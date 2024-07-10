@@ -1,0 +1,61 @@
+# This file will automatically update with entries for new content after a build and reload.
+
+Items: {
+	FleshRipper: {
+		DisplayName: Flesh Ripper
+		Tooltip:
+			'''
+			Blade forged from countless corpses burned and mangled.
+			Inflicts Hellfire.
+			'''
+	}
+
+	EvilImpaler: {
+		DisplayName: Evil Impaler
+		Tooltip: DAEHGAQ
+	}
+
+	CorruptedThornblade: {
+		DisplayName: Corrupted Thornblade
+		Tooltip: ""
+	}
+
+	Parashard: {
+		DisplayName: Parashard
+		Tooltip:
+			'''
+			A shard from another world. 
+			Its potential is yet to be unleashed.
+			'''
+	}
+
+	ParashardSword: {
+		DisplayName: Parashard Sword
+		Tooltip: ""
+	}
+
+	DivineSeekerBossBag: {
+		DisplayName: Divine Seeker Boss Bag
+		Tooltip: ""
+	}
+
+	GravityBarrage: {
+		DisplayName: Gravity Barrage
+		Tooltip: ""
+	}
+}
+
+Projectiles: {
+	EvilImpalerProjectile.DisplayName: Evil Impaler Projectile
+	BlueFire.DisplayName: Blue Fire
+	BlueFireBall.DisplayName: Blue Fire Ball
+	BlueLaser.DisplayName: Blue Laser
+	ParashardSwordProjectile.DisplayName: Parashard Sword Projectile
+	ParaSwordShard.DisplayName: Para Sword Shard
+	IndicatorLaser.DisplayName: Indicator Laser
+}
+
+NPCs: {
+	DroneBoss.DisplayName: Drone Boss
+	DivineSeeker.DisplayName: Divine Seeker
+}
