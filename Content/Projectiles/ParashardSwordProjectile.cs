@@ -77,7 +77,7 @@ namespace Paracosm.Content.Projectiles
             else if (!player.channel && canSpin && AITimer >= 60)
             {
                 mousePos = Main.MouseWorld;
-                mouseDir = Vector2.Normalize(mousePos - Projectile.Center);
+                mouseDir = (mousePos - Projectile.Center).SafeNormalize(Vector2.Zero);
                 canSpin = false;
                 SoundEngine.PlaySound(SoundID.Item1);
             }

@@ -39,7 +39,7 @@ namespace Paracosm.Content.Projectiles
                 Projectile.timeLeft = duration;
             }
 
-            Projectile.velocity = Vector2.Normalize(Projectile.velocity); // Velocity isn't used in this spear implementation, but we use the field to store the spear's attack direction.
+            Projectile.velocity = (Projectile.velocity).SafeNormalize(Vector2.Zero); // Velocity isn't used in this spear implementation, but we use the field to store the spear's attack direction.
 
             float halfDuration = duration * 0.5f;
             float progress;

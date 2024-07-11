@@ -59,7 +59,7 @@ namespace Paracosm.Content.Projectiles.Hostile
                     }
                 }
             }
-            Projectile.velocity = Vector2.Normalize(closestPlayer.position - Projectile.position) * 5;
+            Projectile.velocity = (closestPlayer.position - Projectile.position).SafeNormalize(Vector2.Zero) * 5;
 
             if (AITimer % 5 == 0)
             {

@@ -20,7 +20,7 @@ namespace Paracosm.Content.Projectiles
 
         public override void SetStaticDefaults()
         {
-            Main.projFrames[Projectile.type] = 3;
+            Main.projFrames[Projectile.type] = 4;
         }
 
         public override void SetDefaults()
@@ -38,7 +38,7 @@ namespace Paracosm.Content.Projectiles
 
         public override void OnSpawn(IEntitySource source)
         {
-            Projectile.frame = Main.rand.Next(0, 4);
+            Projectile.frame = Main.rand.Next(0, Main.projFrames[Projectile.type]);
         }
 
         public override void AI()
@@ -52,7 +52,7 @@ namespace Paracosm.Content.Projectiles
                 if (AITimer == 45)
                 {
                     tempMousePos = Main.MouseWorld;
-                    Projectile.velocity = Vector2.Normalize(tempMousePos - Projectile.Center) * 20;
+                    Projectile.velocity = (tempMousePos - Projectile.Center).SafeNormalize(Vector2.Zero) * 20;
                 }
             }
             else

@@ -127,8 +127,8 @@ namespace Paracosm.Content.Bosses
                 NPC.active = false;
             }
             AITimer++;
-            Vector2 playerDirection = Vector2.Normalize(player.Center - NPC.Center);
-            shootOffset = Vector2.Normalize(playerDirection) * new Vector2(NPC.width / 2, NPC.height / 2).Length();
+            Vector2 playerDirection = (player.Center - NPC.Center).SafeNormalize(Vector2.Zero);
+            shootOffset = (playerDirection).SafeNormalize(Vector2.Zero) * new Vector2(NPC.width / 2, NPC.height / 2).Length();
             if (!isDashing && !spinning)
             {
                 NPC.rotation = playerDirection.ToRotation() - MathHelper.PiOver2;
@@ -208,7 +208,7 @@ namespace Paracosm.Content.Bosses
                         }
                         if (idleTimer > 1 && randomIdlePoint != Vector2.Zero)
                         {
-                            NPC.velocity = Vector2.Normalize(randomIdlePoint - NPC.Center) * randomIdlePoint.Distance(NPC.Center) / 10;
+                            NPC.velocity = (randomIdlePoint - NPC.Center).SafeNormalize(Vector2.Zero) * randomIdlePoint.Distance(NPC.Center) / 10;
                         }
                     }
                     if (attack == 1)
@@ -231,7 +231,7 @@ namespace Paracosm.Content.Bosses
                             targetPosition = botLeft;
                         }
 
-                        NPC.velocity = Vector2.Normalize(targetPosition - NPC.Center) * NPC.Center.Distance(targetPosition) / 10;
+                        NPC.velocity = (targetPosition - NPC.Center).SafeNormalize(Vector2.Zero) * NPC.Center.Distance(targetPosition) / 10;
                         if (AITimerA % 30 == 0 && NPC.Center.Distance(targetPosition) < 200)
                         {
                             Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center + shootOffset, playerDirection * 30, ModContent.ProjectileType<BlueLaser>(), damage / 4, 3);
@@ -262,7 +262,7 @@ namespace Paracosm.Content.Bosses
 
                         if (isDashing == false)
                         {
-                            NPC.velocity = Vector2.Normalize(ChosenPosition - NPC.Center) * NPC.Center.Distance(ChosenPosition) / 6;
+                            NPC.velocity = (ChosenPosition - NPC.Center).SafeNormalize(Vector2.Zero) * NPC.Center.Distance(ChosenPosition) / 6;
                         }
                         else
                         {
@@ -310,7 +310,7 @@ namespace Paracosm.Content.Bosses
 
                         if (isCircling == false)
                         {
-                            NPC.velocity = Vector2.Normalize(TopPosition - NPC.Center) * NPC.Center.Distance(TopPosition) / 6;
+                            NPC.velocity = (TopPosition - NPC.Center).SafeNormalize(Vector2.Zero) * NPC.Center.Distance(TopPosition) / 6;
                         }
                         else
                         {
@@ -363,7 +363,7 @@ namespace Paracosm.Content.Bosses
 
                         if (isDashing == false)
                         {
-                            NPC.velocity = Vector2.Normalize(ChosenPosition - NPC.Center) * NPC.Center.Distance(ChosenPosition) / 10;
+                            NPC.velocity = (ChosenPosition - NPC.Center).SafeNormalize(Vector2.Zero) * NPC.Center.Distance(ChosenPosition) / 10;
                         }
                         else
                         {
@@ -382,7 +382,7 @@ namespace Paracosm.Content.Bosses
                             {
                                 if (proj.type == ModContent.ProjectileType<BlueFireBall>())
                                 {
-                                    proj.velocity = Vector2.Normalize(player.Center - proj.Center) * dashTime / 6;
+                                    proj.velocity = (player.Center - proj.Center).SafeNormalize(Vector2.Zero) * dashTime / 6;
                                 }
                             }
                         }
@@ -525,7 +525,7 @@ namespace Paracosm.Content.Bosses
                             targetPosition = botLeft;
 
                         }
-                        NPC.velocity = Vector2.Normalize(targetPosition - NPC.Center) * NPC.Center.Distance(targetPosition) / 10;
+                        NPC.velocity = (targetPosition - NPC.Center).SafeNormalize(Vector2.Zero) * NPC.Center.Distance(targetPosition) / 10;
 
                         if (AITimerB % 10 == 0 && rage == false && NPC.Center.Distance(targetPosition) < 200)
                         {
@@ -563,7 +563,7 @@ namespace Paracosm.Content.Bosses
                         if (isDashing == false)
                         {
 
-                            NPC.velocity = Vector2.Normalize(ChosenPosition - NPC.Center) * NPC.Center.Distance(ChosenPosition) / 10;
+                            NPC.velocity = (ChosenPosition - NPC.Center).SafeNormalize(Vector2.Zero) * NPC.Center.Distance(ChosenPosition) / 10;
                         }
                         else
                         {
@@ -615,7 +615,7 @@ namespace Paracosm.Content.Bosses
 
                         if (isCircling == false)
                         {
-                            NPC.velocity = Vector2.Normalize(TopPosition - NPC.Center) * NPC.Center.Distance(TopPosition) / 6;
+                            NPC.velocity = (TopPosition - NPC.Center).SafeNormalize(Vector2.Zero) * NPC.Center.Distance(TopPosition) / 6;
                         }
                         else
                         {
@@ -665,7 +665,7 @@ namespace Paracosm.Content.Bosses
 
                         if (isDashing == false)
                         {
-                            NPC.velocity = Vector2.Normalize(ChosenPosition - NPC.Center) * NPC.Center.Distance(ChosenPosition) / 7;
+                            NPC.velocity = (ChosenPosition - NPC.Center).SafeNormalize(Vector2.Zero) * NPC.Center.Distance(ChosenPosition) / 7;
                         }
                         else
                         {
@@ -684,7 +684,7 @@ namespace Paracosm.Content.Bosses
                             {
                                 if (proj.type == ModContent.ProjectileType<BlueFireBall>())
                                 {
-                                    proj.velocity = Vector2.Normalize(player.Center - proj.Center) * dashTime / 3;
+                                    proj.velocity = (player.Center - proj.Center).SafeNormalize(Vector2.Zero) * dashTime / 3;
                                 }
                             }
                         }

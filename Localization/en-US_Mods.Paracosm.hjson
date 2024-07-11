@@ -43,6 +43,11 @@ Items: {
 		DisplayName: Gravity Barrage
 		Tooltip: ""
 	}
+
+	ParacosmicFurnace: {
+		DisplayName: Paracosmic Furnace
+		Tooltip: ""
+	}
 }
 
 Projectiles: {
@@ -53,6 +58,8 @@ Projectiles: {
 	ParashardSwordProjectile.DisplayName: Parashard Sword Projectile
 	ParaSwordShard.DisplayName: Para Sword Shard
 	IndicatorLaser.DisplayName: Indicator Laser
+	ParacosmicFlame.DisplayName: Paracosmic Flame
+	HomingBlueFire.DisplayName: Homing Blue Fire
 }
 
 NPCs: {
