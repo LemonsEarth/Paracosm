@@ -35,8 +35,8 @@ Items: {
 	}
 
 	DivineSeekerBossBag: {
-		DisplayName: Divine Seeker Boss Bag
-		Tooltip: ""
+		DisplayName: Treasure Bag (Divine Seeker)
+		Tooltip: "{$CommonItemTooltip.RightClickToOpen}"
 	}
 
 	GravityBarrage: {
@@ -47,6 +47,67 @@ Items: {
 	ParacosmicFurnace: {
 		DisplayName: Paracosmic Furnace
 		Tooltip: ""
+	}
+
+	ParashardSigil: {
+		DisplayName: Parashard Sigil
+		Tooltip:
+			'''
+			{$CommonItemTooltip.PercentIncreasedDamage}
+			{$CommonItemTooltip.PercentIncreasedCritChance@1}
+			Increases life regeneration by {3}
+			Taking damage creates vengeful flames whose damage scales based on damage taken
+			'''
+	}
+
+	ParacosmicEyeStaff: {
+		DisplayName: Paracosmic Eye Staff
+		Tooltip: ""
+	}
+
+	Uragan: {
+		DisplayName: Uragan
+		Tooltip:
+			'''
+			Creates wind slashes around you
+			Releasing the attack button launches all wind slashes towards your mouse cursor
+			Holding the attack button again resets their behaviour.
+			'''
+	}
+
+	WindWarriorBreastplate: {
+		DisplayName: Wind Warrior Breastplate
+		Tooltip:
+			'''
+			{$CommonItemTooltip.PercentIncreasedDamage}
+			{$CommonItemTooltip.PercentReducedManaCost@1}
+			Increases flight time by 50%
+			'''
+	}
+
+	WindWarriorLeggings: {
+		DisplayName: Wind Warrior Leggings
+		Tooltip:
+			'''
+			{$CommonItemTooltip.PercentIncreasedCritChance}
+			{$CommonItemTooltip.PercentIncreasedMovementSpeed@1}
+			Increases jump speed
+			'''
+	}
+
+	WindWarriorHeadgear: {
+		DisplayName: Wind Warrior Headgear
+		Tooltip:
+			'''
+			{$CommonItemTooltip.PercentIncreasedDamage}
+			{$CommonItemTooltip.IncreasesMaxMinionsBy@1}
+			'''
+		SetBonus:
+			'''
+			Increases damage by {0}%
+			Increases critical strike chance by {1}%
+			Further increases damage based on vertical velocity
+			'''
 	}
 }
 
@@ -60,9 +121,23 @@ Projectiles: {
 	IndicatorLaser.DisplayName: Indicator Laser
 	ParacosmicFlame.DisplayName: Paracosmic Flame
 	HomingBlueFire.DisplayName: Homing Blue Fire
+	ParacosmicEye.DisplayName: Paracosmic Eye
+	WindSlash.DisplayName: Wind Slash
 }
 
 NPCs: {
 	DroneBoss.DisplayName: Drone Boss
 	DivineSeeker.DisplayName: Divine Seeker
+}
+
+Buffs: {
+	ParacosmicEyeBuff: {
+		DisplayName: Paracosmic Eye Buff
+		Description: Mods.Paracosm.Buffs.ParacosmicEyeBuff.Description
+	}
+
+	ParacosmicBurn: {
+		DisplayName: Paracosmic Burn
+		Description: Your skin is burning into a different place...
+	}
 }

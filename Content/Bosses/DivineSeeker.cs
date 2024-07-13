@@ -20,6 +20,7 @@ using Terraria.Graphics.Shaders;
 using Terraria.Graphics.Effects;
 using System.IO;
 using Paracosm.Content.Items.BossBags;
+using Paracosm.Content.Items.Weapons;
 
 
 namespace Paracosm.Content.Bosses
@@ -63,6 +64,7 @@ namespace Paracosm.Content.Bosses
         public override void SetStaticDefaults()
         {
             Main.npcFrameCount[NPC.type] = 3;
+            NPCID.Sets.SpecificDebuffImmunity[Type][BuffID.Confused] = true;
         }
 
         public override void SetDefaults()
@@ -903,6 +905,7 @@ namespace Paracosm.Content.Bosses
         {
             LeadingConditionRule classicRule = new LeadingConditionRule(new Conditions.NotExpert());
             classicRule.OnSuccess(ItemDropRule.Common(ModContent.ItemType<Parashard>(), 1, 20, 30));
+            classicRule.OnSuccess(ItemDropRule.OneFromOptions(1, ModContent.ItemType<ParashardSword>(), ModContent.ItemType<ParacosmicFurnace>(), ModContent.ItemType<GravityBarrage>(), ModContent.ItemType<ParacosmicEyeStaff>()));
             npcLoot.Add(classicRule);
             npcLoot.Add(ItemDropRule.BossBag(ModContent.ItemType<DivineSeekerBossBag>()));
         }

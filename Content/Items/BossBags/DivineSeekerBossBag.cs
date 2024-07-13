@@ -4,6 +4,8 @@ using Terraria.ModLoader;
 using Microsoft.Xna.Framework;
 using Terraria.GameContent.ItemDropRules;
 using Paracosm.Content.Items.Materials;
+using Paracosm.Content.Items.Weapons;
+using Paracosm.Content.Items.Accessories;
 
 namespace Paracosm.Content.Items.BossBags
 {
@@ -34,6 +36,8 @@ namespace Paracosm.Content.Items.BossBags
         public override void ModifyItemLoot(ItemLoot itemLoot)
         {
             itemLoot.Add(ItemDropRule.Common(ModContent.ItemType<Parashard>(), 1, 30, 40));
+            itemLoot.Add(ItemDropRule.OneFromOptions(1, ModContent.ItemType<ParashardSword>(), ModContent.ItemType<ParacosmicFurnace>(), ModContent.ItemType<GravityBarrage>(), ModContent.ItemType<ParacosmicEyeStaff>()));
+            itemLoot.Add(ItemDropRule.Common(ModContent.ItemType<ParashardSigil>(), 1, 1, 1));
         }
     }
 }

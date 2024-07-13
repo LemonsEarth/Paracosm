@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
+using Paracosm.Content.Buffs;
 using Paracosm.Content.Items.Weapons;
 using Terraria;
 using Terraria.Audio;
@@ -121,6 +122,7 @@ namespace Paracosm.Content.Projectiles
             {
                 Dust.NewDust(target.Center, target.width, target.height, DustID.SpookyWood, 1, 4, Scale: 1.5f);
             }
+            target.AddBuff(ModContent.BuffType<ParacosmicBurn>(), 600);
         }
     }
 }

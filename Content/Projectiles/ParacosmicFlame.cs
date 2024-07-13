@@ -31,8 +31,9 @@ namespace Paracosm.Content.Projectiles
             Projectile.tileCollide = false;
             Projectile.timeLeft = 24;
             Projectile.frameCounter = 2;
-            Projectile.alpha = 20;
             Projectile.penetrate = 10;
+            Projectile.usesLocalNPCImmunity = true;
+            Projectile.localNPCHitCooldown = 25;
         }
 
         public override void OnSpawn(IEntitySource source)
@@ -43,6 +44,7 @@ namespace Paracosm.Content.Projectiles
         public override void AI()
         {
             AITimer++;
+            Projectile.alpha += 10;
             Projectile.rotation = AITimer / Main.rand.Next(2, 4);
             Projectile.frameCounter--;
             if (Projectile.frameCounter == 0)
@@ -63,8 +65,7 @@ namespace Paracosm.Content.Projectiles
                     Projectile.frameCounter = 1;
                 }
             }
-
-            for (int i = 0; i < 5; i++)
+            if (AITimer % 2 == 0)
             {
                 Dust.NewDust(Projectile.Center, Projectile.width / 2, Projectile.height / 2, DustID.IceTorch);
             }

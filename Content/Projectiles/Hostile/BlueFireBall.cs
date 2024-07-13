@@ -5,6 +5,7 @@ using System.Media;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
+using Paracosm.Content.Buffs;
 using Terraria;
 using Terraria.Audio;
 using Terraria.DataStructures;
@@ -50,6 +51,11 @@ namespace Paracosm.Content.Projectiles.Hostile
                 }
             }
             Projectile.rotation = AITimer;
+        }
+
+        public override void OnHitPlayer(Player target, Player.HurtInfo info)
+        {
+            target.AddBuff(ModContent.BuffType<ParacosmicBurn>(), 120);
         }
     }
 }

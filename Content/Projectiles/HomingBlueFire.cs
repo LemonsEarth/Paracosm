@@ -43,13 +43,7 @@ namespace Paracosm.Content.Projectiles
         public override void AI()
         {
             AITimer++;
-            if (AITimer % 10 == 0)
-            {
-                for (int i = 0; i < 20; i++)
-                {
-                    Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, DustID.IceTorch);
-                }
-            }
+            Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, DustID.IceTorch);
             Projectile.rotation = Projectile.velocity.ToRotation() - MathHelper.PiOver2;
             if (AITimer >= 30)
             {
