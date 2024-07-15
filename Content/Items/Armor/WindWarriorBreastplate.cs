@@ -13,8 +13,8 @@ namespace Paracosm.Content.Items.Armor
     [AutoloadEquip(EquipType.Body)]
     public class WindWarriorBreastplate : ModItem
     {
-        static readonly int manaCostReduction = 20;
-        static readonly int damageBoost = 10;
+        static readonly float manaCostReduction = 20;
+        static readonly float damageBoost = 10;
 
         public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(damageBoost, manaCostReduction);
 
@@ -30,7 +30,7 @@ namespace Paracosm.Content.Items.Armor
         public override void UpdateEquip(Player player)
         {
             player.GetDamage(DamageClass.Generic) += damageBoost / 100;
-            player.manaCost -= manaCostReduction;
+            player.manaCost -= manaCostReduction / 100;
             player.GetModPlayer<WindWarriorBreastplatePlayer>().WindWarriorBreastplate = true;
         }
     }

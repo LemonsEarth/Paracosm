@@ -15,7 +15,7 @@ namespace Paracosm.Content.Projectiles
 {
     public class HomingBlueFire : ModProjectile
     {
-        float AITimer = 0;
+        ref float AITimer => ref Projectile.ai[0];
         NPC closestNPC;
         float speed = 0;
         public override void SetStaticDefaults()

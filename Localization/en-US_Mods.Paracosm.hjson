@@ -109,6 +109,67 @@ Items: {
 			Further increases damage based on vertical velocity
 			'''
 	}
+
+	ParacosmicChestplate: {
+		DisplayName: Paracosmic Chestplate
+		Tooltip:
+			'''
+			{$CommonItemTooltip.PercentIncreasedDamage}
+			{$CommonItemTooltip.PercentIncreasedCritChance@1}
+			{$CommonItemTooltip.ReducesDamageTakenByPercent@2}
+			'''
+	}
+
+	ParacosmicHelmet: {
+		DisplayName: Paracosmic Helmet
+		Tooltip:
+			'''
+			{$CommonItemTooltip.PercentIncreasedMeleeDamageCritChance}
+			{$CommonItemTooltip.PercentIncreasedRangedDamageCritChance}		
+			'''
+		SetBonus:
+			'''
+			{$CommonItemTooltip.PercentIncreasedMeleeDamage}
+			{$CommonItemTooltip.PercentIncreasedRangedDamage}
+			{$CommonItemTooltip.PercentIncreasedRangedCritChance@1}
+			{$CommonItemTooltip.PercentIncreasedMeleeSpeed@2}
+			Getting below 50% health grants you {3} defense and {4}% damage reduction
+			'''
+	}
+
+	ParacosmicLeggings: {
+		DisplayName: Paracosmic Leggings
+		Tooltip:
+			'''
+			{$CommonItemTooltip.PercentIncreasedCritChance}
+			{$CommonItemTooltip.PercentIncreasedMovementSpeed@1}
+			'''
+	}
+
+	ParacosmicGoggles: {
+		DisplayName: Paracosmic Goggles
+		Tooltip:
+			'''
+			{$CommonItemTooltip.PercentIncreasedMagicDamage}
+			{$CommonItemTooltip.PercentIncreasedSummonDamage}
+			{$CommonItemTooltip.IncreasesMaxMinionsBy@1}
+			'''
+		SetBonus:
+			'''
+			{$CommonItemTooltip.PercentIncreasedMagicDamage}
+			{$CommonItemTooltip.PercentIncreasedSummonDamage}
+			{$CommonItemTooltip.PercentIncreasedMagicCritChance@1}
+			{$CommonItemTooltip.IncreasesMaxManaBy@2}
+			{$CommonItemTooltip.IncreasesMaxMinionsBy@3}
+			{$CommonItemTooltip.IncreasesMaxSentriesBy@4}
+			Increases damage by {5}% and reduces mana cost by {6}% when below 50% health
+			'''
+	}
+
+	CosmicSpark: {
+		DisplayName: Cosmic Spark
+		Tooltip: ""
+	}
 }
 
 Projectiles: {
@@ -139,5 +200,15 @@ Buffs: {
 	ParacosmicBurn: {
 		DisplayName: Paracosmic Burn
 		Description: Your skin is burning into a different place...
+	}
+
+	ParacosmicHelmetBuff: {
+		DisplayName: Paracosmic Protection
+		Description: Increased defense and damage reduction
+	}
+
+	ParacosmicGogglesBuff: {
+		DisplayName: Paracosmic Assault
+		Description: Increased damage and decreased mana cost
 	}
 }

@@ -15,7 +15,7 @@ namespace Paracosm.Content.Projectiles
 {
     public class ParaSwordShard : ModProjectile
     {
-        float AITimer = 0;
+        ref float AITimer => ref Projectile.ai[0];
         Vector2 tempMousePos = Vector2.Zero;
 
         public override void SetStaticDefaults()
@@ -44,6 +44,10 @@ namespace Paracosm.Content.Projectiles
         public override void AI()
         {
             AITimer++;
+            if (AITimer % 3 == 0)
+            {
+                Dust.NewDust(Projectile.Center, Projectile.width / 2, Projectile.height / 2, DustID.Corruption);
+            }
             Projectile.rotation = AITimer / 2;
             if (Projectile.ai[1] == 1)
             {

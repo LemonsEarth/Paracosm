@@ -12,22 +12,22 @@ namespace Paracosm.Content.Items.Accessories
 {
     public class ParashardSigil : ModItem
     {
-        static readonly int damageBoost = 10;
-        static readonly int critBoost = 10;
-        static readonly int defenseBoost = 10;
-        static readonly int lifeRegenBoost = 2;
+        static readonly float damageBoost = 10;
+        static readonly float critBoost = 10;
+        static readonly float defenseBoost = 10;
+        static readonly float lifeRegenBoost = 2;
 
         public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(damageBoost, critBoost, defenseBoost, lifeRegenBoost);
 
         public override void SetDefaults()
         {
-            Item.width = 40;
+            Item.width = 32;
             Item.height = 40;
             Item.accessory = true;
             Item.value = 50000;
             Item.rare = ItemRarityID.Expert;
-            Item.defense = defenseBoost;
-            Item.lifeRegen = lifeRegenBoost;
+            Item.defense = (int)defenseBoost;
+            Item.lifeRegen = (int)lifeRegenBoost;
             Item.expert = true;
         }
 

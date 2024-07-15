@@ -15,10 +15,10 @@ namespace Paracosm.Content.Items.Armor
     public class WindWarriorHeadgear : ModItem
     {
         static readonly int maxMinionBoost = 1;
-        static readonly int damageBoost = 5;
+        static readonly float damageBoost = 5;
 
-        static readonly int setBonusDamage = 15;
-        static readonly int setBonusCrit = 10;
+        static readonly float setBonusDamage = 15;
+        static readonly float setBonusCrit = 10;
 
         public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(damageBoost, maxMinionBoost);
         public static LocalizedText setBonusText;

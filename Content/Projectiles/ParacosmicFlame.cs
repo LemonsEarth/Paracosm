@@ -5,6 +5,7 @@ using System.Media;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
+using Paracosm.Content.Buffs;
 using Terraria;
 using Terraria.Audio;
 using Terraria.DataStructures;
@@ -15,7 +16,7 @@ namespace Paracosm.Content.Projectiles
 {
     public class ParacosmicFlame : ModProjectile
     {
-        float AITimer = 0;
+        ref float AITimer => ref Projectile.ai[0];
         public override void SetStaticDefaults()
         {
             Main.projFrames[Projectile.type] = 7;
@@ -33,12 +34,17 @@ namespace Paracosm.Content.Projectiles
             Projectile.frameCounter = 2;
             Projectile.penetrate = 10;
             Projectile.usesLocalNPCImmunity = true;
-            Projectile.localNPCHitCooldown = 25;
+            Projectile.localNPCHitCooldown = 60;
         }
 
         public override void OnSpawn(IEntitySource source)
         {
             SoundEngine.PlaySound(SoundID.Item20 with { MaxInstances = 0 });
+        }
+
+        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
+        {
+            target.AddBuff(ModContent.BuffType<ParacosmicBurn>(), 300);
         }
 
         public override void AI()

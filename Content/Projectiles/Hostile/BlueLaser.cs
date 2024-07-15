@@ -17,7 +17,7 @@ namespace Paracosm.Content.Projectiles.Hostile
 {
     public class BlueLaser : ModProjectile
     {
-        float AITimer = 0;
+        ref float AITimer => ref Projectile.ai[0];
         public override void SetStaticDefaults()
         {
             Main.projFrames[Projectile.type] = 1;

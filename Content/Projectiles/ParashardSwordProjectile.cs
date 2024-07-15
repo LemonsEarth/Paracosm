@@ -16,7 +16,7 @@ namespace Paracosm.Content.Projectiles
 {
     public class ParashardSwordProjectile : ModProjectile
     {
-        float AITimer = 0;
+        ref float AITimer => ref Projectile.ai[0];
         float attackSpeed = 1;
         Vector2 mousePos = Vector2.Zero;
         Vector2 mouseDir = Vector2.Zero;

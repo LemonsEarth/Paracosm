@@ -16,7 +16,7 @@ namespace Paracosm.Content.Projectiles.Hostile
     public class BlueFire : ModProjectile
     {
         int projectileFrame = 0;
-        float AITimer = 0;
+        ref float AITimer => ref Projectile.ai[0];
         public override void SetStaticDefaults()
         {
             Main.projFrames[Projectile.type] = 3;
