@@ -43,6 +43,7 @@ namespace Paracosm.Content.Projectiles
 
         public override void AI()
         {
+            Player player = Main.player[Projectile.owner];
             AITimer++;
             if (AITimer % 3 == 0)
             {
@@ -53,10 +54,11 @@ namespace Paracosm.Content.Projectiles
             {
                 Projectile.DamageType = DamageClass.Magic;
                 Projectile.tileCollide = false;
-                if (AITimer == 45)
+                if (AITimer == 45 && Projectile.owner == Main.myPlayer)
                 {
                     tempMousePos = Main.MouseWorld;
                     Projectile.velocity = (tempMousePos - Projectile.Center).SafeNormalize(Vector2.Zero) * 20;
+                    Projectile.netUpdate = true;
                 }
             }
             else

@@ -125,7 +125,7 @@ Items: {
 		Tooltip:
 			'''
 			{$CommonItemTooltip.PercentIncreasedMeleeDamageCritChance}
-			{$CommonItemTooltip.PercentIncreasedRangedDamageCritChance}		
+			{$CommonItemTooltip.PercentIncreasedRangedDamageCritChance}
 			'''
 		SetBonus:
 			'''

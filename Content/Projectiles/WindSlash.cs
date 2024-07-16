@@ -55,10 +55,11 @@ namespace Paracosm.Content.Projectiles
             }
             else
             {
-                if (released == false)
+                if (released == false && Projectile.owner == Main.myPlayer)
                 {
                     Projectile.timeLeft = 180;
                     Projectile.velocity = (Main.MouseWorld - Projectile.Center).SafeNormalize(Vector2.Zero) * 20;
+                    Projectile.netUpdate = true;
                 }
                 released = true;
             }

@@ -37,11 +37,15 @@ namespace Paracosm.Content.Projectiles
 
         public override void OnSpawn(IEntitySource source)
         {
-            SoundEngine.PlaySound(SoundID.Item20 with { MaxInstances = 0 });
+            
         }
 
         public override void AI()
         {
+            if (AITimer == 0)
+            {
+                SoundEngine.PlaySound(SoundID.Item20 with { MaxInstances = 0 });
+            }
             AITimer++;
             Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, DustID.IceTorch);
             Projectile.rotation = Projectile.velocity.ToRotation() - MathHelper.PiOver2;

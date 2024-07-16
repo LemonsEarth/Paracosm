@@ -39,7 +39,7 @@ namespace Paracosm.Content.Projectiles
 
         public override void OnSpawn(IEntitySource source)
         {
-            SoundEngine.PlaySound(SoundID.Item20 with { MaxInstances = 0 });
+            
         }
 
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
@@ -49,6 +49,10 @@ namespace Paracosm.Content.Projectiles
 
         public override void AI()
         {
+            if (AITimer == 0)
+            {
+                SoundEngine.PlaySound(SoundID.Item20 with { MaxInstances = 0 });
+            }
             AITimer++;
             Projectile.alpha += 10;
             Projectile.rotation = AITimer / Main.rand.Next(2, 4);

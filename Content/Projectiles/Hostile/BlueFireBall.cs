@@ -37,11 +37,15 @@ namespace Paracosm.Content.Projectiles.Hostile
 
         public override void OnSpawn(IEntitySource source)
         {
-            SoundEngine.PlaySound(SoundID.Item20 with { MaxInstances = 0 });
+            
         }
 
         public override void AI()
         {
+            if (AITimer == 0)
+            {
+                SoundEngine.PlaySound(SoundID.Item20 with { MaxInstances = 0 });
+            }
             AITimer++;
             if (AITimer % 10 == 0)
             {

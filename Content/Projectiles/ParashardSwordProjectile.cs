@@ -17,7 +17,7 @@ namespace Paracosm.Content.Projectiles
     public class ParashardSwordProjectile : ModProjectile
     {
         ref float AITimer => ref Projectile.ai[0];
-        float attackSpeed = 1;
+        ref float attackSpeed => ref Projectile.ai[1];
         Vector2 mousePos = Vector2.Zero;
         Vector2 mouseDir = Vector2.Zero;
         Item heldItem;
@@ -41,15 +41,19 @@ namespace Paracosm.Content.Projectiles
 
         public override void OnSpawn(IEntitySource source)
         {
+            attackSpeed = 1;
             Player player = Main.player[Projectile.owner];
-            heldItem = player.HeldItem;
-            direction = player.direction;
         }
 
         public override void AI()
         {
             Player player = Main.player[Projectile.owner];
             player.heldProj = Projectile.whoAmI;
+            if (AITimer == 0)
+            {
+                heldItem = player.HeldItem;
+                direction = player.direction;
+            }
             AITimer++;
             if (AITimer < 60)
             {
@@ -61,12 +65,14 @@ namespace Paracosm.Content.Projectiles
                 SoundEngine.PlaySound(SoundID.MaxMana);
             }
 
-            if (player.channel && canSpin)
+            if (player.channel && canSpin && Projectile.owner == Main.myPlayer)
             {
+                player.SetDummyItemTime(2);
                 Projectile.timeLeft = 120 + (int)(player.GetAttackSpeed(DamageClass.Melee) * 100 / 2);
                 Vector2 playerCenter = player.RotatedRelativePoint(player.MountedCenter);
                 Projectile.rotation = new Vector2(1, 0).RotatedBy(AITimer / 10 * attackSpeed * direction * player.GetAttackSpeed(DamageClass.Melee)).ToRotation() ;
                 Projectile.Center = playerCenter + new Vector2(55, -55).RotatedBy(AITimer / 10 * attackSpeed * direction * player.GetAttackSpeed(DamageClass.Melee));
+                Projectile.netUpdate = true;
                 if (AITimer % (int)(attackSpeed * 10) == 0)
                 {
                     for (int i = 0; i < 7; i++)
@@ -75,22 +81,24 @@ namespace Paracosm.Content.Projectiles
                     }
                 }
             }
-            else if (!player.channel && canSpin && AITimer >= 60)
+            else if (!player.channel && canSpin && AITimer >= 60 && Projectile.owner == Main.myPlayer)
             {
                 mousePos = Main.MouseWorld;
                 mouseDir = (mousePos - Projectile.Center).SafeNormalize(Vector2.Zero);
                 canSpin = false;
                 SoundEngine.PlaySound(SoundID.Item1);
+                Projectile.netUpdate = true;
             }
             else if (!player.channel && canSpin && AITimer < 60)
             {
                 Projectile.Kill();
             }
-            if (canSpin == false)
+            if (canSpin == false && Projectile.owner == Main.myPlayer)
             {
                 if (Projectile.Center.Distance(mousePos) > 20)
                 {
                     Projectile.velocity = mouseDir * 20 * player.GetAttackSpeed(DamageClass.Melee);
+                    
                 }
                 else
                 {
@@ -104,11 +112,7 @@ namespace Paracosm.Content.Projectiles
                     }
                 }
                 Projectile.rotation = new Vector2(1, 0).RotatedBy(AITimer / 10 * attackSpeed * direction * player.GetAttackSpeed(DamageClass.Melee)).ToRotation();
-            }
-
-            if (player.HeldItem != heldItem && canSpin)
-            {
-                Projectile.Kill();
+                Projectile.netUpdate = true;
             }
         }
 

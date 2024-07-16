@@ -36,10 +36,14 @@ namespace Paracosm.Content.Projectiles.Hostile
 
         public override void OnSpawn(IEntitySource source)
         {
-            SoundEngine.PlaySound(SoundID.Item33 with { MaxInstances = 1 });
+            
         }
         public override void AI()
         {
+            if (AITimer == 0)
+            {
+                SoundEngine.PlaySound(SoundID.Item33 with { MaxInstances = 3 });
+            }
             Projectile.spriteDirection = Projectile.direction = (Projectile.velocity.X > 0).ToDirectionInt();
             Projectile.rotation = Projectile.velocity.ToRotation() + (Projectile.spriteDirection == 1 ? 0 : MathHelper.Pi);
             if (Projectile.spriteDirection == 1)

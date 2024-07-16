@@ -38,10 +38,14 @@ namespace Paracosm.Content.Projectiles.Hostile
 
         public override void OnSpawn(IEntitySource source)
         {
-            SoundEngine.PlaySound(SoundID.Item1 with { MaxInstances = 1 });
+            
         }
         public override void AI()
         {
+            if (AITimer == 0)
+            {
+                SoundEngine.PlaySound(SoundID.Item1 with { MaxInstances = 1 });
+            }
             AITimer++;
             Projectile.rotation = Projectile.velocity.ToRotation();
         }

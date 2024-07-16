@@ -13,6 +13,7 @@ namespace Paracosm.Content.Items.Consumables
         {
             Item.ResearchUnlockCount = 3;
             ItemID.Sets.SortingPriorityBossSpawns[Type] = 12;
+
         }
 
         public override void SetDefaults()
@@ -40,7 +41,14 @@ namespace Paracosm.Content.Items.Consumables
         public override bool? UseItem(Player player)
         {
             SoundEngine.PlaySound(SoundID.Roar, player.position);
-            NPC.SpawnOnPlayer(player.whoAmI, ModContent.NPCType<DivineSeeker>());
+            if (Main.netMode != NetmodeID.MultiplayerClient)
+            {
+                NPC.SpawnOnPlayer(player.whoAmI, ModContent.NPCType<DivineSeeker>());
+            }
+            else
+            {
+                NetMessage.SendData(MessageID.SpawnBossUseLicenseStartEvent, number: player.whoAmI, number2: Type);
+            }
             return true;
         }
     }
