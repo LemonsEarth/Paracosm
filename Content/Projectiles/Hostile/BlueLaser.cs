@@ -42,7 +42,7 @@ namespace Paracosm.Content.Projectiles.Hostile
         {
             if (AITimer == 0)
             {
-                SoundEngine.PlaySound(SoundID.Item33 with { MaxInstances = 3 });
+                SoundEngine.PlaySound(SoundID.Item33 with { MaxInstances = 2 });
             }
             Projectile.spriteDirection = Projectile.direction = (Projectile.velocity.X > 0).ToDirectionInt();
             Projectile.rotation = Projectile.velocity.ToRotation() + (Projectile.spriteDirection == 1 ? 0 : MathHelper.Pi);

@@ -45,5 +45,22 @@ namespace Paracosm.Content.Items.Weapons
             }
             return false;
         }
+
+        public override void AddRecipes()
+        {
+            Recipe recipe1 = CreateRecipe();
+            recipe1.AddIngredient(ItemID.SoulofFlight, 15);
+            recipe1.AddIngredient(ItemID.Feather, 8);
+            recipe1.AddIngredient(ItemID.TitaniumSword, 1);
+            recipe1.AddTile(TileID.MythrilAnvil);
+            recipe1.Register();
+
+            Recipe recipe2 = CreateRecipe();
+            recipe2.AddIngredient(ItemID.SoulofFlight, 15);
+            recipe2.AddIngredient(ItemID.Feather, 8);
+            recipe2.AddIngredient(ItemID.AdamantiteSword, 1);
+            recipe2.AddTile(TileID.MythrilAnvil);
+            recipe2.Register();
+        }
     }
 }

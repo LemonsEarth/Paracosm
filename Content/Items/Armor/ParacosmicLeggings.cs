@@ -20,8 +20,8 @@ namespace Paracosm.Content.Items.Armor
 
         public override void SetDefaults()
         {
-            Item.width = 30;
-            Item.height = 24;
+            Item.width = 22;
+            Item.height = 18;
             Item.defense = 16;
             Item.rare = ItemRarityID.LightPurple;
             Item.value = Item.sellPrice(0, 6, 0, 0);
@@ -33,6 +33,15 @@ namespace Paracosm.Content.Items.Armor
             player.moveSpeed += moveSpeedBoost / 100;
             player.jumpSpeedBoost += 1;
             player.GetModPlayer<ParacosmicLeggingsPlayer>().ParacosmicLeggings = true;
+        }
+
+        public override void AddRecipes()
+        {
+            Recipe recipe = CreateRecipe();
+            recipe.AddIngredient(ModContent.ItemType<Parashard>(), 10);
+            recipe.AddIngredient(ItemID.HallowedBar, 12);
+            recipe.AddTile(TileID.MythrilAnvil);
+            recipe.Register();
         }
     }
 

@@ -38,8 +38,8 @@ namespace Paracosm.Content.Items.Armor
 
         public override void SetDefaults()
         {
-            Item.width = 42;
-            Item.height = 34;
+            Item.width = 22;
+            Item.height = 16;
             Item.defense = 3;
             Item.rare = ItemRarityID.LightPurple;
             Item.value = Item.sellPrice(0, 5, 0, 0);
@@ -69,6 +69,15 @@ namespace Paracosm.Content.Items.Armor
             player.statManaMax2 += setBonusMana;
             player.maxMinions += setBonusMinionBoost;
             player.maxTurrets += setBonusSentryBoost;
+        }
+
+        public override void AddRecipes()
+        {
+            Recipe recipe = CreateRecipe();
+            recipe.AddIngredient(ModContent.ItemType<Parashard>(), 8);
+            recipe.AddIngredient(ItemID.HallowedBar, 10);
+            recipe.AddTile(TileID.MythrilAnvil);
+            recipe.Register();
         }
     }
 

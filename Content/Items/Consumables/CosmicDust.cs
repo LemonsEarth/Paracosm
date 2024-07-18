@@ -7,7 +7,7 @@ using Terraria.Audio;
 
 namespace Paracosm.Content.Items.Consumables
 {
-    public class CosmicSpark : ModItem
+    public class CosmicDust : ModItem
     {
         public override void SetStaticDefaults()
         {
@@ -20,7 +20,7 @@ namespace Paracosm.Content.Items.Consumables
         {
             Item.width = 30;
             Item.height = 30;
-            Item.maxStack = 9999;
+            Item.maxStack = 1;
             Item.rare = ItemRarityID.Purple;
             Item.useAnimation = 30;
             Item.useTime = 30;
@@ -50,6 +50,17 @@ namespace Paracosm.Content.Items.Consumables
                 NetMessage.SendData(MessageID.SpawnBossUseLicenseStartEvent, number: player.whoAmI, number2: Type);
             }
             return true;
+        }
+
+        public override void AddRecipes()
+        {
+            Recipe recipe = CreateRecipe();
+            recipe.AddIngredient(ItemID.SoulofSight, 5);
+            recipe.AddIngredient(ItemID.SoulofFright, 5);
+            recipe.AddIngredient(ItemID.SoulofMight, 5);
+            recipe.AddIngredient(ItemID.PixieDust, 10);
+            recipe.AddTile(TileID.MythrilAnvil);
+            recipe.Register();
         }
     }
 }

@@ -37,6 +37,10 @@ namespace Paracosm.Content.Buffs
             {
                 return;
             }
+            for (int i = 0; i < 3; i++)
+            {
+                Dust.NewDust(Player.position, Player.width, Player.height, DustID.BlueTorch, Main.rand.Next(-10, 10), Main.rand.Next(-10, 10));
+            }
             Player.GetDamage(DamageClass.Magic) += 20f / 100f;
             Player.GetDamage(DamageClass.Summon) += 20f / 100f;
             Player.manaCost -= 40f / 100f;

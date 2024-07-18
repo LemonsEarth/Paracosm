@@ -21,6 +21,8 @@ using Terraria.Graphics.Effects;
 using System.IO;
 using Paracosm.Content.Items.BossBags;
 using Paracosm.Content.Items.Weapons;
+using Paracosm.Content.Projectiles;
+using Paracosm.Common.Systems;
 
 
 namespace Paracosm.Content.Bosses
@@ -32,7 +34,6 @@ namespace Paracosm.Content.Bosses
 
         int damage;
 
-        int frame = 0;
         float idleTimer = 0;
         float AITimerA = 0;
         bool isCircling = false;
@@ -135,10 +136,9 @@ namespace Paracosm.Content.Bosses
 
             Player player = Main.player[NPC.target];
 
-            if (player.dead)
+            if (player.dead || NPC.Center.Distance(player.Center) > 2500)
             {
-                NPC.velocity.Y -= 1;
-                NPC.EncourageDespawn(10);
+                NPC.EncourageDespawn(300);
             }
             if (NPC.life > NPC.lifeMax / 2)
             {
@@ -173,13 +173,7 @@ namespace Paracosm.Content.Bosses
 
             Vector2 targetPosition = topLeft;
 
-            if (AITimer % 30 == 0)
-            {
-                for (int i = 0; i < 5; i++)
-                {
-                    Dust.NewDust(NPC.Center, NPC.width, NPC.height, DustID.GemSapphire, Main.rand.Next(1, 1), Main.rand.Next(1, 1), Scale: 1);
-                }
-            }
+
 
             if (!Filters.Scene["DivineSeekerShader"].IsActive() && Main.netMode != NetmodeID.Server)
             {
@@ -189,6 +183,13 @@ namespace Paracosm.Content.Bosses
             switch (phase)
             {
                 case 1:
+                    if (AITimer % 30 == 0)
+                    {
+                        for (int i = 0; i < 5; i++)
+                        {
+                            Dust.NewDust(NPC.position, NPC.width, NPC.height, DustID.Shiverthorn, Main.rand.Next(-10, 10), Main.rand.Next(-10, 10), Scale: 1);
+                        }
+                    }
                     AITimerA++;
                     if (AITimerA > 30 && AITimerA < 720)
                     {
@@ -237,7 +238,7 @@ namespace Paracosm.Content.Bosses
                         }
                         if (idleTimer > 1 && ChosenPosition != Vector2.Zero)
                         {
-                            NPC.velocity = (ChosenPosition - NPC.Center).SafeNormalize(Vector2.Zero) * ChosenPosition.Distance(NPC.Center) / 10;
+                            NPC.velocity = (ChosenPosition - NPC.Center).SafeNormalize(Vector2.Zero) * ChosenPosition.Distance(NPC.Center) / 20;
                         }
                     }
                     if (attack == 1)
@@ -263,12 +264,12 @@ namespace Paracosm.Content.Bosses
                         NPC.velocity = (targetPosition - NPC.Center).SafeNormalize(Vector2.Zero) * NPC.Center.Distance(targetPosition) / 10;
                         if (AITimerA % 30 == 0 && NPC.Center.Distance(targetPosition) < 200 && Main.netMode != NetmodeID.MultiplayerClient)
                         {
-                            Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center + shootOffset, playerDirection * 30, ModContent.ProjectileType<BlueLaser>(), damage / 4, 3);
+                            Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center + shootOffset, playerDirection * 30, ModContent.ProjectileType<BlueLaser>(), damage / 2, 3);
                             NPC.netUpdate = true;
                         }
                         if (AITimerA % 5 == 0 && NPC.Center.Distance(targetPosition) >= 200 && Main.netMode != NetmodeID.MultiplayerClient)
                         {
-                            Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<BlueFire>(), damage / 4, 3);
+                            Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<BlueFire>(), damage / 2, 3, ai1: 5);
                             NPC.netUpdate = true;
                         }
                     }
@@ -301,7 +302,7 @@ namespace Paracosm.Content.Bosses
                             NPC.rotation = NPC.velocity.ToRotation() - MathHelper.PiOver2;
                             if (dashTime % 4 == 0 && Main.netMode != NetmodeID.MultiplayerClient)
                             {
-                                Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, dashFireDir, ModContent.ProjectileType<BlueFireBall>(), damage / 4, 3);
+                                Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, dashFireDir, ModContent.ProjectileType<BlueFireBall>(), damage / 3, 3);
                                 NPC.netUpdate = true;
                             }
                         }
@@ -352,7 +353,7 @@ namespace Paracosm.Content.Bosses
                             {
                                 if (circlingTime % 8 == 0 && Main.netMode != NetmodeID.MultiplayerClient)
                                 {
-                                    Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, playerDirection * 6, ModContent.ProjectileType<BlueFireBall>(), damage / 4, 3);
+                                    Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, playerDirection * 6, ModContent.ProjectileType<BlueFireBall>(), damage / 3, 3);
                                     NPC.netUpdate = true;
                                 }
                             }
@@ -368,17 +369,14 @@ namespace Paracosm.Content.Bosses
                         NPC.damage = 80;
                         if (ChosenPosition == Vector2.Zero)
                         {
-                            if (ChosenPosition == Vector2.Zero)
+                            foreach (var position in cornerPositions)
                             {
-                                foreach (var position in cornerPositions)
+                                if (NPC.Center.Distance(position) < NPC.Center.Distance(ChosenPosition))
                                 {
-                                    if (NPC.Center.Distance(position) < NPC.Center.Distance(ChosenPosition))
-                                    {
-                                        ChosenPosition = position;
-                                    }
+                                    ChosenPosition = position;
                                 }
-                                timeBeforeDash = 75;
                             }
+                            timeBeforeDash = 75;
                         }
                         timeBeforeDash--;
 
@@ -404,8 +402,8 @@ namespace Paracosm.Content.Bosses
                             NPC.rotation = NPC.velocity.ToRotation() - MathHelper.PiOver2;
                             if (dashTime % 8 == 0 && Main.netMode != NetmodeID.MultiplayerClient)
                             {
-                                Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center + new Vector2(30, -30), Vector2.Zero, ModContent.ProjectileType<BlueFireBall>(), damage / 40, 3);
-                                Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center + new Vector2(-30, 30), Vector2.Zero, ModContent.ProjectileType<BlueFireBall>(), damage / 4, 3);
+                                Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center + new Vector2(30, -30), Vector2.Zero, ModContent.ProjectileType<BlueFireBall>(), damage / 3, 3);
+                                Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center + new Vector2(-30, 30), Vector2.Zero, ModContent.ProjectileType<BlueFireBall>(), damage / 3, 3);
                                 NPC.netUpdate = true;
                             }
                         }
@@ -428,8 +426,6 @@ namespace Paracosm.Content.Bosses
                             ChosenPosition = Vector2.Zero;
                             dashTime = 0;
                         }
-
-
                     }
 
                     if (attack == 5)
@@ -457,11 +453,11 @@ namespace Paracosm.Content.Bosses
                         {
                             for (int i = 0; i < 8; i++)
                             {
-                                Projectile.NewProjectile(NPC.GetSource_FromAI(), tempPlayerCenter + new Vector2(-1200, i * 200), new Vector2(40, 0), ModContent.ProjectileType<BlueLaser>(), damage / 4, 3);
+                                Projectile.NewProjectile(NPC.GetSource_FromAI(), tempPlayerCenter + new Vector2(-1200, i * 200), new Vector2(40, 0), ModContent.ProjectileType<BlueLaser>(), damage / 2, 3);
                             }
                             for (int i = 1; i < 8; i++)
                             {
-                                Projectile.NewProjectile(NPC.GetSource_FromAI(), tempPlayerCenter + new Vector2(-1200, -i * 200), new Vector2(40, 0), ModContent.ProjectileType<BlueLaser>(), damage / 4, 3);
+                                Projectile.NewProjectile(NPC.GetSource_FromAI(), tempPlayerCenter + new Vector2(-1200, -i * 200), new Vector2(40, 0), ModContent.ProjectileType<BlueLaser>(), damage / 2, 3);
 
                             }
                             NPC.netUpdate = true;
@@ -486,10 +482,29 @@ namespace Paracosm.Content.Bosses
 
                     break;
                 case 2:
+                    if (AITimer % 30 == 0)
+                    {
+                        for (int i = 0; i < 5; i++)
+                        {
+                            Dust.NewDust(NPC.position, NPC.width, NPC.height, DustID.Shiverthorn, Main.rand.Next(-10, 10), Main.rand.Next(-10, 10), Scale: 1.5f);
+                        }
+                    }
+                    damage = 100;
+                    if (AITimerB == 0)
+                    {
+                        foreach (var proj in Main.ActiveProjectiles)
+                        {
+                            if (proj.hostile == true)
+                            {
+                                proj.Kill();
+                            }
+                        }
+                    }
                     AITimerB++;
                     if (p2FirstTime == false)
                     {
                         SoundEngine.PlaySound(SoundID.Roar with { MaxInstances = 0, Pitch = -0.2f, Volume = 0.95f });
+
                         p2FirstTime = true;
                     }
                     if (AITimerB > 30 && AITimerB < 330)
@@ -503,11 +518,11 @@ namespace Paracosm.Content.Bosses
                         circleWaitTime = 60;
                         indicatorTimer = 0;
                     }
-                    else if (AITimerB > 390 && AITimerB <= 720)
+                    else if (AITimerB > 390 && AITimerB <= 750)
                     {
                         attack = 2;
                     }
-                    else if (AITimerB > 750 && AITimerB <= 1110)
+                    else if (AITimerB > 780 && AITimerB <= 1110)
                     {
                         attack = 3;
                     }
@@ -516,7 +531,7 @@ namespace Paracosm.Content.Bosses
                         attack = 4;
                     }
 
-                    else if (AITimerB > 1530 && AITimerB <= 1890)
+                    else if (AITimerB > 1530 && AITimerB <= 1920)
                     {
                         attack = 5;
                     }
@@ -524,8 +539,26 @@ namespace Paracosm.Content.Bosses
                     else
                     {
                         attack = 0;
-                        rage = false;
-                        NPC.velocity = playerDirection * 10;
+                    }
+
+                    if (attack == 0)
+                    {
+                        NPC.damage = 0;
+                        if (idleTimer == 1)
+                        {
+                            ChosenPosition = Vector2.Zero;
+                            idleTimer = 30;
+                        }
+                        idleTimer--;
+                        if (ChosenPosition == Vector2.Zero && Main.netMode != NetmodeID.MultiplayerClient)
+                        {
+                            ChosenPosition = player.Center + new Vector2(Main.rand.NextBool().ToDirectionInt() * Main.rand.Next(200, 300), Main.rand.NextBool().ToDirectionInt() * Main.rand.Next(200, 300));
+                            NPC.netUpdate = true;
+                        }
+                        if (idleTimer > 1 && ChosenPosition != Vector2.Zero)
+                        {
+                            NPC.velocity = (ChosenPosition - NPC.Center).SafeNormalize(Vector2.Zero) * ChosenPosition.Distance(NPC.Center) / 20;
+                        }
                     }
 
                     if (attack == 1)
@@ -570,16 +603,16 @@ namespace Paracosm.Content.Bosses
 
                         if (AITimerB % 10 == 0 && rage == false && NPC.Center.Distance(targetPosition) < 200 && Main.netMode != NetmodeID.MultiplayerClient)
                         {
-                            Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, playerDirection * 25, ModContent.ProjectileType<BlueLaser>(), damage / 4, 3);
-                            Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center + shootOffset, playerDirection.RotatedBy(-MathHelper.PiOver4) * 15, ModContent.ProjectileType<BlueFireBall>(), damage / 4, 3);
-                            Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center + shootOffset, playerDirection.RotatedBy(MathHelper.PiOver4) * 15, ModContent.ProjectileType<BlueFireBall>(), damage / 4, 3);
+                            Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, playerDirection * 25, ModContent.ProjectileType<BlueLaser>(), damage / 2, 3);
+                            Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center + shootOffset, playerDirection.RotatedBy(-MathHelper.PiOver4) * 15, ModContent.ProjectileType<BlueFireBall>(), damage / 3, 3);
+                            Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center + shootOffset, playerDirection.RotatedBy(MathHelper.PiOver4) * 15, ModContent.ProjectileType<BlueFireBall>(), damage / 3, 3);
                             NPC.netUpdate = true;
                         }
                         if (NPC.Center.Distance(targetPosition) >= 200)
                         {
                             if (AITimerB % 8 == 0 && rage == true && Main.netMode != NetmodeID.MultiplayerClient)
                             {
-                                Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<BlueFire>(), damage / 4, 3);
+                                Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<BlueFire>(), damage / 2, 3, ai1: 5);
                                 NPC.netUpdate = true;
                             }
                         }
@@ -614,8 +647,8 @@ namespace Paracosm.Content.Bosses
                             NPC.rotation = NPC.velocity.ToRotation() - MathHelper.PiOver2;
                             if (dashTime % 2 == 0 && Main.netMode != NetmodeID.MultiplayerClient)
                             {
-                                Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, dashFireDir, ModContent.ProjectileType<BlueFireBall>(), damage / 4, 3);
-                                Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, -dashFireDir, ModContent.ProjectileType<BlueFireBall>(), damage / 4, 3);
+                                Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, dashFireDir, ModContent.ProjectileType<BlueFireBall>(), damage / 3, 3);
+                                Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, -dashFireDir, ModContent.ProjectileType<BlueFireBall>(), damage / 3, 3);
                                 NPC.netUpdate = true;
                             }
                         }
@@ -669,7 +702,7 @@ namespace Paracosm.Content.Bosses
                             {
                                 if (circlingTime % 6 == 0 && Main.netMode != NetmodeID.MultiplayerClient)
                                 {
-                                    Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, playerDirection * 4, ModContent.ProjectileType<BlueFireBall>(), damage / 4, 3);
+                                    Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, playerDirection * 4, ModContent.ProjectileType<BlueFireBall>(), damage / 3, 3);
                                     NPC.netUpdate = true;
                                 }
                             }
@@ -718,8 +751,8 @@ namespace Paracosm.Content.Bosses
                             NPC.rotation = NPC.velocity.ToRotation() - MathHelper.PiOver2;
                             if (dashTime % 8 == 0 && Main.netMode != NetmodeID.MultiplayerClient)
                             {
-                                Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center + new Vector2(30, -30), Vector2.Zero, ModContent.ProjectileType<BlueFireBall>(), damage / 4, 3);
-                                Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center + new Vector2(-30, 30), Vector2.Zero, ModContent.ProjectileType<BlueFireBall>(), damage / 4, 3);
+                                Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center + new Vector2(30, -30), Vector2.Zero, ModContent.ProjectileType<BlueFireBall>(), damage / 3, 3);
+                                Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center + new Vector2(-30, 30), Vector2.Zero, ModContent.ProjectileType<BlueFireBall>(), damage / 3, 3);
                                 NPC.netUpdate = true;
                             }
                         }
@@ -746,79 +779,35 @@ namespace Paracosm.Content.Bosses
 
                     if (attack == 5)
                     {
-                        NPC.damage = 0;
-                        if ((indicatorTimer == 0 || indicatorTimer == 120 || indicatorTimer == 240) && Main.netMode != NetmodeID.MultiplayerClient)
+                        if (AITimerB < 1560)
                         {
-                            tempPlayerCenter = player.Center;
-                            for (int i = 0; i < 16; i++)
+                            ChosenPosition = player.position + new Vector2(0, -500);
+                            NPC.velocity = (ChosenPosition - NPC.Center).SafeNormalize(Vector2.Zero) * NPC.Center.Distance(ChosenPosition) / 10;
+                        }
+                        else if (AITimerB >= 1620)
+                        {
+                            NPC.velocity = playerDirection * 7;
+                            if (Main.netMode != NetmodeID.MultiplayerClient && AITimerB % 30 == 0)
                             {
-                                Projectile.NewProjectile(NPC.GetSource_FromAI(), tempPlayerCenter + new Vector2(-1200, i * 150), new Vector2(40, 0), ModContent.ProjectileType<IndicatorLaser>(), 0, 3);
-                            }
-                            for (int i = 1; i < 16; i++)
-                            {
-                                Projectile.NewProjectile(NPC.GetSource_FromAI(), tempPlayerCenter + new Vector2(-1200, -i * 150), new Vector2(40, 0), ModContent.ProjectileType<IndicatorLaser>(), 0, 3);
-                            }
-
-                            if (indicatorTimer != 0)
-                            {
-                                for (int i = 0; i < 20; i++)
+                                Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center + shootOffset, playerDirection * 20, ModContent.ProjectileType<ParacosmicFlame>(), damage / 2, 0, ai1: 1);
+                                Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center + shootOffset, playerDirection * 15, ModContent.ProjectileType<ParacosmicFlame>(), damage / 2, 0, ai1: 1);
+                                Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center + shootOffset, playerDirection * 10, ModContent.ProjectileType<ParacosmicFlame>(), damage / 2, 0, ai1: 1);
+                                for (int i = 0; i < 8; i++)
                                 {
-                                    Projectile.NewProjectile(NPC.GetSource_FromAI(), tempPlayerCenter + new Vector2(i * 150, -1000), new Vector2(0, 40), ModContent.ProjectileType<BlueLaser>(), damage / 4, 3);
+                                    Vector2 pos = player.Center + new Vector2(800, -800).RotatedBy(i * MathHelper.PiOver4);
+                                    Projectile.NewProjectile(NPC.GetSource_FromAI(), pos, (player.Center - pos).SafeNormalize(Vector2.Zero) * 10, ModContent.ProjectileType<BlueFireBall>(), damage / 3, 0);
+
                                 }
-                                for (int i = 0; i < 20; i++)
-                                {
-                                    Projectile.NewProjectile(NPC.GetSource_FromAI(), tempPlayerCenter + new Vector2(-i * 150, -1000), new Vector2(0, 40), ModContent.ProjectileType<BlueLaser>(), damage / 4, 3);
-                                }
+                                NPC.netUpdate = true;
                             }
-                            NPC.netUpdate = true;
-                        }
-
-                        if (indicatorTimer == 60 || indicatorTimer == 180 || indicatorTimer == 300 && Main.netMode != NetmodeID.MultiplayerClient)
-                        {
-                            for (int i = 0; i < 20; i++)
-                            {
-                                Projectile.NewProjectile(NPC.GetSource_FromAI(), tempPlayerCenter + new Vector2(i * 150, -1000), new Vector2(0, 40), ModContent.ProjectileType<IndicatorLaser>(), 0, 3);
-                            }
-                            for (int i = 0; i < 20; i++)
-                            {
-                                Projectile.NewProjectile(NPC.GetSource_FromAI(), tempPlayerCenter + new Vector2(-i * 150, -1000), new Vector2(0, 40), ModContent.ProjectileType<IndicatorLaser>(), 0, 3);
-                            }
-                            for (int i = 0; i < 16; i++)
-                            {
-                                Projectile.NewProjectile(NPC.GetSource_FromAI(), tempPlayerCenter + new Vector2(-1200, i * 150), new Vector2(40, 0), ModContent.ProjectileType<BlueLaser>(), damage / 4, 3);
-                            }
-                            for (int i = 1; i < 16; i++)
-                            {
-                                Projectile.NewProjectile(NPC.GetSource_FromAI(), tempPlayerCenter + new Vector2(-1200, -i * 150), new Vector2(40, 0), ModContent.ProjectileType<BlueLaser>(), damage / 4, 3);
-                            }
-                            NPC.netUpdate = true;
-                        }
-
-                        if (indicatorTimer == 359 && Main.netMode != NetmodeID.MultiplayerClient)
-                        {
-                            for (int i = 0; i < 20; i++)
-                            {
-                                Projectile.NewProjectile(NPC.GetSource_FromAI(), tempPlayerCenter + new Vector2(i * 150, -1000), new Vector2(0, 40), ModContent.ProjectileType<BlueLaser>(), damage / 4, 3);
-                            }
-                            for (int i = 0; i < 20; i++)
-                            {
-                                Projectile.NewProjectile(NPC.GetSource_FromAI(), tempPlayerCenter + new Vector2(-i * 150, -1000), new Vector2(0, 40), ModContent.ProjectileType<BlueLaser>(), damage / 4, 3);
-                            }
-                            NPC.netUpdate = true;
-                        }
-
-                        if (NPC.Center.Distance(player.Center) > 200)
-                        {
-                            NPC.velocity = playerDirection * NPC.Center.Distance(player.Center) / 30;
                         }
                         else
                         {
-                            NPC.velocity *= 0.5f;
+                            NPC.velocity = Vector2.Zero;
                         }
-                        indicatorTimer++;
                     }
 
-                    if (AITimerB > 1890)
+                    if (AITimerB > 1950)
                     {
                         AITimerB = 0;
                     }
@@ -827,8 +816,26 @@ namespace Paracosm.Content.Bosses
                 case 3:
                     if (AITimerC == 0)
                     {
+                        for (int i = 0; i < 30; i++)
+                        {
+                            Dust.NewDust(NPC.position, NPC.width, NPC.height, DustID.Shiverthorn, Main.rand.Next(-30, 30), Main.rand.Next(-30, 30), Scale: 2f);
+                        }
                         SoundEngine.PlaySound(SoundID.Roar with { MaxInstances = 0, Pitch = -0.4f });
                         NPC.Center = player.position + new Vector2(0, -300);
+                        foreach (var proj in Main.ActiveProjectiles)
+                        {
+                            if (proj.hostile == true)
+                            {
+                                proj.Kill();
+                            }
+                        }
+                    }
+                    if (AITimer % 30 == 0)
+                    {
+                        for (int i = 0; i < 5; i++)
+                        {
+                            Dust.NewDust(NPC.position, NPC.width, NPC.height, DustID.Shiverthorn, Main.rand.Next(-10, 10), Main.rand.Next(-10, 10), Scale: 1.5f);
+                        }
                     }
                     AITimerC++;
                     if (AITimerC <= 360)
@@ -850,27 +857,27 @@ namespace Paracosm.Content.Bosses
                         if (AITimerC < 120 && AITimerC % 20 == 0)
                         {
                             NPC.rotation = (shootDirection.RotatedBy(MathHelper.ToRadians(speen)) * 10).ToRotation();
-                            Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, shootDirection.RotatedBy(MathHelper.ToRadians(speen)) * 5, ModContent.ProjectileType<BlueFireBall>(), damage / 4, 2);
-                            Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, -shootDirection.RotatedBy(MathHelper.ToRadians(speen)) * 5, ModContent.ProjectileType<BlueFireBall>(), damage / 4, 2);
-                            Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, shootDirection.RotatedBy(MathHelper.ToRadians(speen)).RotatedBy(MathHelper.PiOver2) * 5, ModContent.ProjectileType<BlueFireBall>(), damage / 4, 2);
-                            Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, -shootDirection.RotatedBy(MathHelper.ToRadians(speen)).RotatedBy(MathHelper.PiOver2) * 5, ModContent.ProjectileType<BlueFireBall>(), damage / 4, 2);
+                            Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, shootDirection.RotatedBy(MathHelper.ToRadians(speen)) * 5, ModContent.ProjectileType<BlueFireBall>(), damage / 3, 2);
+                            Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, -shootDirection.RotatedBy(MathHelper.ToRadians(speen)) * 5, ModContent.ProjectileType<BlueFireBall>(), damage / 3, 2);
+                            Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, shootDirection.RotatedBy(MathHelper.ToRadians(speen)).RotatedBy(MathHelper.PiOver2) * 5, ModContent.ProjectileType<BlueFireBall>(), damage / 3, 2);
+                            Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, -shootDirection.RotatedBy(MathHelper.ToRadians(speen)).RotatedBy(MathHelper.PiOver2) * 5, ModContent.ProjectileType<BlueFireBall>(), damage / 3, 2);
                             NPC.netUpdate = true;
                         }
 
                         if (AITimerC >= 120 && AITimerC % 2 == 0)
                         {
                             NPC.rotation = (shootDirection.RotatedBy(MathHelper.ToRadians(speen)) * 10).ToRotation();
-                            Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, shootDirection.RotatedBy(MathHelper.ToRadians(speen)) * 10, ModContent.ProjectileType<BlueFireBall>(), damage / 4, 2);
-                            Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, -shootDirection.RotatedBy(MathHelper.ToRadians(speen)) * 10, ModContent.ProjectileType<BlueFireBall>(), damage / 4, 2);
-                            Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, shootDirection.RotatedBy(MathHelper.ToRadians(speen)).RotatedBy(MathHelper.PiOver2) * 10, ModContent.ProjectileType<BlueFireBall>(), damage / 4, 2);
-                            Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, -shootDirection.RotatedBy(MathHelper.ToRadians(speen)).RotatedBy(MathHelper.PiOver2) * 10, ModContent.ProjectileType<BlueFireBall>(), damage / 4, 2);
+                            Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, shootDirection.RotatedBy(MathHelper.ToRadians(speen)) * 10, ModContent.ProjectileType<BlueFireBall>(), damage / 3, 2);
+                            Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, -shootDirection.RotatedBy(MathHelper.ToRadians(speen)) * 10, ModContent.ProjectileType<BlueFireBall>(), damage / 3, 2);
+                            Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, shootDirection.RotatedBy(MathHelper.ToRadians(speen)).RotatedBy(MathHelper.PiOver2) * 10, ModContent.ProjectileType<BlueFireBall>(), damage / 3, 2);
+                            Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, -shootDirection.RotatedBy(MathHelper.ToRadians(speen)).RotatedBy(MathHelper.PiOver2) * 10, ModContent.ProjectileType<BlueFireBall>(), damage / 3, 2);
                             NPC.netUpdate = true;
                         }
-                        if (AITimerC >= 120 && AITimerC % 30 == 0)
+                        if (AITimerC >= 120 && AITimerC % 50 == 0)
                         {
                             for (int i = 0; i < 4; i++)
                             {
-                                Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, new Vector2(1, 1).RotatedBy(MathHelper.PiOver2 * i) * 4, ModContent.ProjectileType<BlueFireBall>(), damage / 4, 2);
+                                Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, new Vector2(1, 1).RotatedBy(MathHelper.PiOver2 * i) * 4, ModContent.ProjectileType<BlueFireBall>(), damage / 3, 2);
                                 NPC.netUpdate = true;
                             }
 
@@ -908,19 +915,19 @@ namespace Paracosm.Content.Bosses
                         {
                             for (int i = 0; i < 16; i++)
                             {
-                                Projectile.NewProjectile(NPC.GetSource_FromAI(), tempPlayerCenter + new Vector2(-1200, i * 150), new Vector2(40, 0), ModContent.ProjectileType<BlueLaser>(), damage / 4, 3);
+                                Projectile.NewProjectile(NPC.GetSource_FromAI(), tempPlayerCenter + new Vector2(-1200, i * 150), new Vector2(40, 0), ModContent.ProjectileType<BlueLaser>(), damage / 2, 3);
                             }
                             for (int i = 1; i < 16; i++)
                             {
-                                Projectile.NewProjectile(NPC.GetSource_FromAI(), tempPlayerCenter + new Vector2(-1200, -i * 150), new Vector2(40, 0), ModContent.ProjectileType<BlueLaser>(), damage / 4, 3);
+                                Projectile.NewProjectile(NPC.GetSource_FromAI(), tempPlayerCenter + new Vector2(-1200, -i * 150), new Vector2(40, 0), ModContent.ProjectileType<BlueLaser>(), damage / 2, 3);
                             }
                             for (int i = 0; i < 20; i++)
                             {
-                                Projectile.NewProjectile(NPC.GetSource_FromAI(), tempPlayerCenter + new Vector2(i * 150, -1000), new Vector2(0, 40), ModContent.ProjectileType<BlueLaser>(), damage / 4, 3);
+                                Projectile.NewProjectile(NPC.GetSource_FromAI(), tempPlayerCenter + new Vector2(i * 150, -1000), new Vector2(0, 40), ModContent.ProjectileType<BlueLaser>(), damage / 2, 3);
                             }
                             for (int i = 0; i < 20; i++)
                             {
-                                Projectile.NewProjectile(NPC.GetSource_FromAI(), tempPlayerCenter + new Vector2(-i * 150, -1000), new Vector2(0, 40), ModContent.ProjectileType<BlueLaser>(), damage / 4, 3);
+                                Projectile.NewProjectile(NPC.GetSource_FromAI(), tempPlayerCenter + new Vector2(-i * 150, -1000), new Vector2(0, 40), ModContent.ProjectileType<BlueLaser>(), damage / 2, 3);
                             }
                             NPC.netUpdate = true;
                         }
@@ -942,13 +949,13 @@ namespace Paracosm.Content.Bosses
         }
         public override void FindFrame(int frameHeight)
         {
-            NPC.frame.Y = frame * frameHeight;
+            NPC.frame.Y = (int)NPC.frameCounter * frameHeight;
             if (AITimer % 10 == 0)
             {
-                frame++;
-                if (frame == 3)
+                NPC.frameCounter++;
+                if (NPC.frameCounter == 3)
                 {
-                    frame = 0;
+                    NPC.frameCounter = 0;
                 }
             }
         }
@@ -971,6 +978,11 @@ namespace Paracosm.Content.Bosses
         {
             cooldownSlot = ImmunityCooldownID.Bosses;
             return true;
+        }
+
+        public override void OnKill()
+        {
+            NPC.SetEventFlagCleared(ref DownedBossSystem.downedDivineSeeker, -1);
         }
     }
 }

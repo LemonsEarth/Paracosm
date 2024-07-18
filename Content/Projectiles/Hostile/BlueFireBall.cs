@@ -42,9 +42,13 @@ namespace Paracosm.Content.Projectiles.Hostile
 
         public override void AI()
         {
+            if (Projectile.alpha > 0)
+            {
+                Projectile.alpha -= 7;
+            }
             if (AITimer == 0)
             {
-                SoundEngine.PlaySound(SoundID.Item20 with { MaxInstances = 0 });
+                SoundEngine.PlaySound(SoundID.Item20 with { MaxInstances = 3 });
             }
             AITimer++;
             if (AITimer % 10 == 0)

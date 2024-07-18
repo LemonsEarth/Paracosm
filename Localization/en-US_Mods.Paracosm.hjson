@@ -1,37 +1,22 @@
 # This file will automatically update with entries for new content after a build and reload.
 
 Items: {
-	FleshRipper: {
-		DisplayName: Flesh Ripper
-		Tooltip:
-			'''
-			Blade forged from countless corpses burned and mangled.
-			Inflicts Hellfire.
-			'''
-	}
-
-	EvilImpaler: {
-		DisplayName: Evil Impaler
-		Tooltip: DAEHGAQ
-	}
-
-	CorruptedThornblade: {
-		DisplayName: Corrupted Thornblade
-		Tooltip: ""
-	}
-
 	Parashard: {
 		DisplayName: Parashard
 		Tooltip:
 			'''
-			A shard from another world. 
-			Its potential is yet to be unleashed.
+			A shard from another world
+			Its potential is yet to be unleashed
 			'''
 	}
 
 	ParashardSword: {
 		DisplayName: Parashard Sword
-		Tooltip: ""
+		Tooltip:
+			'''
+			Holding the attack button swings the sword around you
+			Releasing the attack button throws the sword to your mouse cursor
+			'''
 	}
 
 	DivineSeekerBossBag: {
@@ -41,12 +26,16 @@ Items: {
 
 	GravityBarrage: {
 		DisplayName: Gravity Barrage
-		Tooltip: ""
+		Tooltip: Lifts rocks from below you and hurls them at enemies
 	}
 
 	ParacosmicFurnace: {
 		DisplayName: Paracosmic Furnace
-		Tooltip: ""
+		Tooltip:
+			'''
+			A powerful flamethrower which inflicts Paracosmic Burn
+			Occasionally fires homing projectiles
+			'''
 	}
 
 	ParashardSigil: {
@@ -62,7 +51,7 @@ Items: {
 
 	ParacosmicEyeStaff: {
 		DisplayName: Paracosmic Eye Staff
-		Tooltip: ""
+		Tooltip: Summons a paracosmic eye to fight for you
 	}
 
 	Uragan: {
@@ -71,7 +60,7 @@ Items: {
 			'''
 			Creates wind slashes around you
 			Releasing the attack button launches all wind slashes towards your mouse cursor
-			Holding the attack button again resets their behaviour.
+			Holding the attack button again resets their behaviour
 			'''
 	}
 
@@ -166,14 +155,17 @@ Items: {
 			'''
 	}
 
-	CosmicSpark: {
-		DisplayName: Cosmic Spark
-		Tooltip: ""
+	CosmicDust: {
+		DisplayName: Cosmic Dust
+		Tooltip:
+			'''
+			Unconsumable
+			Attracts an otherworldly creature
+			'''
 	}
 }
 
 Projectiles: {
-	EvilImpalerProjectile.DisplayName: Evil Impaler Projectile
 	BlueFire.DisplayName: Blue Fire
 	BlueFireBall.DisplayName: Blue Fire Ball
 	BlueLaser.DisplayName: Blue Laser
@@ -187,14 +179,16 @@ Projectiles: {
 }
 
 NPCs: {
-	DroneBoss.DisplayName: Drone Boss
-	DivineSeeker.DisplayName: Divine Seeker
+	DivineSeeker: {
+		DisplayName: Divine Seeker
+		BossChecklistCompatibility.SpawnInfo: Use a [i:Paracosm/CosmicDust] at night
+	}
 }
 
 Buffs: {
 	ParacosmicEyeBuff: {
 		DisplayName: Paracosmic Eye Buff
-		Description: Mods.Paracosm.Buffs.ParacosmicEyeBuff.Description
+		Description: An otherworldly creature protects you...
 	}
 
 	ParacosmicBurn: {

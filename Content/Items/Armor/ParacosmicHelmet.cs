@@ -66,6 +66,15 @@ namespace Paracosm.Content.Items.Armor
             player.GetCritChance(DamageClass.Ranged) += setBonusRangedCrit;
             player.GetAttackSpeed(DamageClass.Melee) += setBonusMeleeSpeedBoost / 100;
         }
+
+        public override void AddRecipes()
+        {
+            Recipe recipe = CreateRecipe();
+            recipe.AddIngredient(ModContent.ItemType<Parashard>(), 8);
+            recipe.AddIngredient(ItemID.HallowedBar, 10);
+            recipe.AddTile(TileID.MythrilAnvil);
+            recipe.Register();
+        }
     }
 
     public class ParacosmicHelmetPlayer : ModPlayer

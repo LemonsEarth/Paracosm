@@ -31,16 +31,16 @@ namespace Paracosm.Content.Projectiles.Hostile
             Projectile.ignoreWater = true;
             Projectile.tileCollide = false;
             Projectile.timeLeft = 480;
-        }
-
-        public override void OnSpawn(IEntitySource source)
-        {
-            
+            Projectile.alpha = 255;
         }
 
         Player closestPlayer = Main.player[0];
         public override void AI()
         {
+            if (Projectile.alpha > 0)
+            {
+                Projectile.alpha -= 10;
+            }
             if (AITimer == 0)
             {
                 SoundEngine.PlaySound(SoundID.Item20 with { MaxInstances = 0 });
@@ -63,7 +63,7 @@ namespace Paracosm.Content.Projectiles.Hostile
                     }
                 }
             }
-            Projectile.velocity = (closestPlayer.position - Projectile.position).SafeNormalize(Vector2.Zero) * 5;
+            Projectile.velocity = (closestPlayer.position - Projectile.position).SafeNormalize(Vector2.Zero) * Projectile.ai[1];
 
             if (AITimer % 5 == 0)
             {

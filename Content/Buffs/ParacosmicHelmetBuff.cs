@@ -37,7 +37,10 @@ namespace Paracosm.Content.Buffs
             {
                 return;
             }
-
+            for (int i = 0; i < 3; i++)
+            {
+                Dust.NewDust(Player.position, Player.width, Player.height, DustID.Shiverthorn, 0, 1);
+            }
             Player.statDefense += 20;
             Player.endurance += 0.15f;
         }

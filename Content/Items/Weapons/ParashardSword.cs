@@ -36,14 +36,5 @@ namespace Paracosm.Content.Items.Weapons
         {
             return player.ownedProjectileCounts[Item.shoot] <= 0;
         }
-
-        public override void AddRecipes()
-        {
-            Recipe recipe = CreateRecipe();
-            recipe.AddIngredient(ItemID.SoulofNight, 5);
-            recipe.AddIngredient(ModContent.ItemType<Parashard>(), 10);
-            recipe.AddTile(TileID.MythrilAnvil);
-            recipe.Register();
-        }
     }
 }

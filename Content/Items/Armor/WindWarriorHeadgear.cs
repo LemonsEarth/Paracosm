@@ -55,6 +55,23 @@ namespace Paracosm.Content.Items.Armor
             player.setBonus = setBonusText.Value;
             player.GetDamage(DamageClass.Generic) += (15 + MathHelper.Clamp(Math.Abs(player.velocity.Y), 0, 20)) / 100;
         }
+
+        public override void AddRecipes()
+        {
+            Recipe recipe1 = CreateRecipe();
+            recipe1.AddIngredient(ItemID.SoulofFlight, 10);
+            recipe1.AddIngredient(ItemID.Feather, 2);
+            recipe1.AddIngredient(ItemID.TitaniumBar, 5);
+            recipe1.AddTile(TileID.MythrilAnvil);
+            recipe1.Register();
+
+            Recipe recipe2 = CreateRecipe();
+            recipe2.AddIngredient(ItemID.SoulofFlight, 10);
+            recipe2.AddIngredient(ItemID.Feather, 2);
+            recipe2.AddIngredient(ItemID.AdamantiteBar, 5);
+            recipe2.AddTile(TileID.MythrilAnvil);
+            recipe2.Register();
+        }
     }
 
     public class WindWarriorHeadgearPlayer : ModPlayer

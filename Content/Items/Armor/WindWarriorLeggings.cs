@@ -34,6 +34,23 @@ namespace Paracosm.Content.Items.Armor
             player.jumpSpeedBoost += 4;
             player.GetModPlayer<WindWarriorLeggingsPlayer>().WindWarriorLeggings = true;
         }
+
+        public override void AddRecipes()
+        {
+            Recipe recipe1 = CreateRecipe();
+            recipe1.AddIngredient(ItemID.SoulofFlight, 12);
+            recipe1.AddIngredient(ItemID.Feather, 3);
+            recipe1.AddIngredient(ItemID.TitaniumBar, 7);
+            recipe1.AddTile(TileID.MythrilAnvil);
+            recipe1.Register();
+
+            Recipe recipe2 = CreateRecipe();
+            recipe2.AddIngredient(ItemID.SoulofFlight, 12);
+            recipe2.AddIngredient(ItemID.Feather, 3);
+            recipe2.AddIngredient(ItemID.AdamantiteBar, 7);
+            recipe2.AddTile(TileID.MythrilAnvil);
+            recipe2.Register();
+        }
     }
 
     public class WindWarriorLeggingsPlayer : ModPlayer
