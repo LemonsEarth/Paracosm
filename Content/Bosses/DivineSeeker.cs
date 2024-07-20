@@ -81,7 +81,7 @@ namespace Paracosm.Content.Bosses
             NPC.aiStyle = -1;
             NPC.width = 128;
             NPC.height = 126;
-            NPC.lifeMax = 40000;
+            NPC.lifeMax = 45000;
             NPC.defense = 30;
             NPC.damage = 80;
             NPC.HitSound = SoundID.NPCHit1;

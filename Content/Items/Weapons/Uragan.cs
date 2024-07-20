@@ -39,9 +39,12 @@ namespace Paracosm.Content.Items.Weapons
 
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
-            for (int i = 0; i < 3; i++)
+            if (Main.myPlayer == player.whoAmI)
             {
-                Projectile.NewProjectile(source, position, velocity, type, damage, knockback);
+                for (int i = 0; i < 3; i++)
+                {
+                    Projectile.NewProjectile(source, position, velocity, type, damage, knockback);
+                }
             }
             return false;
         }

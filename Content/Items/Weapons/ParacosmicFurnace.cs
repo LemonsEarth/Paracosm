@@ -46,14 +46,16 @@ namespace Paracosm.Content.Items.Weapons
 
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
-            Projectile.NewProjectile(source, position, velocity.RotatedBy(MathHelper.ToRadians((float)Math.Sin(useCounter) / 3 * 30 * 1)), type, damage, knockback);
-            Projectile.NewProjectile(source, position, velocity.RotatedBy(MathHelper.ToRadians((float)Math.Sin(useCounter) / 3 * 30 * -1)), type, damage, knockback);
-            if (useCounter % 10 == 0)
+            if (Main.myPlayer == player.whoAmI)
             {
-                Projectile.NewProjectile(source, position, velocity / 3, ModContent.ProjectileType<HomingBlueFire>(), damage * 2, knockback * 3);
-                Projectile.NewProjectile(source, position, velocity.RotatedBy(MathHelper.PiOver4) / 3, ModContent.ProjectileType<HomingBlueFire>(), damage * 2, knockback * 3);
-                Projectile.NewProjectile(source, position, velocity.RotatedBy(-MathHelper.PiOver4) / 3, ModContent.ProjectileType<HomingBlueFire>(), damage * 2, knockback * 3);
-
+                Projectile.NewProjectile(source, position, velocity.RotatedBy(MathHelper.ToRadians((float)Math.Sin(useCounter) / 3 * 30 * 1)), type, damage, knockback);
+                Projectile.NewProjectile(source, position, velocity.RotatedBy(MathHelper.ToRadians((float)Math.Sin(useCounter) / 3 * 30 * -1)), type, damage, knockback);
+                if (useCounter % 10 == 0)
+                {
+                    Projectile.NewProjectile(source, position, velocity / 3, ModContent.ProjectileType<HomingBlueFire>(), damage * 2, knockback * 3);
+                    Projectile.NewProjectile(source, position, velocity.RotatedBy(MathHelper.PiOver4) / 3, ModContent.ProjectileType<HomingBlueFire>(), damage * 2, knockback * 3);
+                    Projectile.NewProjectile(source, position, velocity.RotatedBy(-MathHelper.PiOver4) / 3, ModContent.ProjectileType<HomingBlueFire>(), damage * 2, knockback * 3);
+                }
             }
             useCounter++;
             if (useCounter == 30)

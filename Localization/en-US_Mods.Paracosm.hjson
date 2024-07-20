@@ -71,6 +71,7 @@ Items: {
 			{$CommonItemTooltip.PercentIncreasedDamage}
 			{$CommonItemTooltip.PercentReducedManaCost@1}
 			Increases flight time by 50%
+			"Armor piece of a mighty soldier, who once served a higher being"
 			'''
 	}
 
@@ -81,6 +82,7 @@ Items: {
 			{$CommonItemTooltip.PercentIncreasedCritChance}
 			{$CommonItemTooltip.PercentIncreasedMovementSpeed@1}
 			Increases jump speed
+			"Armor piece of a mighty soldier, who once served a higher being"
 			'''
 	}
 
@@ -90,6 +92,7 @@ Items: {
 			'''
 			{$CommonItemTooltip.PercentIncreasedDamage}
 			{$CommonItemTooltip.IncreasesMaxMinionsBy@1}
+			"Armor piece of a mighty soldier, who once served a higher being"
 			'''
 		SetBonus:
 			'''
@@ -159,9 +162,44 @@ Items: {
 		DisplayName: Cosmic Dust
 		Tooltip:
 			'''
-			Unconsumable
+			Not Consumable
 			Attracts an otherworldly creature
 			'''
+	}
+
+	BadWeather: {
+		DisplayName: Bad Weather
+		Tooltip: Rains down projectiles at your cursor
+	}
+
+	CharmOfLife: {
+		DisplayName: Charm Of Life
+		Tooltip:
+			'''
+			{$CommonItemTooltip.IncreasesMaxLifeBy}
+			Increases life regeneration by {1}
+			Reduces duration of potion sickness
+			'''
+	}
+
+	ForestCrest: {
+		DisplayName: Forest Crest
+		Tooltip:
+			'''
+			{$CommonItemTooltip.IncreasesMaxMinionsBy}
+			{$CommonItemTooltip.PercentIncreasedMovementSpeed@1}
+			"Mark of a forgotten legion"
+			'''
+	}
+
+	RoundShield: {
+		DisplayName: Round Shield
+		Tooltip: Grants immunity to knockback
+	}
+
+	CorruptStaff: {
+		DisplayName: Corrupt Staff
+		Tooltip: ""
 	}
 }
 
@@ -176,6 +214,7 @@ Projectiles: {
 	HomingBlueFire.DisplayName: Homing Blue Fire
 	ParacosmicEye.DisplayName: Paracosmic Eye
 	WindSlash.DisplayName: Wind Slash
+	CorruptBolt.DisplayName: Corrupt Bolt
 }
 
 NPCs: {
