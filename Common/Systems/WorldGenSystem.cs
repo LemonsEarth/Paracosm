@@ -12,7 +12,7 @@ namespace Paracosm.Common.Systems
 {
     public class WorldGenSystem : ModSystem
     {
-        private void GenerateCorruptTower(GenerationProgress progress, GameConfiguration config)
+        private void GenerateCorruptTower()
         {
             bool successfulGen = false;
             Point16 point = Point16.Zero;
@@ -36,7 +36,7 @@ namespace Paracosm.Common.Systems
             }
         }
 
-        private void GenerateCrimsonHouse(GenerationProgress progress, GameConfiguration config)
+        private void GenerateCrimsonHouse()
         {
             bool successfulGen = false;
             Point16 point = Point16.Zero;
@@ -60,18 +60,20 @@ namespace Paracosm.Common.Systems
             }
         }
 
-        public override void ModifyWorldGenTasks(List<GenPass> tasks, ref double totalWeight)
+        public override void PostWorldGen()
         {
-            if (!WorldGen.crimson || WorldGen.drunkWorldGen)
+            if (WorldGen.drunkWorldGen)
             {
-                int dungeonGenIndex = tasks.FindIndex(genpass => genpass.Name.Equals("Corruption"));
-                tasks.Insert(dungeonGenIndex + 1, new PassLegacy("Corrupt Tower", GenerateCorruptTower));
+                GenerateCrimsonHouse();
+                GenerateCorruptTower();
             }
-
-            if (WorldGen.crimson || WorldGen.drunkWorldGen)
+            else if (WorldGen.crimson == true)
             {
-                int dungeonGenIndex = tasks.FindIndex(genpass => genpass.Name.Equals("Corruption"));
-                tasks.Insert(dungeonGenIndex + 1, new PassLegacy("Crimson House", GenerateCrimsonHouse));
+                GenerateCrimsonHouse();
+            }
+            else
+            {
+                GenerateCorruptTower();
             }
         }
     }
