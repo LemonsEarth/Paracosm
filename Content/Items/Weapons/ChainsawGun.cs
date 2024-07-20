@@ -8,31 +8,27 @@ using System.Collections.Generic;
 
 namespace Paracosm.Content.Items.Weapons
 {
-    public class CorruptStaff : ModItem
+    public class ChainsawGun : ModItem
     {
         public override void SetStaticDefaults()
         {
-            Item.staff[Type] = true;
         }
 
         public override void SetDefaults()
         {
-            Item.damage = 24;
-            Item.DamageType = DamageClass.Magic;
-            Item.width = 40;
-            Item.height = 40;
-            Item.useTime = 5;
-            Item.useAnimation = 15;
-            Item.reuseDelay = 20;
+            Item.damage = 30;
+            Item.DamageType = DamageClass.Ranged;
+            Item.width = 38;
+            Item.height = 20;
+            Item.useTime = 20;
+            Item.useAnimation = 20;
             Item.useStyle = ItemUseStyleID.Shoot;
             Item.knockBack = 3;
             Item.value = Item.buyPrice(gold: 5);
-            Item.rare = ItemRarityID.Blue;
-            Item.UseSound = SoundID.Item8;
+            Item.rare = ItemRarityID.Red;
             Item.autoReuse = true;
-            Item.mana = 12;
-            Item.shoot = ModContent.ProjectileType<CorruptBolt>();
-            Item.shootSpeed = 10;
+            Item.shoot = ModContent.ProjectileType<Saw>();
+            Item.shootSpeed = 24;
             Item.noMelee = true;
         }
     }

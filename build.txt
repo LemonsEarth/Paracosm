@@ -1,3 +1,4 @@
 displayName = Paracosm
 author = LemonEarth
 version = 0.1
+modReferences = StructureHelper

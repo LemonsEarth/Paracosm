@@ -33,6 +33,7 @@ namespace Paracosm.Content.Items.Weapons
             Item.UseSound = SoundID.Item8;
             Item.autoReuse = true;
             Item.shoot = ModContent.ProjectileType<ParacosmicFlame>();
+            Item.noMelee = true;
         }
 
         public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)

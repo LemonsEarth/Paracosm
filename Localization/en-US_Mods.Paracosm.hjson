@@ -201,6 +201,11 @@ Items: {
 		DisplayName: Corrupt Staff
 		Tooltip: ""
 	}
+
+	ChainsawGun: {
+		DisplayName: Chainsaw Gun
+		Tooltip: ""
+	}
 }
 
 Projectiles: {
@@ -215,6 +220,7 @@ Projectiles: {
 	ParacosmicEye.DisplayName: Paracosmic Eye
 	WindSlash.DisplayName: Wind Slash
 	CorruptBolt.DisplayName: Corrupt Bolt
+	Saw.DisplayName: Saw
 }
 
 NPCs: {

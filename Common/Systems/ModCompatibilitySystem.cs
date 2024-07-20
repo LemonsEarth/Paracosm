@@ -46,5 +46,7 @@ namespace Paracosm.Common.Systems
 
             BossChecklist.Call("LogBoss", Mod, internalName, progression, downed, bossType, additional);
         }
+
+
     }
 }
