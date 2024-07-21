@@ -4,11 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Paracosm.Content.Buffs;
 using Paracosm.Content.Items.Weapons;
 using Terraria;
 using Terraria.Audio;
 using Terraria.DataStructures;
+using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -23,6 +25,12 @@ namespace Paracosm.Content.Projectiles
         Item heldItem;
         int direction = 0;
         bool canSpin = true;
+
+        public override void SetStaticDefaults()
+        {
+            ProjectileID.Sets.TrailCacheLength[Projectile.type] = 6;
+            ProjectileID.Sets.TrailingMode[Projectile.type] = 0;
+        }
 
         public override void SetDefaults()
         {
@@ -77,7 +85,7 @@ namespace Paracosm.Content.Projectiles
                 {
                     for (int i = 0; i < 7; i++)
                     {
-                        Dust.NewDust(Projectile.Center, Projectile.width, Projectile.height, DustID.SpookyWood, 1, 4, Scale: 1f);
+                        Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, DustID.SpookyWood, 1, 4, Scale: 1f);
                     }
                 }
             }
@@ -116,6 +124,20 @@ namespace Paracosm.Content.Projectiles
             }
         }
 
+        public override bool PreDraw(ref Color lightColor)
+        {
+            Texture2D Texture = TextureAssets.Projectile[Type].Value;
+            Vector2 drawOrigin = new Vector2(Texture.Width / 2, Texture.Height / 2);
+
+            for (int i = 0; i < Projectile.oldPos.Length; i += 2)
+            {
+                Vector2 drawPos = (Projectile.oldPos[i] - Main.screenPosition) + drawOrigin + new Vector2(0, Projectile.gfxOffY);
+                Color color = Projectile.GetAlpha(lightColor) * ((Projectile.oldPos.Length - i) / (float)Projectile.oldPos.Length);
+                Main.EntitySpriteDraw(Texture, drawPos, null, color, Projectile.rotation, drawOrigin, Projectile.scale, SpriteEffects.None, 0f);
+            }
+            return true;
+        }
+
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
             for (int i = 0; i < 3; i++)
@@ -124,7 +146,7 @@ namespace Paracosm.Content.Projectiles
             }
             for (int i = 0; i < 10; i++)
             {
-                Dust.NewDust(target.Center, target.width, target.height, DustID.SpookyWood, 1, 4, Scale: 1.5f);
+                Dust.NewDust(target.position, target.width, target.height, DustID.SpookyWood, 1, 4, Scale: 1.5f);
             }
             target.AddBuff(ModContent.BuffType<ParacosmicBurn>(), 600);
         }

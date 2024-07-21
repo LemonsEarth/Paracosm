@@ -5,10 +5,12 @@ using System.Media;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Paracosm.Content.Buffs;
 using Terraria;
 using Terraria.Audio;
 using Terraria.DataStructures;
+using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -21,6 +23,8 @@ namespace Paracosm.Content.Projectiles.Hostile
         public override void SetStaticDefaults()
         {
             Main.projFrames[Projectile.type] = 1;
+            ProjectileID.Sets.TrailCacheLength[Projectile.type] = 4;
+            ProjectileID.Sets.TrailingMode[Projectile.type] = 0;
         }
 
         public override void SetDefaults()
@@ -64,6 +68,20 @@ namespace Paracosm.Content.Projectiles.Hostile
         public override void OnHitPlayer(Player target, Player.HurtInfo info)
         {
             target.AddBuff(ModContent.BuffType<ParacosmicBurn>(), 120);
+        }
+
+        public override bool PreDraw(ref Color lightColor)
+        {
+            Texture2D Texture = TextureAssets.Projectile[Type].Value;
+            Vector2 drawOrigin = new Vector2(Texture.Width / 2, Texture.Height / 2);
+
+            for (int i = 0; i < Projectile.oldPos.Length; i++)
+            {
+                Vector2 drawPos = (Projectile.oldPos[i] - Main.screenPosition) + drawOrigin;
+                Color color = Projectile.GetAlpha(lightColor) * ((Projectile.oldPos.Length - i) / (float)Projectile.oldPos.Length);
+                Main.EntitySpriteDraw(Texture, drawPos, null, color, Projectile.rotation, drawOrigin, Projectile.scale, SpriteEffects.None, 0f);
+            }
+            return true;
         }
     }
 }

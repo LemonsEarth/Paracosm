@@ -199,12 +199,36 @@ Items: {
 
 	CorruptStaff: {
 		DisplayName: Corrupt Staff
-		Tooltip: ""
+		Tooltip: Fires a 3 round burst of corrupt bolts
 	}
 
 	ChainsawGun: {
 		DisplayName: Chainsaw Gun
+		Tooltip: Fires saws!
+	}
+
+	Parastone: {
+		DisplayName: Parastone
+		Tooltip: Stone, influenced by the interdimensional tear
+	}
+
+	ParastoneWallItem: {
+		DisplayName: Parastone Wall
 		Tooltip: ""
+	}
+
+	ParastoneWallUnsafeItem: {
+		DisplayName: Parastone Wall (Unsafe)
+		Tooltip: ""
+	}
+
+	DemonCoin: {
+		DisplayName: Demon Coin
+		Tooltip:
+			'''
+			Increases damage dealt based on missing health
+			Increases damage taken based on missing health
+			'''
 	}
 }
 

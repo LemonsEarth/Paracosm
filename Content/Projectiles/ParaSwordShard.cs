@@ -47,7 +47,7 @@ namespace Paracosm.Content.Projectiles
             AITimer++;
             if (AITimer % 3 == 0)
             {
-                Dust.NewDust(Projectile.Center, Projectile.width / 2, Projectile.height / 2, DustID.Corruption);
+                Dust.NewDust(Projectile.position, Projectile.width / 2, Projectile.height / 2, DustID.Corruption);
             }
             Projectile.rotation = AITimer / 2;
             if (Projectile.ai[1] == 1)
