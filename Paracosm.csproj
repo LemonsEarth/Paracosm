@@ -8,7 +8,6 @@
 		
 	</PropertyGroup>
 	<ItemGroup>
-	  <None Remove="Content\Bosses\DroneBoss_Head_Boss.png" />
 	  <None Remove="Content\Items\Placeable\ParastoneWallUnsafeItem.png" />
 	  <None Remove="Content\Projectiles\ParashardSwordProjectile.png" />
 	  <None Remove="content\shaders\DivineSeekerShader.fx" />

@@ -252,6 +252,8 @@ NPCs: {
 		DisplayName: Divine Seeker
 		BossChecklistCompatibility.SpawnInfo: Use a [i:Paracosm/CosmicDust] at night
 	}
+
+	Wanderer.DisplayName: Wanderer
 }
 
 Buffs: {
@@ -273,5 +275,12 @@ Buffs: {
 	ParacosmicGogglesBuff: {
 		DisplayName: Paracosmic Assault
 		Description: Increased damage and decreased mana cost
+	}
+}
+
+Biomes: {
+	ParacosmicDistortion: {
+		DisplayName: Paracosmic Distortion
+		TownNPCDialogueName: the Paracosmic Distortion
 	}
 }

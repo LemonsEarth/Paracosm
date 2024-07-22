@@ -23,7 +23,7 @@ namespace Paracosm.Content.Items.Weapons
             Item.useTime = 20;
             Item.useAnimation = 20;
             Item.useStyle = ItemUseStyleID.Shoot;
-            Item.knockBack = 3;
+            Item.knockBack = 5;
             Item.value = Item.buyPrice(gold: 5);
             Item.rare = ItemRarityID.Red;
             Item.autoReuse = true;
