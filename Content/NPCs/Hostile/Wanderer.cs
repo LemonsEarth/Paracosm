@@ -16,6 +16,7 @@ namespace Paracosm.Content.NPCs.Hostile
     {
         ref float AITimer => ref NPC.ai[0];
         ref float speed => ref NPC.ai[1];
+        ref float randomChoice => ref NPC.ai[2];
         public override void SetStaticDefaults()
         {
             Main.npcFrameCount[NPC.type] = 2;
@@ -61,9 +62,14 @@ namespace Paracosm.Content.NPCs.Hostile
             Player player = Main.player[NPC.target];
 
             NPC.spriteDirection = Math.Sign(NPC.Center.DirectionTo(player.Center).X);
+            if (AITimer % 60 == 0 && Main.netMode != NetmodeID.MultiplayerClient)
+            {
+                randomChoice = Main.rand.Next(0, 2);
+                NPC.netUpdate = true;
+            }
             AITimer++;
 
-            if (NPC.HasPlayerTarget)
+            if (randomChoice == 1 && NPC.HasPlayerTarget)
             {
                 Chase(player);
             }
@@ -79,13 +85,15 @@ namespace Paracosm.Content.NPCs.Hostile
         void Idle()
         {
             NPC.velocity = new Vector2(0, (float)Math.Sin(MathHelper.ToRadians(AITimer)));
+            NPC.rotation = Utils.AngleLerp(NPC.rotation, 0, MathHelper.ToRadians(5));
             speed = 1;
         }
 
         void Chase(Player player)
         {
-            if (AITimer == 0 || AITimer % 120 == 0)
+            if (AITimer == 0 || AITimer % 60 == 0)
             {
+
                 speed = 1;
             }
             NPC.velocity = NPC.Center.DirectionTo(player.Center) * speed;
@@ -97,7 +105,7 @@ namespace Paracosm.Content.NPCs.Hostile
             {
                 NPC.rotation = Utils.AngleLerp(NPC.rotation, 0, MathHelper.ToRadians(1));
             }
-            speed += 0.1f;
+            speed += 0.2f;
         }
 
         public override void FindFrame(int frameHeight)
@@ -117,7 +125,7 @@ namespace Paracosm.Content.NPCs.Hostile
         {
             if (spawnInfo.Player.InModBiome(ModContent.GetInstance<ParacosmicDistortion>()))
             {
-                return SpawnCondition.Cavern.Chance * 3f;
+                return 2f;
             }
             return 0f;
         }

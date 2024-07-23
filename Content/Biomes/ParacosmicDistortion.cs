@@ -9,13 +9,15 @@ using Paracosm.Content.Projectiles;
 using Terraria.Localization;
 using Paracosm.Common.Systems;
 using Terraria.Graphics.Effects;
+using System.Collections.Generic;
+using Paracosm.Content.NPCs.Hostile;
 
 
 namespace Paracosm.Content.Biomes
 {
     public class ParacosmicDistortion : ModBiome
     {
-        public override int Music => MusicLoader.GetMusicSlot(Mod, "Content/Audio/Music/SeveredSpace");
+        public override int Music => MusicLoader.GetMusicSlot(Mod, "Content/Audio/Music/AnotherSamePlace");
         public override string BestiaryIcon => base.BestiaryIcon;
         public override string BackgroundPath => base.BackgroundPath;
         public override Color? BackgroundColor => base.BackgroundColor;
@@ -44,6 +46,29 @@ namespace Paracosm.Content.Biomes
                 {
                     Filters.Scene.Deactivate("DivineSeekerShader");
                 }
+            }
+
+        }
+    }
+
+    public class ParacosmicDistortionNPC : GlobalNPC
+    {
+        public override void EditSpawnRate(Player player, ref int spawnRate, ref int maxSpawns)
+        {
+            if (player.InModBiome<ParacosmicDistortion>())
+            {
+                maxSpawns = 10;
+                spawnRate *= 2;
+            }
+        }
+
+        public override void EditSpawnPool(IDictionary<int, float> pool, NPCSpawnInfo spawnInfo)
+        {
+            if (spawnInfo.Player.InModBiome<ParacosmicDistortion>())
+            {
+                pool.Clear();
+
+                pool.Add(ModContent.NPCType<Wanderer>(), 2);
             }
         }
     }
