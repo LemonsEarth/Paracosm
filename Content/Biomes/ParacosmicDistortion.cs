@@ -11,6 +11,7 @@ using Paracosm.Common.Systems;
 using Terraria.Graphics.Effects;
 using System.Collections.Generic;
 using Paracosm.Content.NPCs.Hostile;
+using Terraria.GameContent.Bestiary;
 
 
 namespace Paracosm.Content.Biomes
@@ -20,7 +21,8 @@ namespace Paracosm.Content.Biomes
         public override int Music => MusicLoader.GetMusicSlot(Mod, "Content/Audio/Music/AnotherSamePlace");
         public override string BestiaryIcon => base.BestiaryIcon;
         public override string BackgroundPath => base.BackgroundPath;
-        public override Color? BackgroundColor => base.BackgroundColor;
+        public override Color? BackgroundColor => Color.Purple;
+        public override string MapBackground => BackgroundPath;
         public override SceneEffectPriority Priority => SceneEffectPriority.BiomeHigh;
 
         public override bool IsBiomeActive(Player player)
@@ -35,16 +37,16 @@ namespace Paracosm.Content.Biomes
         {
             if (Player.InModBiome<ParacosmicDistortion>())
             {
-                if (!Filters.Scene["DivineSeekerShader"].IsActive() && Main.netMode != NetmodeID.Server)
+                if (!Terraria.Graphics.Effects.Filters.Scene["DivineSeekerShader"].IsActive() && Main.netMode != NetmodeID.Server)
                 {
-                    Filters.Scene.Activate("DivineSeekerShader").GetShader().UseColor(new Color(152, 152, 255));
+                    Terraria.Graphics.Effects.Filters.Scene.Activate("DivineSeekerShader").GetShader().UseColor(new Color(152, 152, 255));
                 }
             }
             else
             {
-                if (Filters.Scene["DivineSeekerShader"].IsActive())
+                if (Terraria.Graphics.Effects.Filters.Scene["DivineSeekerShader"].IsActive())
                 {
-                    Filters.Scene.Deactivate("DivineSeekerShader");
+                    Terraria.Graphics.Effects.Filters.Scene.Deactivate("DivineSeekerShader");
                 }
             }
 

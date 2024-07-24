@@ -9,6 +9,8 @@ using Mono.Cecil;
 using System;
 using Terraria.DataStructures;
 using Terraria.ModLoader.Utilities;
+using Terraria.GameContent.Bestiary;
+using System.Collections.Generic;
 
 namespace Paracosm.Content.NPCs.Hostile
 {
@@ -36,6 +38,14 @@ namespace Paracosm.Content.NPCs.Hostile
             SpawnModBiomes = new int[1] { ModContent.GetInstance<ParacosmicDistortion>().Type };
             NPC.noTileCollide = true;
             NPC.knockBackResist = 0.7f;
+        }
+
+        public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
+        {
+            bestiaryEntry.Info.AddRange(new List<IBestiaryInfoElement>()
+                {
+                    new BestiaryPortraitBackgroundProviderPreferenceInfoElement(ModContent.GetInstance<ParacosmicDistortion>().ModBiomeBestiaryInfoElement),
+                });
         }
 
         public override void OnSpawn(IEntitySource source)
@@ -110,13 +120,15 @@ namespace Paracosm.Content.NPCs.Hostile
 
         public override void FindFrame(int frameHeight)
         {
-            NPC.frame.Y = (int)NPC.frameCounter * frameHeight;
-            if (AITimer % 30 == 0)
+            int frameDur = 30;
+            NPC.frameCounter += 1;
+            if (NPC.frameCounter > frameDur)
             {
-                NPC.frameCounter++;
-                if (NPC.frameCounter == 2)
+                NPC.frame.Y += frameHeight;
+                NPC.frameCounter = 0;
+                if (NPC.frame.Y > 1 * frameHeight)
                 {
-                    NPC.frameCounter = 0;
+                    NPC.frame.Y = 0;
                 }
             }
         }

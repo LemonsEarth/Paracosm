@@ -23,6 +23,7 @@ using Paracosm.Content.Items.BossBags;
 using Paracosm.Content.Items.Weapons;
 using Paracosm.Content.Projectiles;
 using Paracosm.Common.Systems;
+using Terraria.GameContent.Bestiary;
 
 
 namespace Paracosm.Content.Bosses
@@ -73,7 +74,26 @@ namespace Paracosm.Content.Bosses
             NPCID.Sets.SpecificDebuffImmunity[Type][BuffID.Confused] = true;
             NPCID.Sets.MPAllowedEnemies[Type] = true;
             NPCID.Sets.BossBestiaryPriority.Add(Type);
+            NPCID.Sets.NPCBestiaryDrawModifiers drawMod = new NPCID.Sets.NPCBestiaryDrawModifiers()
+            {
+                PortraitPositionYOverride = -15f,
+                PortraitScale = 0.8f
+            };
+            NPCID.Sets.NPCBestiaryDrawOffset.Add(Type, drawMod);
         }
+
+        public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
+        {
+            bestiaryEntry.Info.AddRange(new List<IBestiaryInfoElement>
+            {
+                BestiaryDatabaseNPCsPopulator.CommonTags.SpawnConditions.Biomes.Surface,
+                BestiaryDatabaseNPCsPopulator.CommonTags.SpawnConditions.Times.NightTime,
+                new MoonLordPortraitBackgroundProviderBestiaryInfoElement(),
+                new FlavorTextBestiaryInfoElement("A monster who arrived from a different world. Though feral in nature, it possesses high intelligence, suggesting its arrival was not without purpose."),
+            });
+            
+        }
+        
 
         public override void SetDefaults()
         {
@@ -119,7 +139,7 @@ namespace Paracosm.Content.Bosses
 
         public override bool CheckDead()
         {
-            Filters.Scene.Deactivate("DivineSeekerShader");
+            Terraria.Graphics.Effects.Filters.Scene.Deactivate("DivineSeekerShader");
             return true;
         }
 
@@ -175,9 +195,9 @@ namespace Paracosm.Content.Bosses
 
 
 
-            if (!Filters.Scene["DivineSeekerShader"].IsActive() && Main.netMode != NetmodeID.Server)
+            if (!Terraria.Graphics.Effects.Filters.Scene["DivineSeekerShader"].IsActive() && Main.netMode != NetmodeID.Server)
             {
-                Filters.Scene.Activate("DivineSeekerShader").GetShader().UseColor(new Color(152, 152, 255));
+                Terraria.Graphics.Effects.Filters.Scene.Activate("DivineSeekerShader").GetShader().UseColor(new Color(152, 152, 255));
             }
 
             switch (phase)
@@ -949,13 +969,15 @@ namespace Paracosm.Content.Bosses
         }
         public override void FindFrame(int frameHeight)
         {
-            NPC.frame.Y = (int)NPC.frameCounter * frameHeight;
-            if (AITimer % 10 == 0)
+            int frameDur = 10;
+            NPC.frameCounter += 1;
+            if (NPC.frameCounter > frameDur)
             {
-                NPC.frameCounter++;
-                if (NPC.frameCounter == 3)
+                NPC.frame.Y += frameHeight;
+                NPC.frameCounter = 0;
+                if (NPC.frame.Y > 2 * frameHeight)
                 {
-                    NPC.frameCounter = 0;
+                    NPC.frame.Y = 0;
                 }
             }
         }
