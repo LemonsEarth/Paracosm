@@ -230,6 +230,11 @@ Items: {
 			Increases damage taken based on missing health
 			'''
 	}
+
+	Nightslash: {
+		DisplayName: Nightslash
+		Tooltip: ""
+	}
 }
 
 Projectiles: {
@@ -245,6 +250,7 @@ Projectiles: {
 	WindSlash.DisplayName: Wind Slash
 	CorruptBolt.DisplayName: Corrupt Bolt
 	Saw.DisplayName: Saw
+	NightActualSlash.DisplayName: Night Actual Slash
 }
 
 NPCs: {
