@@ -70,7 +70,7 @@ namespace Paracosm.Content.Projectiles
                 SoundEngine.PlaySound(SoundID.Item60 with { MaxInstances = 2 });
                 Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, DustID.Ash, -Projectile.velocity.X, -Projectile.velocity.Y);
             }
-            Projectile.damage = 30;
+            Projectile.damage = 20;
             int frameDur = 4;
             AITimer++;
             Player player = Main.player[Projectile.owner];

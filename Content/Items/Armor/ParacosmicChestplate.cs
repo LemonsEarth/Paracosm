@@ -38,6 +38,7 @@ namespace Paracosm.Content.Items.Armor
         {
             Recipe recipe = CreateRecipe();
             recipe.AddIngredient(ModContent.ItemType<Parashard>(), 15);
+            recipe.AddIngredient(ModContent.ItemType<CosmicFlames>(), 12);
             recipe.AddIngredient(ItemID.HallowedBar, 16);
             recipe.AddTile(TileID.MythrilAnvil);
             recipe.Register();

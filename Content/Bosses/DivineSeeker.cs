@@ -122,7 +122,7 @@ namespace Paracosm.Content.Bosses
 
         public override void ApplyDifficultyAndPlayerScaling(int numPlayers, float balance, float bossAdjustment)
         {
-            NPC.lifeMax = (int)(NPC.lifeMax * balance * 0.65f);
+            NPC.lifeMax = (int)Math.Ceiling(NPC.lifeMax * balance * 0.65f);
             NPC.damage = (int)(NPC.damage * balance);
             NPC.defense = 30;
         }
@@ -986,6 +986,7 @@ namespace Paracosm.Content.Bosses
         {
             LeadingConditionRule classicRule = new LeadingConditionRule(new Conditions.NotExpert());
             classicRule.OnSuccess(ItemDropRule.Common(ModContent.ItemType<Parashard>(), 1, 20, 30));
+            classicRule.OnSuccess(ItemDropRule.Common(ModContent.ItemType<CosmicFlames>(), 1, 10, 20));
             classicRule.OnSuccess(ItemDropRule.OneFromOptions(1, ModContent.ItemType<ParashardSword>(), ModContent.ItemType<ParacosmicFurnace>(), ModContent.ItemType<GravityBarrage>(), ModContent.ItemType<ParacosmicEyeStaff>()));
             npcLoot.Add(classicRule);
             npcLoot.Add(ItemDropRule.BossBag(ModContent.ItemType<DivineSeekerBossBag>()));

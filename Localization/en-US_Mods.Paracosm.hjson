@@ -34,7 +34,7 @@ Items: {
 		Tooltip:
 			'''
 			A powerful flamethrower which inflicts Paracosmic Burn
-			Occasionally fires homing projectiles
+			Occasionally fires homing fireballs
 			'''
 	}
 
@@ -233,7 +233,22 @@ Items: {
 
 	Nightslash: {
 		DisplayName: Nightslash
-		Tooltip: ""
+		Tooltip: '''"They never knew what hit them"'''
+	}
+
+	SunCoin: {
+		DisplayName: Sun Coin
+		Tooltip: Grants the player the "Happy!" buff
+	}
+
+	CosmicFlames: {
+		DisplayName: Cosmic Flames
+		Tooltip: Everlasting flames, fueled by space itself
+	}
+
+	PoisonBloomStaff: {
+		DisplayName: Poison Bloom Staff
+		Tooltip: Summons a stationary flower that fires poisonous seeds at enemies
 	}
 }
 
@@ -251,6 +266,8 @@ Projectiles: {
 	CorruptBolt.DisplayName: Corrupt Bolt
 	Saw.DisplayName: Saw
 	NightActualSlash.DisplayName: Night Actual Slash
+	PoisonBloom.DisplayName: Poison Bloom
+	PoisonBloomPetal.DisplayName: Poison Bloom Petal
 }
 
 NPCs: {
@@ -260,6 +277,7 @@ NPCs: {
 	}
 
 	Wanderer.DisplayName: Wanderer
+	ParastoneRoller.DisplayName: Parastone Roller
 }
 
 Buffs: {

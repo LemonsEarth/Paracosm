@@ -70,7 +70,8 @@ namespace Paracosm.Content.Biomes
             {
                 pool.Clear();
 
-                pool.Add(ModContent.NPCType<Wanderer>(), 2);
+                pool.Add(ModContent.NPCType<Wanderer>(), 0.4f);
+                pool.Add(ModContent.NPCType<ParastoneRoller>(), 0.3f);
             }
         }
     }

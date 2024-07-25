@@ -16,8 +16,8 @@ namespace Paracosm.Content.Items.Weapons
             Item.DamageType = DamageClass.Melee;
             Item.width = 50;
             Item.height = 60;
-            Item.useTime = 10;
-            Item.useAnimation = 10;
+            Item.useTime = 5;
+            Item.useAnimation = 5;
             Item.useStyle = ItemUseStyleID.Swing;
             Item.knockBack = 4;
             Item.value = Item.buyPrice(gold: 10);
@@ -28,6 +28,11 @@ namespace Paracosm.Content.Items.Weapons
             Item.shoot = ModContent.ProjectileType<NightActualSlash>();
             Item.channel = true;
             Item.UseSound = SoundID.Item60;
+        }
+
+        public override bool CanUseItem(Player player)
+        {
+            return player.ownedProjectileCounts[Item.shoot] < 1;
         }
 
         public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
@@ -53,10 +58,18 @@ namespace Paracosm.Content.Items.Weapons
         public override void AddRecipes()
         {
             Recipe recipe1 = CreateRecipe();
-            recipe1.AddIngredient(ModContent.ItemType<Parashard>(), 20);
             recipe1.AddIngredient(ItemID.Katana, 1);
+            recipe1.AddIngredient(ItemID.ShadowScale, 10);
+            recipe1.AddIngredient(ModContent.ItemType<Parashard>(), 20);
             recipe1.AddTile(TileID.Anvils);
             recipe1.Register();
+
+            Recipe recipe2 = CreateRecipe();
+            recipe2.AddIngredient(ItemID.Katana, 1);
+            recipe2.AddIngredient(ItemID.TissueSample, 10);
+            recipe2.AddIngredient(ModContent.ItemType<Parashard>(), 20);
+            recipe2.AddTile(TileID.Anvils);
+            recipe2.Register();
         }
     }
 }

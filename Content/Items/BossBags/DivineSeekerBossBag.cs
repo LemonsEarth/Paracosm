@@ -36,6 +36,7 @@ namespace Paracosm.Content.Items.BossBags
         public override void ModifyItemLoot(ItemLoot itemLoot)
         {
             itemLoot.Add(ItemDropRule.Common(ModContent.ItemType<Parashard>(), 1, 30, 40));
+            itemLoot.Add(ItemDropRule.Common(ModContent.ItemType<CosmicFlames>(), 1, 20, 30));
             itemLoot.Add(ItemDropRule.OneFromOptions(1, ModContent.ItemType<ParashardSword>(), ModContent.ItemType<ParacosmicFurnace>(), ModContent.ItemType<GravityBarrage>(), ModContent.ItemType<ParacosmicEyeStaff>()));
             itemLoot.Add(ItemDropRule.Common(ModContent.ItemType<ParashardSigil>(), 1, 1, 1));
         }
