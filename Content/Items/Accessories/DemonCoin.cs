@@ -79,4 +79,15 @@ namespace Paracosm.Content.Items.Accessories
             }
         }
     }
+
+    public class DemonCoinNPC : GlobalNPC
+    {
+        public override void ModifyNPCLoot(NPC npc, NPCLoot npcLoot)
+        {
+            if (npc.type == NPCID.Demon)
+            {
+                npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<DemonCoin>(), 20, 1, 1));
+            }
+        }
+    }
 }

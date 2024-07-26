@@ -71,7 +71,7 @@ namespace Paracosm.Common.Systems
                 Point16 dims = Point16.Zero;
                 Generator.GetDimensions("Content/Structures/ParacosmicDistortionCore", Mod, ref dims);
                 int x = WorldGen.genRand.Next((int)((float)Main.maxTilesX * (1f/3f)), (int)((float)Main.maxTilesX * (2f / 3f)));
-                int y = WorldGen.genRand.Next((int)GenVars.rockLayer, Main.maxTilesY - 200);
+                int y = WorldGen.genRand.Next((int)GenVars.rockLayer, (Main.maxTilesY - 200) / 2);
 
                 Tile tile = Main.tile[x, y];
                 point = new Point16(x, y);
@@ -87,12 +87,38 @@ namespace Paracosm.Common.Systems
             }
         }
 
+        private void GenerateParacosmicDistortionCoreLarge(GenerationProgress progress, GameConfiguration config)
+        {
+            bool successfulGen = false;
+            Point16 point = Point16.Zero;
+
+            while (!successfulGen)
+            {
+                Point16 dims = Point16.Zero;
+                Generator.GetDimensions("Content/Structures/ParacosmicCoreLarge", Mod, ref dims);
+                int x = WorldGen.genRand.Next((int)((float)Main.maxTilesX * (1f / 3f)), (int)((float)Main.maxTilesX * (2f / 3f)));
+                int y = WorldGen.genRand.Next((Main.maxTilesY - 200) / 2, Main.maxTilesY - 200);
+
+                Tile tile = Main.tile[x, y];
+                point = new Point16(x, y);
+                if (!CheckForTiles(x, y, dims.X, dims.Y, TileID.LihzahrdBrick) && !CheckForTiles(x, y, dims.X, dims.Y, ModContent.TileType<ParastoneBlock>()) && !CheckForTiles(x, y, dims.X, dims.Y, TileID.BlueDungeonBrick) && !CheckForTiles(x, y, dims.X, dims.Y, TileID.GreenDungeonBrick) && !CheckForTiles(x, y, dims.X, dims.Y, TileID.PinkDungeonBrick))
+                {
+                    successfulGen = true;
+                }
+            }
+
+            if (successfulGen && point != Point16.Zero)
+            {
+                Generator.GenerateStructure("Content/Structures/ParacosmicCoreLarge", point, Mod);
+            }
+        }
+
         public override void ModifyWorldGenTasks(List<GenPass> tasks, ref double totalWeight)
         {
             int templeIndex = tasks.FindIndex(genpass => genpass.Name.Equals("Jungle Temple"));
             tasks.Insert(templeIndex + 1, new PassLegacy("Paracosmic Core", GenerateParacosmicDistortionCore));
             tasks.Insert(templeIndex + 1, new PassLegacy("Paracosmic Core", GenerateParacosmicDistortionCore));
-            tasks.Insert(templeIndex + 1, new PassLegacy("Paracosmic Core", GenerateParacosmicDistortionCore));
+            tasks.Insert(templeIndex + 2, new PassLegacy("Large Paracosmic Core", GenerateParacosmicDistortionCoreLarge));
         }
 
         public override void PostWorldGen()

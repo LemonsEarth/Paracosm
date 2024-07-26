@@ -33,6 +33,8 @@ namespace Paracosm.Content.Projectiles.Sentries
             Projectile.tileCollide = false;
             Projectile.aiStyle = -1;
             Projectile.friendly = true;
+            Projectile.usesIDStaticNPCImmunity = true;
+            Projectile.idStaticNPCHitCooldown = 45;
         }
 
         public override void AI()
