@@ -16,8 +16,8 @@ namespace Paracosm.Content.Items.Weapons
             Item.DamageType = DamageClass.Melee;
             Item.width = 50;
             Item.height = 60;
-            Item.useTime = 5;
-            Item.useAnimation = 5;
+            Item.useTime = 10;
+            Item.useAnimation = 10;
             Item.useStyle = ItemUseStyleID.Swing;
             Item.knockBack = 4;
             Item.value = Item.buyPrice(gold: 10);

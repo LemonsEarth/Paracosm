@@ -101,7 +101,7 @@ namespace Paracosm.Content.Projectiles
             {
                 Projectile.Kill();
             }
-            if (canSpin == false && Projectile.owner == Main.myPlayer)
+            if (canSpin == false)
             {
                 if (Projectile.Center.Distance(mousePos) > 20)
                 {
@@ -111,7 +111,7 @@ namespace Paracosm.Content.Projectiles
                 else
                 {
                     Projectile.velocity = Vector2.Zero;
-                    if (AITimer % 30 == 0)
+                    if (AITimer % 30 == 0 && Projectile.owner == Main.myPlayer)
                     {
                         for (int i = 0; i < 5; i++)
                         {

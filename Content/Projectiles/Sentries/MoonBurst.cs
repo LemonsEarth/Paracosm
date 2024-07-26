@@ -13,7 +13,7 @@ using Terraria.ModLoader;
 
 namespace Paracosm.Content.Projectiles.Sentries
 {
-    public class PoisonBloom : ModProjectile
+    public class MoonBurst : ModProjectile
     {
         ref float AITimer => ref Projectile.ai[0];
         NPC closestEnemy;
@@ -37,13 +37,16 @@ namespace Paracosm.Content.Projectiles.Sentries
 
         public override void AI()
         {
-            closestEnemy = GetClosestNPC(1000);
+            closestEnemy = GetClosestNPC(800);
 
             Projectile.velocity.Y = 10f;
-            if (Main.myPlayer == Projectile.owner && AITimer % 60 == 0 && closestEnemy != null)
+            if (Main.myPlayer == Projectile.owner && closestEnemy != null && AITimer >= 120)
             {
-                Vector2 spawnPos = Projectile.position + new Vector2(Main.rand.Next(0, Projectile.width), Main.rand.Next(0, 20));
-                Projectile.NewProjectile(Projectile.GetSource_FromAI(), spawnPos, (closestEnemy.Center - spawnPos).SafeNormalize(Vector2.Zero) * 10, ModContent.ProjectileType<PoisonBloomPetal>(), Projectile.damage, 2f);
+                Vector2 spawnPos = Projectile.Center - new Vector2(0, 24);
+
+                Dust.NewDust(spawnPos, 0, 0, DustID.IceTorch);
+                AITimer = 0;
+                Projectile.NewProjectile(Projectile.GetSource_FromAI(), spawnPos, (closestEnemy.Center - spawnPos).SafeNormalize(Vector2.Zero) * 8, ModContent.ProjectileType<MoonBurstProjectile>(), Projectile.damage, 2f, ai1: 2, ai2: 1);
                 Projectile.netUpdate = true;
             }
 
@@ -58,7 +61,14 @@ namespace Paracosm.Content.Projectiles.Sentries
                     Projectile.frame = 0;
                 }
             }
-            AITimer++;
+            if (closestEnemy != null)
+            {
+                AITimer++;
+            }
+            else
+            {
+                AITimer = 0;
+            }
         }
 
         public NPC GetClosestNPC(int distance)

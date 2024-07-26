@@ -13,7 +13,7 @@ using Terraria.ModLoader;
 
 namespace Paracosm.Content.Projectiles.Sentries
 {
-    public class PoisonBloom : ModProjectile
+    public class FireBloom : ModProjectile
     {
         ref float AITimer => ref Projectile.ai[0];
         NPC closestEnemy;
@@ -34,16 +34,28 @@ namespace Paracosm.Content.Projectiles.Sentries
             Projectile.friendly = false;
             Projectile.sentry = true;
         }
-
+        float attackSpeed = 0;
         public override void AI()
         {
             closestEnemy = GetClosestNPC(1000);
 
             Projectile.velocity.Y = 10f;
-            if (Main.myPlayer == Projectile.owner && AITimer % 60 == 0 && closestEnemy != null)
+            if (closestEnemy != null)
             {
-                Vector2 spawnPos = Projectile.position + new Vector2(Main.rand.Next(0, Projectile.width), Main.rand.Next(0, 20));
-                Projectile.NewProjectile(Projectile.GetSource_FromAI(), spawnPos, (closestEnemy.Center - spawnPos).SafeNormalize(Vector2.Zero) * 10, ModContent.ProjectileType<PoisonBloomPetal>(), Projectile.damage, 2f);
+                attackSpeed = Projectile.Center.Distance(closestEnemy.Center) / 10;
+                if (attackSpeed < 10)
+                {
+                    attackSpeed = 10;
+                }
+            }
+            if (Main.myPlayer == Projectile.owner && closestEnemy != null && AITimer >= attackSpeed)
+            {
+                for (int i = 0; i < 5; i++)
+                {
+                    Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, DustID.Lava);
+                }
+                Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, new Vector2(0, -1).RotatedBy(MathHelper.ToRadians(Main.rand.Next(-60, 60))) * 6, ProjectileID.BallofFire, Projectile.damage, 2f);
+                AITimer = 0;
                 Projectile.netUpdate = true;
             }
 
@@ -58,7 +70,14 @@ namespace Paracosm.Content.Projectiles.Sentries
                     Projectile.frame = 0;
                 }
             }
-            AITimer++;
+            if (closestEnemy != null)
+            {
+                AITimer++;
+            }
+            else
+            {
+                AITimer = 0;
+            }
         }
 
         public NPC GetClosestNPC(int distance)

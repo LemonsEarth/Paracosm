@@ -10,13 +10,14 @@ using Terraria.Localization;
 
 namespace Paracosm.Content.Items.Accessories
 {
-    public class ForestCrest : ModItem
+    public class AshenForestCrest : ModItem
     {
-        static readonly int sentryBoost = 1;
-        static readonly float moveSpeedBoost = 10;
+        static readonly int sentryBoost = 2;
+        static readonly float summonDamageBoost = 7;
+        static readonly float moveSpeedBoost = 14;
         int timer = 0;
 
-        public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(sentryBoost, moveSpeedBoost);
+        public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(sentryBoost, summonDamageBoost, moveSpeedBoost);
 
         public override void SetDefaults()
         {
@@ -30,15 +31,17 @@ namespace Paracosm.Content.Items.Accessories
         public override void UpdateAccessory(Player player, bool hideVisual)
         {
             player.maxTurrets += sentryBoost;
+            player.GetDamage(DamageClass.Summon) += summonDamageBoost / 100;
             player.moveSpeed += moveSpeedBoost / 100;
         }
 
         public override void AddRecipes()
         {
             Recipe recipe = CreateRecipe();
-            recipe.AddIngredient(ItemID.Wood, 20);
-            recipe.AddIngredient(ItemID.Sunflower, 1);
-            recipe.AddTile(TileID.WorkBenches);
+            recipe.AddIngredient(ModContent.ItemType<ForestCrest>(), 1);
+            recipe.AddIngredient(ItemID.AshWood, 50);
+            recipe.AddIngredient(ItemID.HellstoneBar, 4);
+            recipe.AddTile(TileID.Hellforge);
             recipe.Register();
         }
     }

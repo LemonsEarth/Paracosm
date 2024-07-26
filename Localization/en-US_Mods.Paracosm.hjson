@@ -186,7 +186,7 @@ Items: {
 		DisplayName: Forest Crest
 		Tooltip:
 			'''
-			{$CommonItemTooltip.IncreasesMaxMinionsBy}
+			{$CommonItemTooltip.IncreasesMaxSentriesBy}
 			{$CommonItemTooltip.PercentIncreasedMovementSpeed@1}
 			"Mark of a forgotten legion"
 			'''
@@ -250,6 +250,35 @@ Items: {
 		DisplayName: Poison Bloom Staff
 		Tooltip: Summons a stationary flower that fires poisonous seeds at enemies
 	}
+
+	FireBloomStaff: {
+		DisplayName: Fire Bloom Staff
+		Tooltip:
+			'''
+			Summons a stationary flower that lobs fireballs around itself
+			Attack speed increases the closer enemies are to the flower
+			'''
+	}
+
+	MoonBurstStaff: {
+		DisplayName: Moon Burst Staff
+		Tooltip:
+			'''
+			Summons a stationary flower that shoots a moonlight spark at enemies
+			The moonlight spark bursts into more moonlight sparks upon hitting an enemy
+			'''
+	}
+
+	AshenForestCrest: {
+		DisplayName: Ashen Forest Crest
+		Tooltip:
+			'''
+			{$CommonItemTooltip.IncreasesMaxSentriesBy}
+			{$CommonItemTooltip.PercentIncreasedSummonDamage@1}
+			{$CommonItemTooltip.PercentIncreasedMovementSpeed@2}
+			"Remains of a mark of a forgotten legion"
+			'''
+	}
 }
 
 Projectiles: {
@@ -268,6 +297,9 @@ Projectiles: {
 	NightActualSlash.DisplayName: Night Actual Slash
 	PoisonBloom.DisplayName: Poison Bloom
 	PoisonBloomPetal.DisplayName: Poison Bloom Petal
+	FireBloom.DisplayName: Fire Bloom
+	MoonBurst.DisplayName: Moon Burst
+	MoonBurstProjectile.DisplayName: Moon Burst Projectile
 }
 
 NPCs: {

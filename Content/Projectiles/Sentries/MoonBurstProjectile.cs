@@ -13,9 +13,11 @@ using Terraria.ModLoader;
 
 namespace Paracosm.Content.Projectiles.Sentries
 {
-    public class PoisonBloomPetal : ModProjectile
+    public class MoonBurstProjectile : ModProjectile
     {
         ref float AITimer => ref Projectile.ai[0];
+        ref float reps => ref Projectile.ai[1];
+        ref float slowDown => ref Projectile.ai[2];
         public override void SetStaticDefaults()
         {
             ProjectileID.Sets.SentryShot[Projectile.type] = true;
@@ -25,9 +27,9 @@ namespace Paracosm.Content.Projectiles.Sentries
         {
             Projectile.width = 16;
             Projectile.height = 16;
-            Projectile.penetrate = 3;
-            Projectile.DamageType = DamageClass.Summon;
+            Projectile.penetrate = 2;
             Projectile.timeLeft = 180;
+            Projectile.DamageType = DamageClass.Summon;
             Projectile.tileCollide = false;
             Projectile.aiStyle = -1;
             Projectile.friendly = true;
@@ -37,16 +39,28 @@ namespace Paracosm.Content.Projectiles.Sentries
         {
             if (AITimer == 0)
             {
-                SoundEngine.PlaySound(SoundID.Item17);
+                SoundEngine.PlaySound(SoundID.Item28);
             }
-            Projectile.rotation = Projectile.velocity.ToRotation() + MathHelper.PiOver2;
+            Projectile.rotation = MathHelper.ToRadians(AITimer * 2);
             AITimer++;
-            var dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, DustID.GreenTorch, Projectile.velocity.X, Projectile.velocity.Y);
+
+            Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, DustID.IceTorch, Projectile.velocity.X, Projectile.velocity.Y);
+            Projectile.velocity /= slowDown;
         }
 
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
-            target.AddBuff(BuffID.Poisoned, 300);
+            if (reps > 0)
+            {
+                for (int i = 0; i < 8; i++)
+                {
+                    if (Main.myPlayer == Projectile.owner)
+                    {
+                        Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, new Vector2(1, 1).RotatedBy(i * MathHelper.PiOver4) * 10, Projectile.type, Projectile.damage / 2, Projectile.knockBack, ai1: reps - 1, ai2: 1.2f);
+                        reps--;
+                    }
+                }
+            }
         }
     }
 }

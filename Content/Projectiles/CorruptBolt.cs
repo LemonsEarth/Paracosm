@@ -36,7 +36,7 @@ namespace Paracosm.Content.Projectiles
         {
             if (AITimer == 0)
             {
-                SoundEngine.PlaySound(SoundID.Item20);
+                SoundEngine.PlaySound(SoundID.Item43);
             }
             AITimer++;
             var dust = Dust.NewDustDirect(Projectile.position, Projectile.width / 2, Projectile.height / 2, DustID.Shadowflame, Projectile.velocity.X, Projectile.velocity.Y);
