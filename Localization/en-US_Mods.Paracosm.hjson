@@ -284,6 +284,11 @@ Items: {
 		DisplayName: The Guard Duty
 		Tooltip: Rapidly fires stingers (and sometimes bees)
 	}
+
+	FocusBow: {
+		DisplayName: Focus Bow
+		Tooltip: ""
+	}
 }
 
 Projectiles: {
