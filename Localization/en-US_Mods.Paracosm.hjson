@@ -279,6 +279,11 @@ Items: {
 			"Remains of a mark of a forgotten legion"
 			'''
 	}
+
+	TheGuardDuty: {
+		DisplayName: The Guard Duty
+		Tooltip: Rapidly fires stingers (and sometimes bees)
+	}
 }
 
 Projectiles: {
