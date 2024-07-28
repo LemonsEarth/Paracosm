@@ -287,6 +287,11 @@ Items: {
 
 	FocusBow: {
 		DisplayName: Focus Bow
+		Tooltip: Has a high base critical strike chance
+	}
+
+	ArchmageStaff: {
+		DisplayName: Archmage Staff
 		Tooltip: ""
 	}
 }
@@ -310,6 +315,7 @@ Projectiles: {
 	FireBloom.DisplayName: Fire Bloom
 	MoonBurst.DisplayName: Moon Burst
 	MoonBurstProjectile.DisplayName: Moon Burst Projectile
+	ArchmageBolt.DisplayName: Archmage Bolt
 }
 
 NPCs: {
