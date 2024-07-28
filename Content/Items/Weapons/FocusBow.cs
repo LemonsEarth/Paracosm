@@ -17,9 +17,9 @@ namespace Paracosm.Content.Items.Weapons
 
         public override void SetDefaults()
         {
-            Item.damage = 160;
+            Item.damage = 90;
             Item.knockBack = 2f;
-            Item.crit = 25;
+            Item.crit = 0;
             Item.DamageType = DamageClass.Ranged;
             Item.width = 30;
             Item.height = 58;
@@ -48,18 +48,18 @@ namespace Paracosm.Content.Items.Weapons
             if (Main.myPlayer == player.whoAmI)
             {
                 speed += 2;
-                if (Item.useTime > 6)
+                if (Item.useTime > 2)
                 {
                     Item.useTime -= 2;
                     Item.useAnimation -= 2;
                 }
                 Projectile.NewProjectile(Item.GetSource_FromAI(), position, velocity, type, damage, knockback);
-                if (speed > 24)
+                if (speed > 40)
                 {
                     Projectile.NewProjectile(Item.GetSource_FromAI(), position, velocity / 1.2f, type, damage, knockback);
                     Projectile.NewProjectile(Item.GetSource_FromAI(), position, velocity / 1.4f, type, damage, knockback);
                 }
-                if (speed >= 30)
+                if (speed >= 60)
                 {
                     speed = 1;
                     Item.useTime = 30;
@@ -67,6 +67,19 @@ namespace Paracosm.Content.Items.Weapons
                 }
             }
             return false;
+        }
+
+        public override void ModifyWeaponCrit(Player player, ref float crit)
+        {
+            if (speed < 20)
+            {
+                crit = 0;
+                return;
+            }
+            if (speed >= 20 && crit < 100)
+            {
+                crit += 20;
+            }
         }
 
         public override void AddRecipes()

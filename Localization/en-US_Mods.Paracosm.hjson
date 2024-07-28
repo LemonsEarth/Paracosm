@@ -287,12 +287,12 @@ Items: {
 
 	FocusBow: {
 		DisplayName: Focus Bow
-		Tooltip: Has a high base critical strike chance
+		Tooltip: Has a high base critical strike chance... after a while
 	}
 
 	ArchmageStaff: {
 		DisplayName: Archmage Staff
-		Tooltip: ""
+		Tooltip: '''"The staff of the ultimate sorcerer..."'''
 	}
 }
 
