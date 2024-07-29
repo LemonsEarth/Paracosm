@@ -326,6 +326,9 @@ NPCs: {
 
 	Wanderer.DisplayName: Wanderer
 	ParastoneRoller.DisplayName: Parastone Roller
+	InfectedRevenantBody.DisplayName: Infected Revenant Body
+	InfectedRevenantCorruptHead.DisplayName: Infected Revenant Corrupt Head
+	InfectedRevenantCrimsonHead.DisplayName: Infected Revenant Crimson Head
 }
 
 Buffs: {

@@ -26,7 +26,7 @@ namespace Paracosm.Content.Projectiles.Minions
             Projectile.width = 36;
             Projectile.height = 36;
             Projectile.tileCollide = false;
-            Projectile.friendly = false;
+            Projectile.friendly = true;
             Projectile.hostile = false;
             Projectile.minion = true;
             Projectile.DamageType = DamageClass.Summon;
