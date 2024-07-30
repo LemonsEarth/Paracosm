@@ -16,6 +16,7 @@ using Paracosm.Common.Systems;
 using Terraria.GameContent.Bestiary;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
+using Microsoft.CodeAnalysis.Host.Mef;
 
 namespace Paracosm.Content.Bosses
 {
@@ -28,14 +29,31 @@ namespace Paracosm.Content.Bosses
         public Player player;
         public Vector2 playerDirection;
 
-        ref float AITimer => ref NPC.ai[0];
+        float AITimer = 0;
+        float attackTimer = 0;
+        public ref float Movement => ref NPC.ai[1];
+        Vector2 ChosenPosition
+        {
+            get => new Vector2(NPC.ai[2], NPC.ai[3]);
+            set
+            {
+                NPC.ai[2] = value.X;
+                NPC.ai[3] = value.Y;
+            }
+        }
+
+        enum MovementState
+        {
+            Grounded,
+            Flying
+        }
 
         InfectedRevenantCorruptHead corruptHead;
         InfectedRevenantCrimsonHead crimsonHead;
 
         public override void SetStaticDefaults()
         {
-            Main.npcFrameCount[NPC.type] = 5;
+            Main.npcFrameCount[NPC.type] = 11;
             NPCID.Sets.SpecificDebuffImmunity[Type][BuffID.Confused] = true;
             NPCID.Sets.SpecificDebuffImmunity[Type][BuffID.CursedInferno] = true;
             NPCID.Sets.SpecificDebuffImmunity[Type][BuffID.Ichor] = true;
@@ -71,6 +89,7 @@ namespace Paracosm.Content.Bosses
         }
 
 
+        float speed = 1;
         public override void AI()
         {
             if (NPC.target < 0 || NPC.target == 255 || Main.player[NPC.target].dead || !Main.player[NPC.target].active)
@@ -90,9 +109,73 @@ namespace Paracosm.Content.Bosses
                 NPC.spriteDirection = 1;
             }
 
+            if (AITimer % 600 == 0)
+            {
+                attackTimer = 0;
+                if (Movement == 0)
+                {
+                    Movement = 1;
+                    if (Main.netMode != NetmodeID.MultiplayerClient)
+                    {
+                        ChosenPosition = RandomPosition();
+                        NPC.netUpdate = true;
+                    }
+                    NPC.velocity.Y = 0;
+                    speed = 1;
+                }
+                else Movement = 0;
+            }
+
+            switch (Movement)
+            {
+                case (float)MovementState.Grounded:
+                    NPC.noTileCollide = false;
+                    NPC.velocity = new Vector2(playerDirection.X, 1) * 2;
+                    attackTimer++;
+                    break;
+                case (float)MovementState.Flying:
+                    NPC.noTileCollide = false;
+                    NPC.velocity = playerDirection * speed;
+
+                    if (attackTimer > 60)
+                    {
+                        speed = 16;
+                    }
+                    else
+                    {
+                        speed = 3;
+                    }
+                    if (attackTimer == 90)
+                    {
+                        attackTimer = 0;
+                    }
+                    attackTimer++;
+                    if (attackTimer % 10 == 0)
+                    {
+                        if (Main.netMode != NetmodeID.MultiplayerClient)
+                        {
+                            Projectile.NewProjectile(NPC.GetSource_FromAI(), player.Center - new Vector2(0, 1000), new Vector2(0, 2), ProjectileID.GoldenShowerHostile, 50, 10);
+                            NPC.netUpdate = true;
+                        }
+                    }
+                    break;
+            }
+
             HeadPos = NPC.Center - new Vector2(-Math.Sign(playerDirection.X) * 90, 10);
             SpawnHeads();
             AITimer++;
+        }
+
+        public override bool? CanFallThroughPlatforms()
+        {
+            return Movement == (float)MovementState.Flying;
+        }
+
+        Vector2 RandomPosition()
+        {
+            Vector2 randomPos = HeadPos + new Vector2(Main.rand.Next(-300, 300), Main.rand.Next(-300, 300));
+
+            return randomPos;
         }
 
         void SpawnHeads()
@@ -146,16 +229,32 @@ namespace Paracosm.Content.Bosses
         public override void FindFrame(int frameHeight)
         {
             int frameDur = 12;
-            NPC.frameCounter += 1;
-            if (NPC.frameCounter > frameDur)
+            int startFrame = 0;
+            int endFrame = 4;
+
+            if (Movement == (float)MovementState.Flying)
             {
-                NPC.frame.Y += frameHeight;
-                NPC.frameCounter = 0;
-                if (NPC.frame.Y > 4 * frameHeight)
+                startFrame = 5;
+                endFrame = 10;
+                frameDur = 6;
+
+                if (NPC.frame.Y < startFrame * frameHeight)
                 {
-                    NPC.frame.Y = 0;
+                    NPC.frame.Y = startFrame * frameHeight;
                 }
             }
+
+            if (NPC.frameCounter > frameDur)
+            {
+                NPC.frameCounter = 0;
+                NPC.frame.Y += frameHeight;
+                if (NPC.frame.Y > endFrame * frameHeight)
+                {
+                    NPC.frame.Y = startFrame * frameHeight;
+                }
+            }
+
+            NPC.frameCounter++;
         }
     }
 }

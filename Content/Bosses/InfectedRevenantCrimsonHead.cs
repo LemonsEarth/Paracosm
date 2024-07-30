@@ -98,8 +98,14 @@ namespace Paracosm.Content.Bosses
                     NPC.netUpdate = true;
                 }
             }
-            NPC.velocity = (ChosenPosition - NPC.Center).SafeNormalize(Vector2.Zero) * NPC.Center.Distance(ChosenPosition) / 10;
-            NPC.velocity += body.NPC.velocity;
+            if (body.Movement == 0)
+            {
+                NPC.velocity = (ChosenPosition - NPC.Center).SafeNormalize(Vector2.Zero) * NPC.Center.Distance(ChosenPosition) / 10;
+            }
+            else
+            {
+                NPC.Center = body.HeadPos + new Vector2(Math.Sign(body.playerDirection.X) * 30, -100);
+            }
             NPC.rotation = NPC.Center.DirectionTo(body.player.Center).ToRotation() + MathHelper.PiOver2;
             if ((body.player.Center - NPC.Center).X <= 0)
             {
@@ -110,7 +116,7 @@ namespace Paracosm.Content.Bosses
                 NPC.spriteDirection = 1;
             }
 
-            if (AITimer % 90 == 0)
+            if (AITimer % 90 == 0 && body.Movement != 1)
             {
                 Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, (body.player.Center - NPC.Center).SafeNormalize(Vector2.Zero) * 10, ProjectileID.GoldenShowerHostile, 50, 10);
             }
