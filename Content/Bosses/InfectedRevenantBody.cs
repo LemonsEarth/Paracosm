@@ -14,6 +14,8 @@ using Paracosm.Content.Items.Weapons;
 using Paracosm.Content.Projectiles;
 using Paracosm.Common.Systems;
 using Terraria.GameContent.Bestiary;
+using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
 
 namespace Paracosm.Content.Bosses
 {
@@ -33,8 +35,10 @@ namespace Paracosm.Content.Bosses
 
         public override void SetStaticDefaults()
         {
-            Main.npcFrameCount[NPC.type] = 6;
+            Main.npcFrameCount[NPC.type] = 5;
             NPCID.Sets.SpecificDebuffImmunity[Type][BuffID.Confused] = true;
+            NPCID.Sets.SpecificDebuffImmunity[Type][BuffID.CursedInferno] = true;
+            NPCID.Sets.SpecificDebuffImmunity[Type][BuffID.Ichor] = true;
             NPCID.Sets.MPAllowedEnemies[Type] = true;
             NPCID.Sets.BossBestiaryPriority.Add(Type);
         }
@@ -43,7 +47,7 @@ namespace Paracosm.Content.Bosses
         {
             NPC.boss = true;
             NPC.aiStyle = -1;
-            NPC.width = 248;
+            NPC.width = 243;
             NPC.height = 160;
             NPC.lifeMax = 100000;
             NPC.defense = 30;
@@ -76,7 +80,6 @@ namespace Paracosm.Content.Bosses
 
             player = Main.player[NPC.target];
 
-            NPC.velocity = NPC.Center.DirectionTo(player.Center) * 2;
             playerDirection = (player.Center - NPC.Center).SafeNormalize(Vector2.Zero);
             if (playerDirection.X <= 0)
             {
@@ -87,7 +90,7 @@ namespace Paracosm.Content.Bosses
                 NPC.spriteDirection = 1;
             }
 
-            HeadPos = NPC.Center - new Vector2(-Math.Sign(playerDirection.X) * NPC.width / 2 + 12, NPC.height / 2 + 12);
+            HeadPos = NPC.Center - new Vector2(-Math.Sign(playerDirection.X) * 90, 10);
             SpawnHeads();
             AITimer++;
         }
@@ -148,7 +151,7 @@ namespace Paracosm.Content.Bosses
             {
                 NPC.frame.Y += frameHeight;
                 NPC.frameCounter = 0;
-                if (NPC.frame.Y > 5 * frameHeight)
+                if (NPC.frame.Y > 4 * frameHeight)
                 {
                     NPC.frame.Y = 0;
                 }
