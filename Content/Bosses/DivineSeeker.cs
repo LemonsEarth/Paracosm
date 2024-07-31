@@ -348,7 +348,7 @@ namespace Paracosm.Content.Bosses
                     if (attack == 3)
                     {
                         NPC.damage = 0;
-                        Vector2 TopPosition = player.position + new Vector2(0, -400);
+                        Vector2 TopPosition = player.position + new Vector2(0, -450);
                         circleWaitTime--;
 
                         if (isCircling == false)

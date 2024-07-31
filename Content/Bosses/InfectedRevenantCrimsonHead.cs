@@ -59,8 +59,8 @@ namespace Paracosm.Content.Bosses
         public override void SetDefaults()
         {
             NPC.aiStyle = -1;
-            NPC.width = 72;
-            NPC.height = 72;
+            NPC.width = 58;
+            NPC.height = 52;
             NPC.lifeMax = 100000;
             NPC.dontTakeDamage = true;
             NPC.defense = 30;
@@ -90,36 +90,8 @@ namespace Paracosm.Content.Bosses
             NPC bodyNPC = Main.npc[ParentIndex];
             InfectedRevenantBody body = (InfectedRevenantBody)bodyNPC.ModNPC;
             this.body = body;
-            if (AITimer % 30 == 0)
-            {
-                if (Main.netMode != NetmodeID.MultiplayerClient)
-                {
-                    ChosenPosition = RandomPosition(body);
-                    NPC.netUpdate = true;
-                }
-            }
-            if (body.Movement == 0)
-            {
-                NPC.velocity = (ChosenPosition - NPC.Center).SafeNormalize(Vector2.Zero) * NPC.Center.Distance(ChosenPosition) / 10;
-            }
-            else
-            {
-                NPC.Center = body.HeadPos + new Vector2(Math.Sign(body.playerDirection.X) * 30, -100);
-            }
-            NPC.rotation = NPC.Center.DirectionTo(body.player.Center).ToRotation() + MathHelper.PiOver2;
-            if ((body.player.Center - NPC.Center).X <= 0)
-            {
-                NPC.spriteDirection = -1;
-            }
-            else
-            {
-                NPC.spriteDirection = 1;
-            }
-
-            if (AITimer % 90 == 0 && body.Movement != 1)
-            {
-                Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, (body.player.Center - NPC.Center).SafeNormalize(Vector2.Zero) * 10, ProjectileID.GoldenShowerHostile, 50, 10);
-            }
+            Vector2 position = body.CrimsonHeadPos - new Vector2(0, 120);
+            NPC.velocity = (position - NPC.Center).SafeNormalize(Vector2.Zero) * NPC.Center.Distance(position) / 12;
 
             AITimer++;
         }
@@ -130,7 +102,7 @@ namespace Paracosm.Content.Bosses
             {
                 return NPC.Center;
             }
-            Vector2 randomPos = body.HeadPos + new Vector2(-Math.Sign(body.playerDirection.X) * Main.rand.Next(-30, 10), Main.rand.Next(-100, -30));
+            Vector2 randomPos = body.CrimsonHeadPos + new Vector2(Main.rand.Next(-30, 150), Main.rand.Next(-300, 30));
 
             return randomPos;
         }
@@ -142,12 +114,12 @@ namespace Paracosm.Content.Bosses
                 return true;
             }
 
-            Vector2 drawPosition = NPC.Center;
-            Vector2 HeadToNeckBase = body.HeadPos - NPC.Center;
-            float rotation = HeadToNeckBase.SafeNormalize(Vector2.Zero).ToRotation() + MathHelper.PiOver2;
+            Vector2 drawPosition = body.CrimsonHeadPos;
+            Vector2 NeckBaseToHead = NPC.Center - body.CrimsonHeadPos;
+            float rotation = NeckBaseToHead.SafeNormalize(Vector2.Zero).ToRotation() + MathHelper.PiOver2;
             float segmentHeight = NeckTexture.Value.Height;
             float drawnSegments = 0;
-            float distanceLeft = HeadToNeckBase.Length() + segmentHeight / 2;
+            float distanceLeft = NeckBaseToHead.Length() + segmentHeight / 2;
             if (segmentHeight == 0)
             {
                 segmentHeight = 24;
@@ -155,8 +127,8 @@ namespace Paracosm.Content.Bosses
 
             while (distanceLeft > 0f)
             {
-                drawPosition += HeadToNeckBase.SafeNormalize(Vector2.Zero) * segmentHeight;
-                distanceLeft = drawPosition.Distance(body.HeadPos);
+                drawPosition += NeckBaseToHead.SafeNormalize(Vector2.Zero) * segmentHeight;
+                distanceLeft = drawPosition.Distance(NPC.Center);
                 drawnSegments++;
                 distanceLeft -= segmentHeight;
                 spriteBatch.Draw(NeckTexture.Value, drawPosition - screenPos, null, new Color(255 - drawnSegments * 10, 255 - drawnSegments * 10, 255 - drawnSegments * 10), rotation, new Vector2(NeckTexture.Value.Width / 2f, NeckTexture.Value.Height / 2f), 1f, SpriteEffects.None, 0f);

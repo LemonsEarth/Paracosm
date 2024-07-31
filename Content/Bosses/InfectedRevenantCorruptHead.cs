@@ -38,6 +38,26 @@ namespace Paracosm.Content.Bosses
                 NPC.ai[3] = value.Y;
             }
         }
+        Vector2 defaultHeadPos = Vector2.Zero;
+
+        float attackDuration = 0;
+        float attackTimer = 0;
+        int[] attackDurations = { 300, 300, 300, 300, 300 };
+
+        const int cursedBurstCD1 = 20;
+        const int cursedBurstCD2 = 60;
+        int cursedBurstCount = 0;
+
+        enum Attacks
+        {
+            CursedBurstFire,
+            SpinCursedCross,
+            Attack3,
+            Attack4,
+            Attack5,
+        }
+
+        Queue<int> AttackOrder = new Queue<int>();
 
         public override void Load()
         {
@@ -59,8 +79,8 @@ namespace Paracosm.Content.Bosses
         public override void SetDefaults()
         {
             NPC.aiStyle = -1;
-            NPC.width = 72;
-            NPC.height = 72;
+            NPC.width = 58;
+            NPC.height = 52;
             NPC.lifeMax = 100000;
             NPC.dontTakeDamage = true;
             NPC.defense = 30;
@@ -77,7 +97,18 @@ namespace Paracosm.Content.Bosses
 
         public override void OnSpawn(IEntitySource source)
         {
-
+            if (Main.netMode != NetmodeID.MultiplayerClient)
+            {
+                while (AttackOrder.Count < 5)
+                {
+                    int attackNum = Main.rand.Next(0, 5);
+                    if (!AttackOrder.Contains(attackNum))
+                    {
+                        AttackOrder.Enqueue(attackNum);
+                    }
+                }
+                NPC.netUpdate = true;
+            }
         }
 
         public static int BodyType()
@@ -90,37 +121,35 @@ namespace Paracosm.Content.Bosses
             NPC bodyNPC = Main.npc[ParentIndex];
             InfectedRevenantBody body = (InfectedRevenantBody)bodyNPC.ModNPC;
             this.body = body;
-            if (AITimer % 30 == 0)
+            defaultHeadPos = body.CorruptHeadPos - new Vector2(0, 120);
+            if (attackDuration == 0)
             {
-                if (Main.netMode != NetmodeID.MultiplayerClient)
-                {
-                    ChosenPosition = RandomPosition(body);
-                    NPC.netUpdate = true;
-                }
-            }
-            if (body.Movement == 0)
-            {
-                NPC.velocity = (ChosenPosition - NPC.Center).SafeNormalize(Vector2.Zero) * NPC.Center.Distance(ChosenPosition) / 10;
-            }
-            else
-            {
-                NPC.Center = body.HeadPos + new Vector2(Math.Sign(body.playerDirection.X) * 100, -30);
-            }
-            NPC.rotation = NPC.Center.DirectionTo(body.player.Center).ToRotation() + MathHelper.PiOver2;
-            if ((body.player.Center - NPC.Center).X <= 0)
-            {
-                NPC.spriteDirection = -1;
-            }
-            else
-            {
-                NPC.spriteDirection = 1;
+                attackTimer = 0;
+                Attack = AttackOrder.Dequeue();
+                AttackOrder.Enqueue((int)Attack);
+                attackDuration = attackDurations[(int)Attack];
+                SoundEngine.PlaySound(SoundID.Roar with { MaxInstances = 0, Pitch = -0.2f });
             }
 
-            if (AITimer % 30 == 0 && body.Movement != 1)
+            switch (Attack)
             {
-                Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, (body.player.Center - NPC.Center).SafeNormalize(Vector2.Zero) * 10, ProjectileID.CursedFlameHostile, 50, 10);
+                case (float)Attacks.CursedBurstFire:
+                    CursedBurstFire();
+                    break;
+                case (float)Attacks.SpinCursedCross:
+                    SpinCursedCross();
+                    break;
+                case (float)Attacks.Attack3:
+                    CursedBurstFire();
+                    break;
+                case (float)Attacks.Attack4:
+                    SpinCursedCross();
+                    break;
+                case (float)Attacks.Attack5:
+                    CursedBurstFire();
+                    break;
             }
-
+            attackDuration--;
             AITimer++;
         }
 
@@ -130,9 +159,48 @@ namespace Paracosm.Content.Bosses
             {
                 return NPC.Center;
             }
-            Vector2 randomPos = body.HeadPos + new Vector2(-Math.Sign(body.playerDirection.X) * Main.rand.Next(-100, -80), Main.rand.Next(-50, 10));
+            Vector2 randomPos = body.CorruptHeadPos + new Vector2(Main.rand.Next(-150, 30), Main.rand.Next(-300, 30));
 
             return randomPos;
+        }
+
+        void CursedBurstFire()
+        {
+            NPC.velocity = (defaultHeadPos - NPC.Center).SafeNormalize(Vector2.Zero) * NPC.Center.Distance(defaultHeadPos) / 12;
+
+            if (attackTimer <= 0)
+            {
+                if (Main.netMode != NetmodeID.MultiplayerClient)
+                {
+                    Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, (body.player.Center - NPC.Center).SafeNormalize(Vector2.Zero) * 10, ProjectileID.CursedFlameHostile, 50, 10);
+                    cursedBurstCount++;
+                    attackTimer = cursedBurstCD1;
+                    if (cursedBurstCount >= 4)
+                    {
+                        cursedBurstCount = 0;
+                        attackTimer = cursedBurstCD2;
+                    }
+                    NPC.netUpdate = true;
+                }
+            }
+            attackTimer--;
+        }
+
+        void SpinCursedCross()
+        {
+            NPC.Center = defaultHeadPos + new Vector2(0, -50).RotatedBy(MathHelper.ToRadians(attackTimer));
+            if (attackTimer % 45 == 0)
+            {
+                if (Main.netMode != NetmodeID.MultiplayerClient)
+                {
+                    for (int i = 0; i < 4; i++)
+                    {
+                        Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, new Vector2(0, -1).RotatedBy(i * MathHelper.PiOver2) * 20, ProjectileID.CursedFlameHostile, 50, 10);
+                    }
+                    NPC.netUpdate = true;
+                }
+            }
+            attackTimer++;
         }
 
         public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
@@ -142,12 +210,12 @@ namespace Paracosm.Content.Bosses
                 return true;
             }
 
-            Vector2 drawPosition = NPC.Center;
-            Vector2 HeadToNeckBase = body.HeadPos - NPC.Center;
-            float rotation = HeadToNeckBase.SafeNormalize(Vector2.Zero).ToRotation() + MathHelper.PiOver2;
+            Vector2 drawPosition = body.CorruptHeadPos;
+            Vector2 NeckBaseToHead = NPC.Center - body.CorruptHeadPos;
+            float rotation = NeckBaseToHead.SafeNormalize(Vector2.Zero).ToRotation() + MathHelper.PiOver2;
             float segmentHeight = NeckTexture.Value.Height;
             float drawnSegments = 0;
-            float distanceLeft = HeadToNeckBase.Length() + segmentHeight / 2;
+            float distanceLeft = NeckBaseToHead.Length() + segmentHeight / 2;
             if (segmentHeight == 0)
             {
                 segmentHeight = 24;
@@ -155,8 +223,8 @@ namespace Paracosm.Content.Bosses
 
             while (distanceLeft > 0f)
             {
-                drawPosition += HeadToNeckBase.SafeNormalize(Vector2.Zero) * segmentHeight;
-                distanceLeft = drawPosition.Distance(body.HeadPos);
+                drawPosition += NeckBaseToHead.SafeNormalize(Vector2.Zero) * segmentHeight;
+                distanceLeft = drawPosition.Distance(NPC.Center);
                 drawnSegments++;
                 distanceLeft -= segmentHeight;
                 spriteBatch.Draw(NeckTexture.Value, drawPosition - screenPos, null, new Color(255 - drawnSegments * 10, 255 - drawnSegments * 10, 255 - drawnSegments * 10), rotation, new Vector2(NeckTexture.Value.Width / 2f, NeckTexture.Value.Height / 2f), 1f, SpriteEffects.None, 0f);
