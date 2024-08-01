@@ -17,6 +17,7 @@ using Terraria.GameContent.Bestiary;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using Microsoft.CodeAnalysis.Host.Mef;
+using Paracosm.Content.Buffs;
 
 namespace Paracosm.Content.Bosses
 {
@@ -32,6 +33,9 @@ namespace Paracosm.Content.Bosses
 
         float AITimer = 0;
         float attackTimer = 0;
+
+        List<Projectile> CursedFlames = new List<Projectile>();
+
 
         Vector2 ChosenPosition
         {
@@ -60,8 +64,8 @@ namespace Paracosm.Content.Bosses
         {
             NPC.boss = true;
             NPC.aiStyle = -1;
-            NPC.width = 192;
-            NPC.height = 126;
+            NPC.width = 236;
+            NPC.height = 148;
             NPC.lifeMax = 100000;
             NPC.defense = 30;
             NPC.damage = 80;
@@ -97,15 +101,38 @@ namespace Paracosm.Content.Bosses
             NPC.collideY = Collision.SolidCollision(new Vector2(NPC.position.X, NPC.position.Y + NPC.height), NPC.width, NPC.height / 4, true);
 
 
-            CorruptHeadPos = NPC.Center + new Vector2(-24, -18);
-            CrimsonHeadPos = NPC.Center + new Vector2(24, -18);
+            CorruptHeadPos = NPC.Center + new Vector2(-28, -20);
+            CrimsonHeadPos = NPC.Center + new Vector2(28, -20);
+
+            if (CursedFlames.Count < 20)
+            {
+                for (int i = 0; i < 20; i++)
+                {
+                    var cursedFlame = Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center + new Vector2(0, -1180).RotatedBy(i * MathHelper.ToRadians(18)), Vector2.Zero, ModContent.ProjectileType<CursedFlamesBorder>(), 100, 1);
+                    CursedFlames.Add(cursedFlame);
+                }
+            }
+
+            for (int i = 0; i < CursedFlames.Count; i++)
+            {
+                CursedFlames[i].position = NPC.Center + new Vector2(0, -1180).RotatedBy(i * MathHelper.ToRadians(18));
+            }
+
+            foreach (var player in Main.ActivePlayers)
+            {
+                if (NPC.Center.Distance(player.Center) > 1200)
+                {
+                    player.AddBuff(ModContent.BuffType<Infected>(), 2);
+                }
+            }
             SpawnHeads();
             AITimer++;
         }
 
         public override bool? CanFallThroughPlatforms()
         {
-            return player.Center.Y > NPC.Center.Y + 35;
+            //return player.Center.Y > NPC.Center.Y + 35;
+            return false;
         }
 
         void SpawnHeads()

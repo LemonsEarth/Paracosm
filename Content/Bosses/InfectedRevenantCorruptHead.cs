@@ -188,7 +188,8 @@ namespace Paracosm.Content.Bosses
 
         void SpinCursedCross()
         {
-            NPC.Center = defaultHeadPos + new Vector2(0, -50).RotatedBy(MathHelper.ToRadians(attackTimer));
+            Vector2 position = defaultHeadPos + new Vector2(0, -50).RotatedBy(MathHelper.ToRadians(attackTimer));
+            NPC.velocity = (position - NPC.Center).SafeNormalize(Vector2.Zero) * NPC.Center.Distance(position) / 12; ;
             if (attackTimer % 45 == 0)
             {
                 if (Main.netMode != NetmodeID.MultiplayerClient)

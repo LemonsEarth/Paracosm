@@ -316,6 +316,7 @@ Projectiles: {
 	MoonBurst.DisplayName: Moon Burst
 	MoonBurstProjectile.DisplayName: Moon Burst Projectile
 	ArchmageBolt.DisplayName: Archmage Bolt
+	CursedFlamesBorder.DisplayName: Cursed Flames Border
 }
 
 NPCs: {
@@ -350,6 +351,11 @@ Buffs: {
 	ParacosmicGogglesBuff: {
 		DisplayName: Paracosmic Assault
 		Description: Increased damage and decreased mana cost
+	}
+
+	Infected: {
+		DisplayName: Infected
+		Description: Mods.Paracosm.Buffs.Infected.Description
 	}
 }
 
