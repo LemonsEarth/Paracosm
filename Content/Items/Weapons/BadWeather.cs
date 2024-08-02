@@ -10,7 +10,6 @@ namespace Paracosm.Content.Items.Weapons
 {
     public class BadWeather : ModItem
     {
-        int counter = 0;
         int[] projectiles =
         {
             1, 2, 3, 4, 5, 14, 15, 20, 27, 36, 45, 48, 51, 54, 76, 77, 78, 88, 93, 94, 95, 103, 104, 114, 116, 118, 119, 120, 121, 122, 123, 124, 125, 126, 173, 242, 239

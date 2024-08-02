@@ -18,6 +18,8 @@ using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using Microsoft.CodeAnalysis.Host.Mef;
 using Paracosm.Content.Buffs;
+using Terraria.Chat;
+using Terraria.Localization;
 
 namespace Paracosm.Content.Bosses
 {
@@ -32,7 +34,6 @@ namespace Paracosm.Content.Bosses
         public Vector2 playerDirection;
 
         float AITimer = 0;
-        float attackTimer = 0;
 
         List<Projectile> CursedFlames = new List<Projectile>();
 
@@ -68,7 +69,7 @@ namespace Paracosm.Content.Bosses
             NPC.height = 124;
             NPC.lifeMax = 100000;
             NPC.defense = 30;
-            NPC.damage = 80;
+            NPC.damage = 40;
             NPC.HitSound = SoundID.NPCHit1;
             NPC.DeathSound = SoundID.NPCHit1;
             NPC.value = 1000000;
@@ -87,8 +88,13 @@ namespace Paracosm.Content.Bosses
             return ModContent.NPCType<InfectedRevenantCrimsonHead>();
         }
 
+        public override void ApplyDifficultyAndPlayerScaling(int numPlayers, float balance, float bossAdjustment)
+        {
+            NPC.lifeMax = (int)Math.Ceiling(NPC.lifeMax * balance * 0.7f);
+            NPC.damage = (int)(NPC.damage * balance  * 0.5f);
+            NPC.defense = 50;
+        }
 
-        float speed = 0.2f;
         public override void AI()
         {
             if (NPC.target < 0 || NPC.target == 255 || Main.player[NPC.target].dead || !Main.player[NPC.target].active)
@@ -100,6 +106,16 @@ namespace Paracosm.Content.Bosses
             playerDirection = (player.Center - NPC.Center).SafeNormalize(Vector2.Zero);
             NPC.collideY = Collision.SolidCollision(new Vector2(NPC.position.X, NPC.position.Y + NPC.height), NPC.width, NPC.height / 4, true);
 
+
+            if (NPC.Center.Distance(player.Center) > 2500)
+            {
+                NPC.EncourageDespawn(300);
+            }
+
+            if (player.dead)
+            {
+                NPC.active = false;
+            }
 
             CorruptHeadPos = NPC.Center + new Vector2(-28, -20);
             CrimsonHeadPos = NPC.Center + new Vector2(28, -20);
@@ -138,10 +154,6 @@ namespace Paracosm.Content.Bosses
 
         void SpawnHeads()
         {
-            if (player == null)
-            {
-                return;
-            }
 
             if (spawnedHeads)
             {
@@ -150,6 +162,10 @@ namespace Paracosm.Content.Bosses
 
             spawnedHeads = true;
             if (Main.netMode == NetmodeID.MultiplayerClient)
+            {
+                return;
+            }
+            if (player == null)
             {
                 return;
             }
@@ -162,11 +178,12 @@ namespace Paracosm.Content.Bosses
 
             corruptHead.ParentIndex = NPC.whoAmI;
             crimsonHead.ParentIndex = NPC.whoAmI;
+            corruptHead.NPC.damage = NPC.damage;
+            crimsonHead.NPC.damage = NPC.damage;
 
             if (Main.netMode == NetmodeID.Server)
             {
-                NetMessage.SendData(MessageID.SyncNPC, number: corruptHeadNPC.whoAmI);
-                NetMessage.SendData(MessageID.SyncNPC, number: crimsonHeadNPC.whoAmI);
+                NetMessage.SendData(MessageID.SyncNPC, number: corruptHeadNPC.whoAmI, number2: crimsonHeadNPC.whoAmI);
             }
         }
 

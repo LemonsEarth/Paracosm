@@ -49,8 +49,6 @@ namespace Paracosm.Content.Bosses
 
         Vector2 shootDirection = new Vector2(1, 1);
         float speen = 0;
-        bool destroyedProj1 = false;
-        bool destroyedProj2 = false;
         bool rage = false;
         Vector2 dashFireDir = Vector2.Zero;
 

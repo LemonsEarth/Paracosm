@@ -17,7 +17,6 @@ namespace Paracosm.Content.Projectiles.Hostile
 {
     public class IndicatorLaser : ModProjectile
     {
-        int projectileFrame = 0;
         ref float AITimer => ref Projectile.ai[0];
         public override void SetStaticDefaults()
         {

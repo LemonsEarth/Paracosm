@@ -18,7 +18,6 @@ namespace Paracosm.Content.Projectiles.Hostile
 {
     public class BlueFireBall : ModProjectile
     {
-        int projectileFrame = 0;
         ref float AITimer => ref Projectile.ai[0];
         public override void SetStaticDefaults()
         {
@@ -52,7 +51,7 @@ namespace Paracosm.Content.Projectiles.Hostile
             }
             if (AITimer == 0)
             {
-                SoundEngine.PlaySound(SoundID.Item20 with { MaxInstances = 3 });
+                SoundEngine.PlaySound(SoundID.Item20 with { MaxInstances = 2 });
             }
             AITimer++;
             if (AITimer % 10 == 0)

@@ -15,7 +15,6 @@ namespace Paracosm.Content.Items.Accessories
         static readonly int sentryBoost = 2;
         static readonly float summonDamageBoost = 7;
         static readonly float moveSpeedBoost = 14;
-        int timer = 0;
 
         public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(sentryBoost, summonDamageBoost, moveSpeedBoost);
 

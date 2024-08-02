@@ -15,7 +15,6 @@ namespace Paracosm.Content.Items.Accessories
 {
     public class SunCoin : ModItem
     {
-        static float speedBoost = 0;
         public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs();
 
         public override void SetStaticDefaults()

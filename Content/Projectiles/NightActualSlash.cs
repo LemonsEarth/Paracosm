@@ -21,7 +21,6 @@ namespace Paracosm.Content.Projectiles
         ref float AITimer => ref Projectile.ai[0];
         ref float randomValue => ref Projectile.ai[1];
         ref float randomValue2 => ref Projectile.ai[2];
-        bool released = false;
 
         public override void SetStaticDefaults()
         {
