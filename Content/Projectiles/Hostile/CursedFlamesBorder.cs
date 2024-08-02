@@ -29,10 +29,5 @@ namespace Paracosm.Content.Projectiles.Hostile
             Projectile.timeLeft = 180;
             Projectile.tileCollide = false;
         }
-
-        public override void AI()
-        {
-            Projectile.timeLeft = 180;
-        }
     }
 }

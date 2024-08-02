@@ -65,7 +65,7 @@ namespace Paracosm.Content.Bosses
             NPC.boss = true;
             NPC.aiStyle = -1;
             NPC.width = 236;
-            NPC.height = 148;
+            NPC.height = 124;
             NPC.lifeMax = 100000;
             NPC.defense = 30;
             NPC.damage = 80;
@@ -115,7 +115,8 @@ namespace Paracosm.Content.Bosses
 
             for (int i = 0; i < CursedFlames.Count; i++)
             {
-                CursedFlames[i].position = NPC.Center + new Vector2(0, -1180).RotatedBy(i * MathHelper.ToRadians(18));
+                CursedFlames[i].position = NPC.Center + new Vector2(0, -1180).RotatedBy(i * MathHelper.ToRadians(18)).RotatedBy(MathHelper.ToRadians(AITimer));
+                CursedFlames[i].timeLeft = 180;
             }
 
             foreach (var player in Main.ActivePlayers)
@@ -153,8 +154,8 @@ namespace Paracosm.Content.Bosses
                 return;
             }
 
-            NPC corruptHeadNPC = NPC.NewNPCDirect(NPC.GetSource_FromAI(), NPC.Center, CorruptHeadType());
-            NPC crimsonHeadNPC = NPC.NewNPCDirect(NPC.GetSource_FromAI(), NPC.Center, CrimsonHeadType());
+            NPC corruptHeadNPC = NPC.NewNPCDirect(NPC.GetSource_FromAI(), CorruptHeadPos, CorruptHeadType());
+            NPC crimsonHeadNPC = NPC.NewNPCDirect(NPC.GetSource_FromAI(), CrimsonHeadPos, CrimsonHeadType());
 
             corruptHead = (InfectedRevenantCorruptHead)corruptHeadNPC.ModNPC;
             crimsonHead = (InfectedRevenantCrimsonHead)crimsonHeadNPC.ModNPC;

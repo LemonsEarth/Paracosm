@@ -317,6 +317,7 @@ Projectiles: {
 	MoonBurstProjectile.DisplayName: Moon Burst Projectile
 	ArchmageBolt.DisplayName: Archmage Bolt
 	CursedFlamesBorder.DisplayName: Cursed Flames Border
+	BloodBlast.DisplayName: Blood Blast
 }
 
 NPCs: {

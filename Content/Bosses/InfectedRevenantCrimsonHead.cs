@@ -42,16 +42,14 @@ namespace Paracosm.Content.Bosses
 
         float attackDuration = 0;
         float attackTimer = 0;
-        int[] attackDurations = { 200, 210, 200, 210, 200 };
+        int[] attackDurations = { 200, 600, 315, 210, 200 };
 
-
-        const int ichorShowerCD = 20;
 
         enum Attacks
         {
             ichorShower,
             IchorRain,
-            Attack3,
+            BloodBlasts,
             Attack4,
             Attack5,
         }
@@ -65,7 +63,7 @@ namespace Paracosm.Content.Bosses
 
         public override void SetStaticDefaults()
         {
-            Main.npcFrameCount[NPC.type] = 1;
+            Main.npcFrameCount[NPC.type] = 3;
             NPCID.Sets.SpecificDebuffImmunity[Type][BuffID.Confused] = true;
             NPCID.Sets.MPAllowedEnemies[Type] = true;
             NPCID.Sets.NPCBestiaryDrawModifiers drawMods = new NPCID.Sets.NPCBestiaryDrawModifiers()
@@ -121,14 +119,21 @@ namespace Paracosm.Content.Bosses
             InfectedRevenantBody body = (InfectedRevenantBody)bodyNPC.ModNPC;
             this.body = body;
             defaultHeadPos = body.CrimsonHeadPos - new Vector2(0, 120);
-            if (attackDuration == 0)
+
+            if (AITimer < 60)
             {
-                offset = 0;
-                attackTimer = 0;
+                NPC.frame.Y = 0;
+                AITimer++;
+                return;
+            }
+
+            if (attackDuration <= 0)
+            {
+                NPC.frame.Y = 0;
+                ResetVars();
                 Attack = AttackOrder.Dequeue();
                 AttackOrder.Enqueue((int)Attack);
                 attackDuration = attackDurations[(int)Attack];
-                SoundEngine.PlaySound(SoundID.Roar with { MaxInstances = 0, Pitch = 0.2f });
             }
 
             switch (Attack)
@@ -139,8 +144,8 @@ namespace Paracosm.Content.Bosses
                 case (float)Attacks.IchorRain:
                     IchorRain();
                     break;
-                case (float)Attacks.Attack3:
-                    IchorShower();
+                case (float)Attacks.BloodBlasts:
+                    BloodBlasts();
                     break;
                 case (float)Attacks.Attack4:
                     IchorRain();
@@ -152,19 +157,16 @@ namespace Paracosm.Content.Bosses
             attackDuration--;
             AITimer++;
         }
-
-        Vector2 RandomPosition(InfectedRevenantBody body)
+        
+        void ResetVars()
         {
-            if (body == null)
-            {
-                return NPC.Center;
-            }
-            Vector2 randomPos = body.CrimsonHeadPos + new Vector2(Main.rand.Next(-150, 30), Main.rand.Next(-300, 30));
-
-            return randomPos;
+            offset = 0;
+            attackTimer = 0;
+            positionReached = false;
         }
 
 
+        const int ichorShowerCD = 15;
         float offset = 0;
         void IchorShower()
         {
@@ -180,43 +182,98 @@ namespace Paracosm.Content.Bosses
                     }
                     NPC.netUpdate = true;
                     attackTimer = ichorShowerCD;
-                    offset += 0.2f;
+                    offset += 0.1f;
                 }
             }
+
             attackTimer--;
         }
 
+        bool positionReached = false;
+
         void IchorRain()
         {
-            Vector2 position = body.NPC.Center + new Vector2(1200, -1200);
+            Vector2 RightPosition = body.NPC.Center + new Vector2(1200, -1200);
+            Vector2 LeftPosition = body.NPC.Center + new Vector2(-1200, -1200);
 
             switch (attackTimer)
             {
                 case < 60:
-                    NPC.velocity = (position - NPC.Center).SafeNormalize(Vector2.Zero) * NPC.Center.Distance(position) / 12;
+                    NPC.velocity = (RightPosition - NPC.Center).SafeNormalize(Vector2.Zero) * NPC.Center.Distance(RightPosition) / 12;
                     break;
                 case < 90:
                     NPC.velocity = Vector2.Zero;
                     break;
-                case 180:
-                    SoundEngine.PlaySound(SoundID.Roar with { MaxInstances = 0, Pitch = 0.4f });
-                    break;
-                case < 180:
-                    NPC.velocity = new Vector2(-20, 0);
-                    if (AITimer % 10 == 0)
+                case > 90:
+                    if (NPC.Center.Distance(LeftPosition) < 50)
                     {
-                        if (Main.netMode != NetmodeID.MultiplayerClient)
+                        positionReached = true;
+                        break;
+                    }
+                    if (!positionReached)
+                    {
+                        NPC.velocity = new Vector2(-20, 0);
+                        if (attackTimer % 10 == 0)
                         {
-                            Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, new Vector2(0, 10), ProjectileID.GoldenShowerHostile, 50, 1);
-                            NPC.netUpdate = true;
+                            if (Main.netMode != NetmodeID.MultiplayerClient)
+                            {
+                                Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, new Vector2(0, 10), ProjectileID.GoldenShowerHostile, 50, 1);
+                                NPC.netUpdate = true;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        NPC.velocity = (defaultHeadPos - NPC.Center).SafeNormalize(Vector2.Zero) * NPC.Center.Distance(defaultHeadPos) / 12;
+                        if (NPC.Center.Distance(defaultHeadPos) <= 10)
+                        {
+                            attackDuration -= 10;
                         }
                     }
                     break;
-                case >= 180:
-                    NPC.velocity = (defaultHeadPos - NPC.Center).SafeNormalize(Vector2.Zero) * NPC.Center.Distance(defaultHeadPos) / 12;
-                    break;
             }
             attackTimer++;
+        }
+
+        const int bloodBlastCD = 60;
+
+        void BloodBlasts()
+        {
+            NPC.velocity = (defaultHeadPos - NPC.Center).SafeNormalize(Vector2.Zero) * NPC.Center.Distance(defaultHeadPos) / 12;
+
+            if (attackTimer <= 0)
+            {
+                if (Main.netMode != NetmodeID.MultiplayerClient)
+                {
+                    Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, (body.player.Center - NPC.Center).SafeNormalize(Vector2.Zero) * 10, ModContent.ProjectileType<BloodBlast>(), 50, 1, ai1: 1, ai2: body.player.whoAmI);
+                    NPC.netUpdate = true;
+                }
+                attackTimer = bloodBlastCD;
+            }
+
+            attackTimer--;
+        }
+
+        public override void FindFrame(int frameHeight)
+        {
+            int frameDur = 12;
+            int endFrame = 2;
+
+            if (attackTimer > 24)
+            {
+                NPC.frame.Y = 0;
+            }
+
+            if (NPC.frame.Y < endFrame * frameHeight)
+            {
+                NPC.frameCounter--;
+
+                if (NPC.frameCounter <= 0)
+                {
+                    NPC.frameCounter = frameDur;
+                    NPC.frame.Y += frameHeight;
+                }
+            }
         }
 
         public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)

@@ -42,18 +42,14 @@ namespace Paracosm.Content.Bosses
 
         float attackDuration = 0;
         float attackTimer = 0;
-        int[] attackDurations = { 300, 300, 300, 300, 300 };
-
-        const int cursedBurstCD1 = 20;
-        const int cursedBurstCD2 = 60;
-        int cursedBurstCount = 0;
+        int[] attackDurations = { 300, 300, 360, 400, 300 };
 
         enum Attacks
         {
             CursedBurstFire,
             SpinCursedCross,
-            Attack3,
-            Attack4,
+            CursedCircles,
+            CursedWalls,
             Attack5,
         }
 
@@ -66,7 +62,7 @@ namespace Paracosm.Content.Bosses
 
         public override void SetStaticDefaults()
         {
-            Main.npcFrameCount[NPC.type] = 1;
+            Main.npcFrameCount[NPC.type] = 3;
             NPCID.Sets.SpecificDebuffImmunity[Type][BuffID.Confused] = true;
             NPCID.Sets.MPAllowedEnemies[Type] = true;
             NPCID.Sets.NPCBestiaryDrawModifiers drawMods = new NPCID.Sets.NPCBestiaryDrawModifiers()
@@ -122,13 +118,20 @@ namespace Paracosm.Content.Bosses
             InfectedRevenantBody body = (InfectedRevenantBody)bodyNPC.ModNPC;
             this.body = body;
             defaultHeadPos = body.CorruptHeadPos - new Vector2(0, 120);
-            if (attackDuration == 0)
+
+            if (AITimer < 60)
             {
-                attackTimer = 0;
+                NPC.frame.Y = 0;
+                AITimer++;
+                return;
+            }
+
+            if (attackDuration <= 0)
+            {
+                ResetVars();
                 Attack = AttackOrder.Dequeue();
                 AttackOrder.Enqueue((int)Attack);
                 attackDuration = attackDurations[(int)Attack];
-                SoundEngine.PlaySound(SoundID.Roar with { MaxInstances = 0, Pitch = -0.2f });
             }
 
             switch (Attack)
@@ -139,11 +142,11 @@ namespace Paracosm.Content.Bosses
                 case (float)Attacks.SpinCursedCross:
                     SpinCursedCross();
                     break;
-                case (float)Attacks.Attack3:
-                    CursedBurstFire();
+                case (float)Attacks.CursedCircles:
+                    CursedCircles();
                     break;
-                case (float)Attacks.Attack4:
-                    SpinCursedCross();
+                case (float)Attacks.CursedWalls:
+                    RisingCursedWall();
                     break;
                 case (float)Attacks.Attack5:
                     CursedBurstFire();
@@ -153,16 +156,18 @@ namespace Paracosm.Content.Bosses
             AITimer++;
         }
 
-        Vector2 RandomPosition(InfectedRevenantBody body)
+        void ResetVars()
         {
-            if (body == null)
-            {
-                return NPC.Center;
-            }
-            Vector2 randomPos = body.CorruptHeadPos + new Vector2(Main.rand.Next(-150, 30), Main.rand.Next(-300, 30));
-
-            return randomPos;
+            NPC.frame.Y = 0;
+            attackTimer = 0;
+            rotationTimer = 0;
+            circleCounter = 0;
+            cursedWallCount = 0;
         }
+
+        const int cursedBurstCD1 = 20;
+        const int cursedBurstCD2 = 60;
+        int cursedBurstCount = 0;
 
         void CursedBurstFire()
         {
@@ -183,14 +188,18 @@ namespace Paracosm.Content.Bosses
                     NPC.netUpdate = true;
                 }
             }
+
             attackTimer--;
         }
 
+        int rotationTimer = 0;
+        const int cursedCrossCD = 45;
+
         void SpinCursedCross()
         {
-            Vector2 position = defaultHeadPos + new Vector2(0, -50).RotatedBy(MathHelper.ToRadians(attackTimer));
+            Vector2 position = defaultHeadPos + new Vector2(0, -50).RotatedBy(MathHelper.ToRadians(rotationTimer));
             NPC.velocity = (position - NPC.Center).SafeNormalize(Vector2.Zero) * NPC.Center.Distance(position) / 12; ;
-            if (attackTimer % 45 == 0)
+            if (attackTimer <= 0)
             {
                 if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
@@ -198,10 +207,118 @@ namespace Paracosm.Content.Bosses
                     {
                         Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, new Vector2(0, -1).RotatedBy(i * MathHelper.PiOver2) * 20, ProjectileID.CursedFlameHostile, 50, 10);
                     }
+                    attackTimer = cursedCrossCD;
                     NPC.netUpdate = true;
                 }
             }
-            attackTimer++;
+            rotationTimer++;
+            attackTimer--;
+        }
+
+        const int cursedCirclesCD = 60;
+        int circleCounter = 0;
+
+        void CursedCircles()
+        {
+            NPC.velocity = (body.player.Center - NPC.Center).SafeNormalize(Vector2.Zero) * (50 / (NPC.Center.Distance(defaultHeadPos) + 1));
+
+            if (attackTimer == 0 && circleCounter < 4)
+            {
+                if (Main.netMode != NetmodeID.MultiplayerClient)
+                {
+                    for (int i = 0; i < 12; i++)
+                    {
+                        Projectile proj = Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center, new Vector2(0, -1).RotatedBy(i * (MathHelper.PiOver2 / 3)) * 4, ProjectileID.CursedFlameHostile, 50, 10);
+                        proj.penetrate = 100;
+                    }
+                    NPC.netUpdate = true;
+                }
+            }
+
+            if (attackTimer <= -30)
+            {
+                foreach (var proj in Main.ActiveProjectiles)
+                {
+                    if (proj.type == ProjectileID.CursedFlameHostile && proj.penetrate == 100)
+                    {
+                        proj.velocity = (body.player.Center - NPC.Center).SafeNormalize(Vector2.Zero) * 10;
+                        proj.penetrate = 200;
+                    }
+                }
+                circleCounter++;
+                attackTimer = cursedCirclesCD;
+            }
+            if (circleCounter >= 4)
+            {
+                attackDuration -= 10;
+            }
+
+            attackTimer--;
+        }
+
+        int cursedWallCount = 0;
+        const int cursedWallCD = 5;
+
+        void RisingCursedWall()
+        {
+            NPC.velocity = (defaultHeadPos - NPC.Center).SafeNormalize(Vector2.Zero) * NPC.Center.Distance(defaultHeadPos) / 12;
+
+            if (attackTimer == 0 && cursedWallCount < 60)
+            {
+                if (Main.netMode != NetmodeID.MultiplayerClient)
+                {
+                    for (int i = -1; i < 2; i += 2)
+                    {
+                        Projectile proj = Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), body.NPC.Center + new Vector2(i * 1200, 1200 - (cursedWallCount * 30)), Vector2.Zero, ProjectileID.CursedFlameHostile, 50, 10);
+                        proj.tileCollide = false;
+                        proj.penetrate = 101;
+                    }
+                    NPC.netUpdate = true;
+                }
+            }
+
+            if (attackTimer <= -5)
+            {
+                foreach (var proj in Main.ActiveProjectiles)
+                {
+                    if (proj.type == ProjectileID.CursedFlameHostile && proj.penetrate == 101)
+                    {
+                        proj.penetrate = 201;
+                        proj.velocity = new Vector2(Math.Sign(body.NPC.Center.X - proj.Center.X) * 40, 0);
+                    }  
+                }
+                attackTimer = cursedWallCD;
+                cursedWallCount++;
+            }
+
+            if (cursedWallCount >= 60)
+            {
+                attackDuration -= 10;
+            }
+
+            attackTimer--;
+        }
+
+        public override void FindFrame(int frameHeight)
+        {
+            int frameDur = 12;
+            int endFrame = 2;
+
+            if (attackTimer > 24)
+            {
+                NPC.frame.Y = 0;
+            }
+
+            if (NPC.frame.Y < endFrame * frameHeight)
+            {
+                NPC.frameCounter--;
+
+                if (NPC.frameCounter <= 0)
+                {
+                    NPC.frameCounter = frameDur;
+                    NPC.frame.Y += frameHeight;
+                }
+            }
         }
 
         public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
