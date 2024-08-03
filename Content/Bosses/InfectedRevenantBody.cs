@@ -76,6 +76,11 @@ namespace Paracosm.Content.Bosses
             NPC.knockBackResist = 0;
             NPC.npcSlots = 10;
             NPC.SpawnWithHigherTime(2);
+
+            if (!Main.dedServ)
+            {
+                Music = MusicLoader.GetMusicSlot(Mod, "Content/Audio/Music/EmbodimentOfEvil");
+            }
         }
 
         public static int CorruptHeadType()
@@ -142,6 +147,14 @@ namespace Paracosm.Content.Bosses
                     player.AddBuff(ModContent.BuffType<Infected>(), 2);
                 }
             }
+
+            foreach (var dust in Main.dust)
+            {
+                if (dust.type == DustID.CursedTorch)
+                {
+                    dust.alpha += 20;
+                }
+            }
             SpawnHeads();
             AITimer++;
         }
@@ -154,7 +167,6 @@ namespace Paracosm.Content.Bosses
 
         void SpawnHeads()
         {
-
             if (spawnedHeads)
             {
                 return;
@@ -165,25 +177,25 @@ namespace Paracosm.Content.Bosses
             {
                 return;
             }
-            if (player == null)
+
+            NPC corruptHeadNPC = NPC.NewNPCDirect(NPC.GetSource_FromAI(), CorruptHeadPos, CorruptHeadType(), NPC.whoAmI, NPC.whoAmI);
+            corruptHead = (InfectedRevenantCorruptHead)corruptHeadNPC.ModNPC;
+            corruptHead.ParentIndex = NPC.whoAmI;
+            corruptHead.NPC.damage = NPC.damage;
+
+            if (Main.netMode == NetmodeID.Server)
             {
-                return;
+                NetMessage.SendData(MessageID.SyncNPC, number: corruptHeadNPC.whoAmI);
             }
 
-            NPC corruptHeadNPC = NPC.NewNPCDirect(NPC.GetSource_FromAI(), CorruptHeadPos, CorruptHeadType());
-            NPC crimsonHeadNPC = NPC.NewNPCDirect(NPC.GetSource_FromAI(), CrimsonHeadPos, CrimsonHeadType());
-
-            corruptHead = (InfectedRevenantCorruptHead)corruptHeadNPC.ModNPC;
+            NPC crimsonHeadNPC = NPC.NewNPCDirect(NPC.GetSource_FromAI(), CrimsonHeadPos, CrimsonHeadType(), NPC.whoAmI, NPC.whoAmI);
             crimsonHead = (InfectedRevenantCrimsonHead)crimsonHeadNPC.ModNPC;
-
-            corruptHead.ParentIndex = NPC.whoAmI;
             crimsonHead.ParentIndex = NPC.whoAmI;
-            corruptHead.NPC.damage = NPC.damage;
             crimsonHead.NPC.damage = NPC.damage;
 
             if (Main.netMode == NetmodeID.Server)
             {
-                NetMessage.SendData(MessageID.SyncNPC, number: corruptHeadNPC.whoAmI, number2: crimsonHeadNPC.whoAmI);
+                NetMessage.SendData(MessageID.SyncNPC, number: crimsonHeadNPC.whoAmI);
             }
         }
 

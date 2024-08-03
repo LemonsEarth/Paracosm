@@ -26,8 +26,15 @@ namespace Paracosm.Content.Bosses
         private const string NeckTexturePath = "Paracosm/Content/Bosses/InfectedRevenantCrimsonNeck";
         private static Asset<Texture2D> NeckTexture;
 
-        public int ParentIndex;
-        ref float AITimer => ref NPC.ai[0];
+        public int ParentIndex
+        {
+            get => (int)NPC.ai[0];
+            set
+            {
+                NPC.ai[0] = value;
+            }
+        }
+        float AITimer = 0;
         ref float Attack => ref NPC.ai[1];
         public InfectedRevenantBody body;
         ref float AttackCount => ref NPC.ai[2];
@@ -129,12 +136,14 @@ namespace Paracosm.Content.Bosses
         public override void AI()
         {
             NPC bodyNPC = Main.npc[ParentIndex];
-            InfectedRevenantBody body = (InfectedRevenantBody)bodyNPC.ModNPC;
-            if (body == null)
+            if (Main.netMode != NetmodeID.MultiplayerClient && (Main.npc[ParentIndex] == null || !Main.npc[ParentIndex].active || Main.npc[ParentIndex].type != BodyType()))
             {
                 NPC.active = false;
+                NPC.life = 0;
+                NetMessage.SendData(MessageID.SyncNPC, number: NPC.whoAmI);
                 return;
             }
+            InfectedRevenantBody body = (InfectedRevenantBody)bodyNPC.ModNPC;
             this.body = body;
             defaultHeadPos = body.CrimsonHeadPos - new Vector2(0, 120);
 

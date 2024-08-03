@@ -19,6 +19,8 @@ using ReLogic.Content;
 using Newtonsoft.Json.Linq;
 using System.IO;
 using Microsoft.Build.Tasks;
+using Terraria.Chat;
+using Terraria.Localization;
 
 namespace Paracosm.Content.Bosses
 {
@@ -27,8 +29,15 @@ namespace Paracosm.Content.Bosses
         private const string NeckTexturePath = "Paracosm/Content/Bosses/InfectedRevenantCorruptNeck";
         private static Asset<Texture2D> NeckTexture;
 
-        public int ParentIndex;
-        ref float AITimer => ref NPC.ai[0];
+        public int ParentIndex
+        {
+            get => (int)NPC.ai[0];
+            set
+            {
+                NPC.ai[0] = value;
+            }
+        }
+        float AITimer = 0;
         ref float Attack => ref NPC.ai[1];
         ref float AttackCount => ref NPC.ai[2];
         public InfectedRevenantBody body;
@@ -129,13 +138,15 @@ namespace Paracosm.Content.Bosses
 
         public override void AI()
         {
-            NPC bodyNPC = Main.npc[ParentIndex];
-            InfectedRevenantBody body = (InfectedRevenantBody)bodyNPC.ModNPC;
-            if (body == null)
+            NPC bodyNPC = Main.npc[(int)ParentIndex];
+            if (Main.netMode != NetmodeID.MultiplayerClient && (Main.npc[(int)ParentIndex] == null || !Main.npc[(int)ParentIndex].active || Main.npc[(int)ParentIndex].type != BodyType()))
             {
                 NPC.active = false;
+                NPC.life = 0;
+                NetMessage.SendData(MessageID.SyncNPC, number: NPC.whoAmI);
                 return;
             }
+            InfectedRevenantBody body = (InfectedRevenantBody)bodyNPC.ModNPC;
             this.body = body;
             defaultHeadPos = body.CorruptHeadPos - new Vector2(0, 120);
             if (AITimer < 60)
@@ -144,7 +155,6 @@ namespace Paracosm.Content.Bosses
                 AITimer++;
                 return;
             }
-
             if (attackDuration <= 0)
             {
                 if (Main.netMode != NetmodeID.MultiplayerClient)
@@ -209,7 +219,7 @@ namespace Paracosm.Content.Bosses
                         cursedBurstCount = 0;
                         attackTimer = CursedBurstCD2;
                     }
-                    
+
                 }
             }
 
@@ -232,7 +242,7 @@ namespace Paracosm.Content.Bosses
                         Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, new Vector2(0, -1).RotatedBy(i * MathHelper.PiOver2) * 20, ProjectileID.CursedFlameHostile, (int)(NPC.damage * 0.8f), 10);
                     }
                     attackTimer = CursedCrossCD;
-                    
+
                 }
             }
             rotationTimer++;
@@ -251,23 +261,15 @@ namespace Paracosm.Content.Bosses
                 {
                     for (int i = 0; i < 12; i++)
                     {
-                        Projectile proj = Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center, new Vector2(0, -1).RotatedBy(i * (MathHelper.PiOver2 / 3)) * 4, ProjectileID.CursedFlameHostile, (int)(NPC.damage * 0.8f), 10);
-                        proj.penetrate = 100;
+                        var proj = Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center, new Vector2(0, -1).RotatedBy(i * (MathHelper.PiOver2 / 3)) * 4, ModContent.ProjectileType<CursedFlameRing>(), (int)(NPC.damage * 0.8f), 1, ai0: 30, ai1: body.player.Center.X - NPC.Center.X, ai2: body.player.Center.Y - NPC.Center.Y);
+                        CursedFlameRing cursedFlameRing = (CursedFlameRing)proj.ModProjectile;
+                        cursedFlameRing.speed = 10;
                     }
-                    
                 }
             }
 
             if (attackTimer <= -30)
             {
-                foreach (var proj in Main.ActiveProjectiles)
-                {
-                    if (proj.type == ProjectileID.CursedFlameHostile && proj.penetrate == 100)
-                    {
-                        proj.velocity = (body.player.Center - NPC.Center).SafeNormalize(Vector2.Zero) * 10;
-                        proj.penetrate = 200;
-                    }
-                }
                 AttackCount++;
                 attackTimer = CursedCirclesCD;
             }
@@ -291,24 +293,15 @@ namespace Paracosm.Content.Bosses
                 {
                     for (int i = -1; i < 2; i += 2)
                     {
-                        Projectile proj = Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), body.NPC.Center + new Vector2(i * 1200, 1200 - (AttackCount * 30)), Vector2.Zero, ProjectileID.CursedFlameHostile, (int)(NPC.damage * 0.8f), 10);
-                        proj.tileCollide = false;
-                        proj.penetrate = 101;
+                        var proj = Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), body.NPC.Center + new Vector2(i * 1200, 1200 - (AttackCount * 30)), Vector2.Zero, ModContent.ProjectileType<CursedFlameRing>(), (int)(NPC.damage * 0.8f), 1, ai0: 5, ai1: -i , ai2: 0);
+                        CursedFlameRing cursedFlameRing = (CursedFlameRing)proj.ModProjectile;
+                        cursedFlameRing.speed = 40;
                     }
-                    
                 }
             }
 
             if (attackTimer <= -5)
             {
-                foreach (var proj in Main.ActiveProjectiles)
-                {
-                    if (proj.type == ProjectileID.CursedFlameHostile && proj.penetrate == 101)
-                    {
-                        proj.penetrate = 201;
-                        proj.velocity = new Vector2(Math.Sign(body.NPC.Center.X - proj.Center.X) * 40, 0);
-                    }  
-                }
                 attackTimer = CursedWallCD;
                 AttackCount++;
             }

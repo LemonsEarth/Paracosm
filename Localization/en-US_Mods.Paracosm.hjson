@@ -294,6 +294,11 @@ Items: {
 		DisplayName: Archmage Staff
 		Tooltip: '''"The staff of the ultimate sorcerer..."'''
 	}
+
+	AncientCallingHorn: {
+		DisplayName: Ancient Calling Horn
+		Tooltip: ""
+	}
 }
 
 Projectiles: {
@@ -318,6 +323,7 @@ Projectiles: {
 	ArchmageBolt.DisplayName: Archmage Bolt
 	CursedFlamesBorder.DisplayName: Cursed Flames Border
 	BloodBlast.DisplayName: Blood Blast
+	CursedFlameRing.DisplayName: Cursed Flame Ring
 }
 
 NPCs: {
