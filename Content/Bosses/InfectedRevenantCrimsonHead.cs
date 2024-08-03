@@ -16,7 +16,6 @@ using Paracosm.Common.Systems;
 using Terraria.GameContent.Bestiary;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
-using Newtonsoft.Json.Linq;
 using System.IO;
 
 namespace Paracosm.Content.Bosses
@@ -40,9 +39,11 @@ namespace Paracosm.Content.Bosses
         ref float AttackCount => ref NPC.ai[2];
         Vector2 defaultHeadPos = Vector2.Zero;
 
-        ref float attackDuration => ref NPC.ai[3];
-        float attackTimer = 0;
-        int[] attackDurations = { 200, 600, 315, 210, 200 };
+        float attackDuration = 0;
+        ref float AttackTimer => ref NPC.ai[3];
+        int[] attackDurations = { 200, 600, 315, 210, 450 };
+
+        int attackPause = 60;
 
 
         enum Attacks
@@ -51,7 +52,7 @@ namespace Paracosm.Content.Bosses
             IchorRain,
             BloodBlasts,
             BloodBlastBurst,
-            Attack5,
+            IchorSnipe,
         }
 
         Queue<int> AttackOrder = new Queue<int>();
@@ -120,7 +121,10 @@ namespace Paracosm.Content.Bosses
             {
                 writer.Write(attack);
             }
-            writer.Write(attackTimer);
+            writer.Write(AITimer);
+            writer.Write(AttackTimer);
+            writer.Write(attackDuration);
+            writer.Write(positionReached);
         }
 
         public override void ReceiveExtraAI(BinaryReader reader)
@@ -130,7 +134,10 @@ namespace Paracosm.Content.Bosses
             {
                 AttackOrder.Enqueue(reader.ReadInt32());
             }
-            attackTimer = reader.ReadSingle();
+            AITimer = reader.ReadSingle();
+            AttackTimer = reader.ReadSingle();
+            attackDuration = reader.ReadSingle();
+            positionReached = reader.ReadBoolean();
         }
 
         public override void AI()
@@ -162,9 +169,15 @@ namespace Paracosm.Content.Bosses
                     ResetVars();
                     Attack = AttackOrder.Dequeue();
                     AttackOrder.Enqueue((int)Attack);
-                    attackDuration = attackDurations[(int)Attack];
+                    attackDuration = attackDurations[(int)Attack] + attackPause;
                     NPC.netUpdate = true;
-                }    
+                }
+                for (int i = 0; i < 8; i++)
+                {
+                    var dust = Dust.NewDustDirect(NPC.Center, 2, 2, DustID.OrangeTorch, Scale: 3f);
+                    dust.velocity = new Vector2(0, 10).RotatedBy(MathHelper.PiOver4 * i);
+                    dust.noGravity = true;
+                }
             }
 
             switch (Attack)
@@ -181,8 +194,8 @@ namespace Paracosm.Content.Bosses
                 case (float)Attacks.BloodBlastBurst:
                     BloodBlastBurst();
                     break;
-                case (float)Attacks.Attack5:
-                    IchorShower();
+                case (float)Attacks.IchorSnipe:
+                    IchorSnipe();
                     break;
             }
             attackDuration--;
@@ -192,7 +205,7 @@ namespace Paracosm.Content.Bosses
         void ResetVars()
         {
             AttackCount = 0;
-            attackTimer = 0;
+            AttackTimer = 60;
             positionReached = false;
         }
 
@@ -202,7 +215,7 @@ namespace Paracosm.Content.Bosses
         {
             NPC.velocity = (defaultHeadPos - NPC.Center).SafeNormalize(Vector2.Zero) * NPC.Center.Distance(defaultHeadPos) / 12;
 
-            if (attackTimer <= 0)
+            if (AttackTimer <= 0)
             {
                 if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
@@ -211,12 +224,12 @@ namespace Paracosm.Content.Bosses
                         Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, new Vector2(i * AttackCount, -1) * 10, ProjectileID.GoldenShowerHostile, (int)(NPC.damage * 0.8f), 1);
                     }
                     
-                    attackTimer = IchorShowerCD;
+                    AttackTimer = IchorShowerCD;
                     AttackCount += 0.05f;
                 }
             }
 
-            attackTimer--;
+            AttackTimer--;
         }
 
         bool positionReached = false;
@@ -226,15 +239,15 @@ namespace Paracosm.Content.Bosses
             Vector2 RightPosition = body.NPC.Center + new Vector2(1200, -1200);
             Vector2 LeftPosition = body.NPC.Center + new Vector2(-1200, -1200);
 
-            switch (attackTimer)
+            switch (AttackTimer)
             {
-                case < 60:
+                case >= 0:
                     NPC.velocity = (RightPosition - NPC.Center).SafeNormalize(Vector2.Zero) * NPC.Center.Distance(RightPosition) / 12;
                     break;
-                case < 90:
+                case > -30:
                     NPC.velocity = Vector2.Zero;
                     break;
-                case > 90:
+                case <= -30:
                     if (NPC.Center.Distance(LeftPosition) < 50)
                     {
                         positionReached = true;
@@ -243,7 +256,7 @@ namespace Paracosm.Content.Bosses
                     if (!positionReached)
                     {
                         NPC.velocity = new Vector2(-20, 0);
-                        if (attackTimer % 10 == 0)
+                        if (AttackTimer % 10 == 0)
                         {
                             if (Main.netMode != NetmodeID.MultiplayerClient)
                             {
@@ -261,7 +274,7 @@ namespace Paracosm.Content.Bosses
                     }
                     break;
             }
-            attackTimer++;
+            AttackTimer--;
         }
 
         const int BloodBlastCD = 60;
@@ -270,17 +283,17 @@ namespace Paracosm.Content.Bosses
         {
             NPC.velocity = (defaultHeadPos - NPC.Center).SafeNormalize(Vector2.Zero) * NPC.Center.Distance(defaultHeadPos) / 12;
 
-            if (attackTimer <= 0)
+            if (AttackTimer <= 0)
             {
                 if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
                     Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, (body.player.Center - NPC.Center).SafeNormalize(Vector2.Zero) * 10, ModContent.ProjectileType<BloodBlast>(), (int)(NPC.damage * 0.8f), 1, ai1: 1, ai2: body.player.whoAmI);
                     
                 }
-                attackTimer = BloodBlastCD;
+                AttackTimer = BloodBlastCD;
             }
 
-            attackTimer--;
+            AttackTimer--;
         }
 
         const int BloodBlastBurstCD = 30;
@@ -291,7 +304,7 @@ namespace Paracosm.Content.Bosses
             Vector2 position = defaultHeadPos + new Vector2(30 * (float)Math.Sin(MathHelper.ToRadians(AITimer)), 50 * (float)Math.Sin(MathHelper.ToRadians(AITimer)));
             NPC.velocity = (position - NPC.Center).SafeNormalize(Vector2.Zero) * NPC.Center.Distance(position) / 12;
 
-            if (attackTimer <= 0)
+            if (AttackTimer <= 0)
             {
                 if (AttackCount > 0 && AttackCount % 3 == 0)
                 {
@@ -303,7 +316,7 @@ namespace Paracosm.Content.Bosses
                         }
                         
                     }
-                    attackTimer = BloodBlastBurstCD2;
+                    AttackTimer = BloodBlastBurstCD2;
                 }
                 else
                 {
@@ -314,13 +327,41 @@ namespace Paracosm.Content.Bosses
                             Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, new Vector2(0, -1).RotatedBy(i * MathHelper.PiOver4) * 10, ModContent.ProjectileType<BloodBlast>(), (int)(NPC.damage * 0.8f), 1, ai1: 0);
                         }
                         
-                        attackTimer = BloodBlastBurstCD;
+                        AttackTimer = BloodBlastBurstCD;
                     }
                 }
                 AttackCount++;
             }
 
-            attackTimer--;
+            AttackTimer--;
+        }
+
+        const int IchorSnipeCD1 = 30;
+        const int IchorSnipeCD2 = 60;
+
+        void IchorSnipe()
+        {
+            NPC.velocity = (defaultHeadPos - NPC.Center).SafeNormalize(Vector2.Zero) * NPC.Center.Distance(defaultHeadPos) / 12;
+
+            if (AttackTimer == 0)
+            {
+                if (Main.netMode != NetmodeID.MultiplayerClient)
+                {
+                    Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, (body.player.Center - NPC.Center).SafeNormalize(Vector2.Zero) * 20, ProjectileID.GoldenShowerHostile, (int)(NPC.damage * 0.8f), 1);
+                    NPC.velocity -= (body.player.Center - NPC.Center).SafeNormalize(Vector2.Zero) * 10;
+                    AttackCount++;
+                    if (AttackCount > 0 && AttackCount % 3 == 0)
+                    {
+                        AttackTimer = IchorSnipeCD2;
+                    }
+                    else
+                    {
+                        AttackTimer = IchorSnipeCD1;
+                    }
+                    
+                }
+            }
+            AttackTimer--;
         }
 
         public override void FindFrame(int frameHeight)
@@ -328,7 +369,7 @@ namespace Paracosm.Content.Bosses
             int frameDur = 12;
             int endFrame = 2;
 
-            if (attackTimer > 24)
+            if (AttackTimer > 24 || AttackTimer < 0)
             {
                 NPC.frame.Y = 0;
             }

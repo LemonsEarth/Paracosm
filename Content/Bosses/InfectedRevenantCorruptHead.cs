@@ -45,8 +45,10 @@ namespace Paracosm.Content.Bosses
         Vector2 defaultHeadPos = Vector2.Zero;
 
         float attackDuration = 0;
-        float attackTimer = 0;
-        int[] attackDurations = { 300, 300, 360, 400, 300 };
+        ref float AttackTimer => ref NPC.ai[3];
+        int[] attackDurations = { 300, 300, 360, 400, 600 };
+
+        int attackPause = 60;
 
         enum Attacks
         {
@@ -54,7 +56,7 @@ namespace Paracosm.Content.Bosses
             SpinCursedCross,
             CursedCircles,
             CursedWalls,
-            Attack5,
+            BiteExplosion,
         }
 
         Queue<int> AttackOrder = new Queue<int>();
@@ -102,7 +104,9 @@ namespace Paracosm.Content.Bosses
             {
                 writer.Write(attack);
             }
-            writer.Write(attackTimer);
+            writer.Write(AITimer);
+            writer.Write(AttackTimer);
+            writer.Write(attackDuration);
         }
 
         public override void ReceiveExtraAI(BinaryReader reader)
@@ -112,7 +116,9 @@ namespace Paracosm.Content.Bosses
             {
                 AttackOrder.Enqueue(reader.ReadInt32());
             }
-            attackTimer = reader.ReadSingle();
+            AITimer = reader.ReadSingle();
+            AttackTimer = reader.ReadSingle();
+            attackDuration = reader.ReadSingle();
         }
 
         public override void OnSpawn(IEntitySource source)
@@ -163,8 +169,14 @@ namespace Paracosm.Content.Bosses
                     ResetVars();
                     Attack = AttackOrder.Dequeue();
                     AttackOrder.Enqueue((int)Attack);
-                    attackDuration = attackDurations[(int)Attack];
+                    attackDuration = attackDurations[(int)Attack] + attackPause;
                     NPC.netUpdate = true;
+                }
+                for (int i = 0; i < 8; i++)
+                {
+                    var dust = Dust.NewDustDirect(NPC.Center, 2, 2, DustID.CursedTorch, Scale: 3f);
+                    dust.velocity = new Vector2(0, 10).RotatedBy(MathHelper.PiOver4 * i);
+                    dust.noGravity = true;
                 }
             }
 
@@ -183,8 +195,8 @@ namespace Paracosm.Content.Bosses
                 case (float)Attacks.CursedWalls:
                     RisingCursedWall();
                     break;
-                case (float)Attacks.Attack5:
-                    CursedBurstFire();
+                case (float)Attacks.BiteExplosion:
+                    BiteExplosion();
                     break;
             }
             attackDuration--;
@@ -194,8 +206,7 @@ namespace Paracosm.Content.Bosses
         void ResetVars()
         {
             NPC.frame.Y = 0;
-            attackTimer = 0;
-            rotationTimer = 0;
+            AttackTimer = 60;
             AttackCount = 0;
         }
 
@@ -207,33 +218,33 @@ namespace Paracosm.Content.Bosses
         {
             NPC.velocity = (defaultHeadPos - NPC.Center).SafeNormalize(Vector2.Zero) * NPC.Center.Distance(defaultHeadPos) / 12;
 
-            if (attackTimer <= 0)
+            if (AttackTimer <= 0)
             {
                 if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
                     Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, (body.player.Center - NPC.Center).SafeNormalize(Vector2.Zero) * 10, ProjectileID.CursedFlameHostile, (int)(NPC.damage * 0.8f), 10);
+                    NPC.velocity -= (body.player.Center - NPC.Center).SafeNormalize(Vector2.Zero) * 10;
                     cursedBurstCount++;
-                    attackTimer = CursedBurstCD1;
+                    AttackTimer = CursedBurstCD1;
                     if (cursedBurstCount >= 4)
                     {
                         cursedBurstCount = 0;
-                        attackTimer = CursedBurstCD2;
+                        AttackTimer = CursedBurstCD2;
                     }
 
                 }
             }
 
-            attackTimer--;
+            AttackTimer--;
         }
 
-        int rotationTimer = 0;
         const int CursedCrossCD = 45;
 
         void SpinCursedCross()
         {
-            Vector2 position = defaultHeadPos + new Vector2(0, -50).RotatedBy(MathHelper.ToRadians(rotationTimer));
+            Vector2 position = defaultHeadPos + new Vector2(0, -50).RotatedBy(MathHelper.ToRadians(AITimer));
             NPC.velocity = (position - NPC.Center).SafeNormalize(Vector2.Zero) * NPC.Center.Distance(position) / 12;
-            if (attackTimer <= 0)
+            if (AttackTimer <= 0)
             {
                 if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
@@ -241,12 +252,11 @@ namespace Paracosm.Content.Bosses
                     {
                         Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, new Vector2(0, -1).RotatedBy(i * MathHelper.PiOver2) * 20, ProjectileID.CursedFlameHostile, (int)(NPC.damage * 0.8f), 10);
                     }
-                    attackTimer = CursedCrossCD;
+                    AttackTimer = CursedCrossCD;
 
                 }
             }
-            rotationTimer++;
-            attackTimer--;
+            AttackTimer--;
         }
 
         const int CursedCirclesCD = 60;
@@ -255,7 +265,7 @@ namespace Paracosm.Content.Bosses
         {
             NPC.velocity = (body.player.Center - NPC.Center).SafeNormalize(Vector2.Zero) * (50 / (NPC.Center.Distance(defaultHeadPos) + 1));
 
-            if (attackTimer == 0 && AttackCount < 4)
+            if (AttackTimer == 0 && AttackCount < 4)
             {
                 if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
@@ -268,17 +278,17 @@ namespace Paracosm.Content.Bosses
                 }
             }
 
-            if (attackTimer <= -30)
+            if (AttackTimer <= -30)
             {
                 AttackCount++;
-                attackTimer = CursedCirclesCD;
+                AttackTimer = CursedCirclesCD;
             }
             if (AttackCount >= 4)
             {
                 attackDuration -= 10;
             }
 
-            attackTimer--;
+            AttackTimer--;
         }
 
         const int CursedWallCD = 5;
@@ -286,8 +296,10 @@ namespace Paracosm.Content.Bosses
         void RisingCursedWall()
         {
             NPC.velocity = (defaultHeadPos - NPC.Center).SafeNormalize(Vector2.Zero) * NPC.Center.Distance(defaultHeadPos) / 12;
+            var dust = Dust.NewDustDirect(NPC.position, NPC.width, 120, DustID.CursedTorch, SpeedY: -20, Scale: 3f);
+            dust.noGravity = true;
 
-            if (attackTimer == 0 && AttackCount < 60)
+            if (AttackTimer == 0 && AttackCount < 60)
             {
                 if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
@@ -300,9 +312,9 @@ namespace Paracosm.Content.Bosses
                 }
             }
 
-            if (attackTimer <= -5)
+            if (AttackTimer <= -5)
             {
-                attackTimer = CursedWallCD;
+                AttackTimer = CursedWallCD;
                 AttackCount++;
             }
 
@@ -311,7 +323,38 @@ namespace Paracosm.Content.Bosses
                 attackDuration -= 10;
             }
 
-            attackTimer--;
+            AttackTimer--;
+        }
+
+        const int BiteExplosionCD = 120;
+
+        void BiteExplosion()
+        {
+            if (AttackTimer < -10)
+            {
+                NPC.velocity = (defaultHeadPos - NPC.Center).SafeNormalize(Vector2.Zero) * (NPC.Center.Distance(defaultHeadPos) / 12);
+            }
+            else
+            {
+                NPC.velocity = (body.player.Center - NPC.Center).SafeNormalize(Vector2.Zero) * (NPC.Center.Distance(body.player.Center) / 24);
+            }
+
+            if (AttackTimer == 0)
+            {
+                if (Main.netMode != NetmodeID.MultiplayerClient)
+                {
+                    for (int i = 0; i < 8; i++)
+                    {
+                        Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, new Vector2(0, -1).RotatedBy(i * MathHelper.PiOver4) * 20, ProjectileID.CursedFlameHostile, (int)(NPC.damage * 0.8f), 10);
+                    }
+                }
+            }
+
+            if (AttackTimer <= -60)
+            {
+                AttackTimer = BiteExplosionCD;
+            }
+            AttackTimer--;
         }
 
         public override void FindFrame(int frameHeight)
@@ -319,7 +362,7 @@ namespace Paracosm.Content.Bosses
             int frameDur = 12;
             int endFrame = 2;
 
-            if (attackTimer > 24)
+            if (AttackTimer > 24 || AttackTimer < 0)
             {
                 NPC.frame.Y = 0;
             }
