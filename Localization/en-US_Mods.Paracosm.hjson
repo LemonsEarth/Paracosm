@@ -337,6 +337,7 @@ NPCs: {
 	InfectedRevenantBody.DisplayName: Infected Revenant
 	InfectedRevenantCorruptHead.DisplayName: Infected Revenant
 	InfectedRevenantCrimsonHead.DisplayName: Infected Revenant
+	InfectedRevenantWings.DisplayName: ""
 }
 
 Buffs: {

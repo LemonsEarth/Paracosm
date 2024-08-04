@@ -21,6 +21,7 @@ using System.IO;
 using Microsoft.Build.Tasks;
 using Terraria.Chat;
 using Terraria.Localization;
+using System.Threading;
 
 namespace Paracosm.Content.Bosses
 {
@@ -38,15 +39,15 @@ namespace Paracosm.Content.Bosses
             }
         }
         float AITimer = 0;
-        ref float Attack => ref NPC.ai[1];
-        ref float AttackCount => ref NPC.ai[2];
+        public ref float Attack => ref NPC.ai[1];
+        public ref float AttackCount => ref NPC.ai[2];
         public InfectedRevenantBody body;
 
         Vector2 defaultHeadPos = Vector2.Zero;
 
-        float attackDuration = 0;
-        ref float AttackTimer => ref NPC.ai[3];
-        int[] attackDurations = { 300, 300, 360, 400, 600 };
+        public float attackDuration = 0;
+        public ref float AttackTimer => ref NPC.ai[3];
+        int[] attackDurations = { 300, 300, 360, 400, 600,/* p2 */ 600, 300, 360, 400, 600 };
 
         int attackPause = 60;
 
@@ -57,6 +58,12 @@ namespace Paracosm.Content.Bosses
             CursedCircles,
             CursedWalls,
             BiteExplosion,
+            /* Phase 2 */
+            SoaringBulletHell,
+            Attack2,
+            Attack3,
+            Attack4,
+            Attack5
         }
 
         Queue<int> AttackOrder = new Queue<int>();
@@ -86,13 +93,11 @@ namespace Paracosm.Content.Bosses
             NPC.lifeMax = 100000;
             NPC.dontTakeDamage = true;
             NPC.defense = 30;
-            NPC.HitSound = SoundID.NPCHit1;
-            NPC.DeathSound = SoundID.NPCHit1;
-            NPC.value = 1000000;
+            NPC.value = 0;
             NPC.noTileCollide = true;
-            NPC.knockBackResist = 0;
+            NPC.knockBackResist = 1;
             NPC.noGravity = true;
-            NPC.npcSlots = 10;
+            NPC.npcSlots = 1;
             NPC.SpawnWithHigherTime(2);
             NPC.hide = true;
             NPC.netAlways = true;
@@ -144,7 +149,7 @@ namespace Paracosm.Content.Bosses
 
         public override void AI()
         {
-            NPC bodyNPC = Main.npc[(int)ParentIndex];
+            NPC bodyNPC = Main.npc[ParentIndex];
             if (Main.netMode != NetmodeID.MultiplayerClient && (Main.npc[(int)ParentIndex] == null || !Main.npc[(int)ParentIndex].active || Main.npc[(int)ParentIndex].type != BodyType()))
             {
                 NPC.active = false;
@@ -154,6 +159,7 @@ namespace Paracosm.Content.Bosses
             }
             InfectedRevenantBody body = (InfectedRevenantBody)bodyNPC.ModNPC;
             this.body = body;
+            NPC.alpha = bodyNPC.alpha;
             defaultHeadPos = body.CorruptHeadPos - new Vector2(0, 120);
             if (AITimer < 60)
             {
@@ -161,16 +167,27 @@ namespace Paracosm.Content.Bosses
                 AITimer++;
                 return;
             }
+
+            if (body.phaseTransition)
+            {
+                if (body.transitionDuration > 150)
+                {
+                    NPC.velocity = ((defaultHeadPos + new Vector2(0, 20)) - NPC.Center).SafeNormalize(Vector2.Zero) * (NPC.Center.Distance(defaultHeadPos + new Vector2(0, 20)) / 36);
+                    AttackTimer = 60;
+                }
+                else
+                {
+                    NPC.velocity = ((defaultHeadPos - new Vector2(0, 20)) - NPC.Center).SafeNormalize(Vector2.Zero) * (NPC.Center.Distance(defaultHeadPos - new Vector2(0, 20)) / 12);
+                    AttackTimer = 20;
+                }
+                return;
+            }
+
             if (attackDuration <= 0)
             {
                 if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
-                    NPC.frame.Y = 0;
-                    ResetVars();
-                    Attack = AttackOrder.Dequeue();
-                    AttackOrder.Enqueue((int)Attack);
-                    attackDuration = attackDurations[(int)Attack] + attackPause;
-                    NPC.netUpdate = true;
+                    ChooseAttack();
                 }
                 for (int i = 0; i < 8; i++)
                 {
@@ -179,7 +196,6 @@ namespace Paracosm.Content.Bosses
                     dust.noGravity = true;
                 }
             }
-
 
             switch (Attack)
             {
@@ -199,8 +215,19 @@ namespace Paracosm.Content.Bosses
                     BiteExplosion();
                     break;
             }
+
             attackDuration--;
             AITimer++;
+        }
+
+        void ChooseAttack()
+        {
+            NPC.frame.Y = 0;
+            ResetVars();
+            Attack = AttackOrder.Dequeue();
+            AttackOrder.Enqueue((int)Attack);
+            attackDuration = attackDurations[(int)Attack] + attackPause;
+            NPC.netUpdate = true;
         }
 
         void ResetVars()
@@ -231,7 +258,6 @@ namespace Paracosm.Content.Bosses
                         cursedBurstCount = 0;
                         AttackTimer = CursedBurstCD2;
                     }
-
                 }
             }
 
@@ -305,7 +331,7 @@ namespace Paracosm.Content.Bosses
                 {
                     for (int i = -1; i < 2; i += 2)
                     {
-                        var proj = Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), body.NPC.Center + new Vector2(i * 1200, 1200 - (AttackCount * 30)), Vector2.Zero, ModContent.ProjectileType<CursedFlameRing>(), (int)(NPC.damage * 0.8f), 1, ai0: 5, ai1: -i , ai2: 0);
+                        var proj = Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), body.NPC.Center + new Vector2(i * 1200, 1200 - (AttackCount * 30)), Vector2.Zero, ModContent.ProjectileType<CursedFlameRing>(), (int)(NPC.damage * 0.8f), 1, ai0: 5, ai1: -i, ai2: 0);
                         CursedFlameRing cursedFlameRing = (CursedFlameRing)proj.ModProjectile;
                         cursedFlameRing.speed = 40;
                     }
