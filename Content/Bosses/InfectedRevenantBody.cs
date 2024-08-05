@@ -41,7 +41,10 @@ namespace Paracosm.Content.Bosses
         Vector2 wingsOffset = new Vector2(270, 152 + 72);
 
         ref float AITimer => ref NPC.ai[0];
-        ref float P2Timer => ref NPC.ai[1];
+        public ref float Attack => ref NPC.ai[1];
+        public ref float AttackTimer => ref NPC.ai[2];
+        public ref float AttackDuration => ref NPC.ai[3];
+        public int AttackCount = 0;
 
         public int phase = 1;
 
@@ -50,6 +53,16 @@ namespace Paracosm.Content.Bosses
         public float transitionDuration = 300;
 
         List<Projectile> CursedFlames = new List<Projectile>();
+        bool arenaFollow = true;
+        Vector2 arenaCenter;
+
+        int[] attackDurations = [600, 300];
+
+        public enum Attacks
+        {
+            SoaringBulletHell,
+            DashingSpam
+        }
 
         InfectedRevenantCorruptHead corruptHead;
         InfectedRevenantCrimsonHead crimsonHead;
@@ -152,8 +165,25 @@ namespace Paracosm.Content.Bosses
 
             if (phase == 2 && !phaseTransition)
             {
-                NPC.velocity = NPC.velocity = (player.Center - NPC.Center).SafeNormalize(Vector2.Zero) * 5;
-                P2Timer++;
+                if (AttackDuration <= 0)
+                {
+                    SwitchAttacks();
+                }
+                switch (Attack)
+                {
+                    case (int)Attacks.SoaringBulletHell:
+                        SoaringBulletHell();
+                        break;
+                    case (int)Attacks.DashingSpam:
+                        DashingSpam();
+                        break;
+                }
+                AttackDuration--;
+            }
+
+            if (arenaFollow)
+            {
+                arenaCenter = NPC.Center;
             }
 
             SetOffsets();
@@ -174,6 +204,109 @@ namespace Paracosm.Content.Bosses
             WingsPos = NPC.Center - wingsOffset;
         }
 
+        void SwitchAttacks()
+        {
+            Attack++;
+            if (Attack > 1)
+            {
+                Attack = 0;
+            }
+            AttackDuration = attackDurations[(int)Attack];
+            ResetVars();
+        }
+
+        void ResetVars()
+        {
+            AttackTimer = 0;
+            NPC.alpha = 0;
+            tempPlayerDir = Vector2.Zero;
+            crimsonHead.ResetVars();
+            corruptHead.ResetVars();
+        }
+
+        const int BulletHellCD = 10;
+        Vector2 tempPlayerDir = Vector2.Zero;
+
+        void SoaringBulletHell()
+        {
+            switch (AttackDuration)
+            {
+                case 600:
+                    arenaFollow = false;
+                    arenaCenter = NPC.Center;
+                    break;
+                case > 570:
+                    NPC.velocity.Y = 3;
+                    break;
+                case > 540:
+                    NPC.velocity = ((player.Center - new Vector2(0, 800)) - NPC.Center).SafeNormalize(Vector2.Zero) * (NPC.Center.Distance(player.Center - new Vector2(0, 800)) / 5);
+                    if (NPC.alpha < 255)
+                    {
+                        NPC.alpha += 7;
+                    }
+                    break;
+                case > 180:
+                    NPC.dontTakeDamage = true;
+                    NPC.velocity = ((player.Center - new Vector2(0, 800)) - NPC.Center).SafeNormalize(Vector2.Zero) * (NPC.Center.Distance(player.Center - new Vector2(0, 800)) / 5);
+                    if (AttackTimer == 0)
+                    {
+                        if (Main.netMode != NetmodeID.MultiplayerClient)
+                        {
+                            for (int i = -1; i < 2; i += 2)
+                            {
+                                Vector2 spawnPos = arenaCenter + new Vector2(0, i * 1140).RotatedBy(MathHelper.ToRadians(10 * AttackCount));
+                                var proj = Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), spawnPos, (player.Center - spawnPos).SafeNormalize(Vector2.Zero) * 2, ModContent.ProjectileType<CursedFlameRing>(), corruptHead.NPC.damage, 1, -1, 30, player.Center.X - spawnPos.X, player.Center.Y - spawnPos.Y);
+                                CursedFlameRing cfr = (CursedFlameRing)proj.ModProjectile;
+                                cfr.speed = 40;
+                            }
+                        }
+                        AttackCount++;
+                        AttackTimer = BulletHellCD;
+                    }
+                    AttackTimer--;
+                    break;
+                case 180:
+                    SoundEngine.PlaySound(SoundID.Roar with { MaxInstances = 2, Pitch = -1f });
+                    SoundEngine.PlaySound(SoundID.NPCDeath62 with { MaxInstances = 2, Pitch = -0.5f });
+                    NPC.dontTakeDamage = false;
+                    NPC.velocity = ((player.Center - new Vector2(0, 800)) - NPC.Center).SafeNormalize(Vector2.Zero) * (NPC.Center.Distance(player.Center - new Vector2(0, 800)) / 5);
+                    break;
+                case > 90:
+                    NPC.alpha = 0;
+                    NPC.velocity = playerDirection * NPC.Center.Distance(player.Center) / 2;
+                    Lighting.AddLight(NPC.Center, 10, 10, 10);
+                    var green = Dust.NewDustDirect(NPC.position, NPC.width, NPC.height, DustID.CursedTorch, Scale: 4f);
+                    green.noGravity = true;
+                    var orange = Dust.NewDustDirect(NPC.position, NPC.width, NPC.height, DustID.OrangeTorch, Scale: 4f);
+                    orange.noGravity = true;
+                    break;
+                case > 0:
+                    NPC.damage = 0;
+                    NPC.velocity = (arenaCenter - NPC.Center).SafeNormalize(Vector2.Zero) * (NPC.Center.Distance(arenaCenter) / 12);
+                    break;
+            }
+
+        }
+
+        const int DashingCD = 60;
+
+        void DashingSpam()
+        {
+            NPC.damage = 40;
+            switch (AttackTimer)
+            {
+                case > 0:
+                    NPC.velocity /= 1.1f;
+                    break;
+                case <= 0:
+                    tempPlayerDir = playerDirection;
+                    NPC.velocity = tempPlayerDir.SafeNormalize(Vector2.Zero) * 40;
+                    AttackTimer = DashingCD;
+                    SoundEngine.PlaySound(SoundID.Roar with { MaxInstances = 2, Pitch = 0f });
+                    break;
+            }
+            AttackTimer--;
+        }
 
         float tempVolume;
         void PhaseTransition()
@@ -183,6 +316,7 @@ namespace Paracosm.Content.Bosses
             {
                 case 300:
                     tempVolume = Main.musicVolume;
+                    Attack = -1;
                     break;
                 case > 150:
                     if (Main.musicVolume > 0)
@@ -192,8 +326,12 @@ namespace Paracosm.Content.Bosses
                     break;
                 case 150:
                     SpawnWings();
-                    SoundEngine.PlaySound(SoundID.Roar with { MaxInstances = 2, Pitch = -0f });
+                    SoundEngine.PlaySound(SoundID.Roar with { MaxInstances = 2, Pitch = -1f });
                     SoundEngine.PlaySound(SoundID.NPCDeath62 with { MaxInstances = 2, Pitch = -0.5f });
+                    if (NPC.life < NPC.lifeMax / 2)
+                    {
+                        NPC.life = (int)Math.Ceiling((double)NPC.lifeMax / 2);
+                    }
                     break;
                 case > 20:
                     PunchCameraModifier modifier = new PunchCameraModifier(NPC.Center, (Main.rand.NextFloat() * ((float)Math.PI * 2f)).ToRotationVector2(), 15f, 6f, 20, 1000f, FullName);
@@ -231,13 +369,15 @@ namespace Paracosm.Content.Bosses
 
             for (int i = 0; i < CursedFlames.Count; i++)
             {
-                CursedFlames[i].position = NPC.Center + new Vector2(0, -1180).RotatedBy(i * MathHelper.ToRadians(18)).RotatedBy(MathHelper.ToRadians(AITimer));
+                Vector2 pos = arenaCenter + new Vector2(0, -1180).RotatedBy(i * MathHelper.ToRadians(18)).RotatedBy(MathHelper.ToRadians(AITimer));
+                CursedFlames[i].velocity = (pos - CursedFlames[i].Center).SafeNormalize(Vector2.Zero) * (CursedFlames[i].Distance(pos) / 20);
+
                 CursedFlames[i].timeLeft = 180;
             }
 
             foreach (var player in Main.ActivePlayers)
             {
-                if (NPC.Center.Distance(player.Center) > 1200)
+                if (arenaCenter.Distance(player.Center) > 1200)
                 {
                     player.AddBuff(ModContent.BuffType<Infected>(), 2);
                 }

@@ -47,9 +47,11 @@ namespace Paracosm.Content.Bosses
 
         public float attackDuration = 0;
         public ref float AttackTimer => ref NPC.ai[3];
-        int[] attackDurations = { 300, 300, 360, 400, 600,/* p2 */ 600, 300, 360, 400, 600 };
+        int[] attackDurations = { 300, 300, 360, 400, 600 };
 
         int attackPause = 60;
+
+        int phase => body.phase;
 
         enum Attacks
         {
@@ -183,38 +185,58 @@ namespace Paracosm.Content.Bosses
                 return;
             }
 
-            if (attackDuration <= 0)
+            if (phase == 1)
             {
-                if (Main.netMode != NetmodeID.MultiplayerClient)
+                if (attackDuration <= 0)
                 {
-                    ChooseAttack();
+                    if (Main.netMode != NetmodeID.MultiplayerClient)
+                    {
+                        ChooseAttack();
+                    }
+                    for (int i = 0; i < 8; i++)
+                    {
+                        var dust = Dust.NewDustDirect(NPC.Center, 2, 2, DustID.CursedTorch, Scale: 3f);
+                        dust.velocity = new Vector2(0, 10).RotatedBy(MathHelper.PiOver4 * i);
+                        dust.noGravity = true;
+                    }
                 }
-                for (int i = 0; i < 8; i++)
+
+                switch (Attack)
                 {
-                    var dust = Dust.NewDustDirect(NPC.Center, 2, 2, DustID.CursedTorch, Scale: 3f);
-                    dust.velocity = new Vector2(0, 10).RotatedBy(MathHelper.PiOver4 * i);
-                    dust.noGravity = true;
+                    case (float)Attacks.CursedBurstFire:
+                        CursedBurstFire();
+                        break;
+                    case (float)Attacks.SpinCursedCross:
+                        SpinCursedCross();
+                        break;
+                    case (float)Attacks.CursedCircles:
+                        CursedCircles();
+                        break;
+                    case (float)Attacks.CursedWalls:
+                        RisingCursedWall();
+                        break;
+                    case (float)Attacks.BiteExplosion:
+                        BiteExplosion();
+                        break;
                 }
             }
 
-            switch (Attack)
+            else if (phase == 2)
             {
-                case (float)Attacks.CursedBurstFire:
-                    CursedBurstFire();
-                    break;
-                case (float)Attacks.SpinCursedCross:
-                    SpinCursedCross();
-                    break;
-                case (float)Attacks.CursedCircles:
-                    CursedCircles();
-                    break;
-                case (float)Attacks.CursedWalls:
-                    RisingCursedWall();
-                    break;
-                case (float)Attacks.BiteExplosion:
-                    BiteExplosion();
-                    break;
+                Attack = body.Attack;
+
+                switch (Attack)
+                {
+                    case (int)InfectedRevenantBody.Attacks.SoaringBulletHell:
+                        SoaringBulletHell();
+                        break;
+                    case (int)InfectedRevenantBody.Attacks.DashingSpam:
+                        DashingSpam();
+                        break;
+                }
             }
+
+
 
             attackDuration--;
             AITimer++;
@@ -230,10 +252,14 @@ namespace Paracosm.Content.Bosses
             NPC.netUpdate = true;
         }
 
-        void ResetVars()
+        public void ResetVars()
         {
             NPC.frame.Y = 0;
-            AttackTimer = 60;
+            if (phase == 1)
+            {
+                AttackTimer = 60;
+            }
+            else AttackTimer = 0;
             AttackCount = 0;
         }
 
@@ -303,6 +329,8 @@ namespace Paracosm.Content.Bosses
                     }
                 }
             }
+
+            Lighting.AddLight(NPC.Center, 0.5f, 0f, 1f);
 
             if (AttackTimer <= -30)
             {
@@ -383,6 +411,30 @@ namespace Paracosm.Content.Bosses
             AttackTimer--;
         }
 
+        void SoaringBulletHell()
+        {
+            NPC.velocity = (defaultHeadPos - NPC.Center).SafeNormalize(Vector2.Zero) * NPC.Center.Distance(defaultHeadPos) / 2;
+            AttackTimer = 0;
+        }
+
+        const int DashingSpamCD = 45;
+        void DashingSpam()
+        {
+            NPC.velocity = (defaultHeadPos - NPC.Center).SafeNormalize(Vector2.Zero) * NPC.Center.Distance(defaultHeadPos) / 12;
+            if (AttackTimer == 0)
+            {
+                if (Main.netMode != NetmodeID.MultiplayerClient)
+                {
+                    for (int i = -1; i < 2; i++)
+                    {
+                        var proj = Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center, (body.player.Center - NPC.Center).SafeNormalize(Vector2.Zero).RotatedBy(i * (MathHelper.PiOver4 / 2)) * 20, ProjectileID.CursedFlameHostile, (int)(NPC.damage * 0.8f), 1);
+                    }
+                }
+                AttackTimer = DashingSpamCD;
+            }
+            AttackTimer--;
+        }
+
         public override void FindFrame(int frameHeight)
         {
             int frameDur = 12;
@@ -391,6 +443,11 @@ namespace Paracosm.Content.Bosses
             if (AttackTimer > 24 || AttackTimer < 0)
             {
                 NPC.frame.Y = 0;
+                return;
+            }
+            if (AttackTimer < 5)
+            {
+                NPC.frame.Y = 2 * frameHeight;
             }
 
             if (NPC.frame.Y < endFrame * frameHeight)
@@ -429,7 +486,7 @@ namespace Paracosm.Content.Bosses
                 distanceLeft = drawPosition.Distance(NPC.Center);
                 drawnSegments++;
                 distanceLeft -= segmentHeight;
-                spriteBatch.Draw(NeckTexture.Value, drawPosition - screenPos, null, new Color(255 - drawnSegments * 10, 255 - drawnSegments * 10, 255 - drawnSegments * 10), rotation, new Vector2(NeckTexture.Value.Width / 2f, NeckTexture.Value.Height / 2f), 1f, SpriteEffects.None, 0f);
+                spriteBatch.Draw(NeckTexture.Value, drawPosition - screenPos, null, new Color(255 - (drawnSegments * 10), 255 - (drawnSegments * 10), 255 - (drawnSegments * 10), 255 - NPC.alpha), rotation, new Vector2(NeckTexture.Value.Width / 2f, NeckTexture.Value.Height / 2f), 1f, SpriteEffects.None, 0f);
             }
 
             return true;

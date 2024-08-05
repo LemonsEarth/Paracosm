@@ -43,6 +43,8 @@ namespace Paracosm.Content.Projectiles.Hostile
 
         public override void SetStaticDefaults()
         {
+            ProjectileID.Sets.TrailCacheLength[Projectile.type] = 4;
+            ProjectileID.Sets.TrailingMode[Projectile.type] = 0;
         }
 
         public override void SetDefaults()
@@ -68,12 +70,26 @@ namespace Paracosm.Content.Projectiles.Hostile
             Projectile.rotation = MathHelper.ToRadians(Projectile.timeLeft * 12);
             for (int i = 0; i < 2; i++)
             {
-                var dust = Dust.NewDustDirect(Projectile.position - new Vector2(2f, 2f), Projectile.width + 2, Projectile.height + 2, DustID.CursedTorch, Scale: 3f);
+                var dust = Dust.NewDustDirect(Projectile.position - new Vector2(2f, 2f), Projectile.width + 2, Projectile.height + 2, DustID.CursedTorch, Scale: 2.5f);
                 dust.noGravity = true;
             }
 
 
             AITimer--;
+        }
+
+        public override bool PreDraw(ref Color lightColor)
+        {
+            Texture2D Texture = TextureAssets.Projectile[Type].Value;
+            Vector2 drawOrigin = new Vector2(Texture.Width / 2, Texture.Height / 2);
+
+            for (int i = 0; i < Projectile.oldPos.Length; i++)
+            {
+                Vector2 drawPos = (Projectile.oldPos[i] - Main.screenPosition) + drawOrigin;
+                Color color = Projectile.GetAlpha(lightColor) * ((Projectile.oldPos.Length - i) / (float)Projectile.oldPos.Length);
+                Main.EntitySpriteDraw(Texture, drawPos, null, color, Projectile.rotation, drawOrigin, Projectile.scale, SpriteEffects.None, 0f);
+            }
+            return true;
         }
     }
 }
