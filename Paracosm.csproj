@@ -10,7 +10,7 @@
 	<ItemGroup>
 	  <None Remove="Content\Items\Placeable\ParastoneWallUnsafeItem.png" />
 	  <None Remove="Content\Projectiles\ArchmageBolt.png" />
-	  <None Remove="Content\Projectiles\Hostile\CursedFlameRing.png" />
+	  <None Remove="Content\Projectiles\Hostile\CursedSpiritFlame.png" />
 	  <None Remove="Content\Projectiles\ParashardSwordProjectile.png" />
 	  <None Remove="content\shaders\DivineSeekerShader.fx" />
 	  <None Remove="Content\Walls\ParastoneWallUnsafe.png" />

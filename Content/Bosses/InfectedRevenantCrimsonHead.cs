@@ -146,6 +146,11 @@ namespace Paracosm.Content.Bosses
             positionReached = reader.ReadBoolean();
         }
 
+        public override bool CheckActive()
+        {
+            return false;
+        }
+
         public override void AI()
         {
             NPC bodyNPC = Main.npc[ParentIndex];
@@ -253,10 +258,11 @@ namespace Paracosm.Content.Bosses
                     case (int)InfectedRevenantBody.Attacks.DashingSpam:
                         DashingSpam();
                         break;
+                    case (int)InfectedRevenantBody.Attacks.CorruptTorrent:
+                        CorruptTorrent();
+                        break;
                 }
             }
-
-
 
             attackDuration--;
             AITimer++;
@@ -447,7 +453,7 @@ namespace Paracosm.Content.Bosses
         const int DashingSpamCD = 60;
         void DashingSpam()
         {
-            NPC.velocity = (defaultHeadPos - NPC.Center).SafeNormalize(Vector2.Zero) * NPC.Center.Distance(defaultHeadPos) / 12;
+            NPC.velocity = (defaultHeadPos - NPC.Center).SafeNormalize(Vector2.Zero) * NPC.Center.Distance(defaultHeadPos) / 8;
             if (AttackTimer == 0)
             {
                 if (Main.netMode != NetmodeID.MultiplayerClient)
@@ -458,6 +464,26 @@ namespace Paracosm.Content.Bosses
                     }
                 }
                 AttackTimer = DashingSpamCD;
+            }
+            AttackTimer--;
+        }
+
+
+        const int CTBloodBlastCD = 50;
+        void CorruptTorrent()
+        {
+            Vector2 position = defaultHeadPos + new Vector2(0, -50).RotatedBy(MathHelper.ToRadians(-AITimer));
+            NPC.velocity = (position - NPC.Center).SafeNormalize(Vector2.Zero) * NPC.Center.Distance(position) / 12;
+            if (AttackTimer == 0)
+            {
+                AttackTimer = CTBloodBlastCD;
+                if (Main.netMode != NetmodeID.MultiplayerClient)
+                {
+                    for (int i = 0; i < 4; i++)
+                    {
+                        Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, new Vector2(0, -1).RotatedBy(i * MathHelper.PiOver2) * 10, ModContent.ProjectileType<BloodBlast>(), (int)(NPC.damage * 0.8f), 1, ai1: 0);
+                    }
+                }
             }
             AttackTimer--;
         }

@@ -149,6 +149,11 @@ namespace Paracosm.Content.Bosses
             return ModContent.NPCType<InfectedRevenantBody>();
         }
 
+        public override bool CheckActive()
+        {
+            return false;
+        }
+
         public override void AI()
         {
             NPC bodyNPC = Main.npc[ParentIndex];
@@ -232,6 +237,9 @@ namespace Paracosm.Content.Bosses
                         break;
                     case (int)InfectedRevenantBody.Attacks.DashingSpam:
                         DashingSpam();
+                        break;
+                    case (int)InfectedRevenantBody.Attacks.CorruptTorrent:
+                        CorruptTorrent();
                         break;
                 }
             }
@@ -323,9 +331,9 @@ namespace Paracosm.Content.Bosses
                 {
                     for (int i = 0; i < 12; i++)
                     {
-                        var proj = Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center, new Vector2(0, -1).RotatedBy(i * (MathHelper.PiOver2 / 3)) * 4, ModContent.ProjectileType<CursedFlameRing>(), (int)(NPC.damage * 0.8f), 1, ai0: 30, ai1: body.player.Center.X - NPC.Center.X, ai2: body.player.Center.Y - NPC.Center.Y);
-                        CursedFlameRing cursedFlameRing = (CursedFlameRing)proj.ModProjectile;
-                        cursedFlameRing.speed = 10;
+                        var proj = Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center, new Vector2(0, -1).RotatedBy(i * (MathHelper.PiOver2 / 3)) * 4, ModContent.ProjectileType<CursedSpiritFlame>(), (int)(NPC.damage * 0.8f), 1, ai0: 30, ai1: body.player.Center.X - NPC.Center.X, ai2: body.player.Center.Y - NPC.Center.Y);
+                        CursedSpiritFlame CursedSpiritFlame = (CursedSpiritFlame)proj.ModProjectile;
+                        CursedSpiritFlame.speed = 10;
                     }
                 }
             }
@@ -359,9 +367,9 @@ namespace Paracosm.Content.Bosses
                 {
                     for (int i = -1; i < 2; i += 2)
                     {
-                        var proj = Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), body.NPC.Center + new Vector2(i * 1200, 1200 - (AttackCount * 30)), Vector2.Zero, ModContent.ProjectileType<CursedFlameRing>(), (int)(NPC.damage * 0.8f), 1, ai0: 5, ai1: -i, ai2: 0);
-                        CursedFlameRing cursedFlameRing = (CursedFlameRing)proj.ModProjectile;
-                        cursedFlameRing.speed = 40;
+                        var proj = Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), body.NPC.Center + new Vector2(i * 1200, 1200 - (AttackCount * 30)), Vector2.Zero, ModContent.ProjectileType<CursedSpiritFlame>(), (int)(NPC.damage * 0.8f), 1, ai0: 5, ai1: -i, ai2: 0);
+                        CursedSpiritFlame CursedSpiritFlame = (CursedSpiritFlame)proj.ModProjectile;
+                        CursedSpiritFlame.speed = 40;
                     }
                 }
             }
@@ -420,7 +428,7 @@ namespace Paracosm.Content.Bosses
         const int DashingSpamCD = 45;
         void DashingSpam()
         {
-            NPC.velocity = (defaultHeadPos - NPC.Center).SafeNormalize(Vector2.Zero) * NPC.Center.Distance(defaultHeadPos) / 12;
+            NPC.velocity = (defaultHeadPos - NPC.Center).SafeNormalize(Vector2.Zero) * NPC.Center.Distance(defaultHeadPos) / 6;
             if (AttackTimer == 0)
             {
                 if (Main.netMode != NetmodeID.MultiplayerClient)
@@ -431,6 +439,31 @@ namespace Paracosm.Content.Bosses
                     }
                 }
                 AttackTimer = DashingSpamCD;
+            }
+            AttackTimer--;
+        }
+
+
+        const int FlamethrowerCD = 33;
+        void CorruptTorrent()
+        {
+            Vector2 position = defaultHeadPos + new Vector2(0, -50).RotatedBy(MathHelper.ToRadians(AITimer * 1.6f));
+            NPC.velocity = (position - NPC.Center).SafeNormalize(Vector2.Zero) * NPC.Center.Distance(position) / 12;
+            if (AttackTimer == 0)
+            {
+                SoundEngine.PlaySound(SoundID.DD2_BetsyFireballShot with { MaxInstances = 0, Pitch = -0.1f });
+                if (Main.netMode != NetmodeID.MultiplayerClient)
+                {
+                    for (int i = -1; i < 2; i++)
+                    {
+                        Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, (defaultHeadPos - NPC.Center).SafeNormalize(Vector2.Zero).RotatedBy(i * 0.8f * (MathHelper.PiOver4 / 4)) * 1.5f * AttackCount, ModContent.ProjectileType<CursedFlamethrower>(), (int)(NPC.damage * 0.8f), 1);
+                    }
+                    if (AttackCount < 30)
+                    {
+                        AttackCount += 3;
+                    }
+                }
+                AttackTimer = FlamethrowerCD - AttackCount;
             }
             AttackTimer--;
         }

@@ -323,7 +323,9 @@ Projectiles: {
 	ArchmageBolt.DisplayName: Archmage Bolt
 	CursedFlamesBorder.DisplayName: Cursed Flames Border
 	BloodBlast.DisplayName: Blood Blast
-	CursedFlameRing.DisplayName: Cursed Flame Ring
+	CursedSpiritFlame.DisplayName: Cursed Spirit Flame
+	DivineSpiritFlame.DisplayName: Divine Spirit Flame
+	CursedFlamethrower.DisplayName: Cursed Flamethrower
 }
 
 NPCs: {

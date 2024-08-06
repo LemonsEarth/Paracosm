@@ -17,9 +17,9 @@ using Terraria.ModLoader;
 
 namespace Paracosm.Content.Projectiles.Hostile
 {
-    public class CursedFlameRing : ModProjectile
+    public class CursedSpiritFlame : ModProjectile
     {
-        ref float AITimer => ref Projectile.ai[0];
+        ref float SpawnTime => ref Projectile.ai[0];
         Vector2 direction
         {
             get => new Vector2(Projectile.ai[1], Projectile.ai[2]);
@@ -29,67 +29,85 @@ namespace Paracosm.Content.Projectiles.Hostile
                 Projectile.ai[2] = value.Y;
             }
         }
+        int AITimer = 0;
         public float speed = 1;
 
         public override void SendExtraAI(BinaryWriter writer)
         {
             writer.Write(speed);
+            writer.Write(AITimer);
         }
 
         public override void ReceiveExtraAI(BinaryReader reader)
         {
+
             speed = reader.ReadSingle();
+            AITimer = reader.ReadInt32();
         }
 
         public override void SetStaticDefaults()
         {
-            ProjectileID.Sets.TrailCacheLength[Projectile.type] = 4;
-            ProjectileID.Sets.TrailingMode[Projectile.type] = 0;
+            Main.projFrames[Type] = 4;
         }
 
         public override void SetDefaults()
         {
-            Projectile.width = 16;
-            Projectile.height = 16;
+            Projectile.width = 32;
+            Projectile.height = 32;
             Projectile.hostile = true;
             Projectile.friendly = false;
             Projectile.ignoreWater = true;
             AIType = 0;
             Projectile.timeLeft = 480;
             Projectile.tileCollide = false;
-            Projectile.scale = 1.2f;
         }
 
         public override void AI()
         {
             if (AITimer == 0)
             {
+                Projectile.scale = 0.1f;
+            }
+            if (AITimer < SpawnTime)
+            {
+                if (Projectile.scale < 1f)
+                {
+                    Projectile.scale += 1 / SpawnTime;
+                }
+            }
+            if (AITimer == SpawnTime)
+            {
                 Projectile.velocity = direction.SafeNormalize(Vector2.Zero) * speed;
                 Projectile.netUpdate = true;
             }
-            Projectile.rotation = MathHelper.ToRadians(Projectile.timeLeft * 12);
             for (int i = 0; i < 2; i++)
             {
-                var dust = Dust.NewDustDirect(Projectile.position - new Vector2(2f, 2f), Projectile.width + 2, Projectile.height + 2, DustID.CursedTorch, Scale: 2.5f);
+                var dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, DustID.CursedTorch, Scale: 1.5f);
                 dust.noGravity = true;
             }
 
+            Projectile.frameCounter++;
+            if (Projectile.frameCounter == 6)
+            {
+                Projectile.frame++;
+                Projectile.frameCounter = 0;
+                if (Projectile.frame >= 4)
+                {
+                    Projectile.frame = 0;
+                }
+            }
 
-            AITimer--;
+            AITimer++;
+        }
+
+        public override void OnHitPlayer(Player target, Player.HurtInfo info)
+        {
+            target.AddBuff(BuffID.CursedInferno, 120);
         }
 
         public override bool PreDraw(ref Color lightColor)
         {
-            Texture2D Texture = TextureAssets.Projectile[Type].Value;
-            Vector2 drawOrigin = new Vector2(Texture.Width / 2, Texture.Height / 2);
-
-            for (int i = 0; i < Projectile.oldPos.Length; i++)
-            {
-                Vector2 drawPos = (Projectile.oldPos[i] - Main.screenPosition) + drawOrigin;
-                Color color = Projectile.GetAlpha(lightColor) * ((Projectile.oldPos.Length - i) / (float)Projectile.oldPos.Length);
-                Main.EntitySpriteDraw(Texture, drawPos, null, color, Projectile.rotation, drawOrigin, Projectile.scale, SpriteEffects.None, 0f);
-            }
-            return true;
+            return base.PreDraw(ref lightColor);
         }
     }
 }

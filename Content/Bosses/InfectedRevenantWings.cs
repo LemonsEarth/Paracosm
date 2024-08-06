@@ -59,6 +59,11 @@ namespace Paracosm.Content.Bosses
             NPC.netAlways = true;
         }
 
+        public override bool CheckActive()
+        {
+            return false;
+        }
+
         public static int BodyType()
         {
             return ModContent.NPCType<InfectedRevenantBody>();

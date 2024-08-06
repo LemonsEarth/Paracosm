@@ -21,6 +21,7 @@ using Paracosm.Content.Buffs;
 using Terraria.Chat;
 using Terraria.Localization;
 using Terraria.Graphics.CameraModifiers;
+using System.IO;
 
 namespace Paracosm.Content.Bosses
 {
@@ -56,12 +57,13 @@ namespace Paracosm.Content.Bosses
         bool arenaFollow = true;
         Vector2 arenaCenter;
 
-        int[] attackDurations = [600, 300];
+        int[] attackDurations = [600, 300, 600];
 
         public enum Attacks
         {
             SoaringBulletHell,
-            DashingSpam
+            DashingSpam,
+            CorruptTorrent
         }
 
         InfectedRevenantCorruptHead corruptHead;
@@ -92,12 +94,25 @@ namespace Paracosm.Content.Bosses
             NPC.value = 1000000;
             NPC.knockBackResist = 0;
             NPC.npcSlots = 10;
+            NPC.noGravity = true;
             NPC.SpawnWithHigherTime(2);
 
             if (!Main.dedServ)
             {
                 Music = MusicLoader.GetMusicSlot(Mod, "Content/Audio/Music/EmbodimentOfEvil");
             }
+        }
+
+        public override void SendExtraAI(BinaryWriter writer)
+        {
+            writer.Write(AttackCount);
+            writer.Write(phase);
+        }
+
+        public override void ReceiveExtraAI(BinaryReader reader)
+        {
+            AttackCount = reader.ReadInt32();
+            phase = reader.ReadInt32();
         }
 
         public static int WingsType()
@@ -149,7 +164,7 @@ namespace Paracosm.Content.Bosses
                 PhaseTransition();
             }
 
-            if (NPC.Center.Distance(player.Center) > 2500)
+            if (NPC.Center.Distance(player.Center) > 3500)
             {
                 NPC.EncourageDespawn(300);
             }
@@ -177,6 +192,9 @@ namespace Paracosm.Content.Bosses
                     case (int)Attacks.DashingSpam:
                         DashingSpam();
                         break;
+                    case (int)Attacks.CorruptTorrent:
+                        CorruptTorrent();
+                            break;
                 }
                 AttackDuration--;
             }
@@ -206,12 +224,16 @@ namespace Paracosm.Content.Bosses
 
         void SwitchAttacks()
         {
-            Attack++;
-            if (Attack > 1)
+            if (Main.myPlayer != NetmodeID.MultiplayerClient)
             {
-                Attack = 0;
+                Attack++;
+                if (Attack > 2)
+                {
+                    Attack = 0;
+                }
+                AttackDuration = attackDurations[(int)Attack];
+                NPC.netUpdate = true;
             }
-            AttackDuration = attackDurations[(int)Attack];
             ResetVars();
         }
 
@@ -232,11 +254,15 @@ namespace Paracosm.Content.Bosses
             switch (AttackDuration)
             {
                 case 600:
+                    NPC.damage = 0;
                     arenaFollow = false;
                     arenaCenter = NPC.Center;
                     break;
                 case > 570:
                     NPC.velocity.Y = 3;
+                    break;
+                case 570:
+                    SoundEngine.PlaySound(SoundID.DD2_BetsyFireballShot with { MaxInstances = 1, Pitch = -0.1f });
                     break;
                 case > 540:
                     NPC.velocity = ((player.Center - new Vector2(0, 800)) - NPC.Center).SafeNormalize(Vector2.Zero) * (NPC.Center.Distance(player.Center - new Vector2(0, 800)) / 5);
@@ -247,7 +273,7 @@ namespace Paracosm.Content.Bosses
                     break;
                 case > 180:
                     NPC.dontTakeDamage = true;
-                    NPC.velocity = ((player.Center - new Vector2(0, 800)) - NPC.Center).SafeNormalize(Vector2.Zero) * (NPC.Center.Distance(player.Center - new Vector2(0, 800)) / 5);
+                    NPC.velocity = ((arenaCenter - new Vector2(0, 1400)) - NPC.Center).SafeNormalize(Vector2.Zero) * (NPC.Center.Distance(arenaCenter - new Vector2(0, 1400)) / 5);
                     if (AttackTimer == 0)
                     {
                         if (Main.netMode != NetmodeID.MultiplayerClient)
@@ -255,9 +281,14 @@ namespace Paracosm.Content.Bosses
                             for (int i = -1; i < 2; i += 2)
                             {
                                 Vector2 spawnPos = arenaCenter + new Vector2(0, i * 1140).RotatedBy(MathHelper.ToRadians(10 * AttackCount));
-                                var proj = Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), spawnPos, (player.Center - spawnPos).SafeNormalize(Vector2.Zero) * 2, ModContent.ProjectileType<CursedFlameRing>(), corruptHead.NPC.damage, 1, -1, 30, player.Center.X - spawnPos.X, player.Center.Y - spawnPos.Y);
-                                CursedFlameRing cfr = (CursedFlameRing)proj.ModProjectile;
+                                var proj = Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), spawnPos, (player.Center - spawnPos).SafeNormalize(Vector2.Zero) * 2, ModContent.ProjectileType<CursedSpiritFlame>(), corruptHead.NPC.damage, 1, -1, 30, player.Center.X - spawnPos.X, player.Center.Y - spawnPos.Y);
+                                CursedSpiritFlame cfr = (CursedSpiritFlame)proj.ModProjectile;
                                 cfr.speed = 40;
+                            }
+
+                            if (AttackCount % 5 == 0)
+                            {
+                                Projectile.NewProjectile(NPC.GetSource_FromAI(), player.Center + new Vector2(0, 400).RotatedBy(AttackCount * MathHelper.PiOver2), Vector2.Zero, ModContent.ProjectileType<DivineSpiritFlame>(), crimsonHead.NPC.damage, 1, ai0: 30, ai1: 3, ai2: player.whoAmI);
                             }
                         }
                         AttackCount++;
@@ -269,30 +300,46 @@ namespace Paracosm.Content.Bosses
                     SoundEngine.PlaySound(SoundID.Roar with { MaxInstances = 2, Pitch = -1f });
                     SoundEngine.PlaySound(SoundID.NPCDeath62 with { MaxInstances = 2, Pitch = -0.5f });
                     NPC.dontTakeDamage = false;
-                    NPC.velocity = ((player.Center - new Vector2(0, 800)) - NPC.Center).SafeNormalize(Vector2.Zero) * (NPC.Center.Distance(player.Center - new Vector2(0, 800)) / 5);
+                    NPC.velocity = ((arenaCenter - new Vector2(0, 1400)) - NPC.Center).SafeNormalize(Vector2.Zero) * (NPC.Center.Distance(arenaCenter - new Vector2(0, 1400)) / 5);
                     break;
-                case > 90:
+                case > 170:
                     NPC.alpha = 0;
-                    NPC.velocity = playerDirection * NPC.Center.Distance(player.Center) / 2;
+                    break;
+                case > 110:
+                    NPC.velocity = (arenaCenter - NPC.Center).SafeNormalize(Vector2.Zero) * (NPC.Center.Distance(arenaCenter) / 20);
                     Lighting.AddLight(NPC.Center, 10, 10, 10);
                     var green = Dust.NewDustDirect(NPC.position, NPC.width, NPC.height, DustID.CursedTorch, Scale: 4f);
                     green.noGravity = true;
                     var orange = Dust.NewDustDirect(NPC.position, NPC.width, NPC.height, DustID.OrangeTorch, Scale: 4f);
                     orange.noGravity = true;
                     break;
+                case 110:
+                    AttackCount = 0;
+                    if (Main.netMode != NetmodeID.MultiplayerClient)
+                    {
+                        for (int j = 0; j < 10; j++)
+                        {
+                            for (float i = -1; i <= 1; i++)
+                            {
+                                Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, new Vector2(i * AttackCount * 0.2f, -1) * 10, ProjectileID.GoldenShowerHostile, (int)(NPC.damage * 0.8f), 1);
+                            }
+                            AttackCount++;
+                        }
+
+                    }
+                    break;
                 case > 0:
-                    NPC.damage = 0;
                     NPC.velocity = (arenaCenter - NPC.Center).SafeNormalize(Vector2.Zero) * (NPC.Center.Distance(arenaCenter) / 12);
                     break;
             }
 
         }
 
-        const int DashingCD = 60;
+        const int DashingCD = 90;
 
         void DashingSpam()
         {
-            NPC.damage = 40;
+            NPC.damage = 0;
             switch (AttackTimer)
             {
                 case > 0:
@@ -306,6 +353,11 @@ namespace Paracosm.Content.Bosses
                     break;
             }
             AttackTimer--;
+        }
+
+        void CorruptTorrent()
+        {
+            NPC.velocity = (arenaCenter - NPC.Center).SafeNormalize(Vector2.Zero) * (NPC.Center.Distance(arenaCenter) / 6);
         }
 
         float tempVolume;
@@ -345,7 +397,7 @@ namespace Paracosm.Content.Bosses
                     }
                     break;
                 case > 0:
-                    Main.musicVolume = 1;
+                    Main.musicVolume = tempVolume;
                     break;
                 case <= 0:
                     phaseTransition = false;

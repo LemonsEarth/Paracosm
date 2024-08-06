@@ -49,7 +49,6 @@ namespace Paracosm.Content.Projectiles.Hostile
                 if (AITimer % 30 == 0 && Main.netMode != NetmodeID.MultiplayerClient)
                 {
                     Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Projectile.velocity * 0.5f, Projectile.type, Projectile.damage / 2, 0f, ai1: 0, ai2: 0);
-                    Projectile.netUpdate = true;
                 }
             }
             else
