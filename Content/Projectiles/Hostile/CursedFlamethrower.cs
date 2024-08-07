@@ -40,6 +40,7 @@ namespace Paracosm.Content.Projectiles.Hostile
 
         public override void AI()
         {
+            Projectile.velocity /= 1.05f;
             Lighting.AddLight(Projectile.Center, 0, 10, 0);
             var dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, DustID.CursedTorch);
             dust.noGravity = true;

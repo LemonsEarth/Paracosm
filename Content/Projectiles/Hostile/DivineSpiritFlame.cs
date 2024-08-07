@@ -44,6 +44,10 @@ namespace Paracosm.Content.Projectiles.Hostile
 
         public override void AI()
         {
+            if (AITimer == 0)
+            {
+                SoundEngine.PlaySound(SoundID.Zombie53 with { MaxInstances = 8, PitchVariance = 1.0f, Volume = 0.2f });
+            }
             if (AITimer < SpawnTime)
             {
                 if (Projectile.alpha > 0)

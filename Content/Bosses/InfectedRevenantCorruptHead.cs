@@ -80,6 +80,8 @@ namespace Paracosm.Content.Bosses
             Main.npcFrameCount[NPC.type] = 3;
             NPCID.Sets.SpecificDebuffImmunity[Type][BuffID.Confused] = true;
             NPCID.Sets.MPAllowedEnemies[Type] = true;
+            NPCID.Sets.CantTakeLunchMoney[Type] = true;
+            NPCID.Sets.DontDoHardmodeScaling[Type] = true;
             NPCID.Sets.NPCBestiaryDrawModifiers drawMods = new NPCID.Sets.NPCBestiaryDrawModifiers()
             {
                 Hide = true
@@ -96,6 +98,7 @@ namespace Paracosm.Content.Bosses
             NPC.dontTakeDamage = true;
             NPC.defense = 30;
             NPC.value = 0;
+            NPC.damage = 0;
             NPC.noTileCollide = true;
             NPC.knockBackResist = 1;
             NPC.noGravity = true;
@@ -240,6 +243,9 @@ namespace Paracosm.Content.Bosses
                         break;
                     case (int)InfectedRevenantBody.Attacks.CorruptTorrent:
                         CorruptTorrent();
+                        break;
+                    case (int)InfectedRevenantBody.Attacks.SpiritWaves:
+                        SpiritWaves();
                         break;
                 }
             }
@@ -425,7 +431,7 @@ namespace Paracosm.Content.Bosses
             AttackTimer = 0;
         }
 
-        const int DashingSpamCD = 45;
+        const int DashingSpamCD = 60;
         void DashingSpam()
         {
             NPC.velocity = (defaultHeadPos - NPC.Center).SafeNormalize(Vector2.Zero) * NPC.Center.Distance(defaultHeadPos) / 6;
@@ -443,7 +449,6 @@ namespace Paracosm.Content.Bosses
             AttackTimer--;
         }
 
-
         const int FlamethrowerCD = 33;
         void CorruptTorrent()
         {
@@ -451,12 +456,12 @@ namespace Paracosm.Content.Bosses
             NPC.velocity = (position - NPC.Center).SafeNormalize(Vector2.Zero) * NPC.Center.Distance(position) / 12;
             if (AttackTimer == 0)
             {
-                SoundEngine.PlaySound(SoundID.DD2_BetsyFireballShot with { MaxInstances = 0, Pitch = -0.1f });
+                SoundEngine.PlaySound(SoundID.DD2_BetsyFlameBreath with { MaxInstances = 2, PitchVariance = 1.0f });
                 if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
                     for (int i = -1; i < 2; i++)
                     {
-                        Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, (defaultHeadPos - NPC.Center).SafeNormalize(Vector2.Zero).RotatedBy(i * 0.8f * (MathHelper.PiOver4 / 4)) * 1.5f * AttackCount, ModContent.ProjectileType<CursedFlamethrower>(), (int)(NPC.damage * 0.8f), 1);
+                        Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, (defaultHeadPos - NPC.Center).SafeNormalize(Vector2.Zero).RotatedBy(i * 0.6f * (MathHelper.PiOver4 / 4)) * 3f * AttackCount, ModContent.ProjectileType<CursedFlamethrower>(), (int)(NPC.damage * 0.8f), 1);
                     }
                     if (AttackCount < 30)
                     {
@@ -466,6 +471,45 @@ namespace Paracosm.Content.Bosses
                 AttackTimer = FlamethrowerCD - AttackCount;
             }
             AttackTimer--;
+        }
+
+        const int cursedSpiritCD = 9;
+        const int cursedSpiritCD2 = 45;
+
+        void SpiritWaves()
+        {
+            Vector2 position = defaultHeadPos + new Vector2(0, -50).RotatedBy(MathHelper.ToRadians(AITimer * 1.6f));
+            NPC.velocity = (position - NPC.Center).SafeNormalize(Vector2.Zero) * NPC.Center.Distance(position) / 12;
+            Vector2 neckToHead = body.CorruptHeadPos.DirectionTo(defaultHeadPos);
+            Vector2 neckToPlayer = body.CorruptHeadPos.DirectionTo(body.player.Center);
+            if (Math.Abs(AngleBetween(neckToHead, neckToPlayer)) < 60)
+            {
+                if (AttackTimer <= 0)
+                {
+                    if (Main.netMode != NetmodeID.MultiplayerClient)
+                    {
+                        var proj = Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center, (body.player.Center - NPC.Center).SafeNormalize(Vector2.Zero) * 8, ModContent.ProjectileType<CursedSpiritFlame>(), (int)(NPC.damage * 0.8f), 1, ai0: 60 - (AttackCount * cursedSpiritCD), ai1: body.player.Center.X - NPC.Center.X, ai2: body.player.Center.Y - NPC.Center.Y);
+                        CursedSpiritFlame CursedSpiritFlame = (CursedSpiritFlame)proj.ModProjectile;
+                        CursedSpiritFlame.speed = 60;
+                        AttackCount++;
+                    }
+                    if (AttackCount <= 6)
+                    {
+                        AttackTimer = cursedSpiritCD;
+                    }
+                    else
+                    {
+                        AttackTimer = cursedSpiritCD2;
+                        AttackCount = 0;
+                    }
+                }
+            }
+            AttackTimer--;
+        }
+
+        float AngleBetween(Vector2 u, Vector2 v)
+        {
+            return (float)Math.Acos(Vector2.Dot(u, v) / (u.Length() * v.Length()));
         }
 
         public override void FindFrame(int frameHeight)

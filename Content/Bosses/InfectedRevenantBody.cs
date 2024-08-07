@@ -54,16 +54,16 @@ namespace Paracosm.Content.Bosses
         public float transitionDuration = 300;
 
         List<Projectile> CursedFlames = new List<Projectile>();
-        bool arenaFollow = true;
         Vector2 arenaCenter;
 
-        int[] attackDurations = [600, 300, 600];
+        int[] attackDurations = [600, 300, 600, 720];
 
         public enum Attacks
         {
             SoaringBulletHell,
             DashingSpam,
-            CorruptTorrent
+            CorruptTorrent,
+            SpiritWaves
         }
 
         InfectedRevenantCorruptHead corruptHead;
@@ -76,6 +76,8 @@ namespace Paracosm.Content.Bosses
             NPCID.Sets.SpecificDebuffImmunity[Type][BuffID.Confused] = true;
             NPCID.Sets.SpecificDebuffImmunity[Type][BuffID.CursedInferno] = true;
             NPCID.Sets.SpecificDebuffImmunity[Type][BuffID.Ichor] = true;
+            NPCID.Sets.DontDoHardmodeScaling[Type] = true;
+            NPCID.Sets.CantTakeLunchMoney[Type] = true;
             NPCID.Sets.MPAllowedEnemies[Type] = true;
             NPCID.Sets.BossBestiaryPriority.Add(Type);
         }
@@ -103,16 +105,27 @@ namespace Paracosm.Content.Bosses
             }
         }
 
+        public override bool CheckActive()
+        {
+            return false;
+        }
+
         public override void SendExtraAI(BinaryWriter writer)
         {
             writer.Write(AttackCount);
             writer.Write(phase);
+            writer.Write(phase2FirstTime);
+            writer.Write(phaseTransition);
+            writer.Write(transitionDuration);
         }
 
         public override void ReceiveExtraAI(BinaryReader reader)
         {
             AttackCount = reader.ReadInt32();
             phase = reader.ReadInt32();
+            phase2FirstTime = reader.ReadBoolean();
+            phaseTransition = reader.ReadBoolean();
+            transitionDuration = reader.ReadSingle();
         }
 
         public static int WingsType()
@@ -132,7 +145,7 @@ namespace Paracosm.Content.Bosses
 
         public override void ApplyDifficultyAndPlayerScaling(int numPlayers, float balance, float bossAdjustment)
         {
-            NPC.lifeMax = (int)Math.Ceiling(NPC.lifeMax * balance * 0.7f);
+            NPC.lifeMax = (int)Math.Ceiling(NPC.lifeMax * balance * 0.9f);
             NPC.damage = (int)(NPC.damage * balance * 0.5f);
             NPC.defense = 50;
         }
@@ -157,6 +170,7 @@ namespace Paracosm.Content.Bosses
                 phaseTransition = true;
                 phase = 2;
                 phase2FirstTime = false;
+                NPC.netUpdate = true;
             }
 
             if (phaseTransition)
@@ -164,9 +178,9 @@ namespace Paracosm.Content.Bosses
                 PhaseTransition();
             }
 
-            if (NPC.Center.Distance(player.Center) > 3500)
+            if (NPC.Center.Distance(player.Center) > 5000)
             {
-                NPC.EncourageDespawn(300);
+                NPC.active = false;
             }
             if (player.dead)
             {
@@ -176,13 +190,17 @@ namespace Paracosm.Content.Bosses
             if (phase == 1)
             {
                 NPC.velocity.Y = 10;
+                arenaCenter = NPC.Center;
             }
 
             if (phase == 2 && !phaseTransition)
             {
                 if (AttackDuration <= 0)
                 {
-                    SwitchAttacks();
+                    if (Main.netMode != NetmodeID.MultiplayerClient)
+                    {
+                        SwitchAttacks();
+                    }
                 }
                 switch (Attack)
                 {
@@ -194,14 +212,12 @@ namespace Paracosm.Content.Bosses
                         break;
                     case (int)Attacks.CorruptTorrent:
                         CorruptTorrent();
-                            break;
+                        break;
+                    case (int)Attacks.SpiritWaves:
+                        SpiritWaves();
+                        break;
                 }
                 AttackDuration--;
-            }
-
-            if (arenaFollow)
-            {
-                arenaCenter = NPC.Center;
             }
 
             SetOffsets();
@@ -224,16 +240,12 @@ namespace Paracosm.Content.Bosses
 
         void SwitchAttacks()
         {
-            if (Main.myPlayer != NetmodeID.MultiplayerClient)
+            Attack++;
+            if (Attack > 3)
             {
-                Attack++;
-                if (Attack > 2)
-                {
-                    Attack = 0;
-                }
-                AttackDuration = attackDurations[(int)Attack];
-                NPC.netUpdate = true;
+                Attack = 0;
             }
+            AttackDuration = attackDurations[(int)Attack];
             ResetVars();
         }
 
@@ -244,6 +256,7 @@ namespace Paracosm.Content.Bosses
             tempPlayerDir = Vector2.Zero;
             crimsonHead.ResetVars();
             corruptHead.ResetVars();
+            NPC.netUpdate = true;
         }
 
         const int BulletHellCD = 10;
@@ -255,8 +268,6 @@ namespace Paracosm.Content.Bosses
             {
                 case 600:
                     NPC.damage = 0;
-                    arenaFollow = false;
-                    arenaCenter = NPC.Center;
                     break;
                 case > 570:
                     NPC.velocity.Y = 3;
@@ -305,6 +316,9 @@ namespace Paracosm.Content.Bosses
                 case > 170:
                     NPC.alpha = 0;
                     break;
+                case 170:
+                    NPC.netUpdate = true;
+                    break;
                 case > 110:
                     NPC.velocity = (arenaCenter - NPC.Center).SafeNormalize(Vector2.Zero) * (NPC.Center.Distance(arenaCenter) / 20);
                     Lighting.AddLight(NPC.Center, 10, 10, 10);
@@ -321,7 +335,7 @@ namespace Paracosm.Content.Bosses
                         {
                             for (float i = -1; i <= 1; i++)
                             {
-                                Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, new Vector2(i * AttackCount * 0.2f, -1) * 10, ProjectileID.GoldenShowerHostile, (int)(NPC.damage * 0.8f), 1);
+                                Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, new Vector2(i * AttackCount * 0.2f, -1) * 10, ProjectileID.GoldenShowerHostile, (int)(crimsonHead.NPC.damage * 0.8f), 1);
                             }
                             AttackCount++;
                         }
@@ -360,6 +374,24 @@ namespace Paracosm.Content.Bosses
             NPC.velocity = (arenaCenter - NPC.Center).SafeNormalize(Vector2.Zero) * (NPC.Center.Distance(arenaCenter) / 6);
         }
 
+        void SpiritWaves()
+        {
+            Vector2 leftPos = arenaCenter - new Vector2(600, 0);
+            Vector2 rightPos = arenaCenter + new Vector2(600, 0);
+            switch (AttackDuration)
+            {
+                case > 480:
+                    NPC.velocity = (leftPos - NPC.Center).SafeNormalize(Vector2.Zero) * NPC.Center.Distance(leftPos) / 10;
+                    break;
+                case > 240:
+                    NPC.velocity = (arenaCenter - NPC.Center).SafeNormalize(Vector2.Zero) * NPC.Center.Distance(arenaCenter) / 10;
+                    break;
+                case > 0:
+                    NPC.velocity = (rightPos - NPC.Center).SafeNormalize(Vector2.Zero) * NPC.Center.Distance(rightPos) / 10;
+                    break;
+            }
+        }
+
         float tempVolume;
         void PhaseTransition()
         {
@@ -367,6 +399,7 @@ namespace Paracosm.Content.Bosses
             switch (transitionDuration)
             {
                 case 300:
+                    NPC.netUpdate = true;
                     tempVolume = Main.musicVolume;
                     Attack = -1;
                     break;
@@ -402,6 +435,7 @@ namespace Paracosm.Content.Bosses
                 case <= 0:
                     phaseTransition = false;
                     NPC.dontTakeDamage = false;
+                    NPC.netUpdate = true;
                     break;
             }
 

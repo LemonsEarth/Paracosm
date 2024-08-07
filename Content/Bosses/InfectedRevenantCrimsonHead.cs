@@ -75,6 +75,8 @@ namespace Paracosm.Content.Bosses
             Main.npcFrameCount[NPC.type] = 3;
             NPCID.Sets.SpecificDebuffImmunity[Type][BuffID.Confused] = true;
             NPCID.Sets.MPAllowedEnemies[Type] = true;
+            NPCID.Sets.DontDoHardmodeScaling[Type] = true;
+            NPCID.Sets.CantTakeLunchMoney[Type] = true;
             NPCID.Sets.NPCBestiaryDrawModifiers drawMods = new NPCID.Sets.NPCBestiaryDrawModifiers()
             {
                 Hide = true
@@ -91,6 +93,7 @@ namespace Paracosm.Content.Bosses
             NPC.dontTakeDamage = true;
             NPC.defense = 30;
             NPC.value = 0;
+            NPC.damage = 0;
             NPC.noTileCollide = true;
             NPC.knockBackResist = 1;
             NPC.noGravity = true;
@@ -260,6 +263,9 @@ namespace Paracosm.Content.Bosses
                         break;
                     case (int)InfectedRevenantBody.Attacks.CorruptTorrent:
                         CorruptTorrent();
+                        break;
+                    case (int)InfectedRevenantBody.Attacks.SpiritWaves:
+                        SpiritWaves();
                         break;
                 }
             }
@@ -450,7 +456,7 @@ namespace Paracosm.Content.Bosses
             AttackTimer = 0;
         }
 
-        const int DashingSpamCD = 60;
+        const int DashingSpamCD = 65;
         void DashingSpam()
         {
             NPC.velocity = (defaultHeadPos - NPC.Center).SafeNormalize(Vector2.Zero) * NPC.Center.Distance(defaultHeadPos) / 8;
@@ -484,6 +490,25 @@ namespace Paracosm.Content.Bosses
                         Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, new Vector2(0, -1).RotatedBy(i * MathHelper.PiOver2) * 10, ModContent.ProjectileType<BloodBlast>(), (int)(NPC.damage * 0.8f), 1, ai1: 0);
                     }
                 }
+            }
+            AttackTimer--;
+        }
+
+
+        const int SpiritWavesCD = 60;
+        void SpiritWaves()
+        {
+            NPC.velocity = (defaultHeadPos - NPC.Center).SafeNormalize(Vector2.Zero) * NPC.Center.Distance(defaultHeadPos) / 6;
+            if (AttackTimer <= 0)
+            {
+                if (Main.netMode != NetmodeID.MultiplayerClient)
+                {
+                    for (int i = 0; i < 4; i++)
+                    {
+                        Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center + new Vector2(0, -50).RotatedBy(i * MathHelper.PiOver2), Vector2.Zero, ModContent.ProjectileType<DivineSpiritFlame>(), (int)(NPC.damage * 0.8f), 1, ai0: 20, ai1: 7, ai2: body.player.whoAmI);
+                    }
+                }
+                AttackTimer = SpiritWavesCD;
             }
             AttackTimer--;
         }

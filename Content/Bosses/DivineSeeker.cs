@@ -61,6 +61,8 @@ namespace Paracosm.Content.Bosses
             Main.npcFrameCount[NPC.type] = 3;
             NPCID.Sets.SpecificDebuffImmunity[Type][BuffID.Confused] = true;
             NPCID.Sets.MPAllowedEnemies[Type] = true;
+            NPCID.Sets.CantTakeLunchMoney[Type] = true;
+            NPCID.Sets.DontDoHardmodeScaling[Type] = true;
             NPCID.Sets.BossBestiaryPriority.Add(Type);
             NPCID.Sets.NPCBestiaryDrawModifiers drawMod = new NPCID.Sets.NPCBestiaryDrawModifiers()
             {
