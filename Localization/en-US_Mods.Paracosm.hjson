@@ -297,7 +297,21 @@ Items: {
 
 	AncientCallingHorn: {
 		DisplayName: Ancient Calling Horn
-		Tooltip: ""
+		Tooltip:
+			'''
+			Not Consumable
+			Summons the remains of an ancient deity
+			'''
+	}
+
+	CorruptedDragonHeart: {
+		DisplayName: Corrupted Dragon Heart
+		Tooltip:
+			'''
+			{$CommonItemTooltip.IncreasesMaxLifeByPercent}
+			Grants immunity to Cursed Inferno and Ichor
+			All attacks inflict Cursed Inferno and Ichor
+			'''
 	}
 }
 
@@ -326,6 +340,7 @@ Projectiles: {
 	CursedSpiritFlame.DisplayName: Cursed Spirit Flame
 	DivineSpiritFlame.DisplayName: Divine Spirit Flame
 	CursedFlamethrower.DisplayName: Cursed Flamethrower
+	DivineFlamethrower.DisplayName: Divine Flamethrower
 }
 
 NPCs: {

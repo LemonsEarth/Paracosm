@@ -56,14 +56,15 @@ namespace Paracosm.Content.Bosses
         List<Projectile> CursedFlames = new List<Projectile>();
         Vector2 arenaCenter;
 
-        int[] attackDurations = [600, 300, 600, 720];
+        int[] attackDurations = [600, 300, 600, 720, 720];
 
         public enum Attacks
         {
             SoaringBulletHell,
             DashingSpam,
             CorruptTorrent,
-            SpiritWaves
+            SpiritWaves,
+            FlameChase
         }
 
         InfectedRevenantCorruptHead corruptHead;
@@ -117,6 +118,7 @@ namespace Paracosm.Content.Bosses
             writer.Write(phase2FirstTime);
             writer.Write(phaseTransition);
             writer.Write(transitionDuration);
+            writer.Write(elapsedTime);
         }
 
         public override void ReceiveExtraAI(BinaryReader reader)
@@ -126,6 +128,7 @@ namespace Paracosm.Content.Bosses
             phase2FirstTime = reader.ReadBoolean();
             phaseTransition = reader.ReadBoolean();
             transitionDuration = reader.ReadSingle();
+            elapsedTime = reader.ReadSingle();
         }
 
         public static int WingsType()
@@ -161,7 +164,7 @@ namespace Paracosm.Content.Bosses
             playerDirection = (player.Center - NPC.Center).SafeNormalize(Vector2.Zero);
 
 
-            if (NPC.life > (NPC.lifeMax / 2))
+            if (NPC.life > (NPC.lifeMax * 0.66f))
             {
                 phase = 1;
             }
@@ -216,6 +219,9 @@ namespace Paracosm.Content.Bosses
                     case (int)Attacks.SpiritWaves:
                         SpiritWaves();
                         break;
+                    case (int)Attacks.FlameChase:
+                        FlameChase();
+                        break;
                 }
                 AttackDuration--;
             }
@@ -241,11 +247,18 @@ namespace Paracosm.Content.Bosses
         void SwitchAttacks()
         {
             Attack++;
-            if (Attack > 3)
+            if (Attack > 4)
             {
                 Attack = 0;
             }
             AttackDuration = attackDurations[(int)Attack];
+            foreach (var proj in Main.ActiveProjectiles)
+            {
+                if (proj.type == ModContent.ProjectileType<DivineSpiritFlame>() || proj.type == ModContent.ProjectileType<CursedSpiritFlame>())
+                {
+                    proj.Kill();
+                }
+            }
             ResetVars();
         }
 
@@ -254,6 +267,7 @@ namespace Paracosm.Content.Bosses
             AttackTimer = 0;
             NPC.alpha = 0;
             tempPlayerDir = Vector2.Zero;
+            elapsedTime = 0;
             crimsonHead.ResetVars();
             corruptHead.ResetVars();
             NPC.netUpdate = true;
@@ -391,6 +405,58 @@ namespace Paracosm.Content.Bosses
                     break;
             }
         }
+        float elapsedTime = 0;
+        Vector2 leftPos = Vector2.Zero;
+        Vector2 rightPos = Vector2.Zero;
+
+        void FlameChase()
+        {
+            Vector2 topPos = arenaCenter + new Vector2(0, -1000);
+            Vector2 botPos = arenaCenter + new Vector2(0, 1000);
+            float percentComplete = 0;
+            switch (AttackDuration)
+            {
+                case > 660:
+                    leftPos = new Vector2(arenaCenter.X - 1200, player.Center.Y - 400);
+                    rightPos = new Vector2(arenaCenter.X + 1200, player.Center.Y - 400);
+                    NPC.velocity = (leftPos - NPC.Center).SafeNormalize(Vector2.Zero) * (NPC.Center.Distance(leftPos) / 20);
+                    break;
+                case > 540:
+                    elapsedTime++;
+                    percentComplete = elapsedTime / 120;
+                    NPC.Center = Vector2.SmoothStep(leftPos, rightPos, MathHelper.SmoothStep(0, 1, percentComplete));
+                    break;
+                case > 480:
+                    elapsedTime = 0;
+                    leftPos = new Vector2(arenaCenter.X, player.Center.Y - 300);
+                    rightPos = new Vector2(arenaCenter.X + 1200, player.Center.Y - 300);
+                    NPC.velocity = (rightPos - NPC.Center).SafeNormalize(Vector2.Zero) * (NPC.Center.Distance(rightPos) / 20);
+                    break;
+                case > 360:
+                    elapsedTime++;
+                    percentComplete = elapsedTime / 60;
+                    NPC.Center = Vector2.SmoothStep(rightPos, leftPos, MathHelper.SmoothStep(0, 1, percentComplete));
+                    break;
+                case > 300:
+                    elapsedTime = 0;
+                    NPC.velocity = (topPos - NPC.Center).SafeNormalize(Vector2.Zero) * (NPC.Center.Distance(topPos) / 20);
+                    break;
+                case > 180:
+                    elapsedTime++;
+                    percentComplete = elapsedTime / 120;
+                    NPC.Center = Vector2.SmoothStep(topPos, arenaCenter, MathHelper.SmoothStep(0, 1, percentComplete));
+                    break;
+                case > 120:
+                    elapsedTime = 0;
+                    NPC.velocity = (botPos - NPC.Center).SafeNormalize(Vector2.Zero) * (NPC.Center.Distance(botPos) / 20);
+                    break;
+                case > 0:
+                    elapsedTime++;
+                    percentComplete = elapsedTime / 120;
+                    NPC.Center = Vector2.SmoothStep(botPos, arenaCenter, MathHelper.SmoothStep(0, 1, percentComplete));
+                    break;
+            }
+        }
 
         float tempVolume;
         void PhaseTransition()
@@ -413,9 +479,9 @@ namespace Paracosm.Content.Bosses
                     SpawnWings();
                     SoundEngine.PlaySound(SoundID.Roar with { MaxInstances = 2, Pitch = -1f });
                     SoundEngine.PlaySound(SoundID.NPCDeath62 with { MaxInstances = 2, Pitch = -0.5f });
-                    if (NPC.life < NPC.lifeMax / 2)
+                    if (NPC.life < NPC.lifeMax * 0.65f)
                     {
-                        NPC.life = (int)Math.Ceiling((double)NPC.lifeMax / 2);
+                        NPC.life = (int)Math.Ceiling((double)NPC.lifeMax * 0.65f);
                     }
                     break;
                 case > 20:
@@ -544,6 +610,11 @@ namespace Paracosm.Content.Bosses
         public override void FindFrame(int frameHeight)
         {
             NPC.frame.Y = (phase - 1) * frameHeight;
+        }
+
+        public override void BossLoot(ref string name, ref int potionType)
+        {
+            potionType = ItemID.GreaterHealingPotion;
         }
     }
 }

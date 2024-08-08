@@ -35,7 +35,7 @@ namespace Paracosm.Content.Items.Consumables
 
         public override bool CanUseItem(Player player)
         {
-            return !Main.dayTime && !NPC.AnyNPCs(ModContent.NPCType<InfectedRevenantBody>());
+            return !Main.dayTime && !NPC.AnyNPCs(ModContent.NPCType<InfectedRevenantBody>()) && (player.ZoneCorrupt || player.ZoneCrimson);
         }
 
         public override bool? UseItem(Player player)

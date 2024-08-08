@@ -55,12 +55,6 @@ namespace Paracosm.Content.Bosses
             BloodBlasts,
             BloodBlastBurst,
             IchorSnipe,
-            /* Phase 2 */
-            SoaringBulletHell,
-            Attack2,
-            Attack3,
-            Attack4,
-            Attack5
         }
 
         Queue<int> AttackOrder = new Queue<int>();
@@ -267,6 +261,9 @@ namespace Paracosm.Content.Bosses
                     case (int)InfectedRevenantBody.Attacks.SpiritWaves:
                         SpiritWaves();
                         break;
+                    case (int)InfectedRevenantBody.Attacks.FlameChase:
+                        FlameChase();
+                        break;
                 }
             }
 
@@ -433,18 +430,18 @@ namespace Paracosm.Content.Bosses
             {
                 if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
-                    Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, (body.player.Center - NPC.Center).SafeNormalize(Vector2.Zero) * 20, ProjectileID.GoldenShowerHostile, (int)(NPC.damage * 0.8f), 1);
-                    NPC.velocity -= (body.player.Center - NPC.Center).SafeNormalize(Vector2.Zero) * 10;
-                    AttackCount++;
-                    if (AttackCount > 0 && AttackCount % 3 == 0)
-                    {
-                        AttackTimer = IchorSnipeCD2;
-                    }
-                    else
-                    {
-                        AttackTimer = IchorSnipeCD1;
-                    }
-
+                    Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, (body.player.Center - NPC.Center).SafeNormalize(Vector2.Zero) * 12, ProjectileID.GoldenShowerHostile, (int)(NPC.damage * 0.8f), 1);
+                    
+                }
+                NPC.velocity -= (body.player.Center - NPC.Center).SafeNormalize(Vector2.Zero) * 10;
+                AttackCount++;
+                if (AttackCount > 0 && AttackCount % 3 == 0)
+                {
+                    AttackTimer = IchorSnipeCD2;
+                }
+                else
+                {
+                    AttackTimer = IchorSnipeCD1;
                 }
             }
             AttackTimer--;
@@ -511,6 +508,101 @@ namespace Paracosm.Content.Bosses
                 AttackTimer = SpiritWavesCD;
             }
             AttackTimer--;
+        }
+
+        const int FlameChaseCD = 6;
+
+        void FlameChase()
+        {
+            Vector2 botLeftPos = body.CrimsonHeadPos + new Vector2(-45, 140);
+            Vector2 botRightPos = body.CrimsonHeadPos + new Vector2(45, 140);
+            Vector2 topRightPos = defaultHeadPos + new Vector2(45, -20);
+
+            switch (body.AttackDuration)
+            {
+                case > 660:
+                    AttackTimer = FlameChaseCD;
+                    NPC.velocity = (defaultHeadPos - NPC.Center).SafeNormalize(Vector2.Zero) * NPC.Center.Distance(defaultHeadPos) / 6;
+                    break;
+                case > 540:
+                    if (AttackTimer <= 0)
+                    {
+                        SoundEngine.PlaySound(SoundID.DD2_BetsyFlameBreath with { MaxInstances = 2, PitchVariance = 1.0f });
+                        if (Main.netMode != NetmodeID.MultiplayerClient)
+                        {
+                            for (int i = -1; i < 2; i++)
+                            {
+                                Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, new Vector2(0, 1).RotatedBy(i * 0.6f * (MathHelper.PiOver4 / 4)).RotatedBy(MathHelper.PiOver4) * 160f, ModContent.ProjectileType<DivineFlamethrower>(), (int)(NPC.damage * 0.8f), 1);
+                            }
+                        }
+                        AttackTimer = FlameChaseCD;
+                    }
+                    AttackTimer--;
+                    NPC.velocity = (botLeftPos - NPC.Center).SafeNormalize(Vector2.Zero) * NPC.Center.Distance(botLeftPos) / 6;
+                    break;
+                case > 480:
+                    AttackTimer = FlameChaseCD;
+                    NPC.velocity = (defaultHeadPos - NPC.Center).SafeNormalize(Vector2.Zero) * NPC.Center.Distance(defaultHeadPos) / 6;
+                    AttackCount = -60;
+                    break;
+                case > 360:
+                    if (AttackTimer <= 0)
+                    {
+                        SoundEngine.PlaySound(SoundID.DD2_BetsyFlameBreath with { MaxInstances = 2, PitchVariance = 1.0f });
+                        if (Main.netMode != NetmodeID.MultiplayerClient)
+                        {
+                            for (int i = -1; i < 2; i++)
+                            {
+                                Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, new Vector2(0, 1).RotatedBy(i * 0.6f * (MathHelper.PiOver4 / 4)).RotatedBy(MathHelper.ToRadians(AttackCount)) * 160f, ModContent.ProjectileType<DivineFlamethrower>(), (int)(NPC.damage * 0.8f), 1);
+                            }
+                        }
+                        AttackCount += 9;
+                        AttackTimer = FlameChaseCD;
+                    }
+                    AttackTimer--;
+                    NPC.velocity = (botRightPos - NPC.Center).SafeNormalize(Vector2.Zero) * NPC.Center.Distance(botRightPos) / 6;
+                    break;
+                case > 300:
+                    AttackTimer = FlameChaseCD;
+                    NPC.velocity = (defaultHeadPos - NPC.Center).SafeNormalize(Vector2.Zero) * NPC.Center.Distance(defaultHeadPos) / 6;
+                    break;
+                case > 180:
+                    if (AttackTimer <= 0)
+                    {
+                        SoundEngine.PlaySound(SoundID.DD2_BetsyFlameBreath with { MaxInstances = 2, PitchVariance = 1.0f });
+                        if (Main.netMode != NetmodeID.MultiplayerClient)
+                        {
+                            for (int i = -1; i < 2; i++)
+                            {
+                                Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, new Vector2(1, 0).RotatedBy(i * 0.6f * (MathHelper.PiOver4 / 4)) * 160f, ModContent.ProjectileType<DivineFlamethrower>(), (int)(NPC.damage * 0.8f), 1);
+                            }
+                        }
+                        AttackTimer = FlameChaseCD;
+                    }
+                    AttackTimer--;
+                    NPC.velocity = (topRightPos - NPC.Center).SafeNormalize(Vector2.Zero) * NPC.Center.Distance(topRightPos) / 6;
+                    break;
+                case > 120:
+                    AttackTimer = FlameChaseCD;
+                    NPC.velocity = (defaultHeadPos - NPC.Center).SafeNormalize(Vector2.Zero) * NPC.Center.Distance(defaultHeadPos) / 6; ;
+                    break;
+                case > 0:
+                    if (AttackTimer <= 0)
+                    {
+                        SoundEngine.PlaySound(SoundID.DD2_BetsyFlameBreath with { MaxInstances = 2, PitchVariance = 1.0f });
+                        if (Main.netMode != NetmodeID.MultiplayerClient)
+                        {
+                            for (int i = -1; i < 2; i++)
+                            {
+                                Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, new Vector2(1, 0).RotatedBy(i * 0.6f * (MathHelper.PiOver4 / 4)) * 160f, ModContent.ProjectileType<DivineFlamethrower>(), (int)(NPC.damage * 0.8f), 1);
+                            }
+                        }
+                        AttackTimer = FlameChaseCD;
+                    }
+                    AttackTimer--;
+                    NPC.velocity = (defaultHeadPos - NPC.Center).SafeNormalize(Vector2.Zero) * NPC.Center.Distance(defaultHeadPos) / 6;
+                    break;
+            }
         }
 
         public override void FindFrame(int frameHeight)

@@ -9,6 +9,7 @@ using Terraria.DataStructures;
 using Microsoft.Xna.Framework.Graphics;
 using Newtonsoft.Json.Linq;
 using System.IO;
+using Terraria.Audio;
 
 namespace Paracosm.Content.Bosses
 {
@@ -83,7 +84,16 @@ namespace Paracosm.Content.Bosses
             this.body = body;
             NPC.alpha = bodyNPC.alpha;
             NPC.position = body.WingsPos;
+            if (AITimer % 45 == 0)
+            {
+                SoundEngine.PlaySound(SoundID.DD2_BetsyFireballShot with { MaxInstances = 1, PitchVariance = 1.0f, Volume = 0.5f });
+            }
             AITimer++;
+            if (body.phaseTransition)
+            {
+                NPC.frame.Y = 0;
+                return;
+            }
         }
 
 
@@ -92,12 +102,6 @@ namespace Paracosm.Content.Bosses
             int frameDurLong = 12;
             int frameDurShort = 6;
             int frameDur = 0;
-
-            if (body.phaseTransition)
-            {
-                NPC.frame.Y = 0;
-                return;
-            }
 
             if (NPC.frame.Y == 1 * frameHeight || NPC.frame.Y == 3 * frameHeight)
             {

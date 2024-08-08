@@ -14,7 +14,7 @@ using Terraria.ModLoader;
 
 namespace Paracosm.Content.Projectiles.Hostile
 {
-    public class CursedFlamethrower : ModProjectile
+    public class DivineFlamethrower : ModProjectile
     {
         ref float AITimer => ref Projectile.ai[0];
         Vector2 savedVelocity
@@ -44,7 +44,7 @@ namespace Paracosm.Content.Projectiles.Hostile
 
         public override void OnHitPlayer(Player target, Player.HurtInfo info)
         {
-            target.AddBuff(BuffID.CursedInferno, 180);
+            target.AddBuff(BuffID.Ichor, 180);
         }
 
         public override void AI()
@@ -56,8 +56,8 @@ namespace Paracosm.Content.Projectiles.Hostile
                 Projectile.netUpdate = true;
             }
             Projectile.velocity = Vector2.Lerp(Projectile.velocity, savedVelocity, 0.1f);
-            Lighting.AddLight(Projectile.Center, 0, 10, 0);
-            var dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, DustID.CursedTorch, Scale: 2.5f);
+            Lighting.AddLight(Projectile.Center, 10, 10, 0);
+            var dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, DustID.OrangeTorch, Scale: 2.5f);
             dust.noGravity = true;
             AITimer++;
             Projectile.alpha += 5;
