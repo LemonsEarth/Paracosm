@@ -55,10 +55,9 @@ namespace Paracosm.Content.Items.Consumables
         public override void AddRecipes()
         {
             Recipe recipe = CreateRecipe();
-            recipe.AddIngredient(ItemID.SoulofSight, 5);
-            recipe.AddIngredient(ItemID.SoulofFright, 5);
-            recipe.AddIngredient(ItemID.SoulofMight, 5);
-            recipe.AddIngredient(ItemID.PixieDust, 10);
+            recipe.AddIngredient(ItemID.LunarTabletFragment, 10);
+            recipe.AddIngredient(ItemID.Ectoplasm, 5);
+            recipe.AddIngredient(ItemID.SoulofNight, 6);
             recipe.AddTile(TileID.MythrilAnvil);
             recipe.Register();
         }

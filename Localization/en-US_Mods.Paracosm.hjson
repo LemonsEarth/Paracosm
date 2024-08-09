@@ -300,7 +300,7 @@ Items: {
 		Tooltip:
 			'''
 			Not Consumable
-			Summons the remains of an ancient deity
+			Summons the remains of an ancient deity when used in an Evil Biome at Night
 			'''
 	}
 
@@ -312,6 +312,31 @@ Items: {
 			Grants immunity to Cursed Inferno and Ichor
 			All attacks inflict Cursed Inferno and Ichor
 			'''
+	}
+
+	InfectedRevenantBossBag: {
+		DisplayName: Treasure Bag (Infected Revenant)
+		Tooltip: "{$CommonItemTooltip.RightClickToOpen}"
+	}
+
+	DivineFlesh: {
+		DisplayName: Divine Flesh
+		Tooltip: Flesh carved off the remains of a deity
+	}
+
+	NightmareScale: {
+		DisplayName: Nightmare Scale
+		Tooltip: Scales peeled off the remains of a deity
+	}
+
+	LightsEnd: {
+		DisplayName: Light's End
+		Tooltip: Fires projectiles that create Shadow Slashes on hit
+	}
+
+	DivineTendonBow: {
+		DisplayName: Divine Tendon Bow
+		Tooltip: ""
 	}
 }
 
@@ -341,6 +366,8 @@ Projectiles: {
 	DivineSpiritFlame.DisplayName: Divine Spirit Flame
 	CursedFlamethrower.DisplayName: Cursed Flamethrower
 	DivineFlamethrower.DisplayName: Divine Flamethrower
+	LightsEndBeam.DisplayName: Lights End Beam
+	BloodseekerArrow.DisplayName: Bloodseeker Arrow
 }
 
 NPCs: {

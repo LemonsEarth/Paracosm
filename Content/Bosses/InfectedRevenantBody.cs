@@ -616,5 +616,15 @@ namespace Paracosm.Content.Bosses
         {
             potionType = ItemID.GreaterHealingPotion;
         }
+
+        public override void ModifyNPCLoot(NPCLoot npcLoot)
+        {
+            LeadingConditionRule classicRule = new LeadingConditionRule(new Conditions.NotExpert());
+            classicRule.OnSuccess(ItemDropRule.Common(ModContent.ItemType<NightmareScale>(), 1, 15, 25));
+            classicRule.OnSuccess(ItemDropRule.Common(ModContent.ItemType<DivineFlesh>(), 1, 15, 25));
+            classicRule.OnSuccess(ItemDropRule.OneFromOptions(1, ModContent.ItemType<ParashardSword>(), ModContent.ItemType<ParacosmicFurnace>(), ModContent.ItemType<GravityBarrage>(), ModContent.ItemType<ParacosmicEyeStaff>()));
+            npcLoot.Add(classicRule);
+            npcLoot.Add(ItemDropRule.BossBag(ModContent.ItemType<DivineSeekerBossBag>()));
+        }
     }
 }
