@@ -52,7 +52,7 @@ namespace Paracosm.Content.Projectiles
             {
                 for (int i = 0; i < 10; i++)
                 {
-                    Projectile.NewProjectile(Projectile.GetSource_FromAI(), target.Center + new Vector2(Main.rand.Next(-150, 150), Main.rand.Next(-170, 170)), Vector2.Zero, ModContent.ProjectileType<NightActualSlash>(), Projectile.damage, Projectile.knockBack / 2);
+                    Projectile.NewProjectile(Projectile.GetSource_FromAI(), target.Center + new Vector2(Main.rand.Next(-150, 150), Main.rand.Next(-170, 170)), Vector2.Zero, ModContent.ProjectileType<NightActualSlash>(), Projectile.damage / 2, Projectile.knockBack / 2);
                 }
             }
         }

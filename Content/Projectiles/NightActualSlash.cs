@@ -21,6 +21,7 @@ namespace Paracosm.Content.Projectiles
         ref float AITimer => ref Projectile.ai[0];
         ref float randomValue => ref Projectile.ai[1];
         ref float randomValue2 => ref Projectile.ai[2];
+        int savedDamage;
 
         public override void SetStaticDefaults()
         {
@@ -44,11 +45,11 @@ namespace Paracosm.Content.Projectiles
 
         public override void AI()
         {
-
             if (Projectile.timeLeft == 200 && Main.netMode != NetmodeID.MultiplayerClient)
             {
                 randomValue2 = Main.rand.Next(30, 60);
                 Projectile.netUpdate = true;
+                savedDamage = Projectile.damage;
             }
             if (Projectile.timeLeft > 200 - randomValue2)
             {
@@ -69,7 +70,7 @@ namespace Paracosm.Content.Projectiles
                 SoundEngine.PlaySound(SoundID.Item60 with { MaxInstances = 2 });
                 Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, DustID.Ash, -Projectile.velocity.X, -Projectile.velocity.Y);
             }
-            Projectile.damage = 20;
+            Projectile.damage = savedDamage;
             int frameDur = 4;
             AITimer++;
             Player player = Main.player[Projectile.owner];

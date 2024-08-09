@@ -81,6 +81,25 @@ namespace Paracosm.Content.Bosses
             NPCID.Sets.CantTakeLunchMoney[Type] = true;
             NPCID.Sets.MPAllowedEnemies[Type] = true;
             NPCID.Sets.BossBestiaryPriority.Add(Type);
+            NPCID.Sets.NPCBestiaryDrawModifiers drawModifiers = new NPCID.Sets.NPCBestiaryDrawModifiers()
+            {
+                CustomTexturePath = "Paracosm/Content/Textures/Bestiary/InfectedRevenantBestiary",
+                PortraitScale = 0.7f, // Portrait refers to the full picture when clicking on the icon in the bestiary
+                PortraitPositionYOverride = 0f,
+            };
+            NPCID.Sets.NPCBestiaryDrawOffset.Add(Type, drawModifiers);
+        }
+
+        public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
+        {
+            bestiaryEntry.Info.AddRange(new List<IBestiaryInfoElement>
+            {
+                BestiaryDatabaseNPCsPopulator.CommonTags.SpawnConditions.Biomes.TheCorruption,
+                BestiaryDatabaseNPCsPopulator.CommonTags.SpawnConditions.Biomes.TheCrimson,
+                BestiaryDatabaseNPCsPopulator.CommonTags.SpawnConditions.Times.NightTime,
+                new MoonLordPortraitBackgroundProviderBestiaryInfoElement(),
+                new FlavorTextBestiaryInfoElement("A long time ago, an ancient dragon cast aside its flesh in order to traverse a different realm. What remains of it has now been infected by the world evils, once again serving as a reminder of their danger."),
+            });
         }
 
         public override void SetDefaults()
@@ -522,7 +541,7 @@ namespace Paracosm.Content.Bosses
             for (int i = 0; i < CursedFlames.Count; i++)
             {
                 Vector2 pos = arenaCenter + new Vector2(0, -1180).RotatedBy(i * MathHelper.ToRadians(18)).RotatedBy(MathHelper.ToRadians(AITimer));
-                CursedFlames[i].velocity = (pos - CursedFlames[i].Center).SafeNormalize(Vector2.Zero) * (CursedFlames[i].Distance(pos) / 20);
+                CursedFlames[i].velocity = (pos - CursedFlames[i].position).SafeNormalize(Vector2.Zero) * (CursedFlames[i].position.Distance(pos) / 20);
 
                 CursedFlames[i].timeLeft = 180;
             }
@@ -624,7 +643,7 @@ namespace Paracosm.Content.Bosses
             classicRule.OnSuccess(ItemDropRule.Common(ModContent.ItemType<DivineFlesh>(), 1, 15, 25));
             classicRule.OnSuccess(ItemDropRule.OneFromOptions(1, ModContent.ItemType<ParashardSword>(), ModContent.ItemType<ParacosmicFurnace>(), ModContent.ItemType<GravityBarrage>(), ModContent.ItemType<ParacosmicEyeStaff>()));
             npcLoot.Add(classicRule);
-            npcLoot.Add(ItemDropRule.BossBag(ModContent.ItemType<DivineSeekerBossBag>()));
+            npcLoot.Add(ItemDropRule.BossBag(ModContent.ItemType<InfectedRevenantBossBag>()));
         }
     }
 }
