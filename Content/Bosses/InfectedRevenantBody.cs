@@ -98,7 +98,7 @@ namespace Paracosm.Content.Bosses
                 BestiaryDatabaseNPCsPopulator.CommonTags.SpawnConditions.Biomes.TheCrimson,
                 BestiaryDatabaseNPCsPopulator.CommonTags.SpawnConditions.Times.NightTime,
                 new MoonLordPortraitBackgroundProviderBestiaryInfoElement(),
-                new FlavorTextBestiaryInfoElement("A long time ago, an ancient dragon cast aside its flesh in order to traverse a different realm. What remains of it has now been infected by the world evils, once again serving as a reminder of their danger."),
+                new FlavorTextBestiaryInfoElement("The infected remains of an ancient dragon, who cast aside his flesh to traverse a different realm."),
             });
         }
 
@@ -396,7 +396,7 @@ namespace Paracosm.Content.Bosses
                     tempPlayerDir = playerDirection;
                     NPC.velocity = tempPlayerDir.SafeNormalize(Vector2.Zero) * 40;
                     AttackTimer = DashingCD;
-                    SoundEngine.PlaySound(SoundID.Roar with { MaxInstances = 2, Pitch = 0f });
+                    SoundEngine.PlaySound(SoundID.Roar with { MaxInstances = 2, Pitch = -0.3f });
                     break;
             }
             AttackTimer--;
@@ -612,6 +612,26 @@ namespace Paracosm.Content.Bosses
             }
         }
 
+        public override void HitEffect(NPC.HitInfo hit)
+        {
+            if (Main.netMode == NetmodeID.Server)
+            {
+                return;
+            }
+            if (NPC.life <= 0)
+            {
+                for (int i = 0; i < 20; i++)
+                {
+                    var green = Dust.NewDustDirect(NPC.position + new Vector2(95, 0), 2, 2, DustID.CursedTorch, Scale: 4f);
+                    green.velocity = new Vector2(0, -Main.rand.Next(20, 30)).RotatedByRandom(2 * MathHelper.Pi);
+                    var orange = Dust.NewDustDirect(NPC.position + new Vector2(95, 0), 2, 2, DustID.OrangeTorch, Scale: 4f);
+                    orange.velocity = new Vector2(0, -Main.rand.Next(20, 30)).RotatedByRandom(2 * MathHelper.Pi);
+                }
+                SoundEngine.PlaySound(SoundID.Roar with { MaxInstances = 2, Pitch = -1f });
+                SoundEngine.PlaySound(SoundID.NPCDeath62 with { MaxInstances = 2, Pitch = -0.5f });
+            }
+        }
+
         public override void OnKill()
         {
             if (Main.netMode != NetmodeID.MultiplayerClient)
@@ -619,6 +639,7 @@ namespace Paracosm.Content.Bosses
                 corruptHead.NPC.StrikeInstantKill();
                 crimsonHead.NPC.StrikeInstantKill();
             }
+            NPC.SetEventFlagCleared(ref DownedBossSystem.downedInfectedRevenant, -1);
         }
 
         public override void DrawBehind(int index)

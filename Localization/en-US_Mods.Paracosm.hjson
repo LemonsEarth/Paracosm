@@ -336,6 +336,11 @@ Items: {
 
 	DivineTendonBow: {
 		DisplayName: Divine Tendon Bow
+		Tooltip: Every third shot fires 8 homing blood arrows
+	}
+
+	DivineSeekerRelic: {
+		DisplayName: Divine Seeker Relic
 		Tooltip: ""
 	}
 }
@@ -376,9 +381,13 @@ NPCs: {
 		BossChecklistCompatibility.SpawnInfo: Use a [i:Paracosm/CosmicDust] at night
 	}
 
+	InfectedRevenantBody: {
+		DisplayName: Infected Revenant
+		BossChecklistCompatibility.SpawnInfo: Use a [i:Paracosm/AncientCallingHorn] at night in the Corruption or Crimson
+	}
+
 	Wanderer.DisplayName: Wanderer
 	ParastoneRoller.DisplayName: Parastone Roller
-	InfectedRevenantBody.DisplayName: Infected Revenant
 	InfectedRevenantCorruptHead.DisplayName: Infected Revenant
 	InfectedRevenantCrimsonHead.DisplayName: Infected Revenant
 	InfectedRevenantWings.DisplayName: ""

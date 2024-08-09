@@ -1,4 +1,6 @@
-﻿using Paracosm.Content.Bosses;
+﻿using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework;
+using Paracosm.Content.Bosses;
 using Paracosm.Content.Items.Consumables;
 using System;
 using System.Collections.Generic;
@@ -37,14 +39,44 @@ namespace Paracosm.Common.Systems
 
             int spawnItemType = ModContent.ItemType<CosmicDust>();
             LocalizedText spawnInfo = Language.GetText("Mods.Paracosm.NPCs.DivineSeeker.BossChecklistCompatibility.SpawnInfo");
+            List<int> collectibles = new List<int>()
+            {
+                ModContent.ItemType<Content.Items.Placeable.Furniture.DivineSeekerRelic>()
+            };
 
             Dictionary<string, object> additional = new Dictionary<string, object>()
             {
                 ["spawnItems"] = spawnItemType,
-                ["spawnInfo"] = spawnInfo
+                ["spawnInfo"] = spawnInfo,
+                ["collectibles"] = collectibles
             };
 
             BossChecklist.Call("LogBoss", Mod, internalName, progression, downed, bossType, additional);
+
+
+            //Log Infected Revenant
+            string internalName1 = "InfectedRevenantBody";
+            float progression1 = 16.1f; //Betsy - 16f
+            Func<bool> downed1 = () => DownedBossSystem.downedInfectedRevenant;
+            int bossType1 = ModContent.NPCType<InfectedRevenantBody>();
+
+            int spawnItemType1 = ModContent.ItemType<AncientCallingHorn>();
+            LocalizedText spawnInfo1 = Language.GetText("Mods.Paracosm.NPCs.InfectedRevenantBody.BossChecklistCompatibility.SpawnInfo");
+            Action<SpriteBatch, Rectangle, Color> portrait = (SpriteBatch spriteBatch, Rectangle rect, Color color) =>
+            {
+                Texture2D texture = ModContent.Request<Texture2D>("Paracosm/Content/Textures/BossChecklist/InfectedRevenantBossChecklistPortrait").Value;
+                Vector2 centered = new Vector2((int)(rect.X + (rect.Width / 2) - (texture.Width / 2)), (int)(rect.Y + (rect.Height / 2) - (texture.Height / 2)));
+                spriteBatch.Draw(texture, centered, color);
+            };
+
+            Dictionary<string, object> additional1 = new Dictionary<string, object>()
+            {
+                ["spawnItems"] = spawnItemType1,
+                ["spawnInfo"] = spawnInfo1,
+                ["customPortrait"] = portrait
+            };
+
+            BossChecklist.Call("LogBoss", Mod, internalName1, progression1, downed1, bossType1, additional1);
         }
 
 

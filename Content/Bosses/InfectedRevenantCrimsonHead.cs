@@ -298,6 +298,10 @@ namespace Paracosm.Content.Bosses
         {
             NPC.velocity = (defaultHeadPos - NPC.Center).SafeNormalize(Vector2.Zero) * NPC.Center.Distance(defaultHeadPos) / 12;
 
+            if (attackDuration == attackDurations[(int)Attack])
+            {
+                SoundEngine.PlaySound(SoundID.Zombie27 with { MaxInstances = 2, Pitch = -0.3f });
+            }
             if (AttackTimer <= 0)
             {
                 if (Main.netMode != NetmodeID.MultiplayerClient)
@@ -424,6 +428,10 @@ namespace Paracosm.Content.Bosses
 
         void IchorSnipe()
         {
+            if (attackDuration == attackDurations[(int)Attack])
+            {
+                SoundEngine.PlaySound(SoundID.Zombie8 with { MaxInstances = 2, Pitch = -0.3f });
+            }
             NPC.velocity = (defaultHeadPos - NPC.Center).SafeNormalize(Vector2.Zero) * NPC.Center.Distance(defaultHeadPos) / 12;
 
             if (AttackTimer == 0)
