@@ -140,7 +140,7 @@ namespace Paracosm.Content.Bosses
         }
 
         float phase = 1;
-        ref float attack => ref NPC.ai[1];
+        ref float Attack => ref NPC.ai[1];
         bool p2FirstTime = false;
         Vector2 shootOffset;
         public override void AI()
@@ -152,7 +152,7 @@ namespace Paracosm.Content.Bosses
 
             Player player = Main.player[NPC.target];
 
-            if (player.dead || NPC.Center.Distance(player.Center) > 2500)
+            if (player.dead || NPC.Center.Distance(player.MountedCenter) > 2500)
             {
                 NPC.EncourageDespawn(300);
             }
@@ -173,7 +173,7 @@ namespace Paracosm.Content.Bosses
                 NPC.active = false;
             }
             AITimer++;
-            Vector2 playerDirection = (player.Center - NPC.Center).SafeNormalize(Vector2.Zero);
+            Vector2 playerDirection = (player.MountedCenter - NPC.Center).SafeNormalize(Vector2.Zero);
             shootOffset = (playerDirection).SafeNormalize(Vector2.Zero) * new Vector2(NPC.width / 2, NPC.height / 2).Length();
             if (!isDashing && !spinning)
             {
@@ -209,7 +209,7 @@ namespace Paracosm.Content.Bosses
                     AITimerA++;
                     if (AITimerA > 30 && AITimerA < 720)
                     {
-                        attack = 1;
+                        Attack = 1;
                         isDashing = false;
                         timeBeforeDash = 45;
                         dashTime = 0;
@@ -220,25 +220,25 @@ namespace Paracosm.Content.Bosses
                     }
                     else if (AITimerA >= 750 && AITimerA < 1110)
                     {
-                        attack = 2;
+                        Attack = 2;
                     }
                     else if (AITimerA >= 1140 && AITimerA < 1500)
                     {
-                        attack = 3;
+                        Attack = 3;
                     }
                     else if (AITimerA >= 1530 && AITimerA < 1890)
                     {
-                        attack = 4;
+                        Attack = 4;
                     }
                     else if (AITimerA >= 1920 && AITimerA < 2280)
                     {
-                        attack = 5;
+                        Attack = 5;
                     }
                     else
                     {
-                        attack = 0;
+                        Attack = 0;
                     }
-                    if (attack == 0)
+                    if (Attack == 0)
                     {
                         NPC.damage = 0;
                         if (idleTimer == 1)
@@ -249,7 +249,7 @@ namespace Paracosm.Content.Bosses
                         idleTimer--;
                         if (ChosenPosition == Vector2.Zero && Main.netMode != NetmodeID.MultiplayerClient)
                         {
-                            ChosenPosition = player.Center + new Vector2(Main.rand.NextBool().ToDirectionInt() * Main.rand.Next(200, 300), Main.rand.NextBool().ToDirectionInt() * Main.rand.Next(200, 300));
+                            ChosenPosition = player.MountedCenter + new Vector2(Main.rand.NextBool().ToDirectionInt() * Main.rand.Next(200, 300), Main.rand.NextBool().ToDirectionInt() * Main.rand.Next(200, 300));
                             NPC.netUpdate = true;
                         }
                         if (idleTimer > 1 && ChosenPosition != Vector2.Zero)
@@ -257,7 +257,7 @@ namespace Paracosm.Content.Bosses
                             NPC.velocity = (ChosenPosition - NPC.Center).SafeNormalize(Vector2.Zero) * ChosenPosition.Distance(NPC.Center) / 20;
                         }
                     }
-                    if (attack == 1)
+                    if (Attack == 1)
                     {
                         NPC.damage = 0;
                         if (AITimerA >= 30 && AITimerA <= 180)
@@ -290,11 +290,11 @@ namespace Paracosm.Content.Bosses
                         }
                     }
 
-                    if (attack == 2)
+                    if (Attack == 2)
                     {
                         NPC.damage = 80;
-                        Vector2 RightPosition = player.Center + new Vector2(600, 0);
-                        Vector2 LeftPosition = player.Center + new Vector2(-600, 0);
+                        Vector2 RightPosition = player.MountedCenter + new Vector2(600, 0);
+                        Vector2 LeftPosition = player.MountedCenter + new Vector2(-600, 0);
                         timeBeforeDash--;
                         if (timeBeforeDash > 10)
                         {
@@ -351,7 +351,7 @@ namespace Paracosm.Content.Bosses
                         }
                     }
 
-                    if (attack == 3)
+                    if (Attack == 3)
                     {
                         NPC.damage = 0;
                         Vector2 TopPosition = player.position + new Vector2(0, -450);
@@ -363,7 +363,7 @@ namespace Paracosm.Content.Bosses
                         }
                         else
                         {
-                            NPC.Center = player.Center + new Vector2(0, -450).RotatedBy(circlingTime / 10);
+                            NPC.Center = player.MountedCenter + new Vector2(0, -450).RotatedBy(circlingTime / 10);
                             circlingTime++;
                             if ((Math.Atan2(playerDirection.Y, playerDirection.X) > MathHelper.ToRadians(-30) && Math.Atan2(playerDirection.Y, playerDirection.X) < MathHelper.ToRadians(30)) || (Math.Atan2(playerDirection.Y, playerDirection.X) > MathHelper.ToRadians(60) && Math.Atan2(playerDirection.Y, playerDirection.X) < MathHelper.ToRadians(120)) || (Math.Atan2(playerDirection.Y, playerDirection.X) > MathHelper.ToRadians(150) || Math.Atan2(playerDirection.Y, playerDirection.X) < MathHelper.ToRadians(-150)) || (Math.Atan2(playerDirection.Y, playerDirection.X) < MathHelper.ToRadians(-60) && Math.Atan2(playerDirection.Y, playerDirection.X) > MathHelper.ToRadians(-120)))
                             {
@@ -380,7 +380,7 @@ namespace Paracosm.Content.Bosses
                         }
                     }
 
-                    if (attack == 4)
+                    if (Attack == 4)
                     {
                         NPC.damage = 80;
                         if (ChosenPosition == Vector2.Zero)
@@ -430,7 +430,7 @@ namespace Paracosm.Content.Bosses
                             {
                                 if (proj.type == ModContent.ProjectileType<BlueFireBall>())
                                 {
-                                    proj.velocity = (player.Center - proj.Center).SafeNormalize(Vector2.Zero) * dashTime / 6;
+                                    proj.velocity = (player.MountedCenter - proj.Center).SafeNormalize(Vector2.Zero) * dashTime / 6;
                                 }
                             }
                         }
@@ -444,12 +444,12 @@ namespace Paracosm.Content.Bosses
                         }
                     }
 
-                    if (attack == 5)
+                    if (Attack == 5)
                     {
                         NPC.damage = 0;
                         if (indicatorTimer == 0 || indicatorTimer == 120 || indicatorTimer == 240)
                         {
-                            tempPlayerCenter = player.Center;
+                            tempPlayerCenter = player.MountedCenter;
                             if (Main.netMode != NetmodeID.MultiplayerClient)
                             {
                                 for (int i = 0; i < 8; i++)
@@ -479,9 +479,9 @@ namespace Paracosm.Content.Bosses
                             NPC.netUpdate = true;
                         }
 
-                        if (NPC.Center.Distance(player.Center) > 200)
+                        if (NPC.Center.Distance(player.MountedCenter) > 200)
                         {
-                            NPC.velocity = playerDirection * NPC.Center.Distance(player.Center) / 30;
+                            NPC.velocity = playerDirection * NPC.Center.Distance(player.MountedCenter) / 30;
                         }
                         else
                         {
@@ -525,7 +525,7 @@ namespace Paracosm.Content.Bosses
                     }
                     if (AITimerB > 30 && AITimerB < 330)
                     {
-                        attack = 1;
+                        Attack = 1;
                         isDashing = false;
                         timeBeforeDash = 30;
                         dashTime = 0;
@@ -536,28 +536,28 @@ namespace Paracosm.Content.Bosses
                     }
                     else if (AITimerB > 390 && AITimerB <= 750)
                     {
-                        attack = 2;
+                        Attack = 2;
                     }
                     else if (AITimerB > 780 && AITimerB <= 1110)
                     {
-                        attack = 3;
+                        Attack = 3;
                     }
                     else if (AITimerB > 1140 && AITimerB <= 1500)
                     {
-                        attack = 4;
+                        Attack = 4;
                     }
 
                     else if (AITimerB > 1530 && AITimerB <= 1920)
                     {
-                        attack = 5;
+                        Attack = 5;
                     }
 
                     else
                     {
-                        attack = 0;
+                        Attack = 0;
                     }
 
-                    if (attack == 0)
+                    if (Attack == 0)
                     {
                         NPC.damage = 0;
                         if (idleTimer == 1)
@@ -568,7 +568,7 @@ namespace Paracosm.Content.Bosses
                         idleTimer--;
                         if (ChosenPosition == Vector2.Zero && Main.netMode != NetmodeID.MultiplayerClient)
                         {
-                            ChosenPosition = player.Center + new Vector2(Main.rand.NextBool().ToDirectionInt() * Main.rand.Next(200, 300), Main.rand.NextBool().ToDirectionInt() * Main.rand.Next(200, 300));
+                            ChosenPosition = player.MountedCenter + new Vector2(Main.rand.NextBool().ToDirectionInt() * Main.rand.Next(200, 300), Main.rand.NextBool().ToDirectionInt() * Main.rand.Next(200, 300));
                             NPC.netUpdate = true;
                         }
                         if (idleTimer > 1 && ChosenPosition != Vector2.Zero)
@@ -577,7 +577,7 @@ namespace Paracosm.Content.Bosses
                         }
                     }
 
-                    if (attack == 1)
+                    if (Attack == 1)
                     {
                         NPC.damage = 0;
                         if (AITimerB >= 0 && AITimerB <= 60)
@@ -633,7 +633,7 @@ namespace Paracosm.Content.Bosses
                             }
                         }
                     }
-                    if (attack == 2)
+                    if (Attack == 2)
                     {
                         NPC.damage = 80;
                         Vector2 RightPosition = player.position + new Vector2(600, 0);
@@ -697,7 +697,7 @@ namespace Paracosm.Content.Bosses
                         }
                     }
 
-                    if (attack == 3)
+                    if (Attack == 3)
                     {
                         isDashing = false;
                         timeBeforeDash = 45;
@@ -712,7 +712,7 @@ namespace Paracosm.Content.Bosses
                         }
                         else
                         {
-                            NPC.Center = player.Center + new Vector2(0, -450).RotatedBy(circlingTime / 9);
+                            NPC.Center = player.MountedCenter + new Vector2(0, -450).RotatedBy(circlingTime / 9);
                             circlingTime++;
                             if ((Math.Atan2(playerDirection.Y, playerDirection.X) > MathHelper.ToRadians(-30) && Math.Atan2(playerDirection.Y, playerDirection.X) < MathHelper.ToRadians(30)) || (Math.Atan2(playerDirection.Y, playerDirection.X) > MathHelper.ToRadians(60) && Math.Atan2(playerDirection.Y, playerDirection.X) < MathHelper.ToRadians(120)) || (Math.Atan2(playerDirection.Y, playerDirection.X) > MathHelper.ToRadians(150) || Math.Atan2(playerDirection.Y, playerDirection.X) < MathHelper.ToRadians(-150)) || (Math.Atan2(playerDirection.Y, playerDirection.X) < MathHelper.ToRadians(-60) && Math.Atan2(playerDirection.Y, playerDirection.X) > MathHelper.ToRadians(-120)))
                             {
@@ -729,7 +729,7 @@ namespace Paracosm.Content.Bosses
                         }
                     }
 
-                    if (attack == 4)
+                    if (Attack == 4)
                     {
                         NPC.damage = 80;
                         if (ChosenPosition == Vector2.Zero)
@@ -779,7 +779,7 @@ namespace Paracosm.Content.Bosses
                             {
                                 if (proj.type == ModContent.ProjectileType<BlueFireBall>())
                                 {
-                                    proj.velocity = (player.Center - proj.Center).SafeNormalize(Vector2.Zero) * dashTime / 3;
+                                    proj.velocity = (player.MountedCenter - proj.Center).SafeNormalize(Vector2.Zero) * dashTime / 3;
                                 }
                             }
                         }
@@ -793,7 +793,7 @@ namespace Paracosm.Content.Bosses
                         }
                     }
 
-                    if (attack == 5)
+                    if (Attack == 5)
                     {
                         if (AITimerB < 1560)
                         {
@@ -810,8 +810,8 @@ namespace Paracosm.Content.Bosses
                                 Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center + shootOffset, playerDirection * 10, ModContent.ProjectileType<ParacosmicFlameHostile>(), damage / 2, 0);
                                 for (int i = 0; i < 8; i++)
                                 {
-                                    Vector2 pos = player.Center + new Vector2(800, -800).RotatedBy(i * MathHelper.PiOver4);
-                                    Projectile.NewProjectile(NPC.GetSource_FromAI(), pos, (player.Center - pos).SafeNormalize(Vector2.Zero) * 10, ModContent.ProjectileType<BlueFireBall>(), damage / 3, 0);
+                                    Vector2 pos = player.MountedCenter + new Vector2(800, -800).RotatedBy(i * MathHelper.PiOver4);
+                                    Projectile.NewProjectile(NPC.GetSource_FromAI(), pos, (player.MountedCenter - pos).SafeNormalize(Vector2.Zero) * 10, ModContent.ProjectileType<BlueFireBall>(), damage / 3, 0);
 
                                 }
                                 NPC.netUpdate = true;
@@ -859,14 +859,14 @@ namespace Paracosm.Content.Bosses
                         indicatorTimer = 0;
                         spinning = true;
                         isDashing = false;
-                        attack = 1;
+                        Attack = 1;
                     }
                     else if (AITimerC > 360 && AITimerC < 720)
                     {
-                        attack = 2;
+                        Attack = 2;
                     }
 
-                    if (attack == 1)
+                    if (Attack == 1)
                     {
                         NPC.velocity = Vector2.Zero;
                         speen += 1;
@@ -900,14 +900,14 @@ namespace Paracosm.Content.Bosses
                         }
                     }
 
-                    else if (attack == 2)
+                    else if (Attack == 2)
                     {
                         spinning = false;
                         indicatorTimer++;
                         NPC.Center = player.position + new Vector2(0, -300);
                         if (indicatorTimer == 1 && Main.netMode != NetmodeID.MultiplayerClient)
                         {
-                            tempPlayerCenter = player.Center;
+                            tempPlayerCenter = player.MountedCenter;
                             for (int i = 0; i < 16; i++)
                             {
                                 Projectile.NewProjectile(NPC.GetSource_FromAI(), tempPlayerCenter + new Vector2(-1200, i * 150), new Vector2(40, 0), ModContent.ProjectileType<IndicatorLaser>(), 0, 3);

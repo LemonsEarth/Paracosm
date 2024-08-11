@@ -39,7 +39,7 @@ namespace Paracosm.Content.Items.Weapons.Ranged
 
         public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
         {
-            position = player.Center + (Main.MouseWorld - player.Center).SafeNormalize(Vector2.Zero);
+            position = player.MountedCenter + (Main.MouseWorld - player.MountedCenter).SafeNormalize(Vector2.Zero);
             damage = Item.damage;
             knockback = Item.knockBack;
         }

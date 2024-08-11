@@ -286,8 +286,8 @@ namespace Paracosm.Content.Bosses
             {
                 if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
-                    Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, (body.player.Center - NPC.Center).SafeNormalize(Vector2.Zero) * 10, ProjectileID.CursedFlameHostile, (int)(NPC.damage * 0.8f), 10);
-                    NPC.velocity -= (body.player.Center - NPC.Center).SafeNormalize(Vector2.Zero) * 10;
+                    Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, (body.player.MountedCenter - NPC.Center).SafeNormalize(Vector2.Zero) * 10, ProjectileID.CursedFlameHostile, (int)(NPC.damage * 0.8f), 10);
+                    NPC.velocity -= (body.player.MountedCenter - NPC.Center).SafeNormalize(Vector2.Zero) * 10;
                     cursedBurstCount++;
                     AttackTimer = CursedBurstCD1;
                     if (cursedBurstCount >= 4)
@@ -326,7 +326,7 @@ namespace Paracosm.Content.Bosses
 
         void CursedCircles()
         {
-            NPC.velocity = (body.player.Center - NPC.Center).SafeNormalize(Vector2.Zero) * (50 / (NPC.Center.Distance(defaultHeadPos) + 1));
+            NPC.velocity = (body.player.MountedCenter - NPC.Center).SafeNormalize(Vector2.Zero) * (50 / (NPC.Center.Distance(defaultHeadPos) + 1));
 
             if (AttackTimer == 0 && AttackCount < 4)
             {
@@ -334,7 +334,7 @@ namespace Paracosm.Content.Bosses
                 {
                     for (int i = 0; i < 12; i++)
                     {
-                        var proj = Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center, new Vector2(0, -1).RotatedBy(i * (MathHelper.PiOver2 / 3)) * 4, ModContent.ProjectileType<CursedSpiritFlame>(), (int)(NPC.damage * 0.8f), 1, ai0: 30, ai1: body.player.Center.X - NPC.Center.X, ai2: body.player.Center.Y - NPC.Center.Y);
+                        var proj = Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center, new Vector2(0, -1).RotatedBy(i * (MathHelper.PiOver2 / 3)) * 4, ModContent.ProjectileType<CursedSpiritFlame>(), (int)(NPC.damage * 0.8f), 1, ai0: 30, ai1: body.player.MountedCenter.X - NPC.Center.X, ai2: body.player.MountedCenter.Y - NPC.Center.Y);
                         CursedSpiritFlame CursedSpiritFlame = (CursedSpiritFlame)proj.ModProjectile;
                         CursedSpiritFlame.speed = 10;
                     }
@@ -401,7 +401,7 @@ namespace Paracosm.Content.Bosses
             }
             else
             {
-                NPC.velocity = (body.player.Center - NPC.Center).SafeNormalize(Vector2.Zero) * (NPC.Center.Distance(body.player.Center) / 24);
+                NPC.velocity = (body.player.MountedCenter - NPC.Center).SafeNormalize(Vector2.Zero) * (NPC.Center.Distance(body.player.MountedCenter) / 24);
             }
 
             if (AttackTimer == 0)
@@ -438,7 +438,7 @@ namespace Paracosm.Content.Bosses
                 {
                     for (int i = -1; i < 2; i++)
                     {
-                        var proj = Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center, (body.player.Center - NPC.Center).SafeNormalize(Vector2.Zero).RotatedBy(i * (MathHelper.PiOver4 / 2)) * 20, ProjectileID.CursedFlameHostile, (int)(NPC.damage * 0.8f), 1);
+                        var proj = Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center, (body.player.MountedCenter - NPC.Center).SafeNormalize(Vector2.Zero).RotatedBy(i * (MathHelper.PiOver4 / 2)) * 20, ProjectileID.CursedFlameHostile, (int)(NPC.damage * 0.8f), 1);
                     }
                 }
                 AttackTimer = DashingSpamCD;
@@ -478,14 +478,14 @@ namespace Paracosm.Content.Bosses
             Vector2 position = defaultHeadPos + new Vector2(0, -50).RotatedBy(MathHelper.ToRadians(AITimer * 1.6f));
             NPC.velocity = (position - NPC.Center).SafeNormalize(Vector2.Zero) * NPC.Center.Distance(position) / 12;
             Vector2 neckToHead = body.CorruptHeadPos.DirectionTo(defaultHeadPos);
-            Vector2 neckToPlayer = body.CorruptHeadPos.DirectionTo(body.player.Center);
+            Vector2 neckToPlayer = body.CorruptHeadPos.DirectionTo(body.player.MountedCenter);
             if (Math.Abs(AngleBetween(neckToHead, neckToPlayer)) < 60)
             {
                 if (AttackTimer <= 0)
                 {
                     if (Main.netMode != NetmodeID.MultiplayerClient)
                     {
-                        var proj = Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center, (body.player.Center - NPC.Center).SafeNormalize(Vector2.Zero) * 8, ModContent.ProjectileType<CursedSpiritFlame>(), (int)(NPC.damage * 0.8f), 1, ai0: 60 - (AttackCount * cursedSpiritCD), ai1: body.player.Center.X - NPC.Center.X, ai2: body.player.Center.Y - NPC.Center.Y);
+                        var proj = Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center, (body.player.MountedCenter - NPC.Center).SafeNormalize(Vector2.Zero) * 8, ModContent.ProjectileType<CursedSpiritFlame>(), (int)(NPC.damage * 0.8f), 1, ai0: 60 - (AttackCount * cursedSpiritCD), ai1: body.player.MountedCenter.X - NPC.Center.X, ai2: body.player.MountedCenter.Y - NPC.Center.Y);
                         CursedSpiritFlame CursedSpiritFlame = (CursedSpiritFlame)proj.ModProjectile;
                         CursedSpiritFlame.speed = 60;
                         AttackCount++;

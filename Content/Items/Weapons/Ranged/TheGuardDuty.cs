@@ -43,8 +43,8 @@ namespace Paracosm.Content.Items.Weapons.Ranged
         public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
         {
             type = ProjectileID.HornetStinger;
-            position = player.Center + (Main.MouseWorld - player.Center).SafeNormalize(Vector2.Zero) * 35;
-            shootPos = (Main.MouseWorld - player.Center).SafeNormalize(Vector2.Zero).RotatedBy(MathHelper.ToRadians(Main.rand.Next(-15, 15)));
+            position = player.MountedCenter + (Main.MouseWorld - player.MountedCenter).SafeNormalize(Vector2.Zero) * 35;
+            shootPos = (Main.MouseWorld - player.MountedCenter).SafeNormalize(Vector2.Zero).RotatedBy(MathHelper.ToRadians(Main.rand.Next(-15, 15)));
             velocity = shootPos * 100;
             damage = Item.damage;
             knockback = Item.knockBack;

@@ -43,7 +43,7 @@ namespace Paracosm.Content.Items.Consumables
             SoundEngine.PlaySound(SoundID.Roar, player.position);
             if (Main.netMode != NetmodeID.MultiplayerClient)
             {
-                NPC.SpawnBoss((int)player.Center.X, (int)player.Center.Y - 600, ModContent.NPCType<InfectedRevenantBody>(), player.whoAmI);
+                NPC.SpawnBoss((int)player.MountedCenter.X, (int)player.MountedCenter.Y - 600, ModContent.NPCType<InfectedRevenantBody>(), player.whoAmI);
             }
             else
             {

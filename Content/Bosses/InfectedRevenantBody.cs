@@ -183,7 +183,7 @@ namespace Paracosm.Content.Bosses
             }
 
             player = Main.player[NPC.target];
-            playerDirection = (player.Center - NPC.Center).SafeNormalize(Vector2.Zero);
+            playerDirection = (player.MountedCenter - NPC.Center).SafeNormalize(Vector2.Zero);
 
 
             if (NPC.life > (NPC.lifeMax * 0.66f))
@@ -203,7 +203,7 @@ namespace Paracosm.Content.Bosses
                 PhaseTransition();
             }
 
-            if (NPC.Center.Distance(player.Center) > 5000)
+            if (NPC.Center.Distance(player.MountedCenter) > 5000)
             {
                 NPC.active = false;
             }
@@ -312,7 +312,7 @@ namespace Paracosm.Content.Bosses
                     SoundEngine.PlaySound(SoundID.DD2_BetsyFireballShot with { MaxInstances = 1, Pitch = -0.1f }, NPC.Center);
                     break;
                 case > 540:
-                    NPC.velocity = ((player.Center - new Vector2(0, 800)) - NPC.Center).SafeNormalize(Vector2.Zero) * (NPC.Center.Distance(player.Center - new Vector2(0, 800)) / 5);
+                    NPC.velocity = ((player.MountedCenter - new Vector2(0, 800)) - NPC.Center).SafeNormalize(Vector2.Zero) * (NPC.Center.Distance(player.MountedCenter - new Vector2(0, 800)) / 5);
                     if (NPC.alpha < 255)
                     {
                         NPC.alpha += 7;
@@ -328,14 +328,14 @@ namespace Paracosm.Content.Bosses
                             for (int i = -1; i < 2; i += 2)
                             {
                                 Vector2 spawnPos = arenaCenter + new Vector2(0, i * 1140).RotatedBy(MathHelper.ToRadians(10 * AttackCount));
-                                var proj = Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), spawnPos, (player.Center - spawnPos).SafeNormalize(Vector2.Zero) * 2, ModContent.ProjectileType<CursedSpiritFlame>(), corruptHead.NPC.damage, 1, -1, 30, player.Center.X - spawnPos.X, player.Center.Y - spawnPos.Y);
+                                var proj = Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), spawnPos, (player.MountedCenter - spawnPos).SafeNormalize(Vector2.Zero) * 2, ModContent.ProjectileType<CursedSpiritFlame>(), corruptHead.NPC.damage, 1, -1, 30, player.MountedCenter.X - spawnPos.X, player.MountedCenter.Y - spawnPos.Y);
                                 CursedSpiritFlame cfr = (CursedSpiritFlame)proj.ModProjectile;
                                 cfr.speed = 40;
                             }
 
                             if (AttackCount % 5 == 0)
                             {
-                                Projectile.NewProjectile(NPC.GetSource_FromAI(), player.Center + new Vector2(0, 400).RotatedBy(AttackCount * MathHelper.PiOver2), Vector2.Zero, ModContent.ProjectileType<DivineSpiritFlame>(), crimsonHead.NPC.damage, 1, ai0: 30, ai1: 3, ai2: player.whoAmI);
+                                Projectile.NewProjectile(NPC.GetSource_FromAI(), player.MountedCenter + new Vector2(0, 400).RotatedBy(AttackCount * MathHelper.PiOver2), Vector2.Zero, ModContent.ProjectileType<DivineSpiritFlame>(), crimsonHead.NPC.damage, 1, ai0: 30, ai1: 3, ai2: player.whoAmI);
                             }
                         }
                         AttackCount++;
@@ -439,8 +439,8 @@ namespace Paracosm.Content.Bosses
             switch (AttackDuration)
             {
                 case > 660:
-                    leftPos = new Vector2(arenaCenter.X - 1200, player.Center.Y - 400);
-                    rightPos = new Vector2(arenaCenter.X + 1200, player.Center.Y - 400);
+                    leftPos = new Vector2(arenaCenter.X - 1200, player.MountedCenter.Y - 400);
+                    rightPos = new Vector2(arenaCenter.X + 1200, player.MountedCenter.Y - 400);
                     NPC.velocity = (leftPos - NPC.Center).SafeNormalize(Vector2.Zero) * (NPC.Center.Distance(leftPos) / 20);
                     break;
                 case > 540:
@@ -450,8 +450,8 @@ namespace Paracosm.Content.Bosses
                     break;
                 case > 480:
                     elapsedTime = 0;
-                    leftPos = new Vector2(arenaCenter.X, player.Center.Y - 300);
-                    rightPos = new Vector2(arenaCenter.X + 1200, player.Center.Y - 300);
+                    leftPos = new Vector2(arenaCenter.X, player.MountedCenter.Y - 300);
+                    rightPos = new Vector2(arenaCenter.X + 1200, player.MountedCenter.Y - 300);
                     NPC.velocity = (rightPos - NPC.Center).SafeNormalize(Vector2.Zero) * (NPC.Center.Distance(rightPos) / 20);
                     break;
                 case > 360:
@@ -551,7 +551,7 @@ namespace Paracosm.Content.Bosses
 
             foreach (var player in Main.ActivePlayers)
             {
-                if (arenaCenter.Distance(player.Center) > 1200)
+                if (arenaCenter.Distance(player.MountedCenter) > 1200)
                 {
                     player.AddBuff(ModContent.BuffType<Infected>(), 2);
                 }

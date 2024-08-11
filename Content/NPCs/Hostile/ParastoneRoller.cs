@@ -93,7 +93,7 @@ namespace Paracosm.Content.NPCs.Hostile
                 }
                 if (DashTimer == 30)
                 {
-                    RandomPos = player.Center;
+                    RandomPos = player.MountedCenter;
                 }
                 if (DashTimer == 45)
                 {

@@ -31,7 +31,7 @@ namespace Paracosm.Content.Items.Weapons.Melee
 
         public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
         {
-            position = player.Center + new Vector2(Main.rand.Next(-100, 100), Main.rand.Next(-150, 150));
+            position = player.MountedCenter + new Vector2(Main.rand.Next(-100, 100), Main.rand.Next(-150, 150));
             type = ModContent.ProjectileType<WindSlash>();
             damage = Item.damage / 2;
             knockback = Item.knockBack / 2;

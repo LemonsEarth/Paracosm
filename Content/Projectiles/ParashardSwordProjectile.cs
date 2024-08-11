@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,9 +23,19 @@ namespace Paracosm.Content.Projectiles
         ref float attackSpeed => ref Projectile.ai[1];
         Vector2 mousePos = Vector2.Zero;
         Vector2 mouseDir = Vector2.Zero;
-        Item heldItem;
         int direction = 0;
         bool canSpin = true;
+
+        public override void SendExtraAI(BinaryWriter writer)
+        {
+            writer.Write(canSpin);
+            writer.Write(direction);
+        }
+        public override void ReceiveExtraAI(BinaryReader reader)
+        {
+            canSpin = reader.ReadBoolean();
+            direction = reader.ReadInt32();
+        }
 
         public override void SetStaticDefaults()
         {
@@ -59,7 +70,6 @@ namespace Paracosm.Content.Projectiles
             player.heldProj = Projectile.whoAmI;
             if (AITimer == 0)
             {
-                heldItem = player.HeldItem;
                 direction = player.direction;
             }
             AITimer++;
@@ -73,15 +83,14 @@ namespace Paracosm.Content.Projectiles
                 SoundEngine.PlaySound(SoundID.MaxMana);
             }
 
-            if (player.channel && canSpin && Projectile.owner == Main.myPlayer)
+            if (player.channel && canSpin)
             {
                 player.SetDummyItemTime(2);
                 Projectile.timeLeft = 120 + (int)(player.GetAttackSpeed(DamageClass.Melee) * 100 / 2);
                 Vector2 playerCenter = player.RotatedRelativePoint(player.MountedCenter);
-                Projectile.rotation = new Vector2(1, 0).RotatedBy(AITimer / 10 * attackSpeed * direction * player.GetAttackSpeed(DamageClass.Melee)).ToRotation() ;
+                Projectile.rotation = new Vector2(1, 0).RotatedBy(AITimer / 10 * attackSpeed * direction * player.GetAttackSpeed(DamageClass.Melee)).ToRotation();
                 Projectile.Center = playerCenter + new Vector2(55, -55).RotatedBy(AITimer / 10 * attackSpeed * direction * player.GetAttackSpeed(DamageClass.Melee));
-                Projectile.netUpdate = true;
-                if (AITimer % (int)(attackSpeed * 10) == 0)
+                if (AITimer % 10 == 0)
                 {
                     for (int i = 0; i < 7; i++)
                     {
@@ -106,7 +115,6 @@ namespace Paracosm.Content.Projectiles
                 if (Projectile.Center.Distance(mousePos) > 20)
                 {
                     Projectile.velocity = mouseDir * 20 * player.GetAttackSpeed(DamageClass.Melee);
-                    
                 }
                 else
                 {
@@ -120,7 +128,6 @@ namespace Paracosm.Content.Projectiles
                     }
                 }
                 Projectile.rotation = new Vector2(1, 0).RotatedBy(AITimer / 10 * attackSpeed * direction * player.GetAttackSpeed(DamageClass.Melee)).ToRotation();
-                Projectile.netUpdate = true;
             }
         }
 
@@ -142,7 +149,10 @@ namespace Paracosm.Content.Projectiles
         {
             for (int i = 0; i < 3; i++)
             {
-                Projectile.NewProjectile(Projectile.GetSource_FromAI(), target.position, new Vector2(Main.rand.NextBool().ToDirectionInt() * Main.rand.Next(5, 16), Main.rand.NextBool().ToDirectionInt() * Main.rand.Next(5, 16)), ModContent.ProjectileType<ParaSwordShard>(), Projectile.damage / 4, 2);
+                if (Main.myPlayer == Projectile.owner)
+                {
+                    Projectile.NewProjectile(Projectile.GetSource_FromAI(), target.position, new Vector2(Main.rand.NextBool().ToDirectionInt() * Main.rand.Next(5, 16), Main.rand.NextBool().ToDirectionInt() * Main.rand.Next(5, 16)), ModContent.ProjectileType<ParaSwordShard>(), Projectile.damage / 4, 2);
+                }
             }
             for (int i = 0; i < 10; i++)
             {

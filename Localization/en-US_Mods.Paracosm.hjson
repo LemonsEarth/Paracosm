@@ -352,6 +352,11 @@ Items: {
 			Fires homing rockets when used with Rocket IV's
 			'''
 	}
+
+	DefiledGlaive: {
+		DisplayName: Defiled Glaive
+		Tooltip: ""
+	}
 }
 
 Projectiles: {
@@ -384,6 +389,7 @@ Projectiles: {
 	BloodseekerArrow.DisplayName: Bloodseeker Arrow
 	ShadowOrbProj.DisplayName: Shadow Orb Proj
 	ParacosmicFlameHostile.DisplayName: Paracosmic Flame Hostile
+	DefiledGlaiveProjectile.DisplayName: Defiled Glaive Projectile
 }
 
 NPCs: {

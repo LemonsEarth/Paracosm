@@ -30,7 +30,7 @@ namespace Paracosm.Content.Items.Weapons.Magic
 
         public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
         {
-            position = player.Center + new Vector2(Main.rand.Next(-100, 100), 600 + Main.rand.Next(-20, 20));
+            position = player.MountedCenter + new Vector2(Main.rand.Next(-100, 100), 600 + Main.rand.Next(-20, 20));
             velocity = new Vector2(0, -30);
             type = Item.shoot;
             damage = Item.damage;

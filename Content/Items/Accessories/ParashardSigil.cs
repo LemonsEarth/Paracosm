@@ -79,7 +79,7 @@ namespace Paracosm.Content.Items.Accessories
                 activeTimer = true;
                 for (int i = 0; i < 5; i++)
                 {
-                    Projectile.NewProjectile(Item.GetSource_None(), Player.Center, Main.rand.NextVector2Circular(1, 1).SafeNormalize(Vector2.Zero) * 10, ModContent.ProjectileType<HomingBlueFire>(), 100 + info.Damage, info.Knockback);
+                    Projectile.NewProjectile(Item.GetSource_None(), Player.MountedCenter, Main.rand.NextVector2Circular(1, 1).SafeNormalize(Vector2.Zero) * 10, ModContent.ProjectileType<HomingBlueFire>(), 100 + info.Damage, info.Knockback);
                 }
             }      
         }

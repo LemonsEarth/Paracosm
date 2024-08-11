@@ -374,7 +374,7 @@ namespace Paracosm.Content.Bosses
             {
                 if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
-                    Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, (body.player.Center - NPC.Center).SafeNormalize(Vector2.Zero) * 10, ModContent.ProjectileType<BloodBlast>(), (int)(NPC.damage * 0.8f), 1, ai1: 1, ai2: body.player.whoAmI);
+                    Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, (body.player.MountedCenter - NPC.Center).SafeNormalize(Vector2.Zero) * 10, ModContent.ProjectileType<BloodBlast>(), (int)(NPC.damage * 0.8f), 1, ai1: 1, ai2: body.player.whoAmI);
 
                 }
                 AttackTimer = BloodBlastCD;
@@ -438,10 +438,10 @@ namespace Paracosm.Content.Bosses
             {
                 if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
-                    Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, (body.player.Center - NPC.Center).SafeNormalize(Vector2.Zero) * 12, ProjectileID.GoldenShowerHostile, (int)(NPC.damage * 0.8f), 1);
+                    Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, (body.player.MountedCenter - NPC.Center).SafeNormalize(Vector2.Zero) * 12, ProjectileID.GoldenShowerHostile, (int)(NPC.damage * 0.8f), 1);
                     
                 }
-                NPC.velocity -= (body.player.Center - NPC.Center).SafeNormalize(Vector2.Zero) * 10;
+                NPC.velocity -= (body.player.MountedCenter - NPC.Center).SafeNormalize(Vector2.Zero) * 10;
                 AttackCount++;
                 if (AttackCount > 0 && AttackCount % 3 == 0)
                 {

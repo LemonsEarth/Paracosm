@@ -71,7 +71,7 @@ namespace Paracosm.Content.NPCs.Hostile
             }
             Player player = Main.player[NPC.target];
 
-            NPC.spriteDirection = Math.Sign(NPC.Center.DirectionTo(player.Center).X);
+            NPC.spriteDirection = Math.Sign(NPC.Center.DirectionTo(player.MountedCenter).X);
             if (AITimer % 60 == 0 && Main.netMode != NetmodeID.MultiplayerClient)
             {
                 randomChoice = Main.rand.Next(0, 2);
@@ -106,7 +106,7 @@ namespace Paracosm.Content.NPCs.Hostile
 
                 speed = 1;
             }
-            NPC.velocity = NPC.Center.DirectionTo(player.Center) * speed;
+            NPC.velocity = NPC.Center.DirectionTo(player.MountedCenter) * speed;
             if (speed > 3)
             {
                 NPC.rotation = Utils.AngleLerp(NPC.rotation, NPC.spriteDirection * MathHelper.ToRadians(30), MathHelper.ToRadians(1));
