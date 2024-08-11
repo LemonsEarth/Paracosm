@@ -10,7 +10,7 @@ using System;
 using Terraria.Audio;
 using Paracosm.Content.Items.Materials;
 
-namespace Paracosm.Content.Items.Weapons
+namespace Paracosm.Content.Items.Weapons.Ranged
 {
     public class DivineTendonBow : ModItem
     {

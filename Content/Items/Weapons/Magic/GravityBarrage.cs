@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework;
 using Terraria.DataStructures;
 using Paracosm.Content.Projectiles;
 
-namespace Paracosm.Content.Items.Weapons
+namespace Paracosm.Content.Items.Weapons.Magic
 {
     public class GravityBarrage : ModItem
     {

@@ -8,7 +8,7 @@ using Paracosm.Content.Projectiles.Hostile;
 using Microsoft.Xna.Framework.Input;
 using System;
 
-namespace Paracosm.Content.Items.Weapons
+namespace Paracosm.Content.Items.Weapons.Ranged
 {
     public class ParacosmicFurnace : ModItem
     {
@@ -32,7 +32,7 @@ namespace Paracosm.Content.Items.Weapons
             Item.rare = ItemRarityID.Purple;
             Item.UseSound = SoundID.Item8;
             Item.autoReuse = true;
-            Item.shoot = ModContent.ProjectileType<ParacosmicFlame>();
+            Item.shoot = ModContent.ProjectileType<ParacosmicFlameHostile>();
             Item.noMelee = true;
         }
 
@@ -40,7 +40,7 @@ namespace Paracosm.Content.Items.Weapons
         {
             position = player.Center + (Main.MouseWorld - player.Center).SafeNormalize(Vector2.Zero) * 40;
             velocity = (Main.MouseWorld - player.Center).SafeNormalize(Vector2.Zero) * 30;
-            type = ModContent.ProjectileType<ParacosmicFlame>();
+            type = ModContent.ProjectileType<ParacosmicFlameHostile>();
             damage = Item.damage;
             knockback = Item.knockBack;
         }

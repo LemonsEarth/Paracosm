@@ -5,29 +5,18 @@ using System.Media;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Paracosm.Content.Buffs;
 using Terraria;
 using Terraria.Audio;
 using Terraria.DataStructures;
-using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Paracosm.Content.Projectiles.Hostile
 {
-    public class CursedFlamethrower : ModProjectile
+    public class ParacosmicFlameHostile : ModProjectile
     {
         ref float AITimer => ref Projectile.ai[0];
-        Vector2 savedVelocity
-        {
-            get => new Vector2(Projectile.ai[1], Projectile.ai[2]);
-            set
-            {
-                Projectile.ai[1] = value.X;
-                Projectile.ai[2] = value.Y;
-            }
-        }
         public override void SetStaticDefaults()
         {
             Main.projFrames[Projectile.type] = 7;
@@ -38,31 +27,34 @@ namespace Paracosm.Content.Projectiles.Hostile
             Projectile.width = 90;
             Projectile.height = 90;
             Projectile.hostile = true;
+            Projectile.friendly = false;
             Projectile.ignoreWater = true;
             Projectile.tileCollide = false;
-            Projectile.timeLeft = 48;
+            Projectile.timeLeft = 24;
             Projectile.frameCounter = 2;
+            Projectile.penetrate = 10;
+            Projectile.usesLocalNPCImmunity = true;
+            Projectile.localNPCHitCooldown = 60;
         }
 
-        public override void OnHitPlayer(Player target, Player.HurtInfo info)
+        public override void OnSpawn(IEntitySource source)
         {
-            target.AddBuff(BuffID.CursedInferno, 180);
+            
+        }
+
+        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
+        {
+            target.AddBuff(ModContent.BuffType<ParacosmicBurn>(), 300);
         }
 
         public override void AI()
         {
             if (AITimer == 0)
             {
-                savedVelocity = Projectile.velocity;
-                Projectile.velocity = new Vector2(0.1f, 0.1f);
-                Projectile.netUpdate = true;
+                SoundEngine.PlaySound(SoundID.Item20 with { MaxInstances = 1, Pitch = -0.1f });
             }
-            Projectile.velocity = Vector2.Lerp(Projectile.velocity, savedVelocity, 0.1f);
-            Lighting.AddLight(Projectile.Center, 0, 10, 0);
-            var dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, DustID.CursedTorch, Scale: 2.5f);
-            dust.noGravity = true;
             AITimer++;
-            Projectile.alpha += 5;
+            Projectile.alpha += 10;
             Projectile.rotation = AITimer / Main.rand.Next(2, 4);
             Projectile.frameCounter--;
             if (Projectile.frameCounter == 0)
@@ -82,6 +74,10 @@ namespace Paracosm.Content.Projectiles.Hostile
                     Projectile.frame++;
                     Projectile.frameCounter = 1;
                 }
+            }
+            if (AITimer % 2 == 0)
+            {
+                Dust.NewDust(Projectile.Center, Projectile.width / 2, Projectile.height / 2, DustID.IceTorch);
             }
         }
     }

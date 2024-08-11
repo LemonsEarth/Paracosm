@@ -343,6 +343,15 @@ Items: {
 		DisplayName: Divine Seeker Relic
 		Tooltip: ""
 	}
+
+	ShadowBomber: {
+		DisplayName: Shadow Bomber
+		Tooltip:
+			'''
+			Fires a shadow orb that explodes into rockets
+			Fires homing rockets when used with Rocket IV's
+			'''
+	}
 }
 
 Projectiles: {
@@ -373,6 +382,8 @@ Projectiles: {
 	DivineFlamethrower.DisplayName: Divine Flamethrower
 	LightsEndBeam.DisplayName: Lights End Beam
 	BloodseekerArrow.DisplayName: Bloodseeker Arrow
+	ShadowOrbProj.DisplayName: Shadow Orb Proj
+	ParacosmicFlameHostile.DisplayName: Paracosmic Flame Hostile
 }
 
 NPCs: {

@@ -16,6 +16,7 @@ namespace Paracosm.Content.Bosses
     public class InfectedRevenantWings : ModNPC
     {
         InfectedRevenantBody body;
+        bool noAnim = false;
         public int ParentIndex
         {
             get => (int)NPC.ai[0];
@@ -84,15 +85,18 @@ namespace Paracosm.Content.Bosses
             this.body = body;
             NPC.alpha = bodyNPC.alpha;
             NPC.position = body.WingsPos;
-            if (AITimer % 45 == 0)
+            if (AITimer % 45 == 0 && body.phaseTransition == false)
             {
                 SoundEngine.PlaySound(SoundID.DD2_BetsyFireballShot with { MaxInstances = 1, PitchVariance = 1.0f, Volume = 0.5f });
             }
             AITimer++;
             if (body.phaseTransition)
             {
-                NPC.frame.Y = 0;
-                return;
+                noAnim = true;
+            }
+            else
+            {
+                noAnim = false;
             }
         }
 
@@ -102,6 +106,11 @@ namespace Paracosm.Content.Bosses
             int frameDurLong = 12;
             int frameDurShort = 6;
             int frameDur = 0;
+            if (noAnim)
+            {
+                NPC.frame.Y = 0;
+                return;
+            }
 
             if (NPC.frame.Y == 1 * frameHeight || NPC.frame.Y == 3 * frameHeight)
             {

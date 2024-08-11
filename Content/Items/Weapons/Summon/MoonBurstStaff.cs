@@ -8,9 +8,9 @@ using Paracosm.Content.Projectiles.Minions;
 using Paracosm.Content.Projectiles.Sentries;
 using Paracosm.Content.Items.Materials;
 
-namespace Paracosm.Content.Items.Weapons
+namespace Paracosm.Content.Items.Weapons.Summon
 {
-    public class PoisonBloomStaff : ModItem
+    public class MoonBurstStaff : ModItem
     {
         public override void SetStaticDefaults()
         {
@@ -23,14 +23,14 @@ namespace Paracosm.Content.Items.Weapons
             Item.height = 40;
             Item.mana = 10;
             Item.noMelee = true;
-            Item.damage = 24;
+            Item.damage = 15;
             Item.DamageType = DamageClass.Summon;
             Item.useStyle = ItemUseStyleID.Swing;
             Item.useTime = 20;
             Item.useAnimation = 20;
             Item.UseSound = SoundID.Item44;
-            Item.shoot = ModContent.ProjectileType<PoisonBloom>();
-            Item.rare = ItemRarityID.Green;
+            Item.shoot = ModContent.ProjectileType<MoonBurst>();
+            Item.rare = ItemRarityID.Blue;
             Item.value = 20000;
         }
 
@@ -54,10 +54,11 @@ namespace Paracosm.Content.Items.Weapons
         public override void AddRecipes()
         {
             Recipe recipe = CreateRecipe();
-            recipe.AddIngredient(ItemID.Wood, 20);
-            recipe.AddIngredient(ItemID.Daybloom, 3);
-            recipe.AddIngredient(ItemID.Stinger, 2);
-            recipe.AddTile(TileID.WorkBenches);
+            recipe.AddIngredient(ItemID.RichMahogany, 20);
+            recipe.AddIngredient(ItemID.Moonglow, 3);
+            recipe.AddIngredient(ItemID.Vine, 3);
+            recipe.AddIngredient(ItemID.JungleSpores, 6);
+            recipe.AddTile(TileID.Anvils);
             recipe.Register();
         }
     }

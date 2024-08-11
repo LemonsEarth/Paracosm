@@ -10,10 +10,15 @@ using Terraria.GameContent.ItemDropRules;
 using Paracosm.Content.Items.Materials;
 using Terraria.DataStructures;
 using Paracosm.Content.Items.BossBags;
-using Paracosm.Content.Items.Weapons;
 using Paracosm.Content.Projectiles;
 using Paracosm.Common.Systems;
 using Terraria.GameContent.Bestiary;
+using Paracosm.Content.Items.Weapons.Melee;
+using Paracosm.Content.Items.Weapons.Magic;
+using Paracosm.Content.Items.Weapons.Ranged;
+using Paracosm.Content.Items.Weapons.Summon;
+using Microsoft.Xna.Framework.Graphics;
+using Terraria.GameContent;
 
 
 namespace Paracosm.Content.Bosses
@@ -58,6 +63,8 @@ namespace Paracosm.Content.Bosses
 
         public override void SetStaticDefaults()
         {
+            NPCID.Sets.TrailCacheLength[NPC.type] = 5;
+            NPCID.Sets.TrailingMode[NPC.type] = 0;
             Main.npcFrameCount[NPC.type] = 3;
             NPCID.Sets.SpecificDebuffImmunity[Type][BuffID.Confused] = true;
             NPCID.Sets.MPAllowedEnemies[Type] = true;
@@ -321,7 +328,7 @@ namespace Paracosm.Content.Bosses
                             isDashing = true;
                             dashFireDir = new Vector2(0, Math.Sign(playerDirection.Y));
                             NPC.velocity = new Vector2(60 * Math.Sign(playerDirection.X), 0);
-                            SoundEngine.PlaySound(SoundID.Roar with { MaxInstances = 0 });
+                            SoundEngine.PlaySound(SoundID.Roar with { MaxInstances = 0 }, NPC.Center);
                         }
 
                         if (dashTime == 30)
@@ -393,7 +400,7 @@ namespace Paracosm.Content.Bosses
                         {
                             isDashing = true;
                             NPC.velocity = tempPlayerDir * 70;
-                            SoundEngine.PlaySound(SoundID.Roar with { MaxInstances = 0, Pitch = 0.2f });
+                            SoundEngine.PlaySound(SoundID.Roar with { MaxInstances = 0, Pitch = 0.2f }, NPC.Center);
                         }
 
                         if (timeBeforeDash > 15)
@@ -512,7 +519,7 @@ namespace Paracosm.Content.Bosses
                     AITimerB++;
                     if (p2FirstTime == false)
                     {
-                        SoundEngine.PlaySound(SoundID.Roar with { MaxInstances = 0, Pitch = -0.2f, Volume = 0.95f });
+                        SoundEngine.PlaySound(SoundID.Roar with { MaxInstances = 0, Pitch = -0.2f, Volume = 0.95f }, NPC.Center);
 
                         p2FirstTime = true;
                     }
@@ -667,7 +674,7 @@ namespace Paracosm.Content.Bosses
                             isDashing = true;
                             dashFireDir = new Vector2(0, Math.Sign(playerDirection.Y));
                             NPC.velocity = new Vector2(100 * Math.Sign(playerDirection.X), 0);
-                            SoundEngine.PlaySound(SoundID.Roar with { MaxInstances = 0 });
+                            SoundEngine.PlaySound(SoundID.Roar with { MaxInstances = 0 }, NPC.Center);
                         }
 
                         if (dashTime == 25)
@@ -742,7 +749,7 @@ namespace Paracosm.Content.Bosses
                         {
                             isDashing = true;
                             NPC.velocity = tempPlayerDir * 70;
-                            SoundEngine.PlaySound(SoundID.Roar with { MaxInstances = 0, Pitch = 0.05f });
+                            SoundEngine.PlaySound(SoundID.Roar with { MaxInstances = 0, Pitch = 0.05f }, NPC.Center);
                         }
 
                         if (timeBeforeDash > 10)
@@ -798,9 +805,9 @@ namespace Paracosm.Content.Bosses
                             NPC.velocity = playerDirection * 7;
                             if (Main.netMode != NetmodeID.MultiplayerClient && AITimerB % 30 == 0)
                             {
-                                Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center + shootOffset, playerDirection * 20, ModContent.ProjectileType<ParacosmicFlame>(), damage / 2, 0, ai1: 1);
-                                Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center + shootOffset, playerDirection * 15, ModContent.ProjectileType<ParacosmicFlame>(), damage / 2, 0, ai1: 1);
-                                Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center + shootOffset, playerDirection * 10, ModContent.ProjectileType<ParacosmicFlame>(), damage / 2, 0, ai1: 1);
+                                Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center + shootOffset, playerDirection * 20, ModContent.ProjectileType<ParacosmicFlameHostile>(), damage / 2, 0);
+                                Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center + shootOffset, playerDirection * 15, ModContent.ProjectileType<ParacosmicFlameHostile>(), damage / 2, 0);
+                                Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center + shootOffset, playerDirection * 10, ModContent.ProjectileType<ParacosmicFlameHostile>(), damage / 2, 0);
                                 for (int i = 0; i < 8; i++)
                                 {
                                     Vector2 pos = player.Center + new Vector2(800, -800).RotatedBy(i * MathHelper.PiOver4);
@@ -829,7 +836,7 @@ namespace Paracosm.Content.Bosses
                         {
                             Dust.NewDust(NPC.position, NPC.width, NPC.height, DustID.Shiverthorn, Main.rand.Next(-30, 30), Main.rand.Next(-30, 30), Scale: 2f);
                         }
-                        SoundEngine.PlaySound(SoundID.Roar with { MaxInstances = 0, Pitch = -0.4f });
+                        SoundEngine.PlaySound(SoundID.Roar with { MaxInstances = 0, Pitch = -0.4f }, NPC.Center);
                         NPC.Center = player.position + new Vector2(0, -300);
                         foreach (var proj in Main.ActiveProjectiles)
                         {
@@ -996,6 +1003,25 @@ namespace Paracosm.Content.Bosses
         public override void OnKill()
         {
             NPC.SetEventFlagCleared(ref DownedBossSystem.downedDivineSeeker, -1);
+        }
+
+        public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
+        {
+            if (!isDashing)
+            {
+                return true;
+            }
+            Texture2D texture = TextureAssets.Npc[Type].Value;
+
+            // Redraw the projectile with the color not influenced by light
+            Vector2 drawOrigin = new Vector2(texture.Width * 0.5f, NPC.height * 0.5f);
+            for (int k = 0; k < NPC.oldPos.Length; k++)
+            {
+                Vector2 drawPos = (NPC.oldPos[k] - Main.screenPosition) + drawOrigin + new Vector2(0f, NPC.gfxOffY);
+                Color color = NPC.GetAlpha(drawColor) * ((NPC.oldPos.Length - k) / (float)NPC.oldPos.Length);
+                Main.EntitySpriteDraw(texture, drawPos, null, color, NPC.rotation, drawOrigin, NPC.scale, SpriteEffects.None, 0);
+            }
+            return true;
         }
     }
 }

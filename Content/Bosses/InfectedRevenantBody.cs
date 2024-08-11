@@ -10,7 +10,6 @@ using Terraria.GameContent.ItemDropRules;
 using Paracosm.Content.Items.Materials;
 using Terraria.DataStructures;
 using Paracosm.Content.Items.BossBags;
-using Paracosm.Content.Items.Weapons;
 using Paracosm.Content.Projectiles;
 using Paracosm.Common.Systems;
 using Terraria.GameContent.Bestiary;
@@ -22,6 +21,10 @@ using Terraria.Chat;
 using Terraria.Localization;
 using Terraria.Graphics.CameraModifiers;
 using System.IO;
+using Paracosm.Content.Items.Weapons.Melee;
+using Paracosm.Content.Items.Weapons.Magic;
+using Paracosm.Content.Items.Weapons.Ranged;
+using Paracosm.Content.Items.Weapons.Summon;
 
 namespace Paracosm.Content.Bosses
 {
@@ -306,7 +309,7 @@ namespace Paracosm.Content.Bosses
                     NPC.velocity.Y = 3;
                     break;
                 case 570:
-                    SoundEngine.PlaySound(SoundID.DD2_BetsyFireballShot with { MaxInstances = 1, Pitch = -0.1f });
+                    SoundEngine.PlaySound(SoundID.DD2_BetsyFireballShot with { MaxInstances = 1, Pitch = -0.1f }, NPC.Center);
                     break;
                 case > 540:
                     NPC.velocity = ((player.Center - new Vector2(0, 800)) - NPC.Center).SafeNormalize(Vector2.Zero) * (NPC.Center.Distance(player.Center - new Vector2(0, 800)) / 5);
@@ -341,8 +344,8 @@ namespace Paracosm.Content.Bosses
                     AttackTimer--;
                     break;
                 case 180:
-                    SoundEngine.PlaySound(SoundID.Roar with { MaxInstances = 2, Pitch = -1f });
-                    SoundEngine.PlaySound(SoundID.NPCDeath62 with { MaxInstances = 2, Pitch = -0.5f });
+                    SoundEngine.PlaySound(SoundID.Roar with { MaxInstances = 2, Pitch = -1f }, NPC.Center);
+                    SoundEngine.PlaySound(SoundID.NPCDeath62 with { MaxInstances = 2, Pitch = -0.5f }, NPC.Center);
                     NPC.dontTakeDamage = false;
                     NPC.velocity = ((arenaCenter - new Vector2(0, 1400)) - NPC.Center).SafeNormalize(Vector2.Zero) * (NPC.Center.Distance(arenaCenter - new Vector2(0, 1400)) / 5);
                     break;
@@ -396,7 +399,7 @@ namespace Paracosm.Content.Bosses
                     tempPlayerDir = playerDirection;
                     NPC.velocity = tempPlayerDir.SafeNormalize(Vector2.Zero) * 40;
                     AttackTimer = DashingCD;
-                    SoundEngine.PlaySound(SoundID.Roar with { MaxInstances = 2, Pitch = -0.3f });
+                    SoundEngine.PlaySound(SoundID.Roar with { MaxInstances = 2, Pitch = -0.3f }, NPC.Center);
                     break;
             }
             AttackTimer--;
@@ -496,8 +499,8 @@ namespace Paracosm.Content.Bosses
                     break;
                 case 150:
                     SpawnWings();
-                    SoundEngine.PlaySound(SoundID.Roar with { MaxInstances = 2, Pitch = -1f });
-                    SoundEngine.PlaySound(SoundID.NPCDeath62 with { MaxInstances = 2, Pitch = -0.5f });
+                    SoundEngine.PlaySound(SoundID.Roar with { MaxInstances = 2, Pitch = -1f }, NPC.Center);
+                    SoundEngine.PlaySound(SoundID.NPCDeath62 with { MaxInstances = 2, Pitch = -0.5f }, NPC.Center);
                     if (NPC.life < NPC.lifeMax * 0.65f)
                     {
                         NPC.life = (int)Math.Ceiling((double)NPC.lifeMax * 0.65f);
@@ -627,8 +630,21 @@ namespace Paracosm.Content.Bosses
                     var orange = Dust.NewDustDirect(NPC.position + new Vector2(95, 0), 2, 2, DustID.OrangeTorch, Scale: 4f);
                     orange.velocity = new Vector2(0, -Main.rand.Next(20, 30)).RotatedByRandom(2 * MathHelper.Pi);
                 }
-                SoundEngine.PlaySound(SoundID.Roar with { MaxInstances = 2, Pitch = -1f });
-                SoundEngine.PlaySound(SoundID.NPCDeath62 with { MaxInstances = 2, Pitch = -0.5f });
+                SoundEngine.PlaySound(SoundID.Roar with { MaxInstances = 2, Pitch = -1f }, NPC.Center);
+                SoundEngine.PlaySound(SoundID.NPCDeath62 with { MaxInstances = 2, Pitch = -0.5f }, NPC.Center);
+
+                int goreType1 = Mod.Find<ModGore>("InfectedRevenantBody_Gore1").Type;
+                int goreType2 = Mod.Find<ModGore>("InfectedRevenantBody_Gore2").Type;
+                int corruptHeadGoreType = Mod.Find<ModGore>("InfectedRevenantCorruptHead_Gore").Type;
+                int crimsonHeadGoreType = Mod.Find<ModGore>("InfectedRevenantCrimsonHead_Gore").Type;
+
+                for (int i = 0; i < 2; i++)
+                {
+                    Gore.NewGore(NPC.GetSource_Death(), NPC.position, new Vector2(Main.rand.Next(-6, 7), Main.rand.Next(-6, 7)), goreType1);
+                    Gore.NewGore(NPC.GetSource_Death(), NPC.position, new Vector2(Main.rand.Next(-6, 7), Main.rand.Next(-6, 7)), goreType2);
+                }
+                Gore.NewGore(NPC.GetSource_Death(), corruptHead.NPC.position, new Vector2(Main.rand.Next(-6, 7), Main.rand.Next(-6, 7)), corruptHeadGoreType);
+                Gore.NewGore(NPC.GetSource_Death(), crimsonHead.NPC.position, new Vector2(Main.rand.Next(-6, 7), Main.rand.Next(-6, 7)), crimsonHeadGoreType);
             }
         }
 
@@ -662,7 +678,6 @@ namespace Paracosm.Content.Bosses
             LeadingConditionRule classicRule = new LeadingConditionRule(new Conditions.NotExpert());
             classicRule.OnSuccess(ItemDropRule.Common(ModContent.ItemType<NightmareScale>(), 1, 15, 25));
             classicRule.OnSuccess(ItemDropRule.Common(ModContent.ItemType<DivineFlesh>(), 1, 15, 25));
-            classicRule.OnSuccess(ItemDropRule.OneFromOptions(1, ModContent.ItemType<ParashardSword>(), ModContent.ItemType<ParacosmicFurnace>(), ModContent.ItemType<GravityBarrage>(), ModContent.ItemType<ParacosmicEyeStaff>()));
             npcLoot.Add(classicRule);
             npcLoot.Add(ItemDropRule.BossBag(ModContent.ItemType<InfectedRevenantBossBag>()));
         }

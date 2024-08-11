@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework;
 using Paracosm.Content.Items.Materials;
 using Paracosm.Content.Projectiles;
 
-namespace Paracosm.Content.Items.Weapons
+namespace Paracosm.Content.Items.Weapons.Melee
 {
     public class ParashardSword : ModItem
     {

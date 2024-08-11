@@ -4,8 +4,11 @@ using Terraria.ModLoader;
 using Microsoft.Xna.Framework;
 using Terraria.GameContent.ItemDropRules;
 using Paracosm.Content.Items.Materials;
-using Paracosm.Content.Items.Weapons;
 using Paracosm.Content.Items.Accessories;
+using Paracosm.Content.Items.Weapons.Melee;
+using Paracosm.Content.Items.Weapons.Magic;
+using Paracosm.Content.Items.Weapons.Ranged;
+using Paracosm.Content.Items.Weapons.Summon;
 
 namespace Paracosm.Content.Items.BossBags
 {
@@ -37,7 +40,6 @@ namespace Paracosm.Content.Items.BossBags
         {
             itemLoot.Add(ItemDropRule.Common(ModContent.ItemType<NightmareScale>(), 1, 30, 40));
             itemLoot.Add(ItemDropRule.Common(ModContent.ItemType<DivineFlesh>(), 1, 30, 40));
-            itemLoot.Add(ItemDropRule.OneFromOptions(1, ModContent.ItemType<ParashardSword>(), ModContent.ItemType<ParacosmicFurnace>(), ModContent.ItemType<GravityBarrage>(), ModContent.ItemType<ParacosmicEyeStaff>()));
             itemLoot.Add(ItemDropRule.Common(ModContent.ItemType<CorruptedDragonHeart>(), 1, 1, 1));
         }
     }

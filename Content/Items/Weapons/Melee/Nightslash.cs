@@ -6,7 +6,7 @@ using Paracosm.Content.Projectiles;
 using Terraria.DataStructures;
 using Paracosm.Content.Items.Materials;
 
-namespace Paracosm.Content.Items.Weapons
+namespace Paracosm.Content.Items.Weapons.Melee
 {
     public class Nightslash : ModItem
     {

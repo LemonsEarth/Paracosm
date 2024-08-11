@@ -6,7 +6,7 @@ using Terraria.DataStructures;
 using Paracosm.Content.Projectiles;
 using System.Collections.Generic;
 
-namespace Paracosm.Content.Items.Weapons
+namespace Paracosm.Content.Items.Weapons.Ranged
 {
     public class ChainsawGun : ModItem
     {

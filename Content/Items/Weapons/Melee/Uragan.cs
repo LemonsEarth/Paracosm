@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework;
 using Paracosm.Content.Projectiles;
 using Terraria.DataStructures;
 
-namespace Paracosm.Content.Items.Weapons
+namespace Paracosm.Content.Items.Weapons.Melee
 {
     public class Uragan : ModItem
     {

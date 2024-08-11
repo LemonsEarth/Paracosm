@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework.Input;
 using System;
 using Terraria.Audio;
 
-namespace Paracosm.Content.Items.Weapons
+namespace Paracosm.Content.Items.Weapons.Ranged
 {
     public class TheGuardDuty : ModItem
     {

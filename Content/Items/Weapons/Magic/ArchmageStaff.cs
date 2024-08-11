@@ -8,7 +8,7 @@ using Paracosm.Content.Projectiles.Minions;
 using Paracosm.Content.Projectiles.Sentries;
 using Paracosm.Content.Items.Materials;
 
-namespace Paracosm.Content.Items.Weapons
+namespace Paracosm.Content.Items.Weapons.Magic
 {
     public class ArchmageStaff : ModItem
     {

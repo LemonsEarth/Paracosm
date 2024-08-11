@@ -4,8 +4,11 @@ using Terraria.ModLoader;
 using Microsoft.Xna.Framework;
 using Terraria.GameContent.ItemDropRules;
 using Paracosm.Content.Items.Materials;
-using Paracosm.Content.Items.Weapons;
 using Paracosm.Content.Items.Accessories;
+using Paracosm.Content.Items.Weapons.Melee;
+using Paracosm.Content.Items.Weapons.Magic;
+using Paracosm.Content.Items.Weapons.Ranged;
+using Paracosm.Content.Items.Weapons.Summon;
 
 namespace Paracosm.Content.Items.BossBags
 {

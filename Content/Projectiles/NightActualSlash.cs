@@ -45,7 +45,7 @@ namespace Paracosm.Content.Projectiles
 
         public override void AI()
         {
-            if (Projectile.timeLeft == 200 && Main.netMode != NetmodeID.MultiplayerClient)
+            if (Projectile.timeLeft == 200 && Projectile.owner == Main.myPlayer)
             {
                 randomValue2 = Main.rand.Next(30, 60);
                 Projectile.netUpdate = true;
@@ -61,7 +61,7 @@ namespace Paracosm.Content.Projectiles
             if (Projectile.timeLeft == 200 - randomValue2)
             {
                 Projectile.alpha = 0;
-                if (Main.netMode != NetmodeID.MultiplayerClient)
+                if (Projectile.owner == Main.myPlayer)
                 {
                     randomValue = Main.rand.Next(-180, 180);
                     Projectile.rotation = MathHelper.ToRadians(randomValue);
