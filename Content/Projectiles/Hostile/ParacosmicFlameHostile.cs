@@ -42,9 +42,9 @@ namespace Paracosm.Content.Projectiles.Hostile
             
         }
 
-        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
+        public override void OnHitPlayer(Player target, Player.HurtInfo info)
         {
-            target.AddBuff(ModContent.BuffType<ParacosmicBurn>(), 300);
+            target.AddBuff(ModContent.BuffType<ParacosmicBurn>(), 120);
         }
 
         public override void AI()
