@@ -111,8 +111,8 @@ namespace Paracosm.Content.Bosses
             NPC.aiStyle = -1;
             NPC.width = 236;
             NPC.height = 124;
-            NPC.lifeMax = 100000;
-            NPC.defense = 30;
+            NPC.lifeMax = 140000;
+            NPC.defense = 70;
             NPC.damage = 40;
             NPC.HitSound = SoundID.NPCHit1;
             NPC.DeathSound = SoundID.NPCHit1;
@@ -170,9 +170,9 @@ namespace Paracosm.Content.Bosses
 
         public override void ApplyDifficultyAndPlayerScaling(int numPlayers, float balance, float bossAdjustment)
         {
-            NPC.lifeMax = (int)Math.Ceiling(NPC.lifeMax * balance * 0.9f);
+            NPC.lifeMax = (int)Math.Ceiling(NPC.lifeMax * balance * 1f);
             NPC.damage = (int)(NPC.damage * balance * 0.5f);
-            NPC.defense = 50;
+            NPC.defense = 70;
         }
 
         public override void AI()

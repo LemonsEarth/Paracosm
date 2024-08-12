@@ -63,10 +63,9 @@ namespace Paracosm.Content.Projectiles.Hostile
             {
                 Projectile.alpha -= 7;
             }
-            Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, DustID.CrimsonPlants, Scale: 1.0f);
-            Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, DustID.OrangeTorch, Scale: 1.5f);
+            Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, DustID.Ichor, Scale: 1.0f);
 
-            Lighting.AddLight(Projectile.Center, 0.9f, 0.3f, 0.4f);
+            Lighting.AddLight(Projectile.Center, 0.9f, 0.9f, 0.0f);
             Projectile.rotation = AITimer;
             AITimer++;
         }
