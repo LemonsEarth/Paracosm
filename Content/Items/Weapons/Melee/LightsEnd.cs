@@ -51,7 +51,7 @@ namespace Paracosm.Content.Items.Weapons.Melee
             Recipe recipe1 = CreateRecipe();
             recipe1.AddIngredient(ModContent.ItemType<Nightslash>(), 1);
             recipe1.AddIngredient(ItemID.LightsBane, 1);
-            recipe1.AddIngredient(ModContent.ItemType<NightmareScale>(), 15);
+            recipe1.AddIngredient(ModContent.ItemType<NightmareScale>(), 16);
             recipe1.AddTile(TileID.MythrilAnvil);
             recipe1.Register();
         }

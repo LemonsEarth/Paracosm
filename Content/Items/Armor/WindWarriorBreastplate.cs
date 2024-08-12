@@ -39,14 +39,14 @@ namespace Paracosm.Content.Items.Armor
             Recipe recipe1 = CreateRecipe();
             recipe1.AddIngredient(ItemID.SoulofFlight, 15);
             recipe1.AddIngredient(ItemID.Feather, 4);
-            recipe1.AddIngredient(ItemID.TitaniumBar, 12);
+            recipe1.AddIngredient(ItemID.CobaltBar, 12);
             recipe1.AddTile(TileID.MythrilAnvil);
             recipe1.Register();
 
             Recipe recipe2 = CreateRecipe();
             recipe2.AddIngredient(ItemID.SoulofFlight, 15);
             recipe2.AddIngredient(ItemID.Feather, 4);
-            recipe2.AddIngredient(ItemID.AdamantiteBar, 12);
+            recipe2.AddIngredient(ItemID.PalladiumBar, 12);
             recipe2.AddTile(TileID.MythrilAnvil);
             recipe2.Register();
         }

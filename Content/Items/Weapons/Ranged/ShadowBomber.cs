@@ -60,7 +60,11 @@ namespace Paracosm.Content.Items.Weapons.Ranged
             {
                 return false;
             }
-            Projectile.NewProjectile(source, position, velocity, type, damage, knockback, ai0: AmmoType);
+            if (Main.myPlayer == player.whoAmI)
+            {
+                Projectile.NewProjectile(source, position, velocity, type, damage, knockback, ai0: AmmoType);
+
+            }
             return false;
         }
 

@@ -129,6 +129,11 @@ namespace Paracosm.Content.Projectiles
                 }
                 Projectile.rotation = new Vector2(1, 0).RotatedBy(AITimer / 10 * attackSpeed * direction * player.GetAttackSpeed(DamageClass.Melee)).ToRotation();
             }
+
+            if (AITimer % 10 == 0)
+            {
+                Projectile.netUpdate = true;
+            }
         }
 
         public override bool PreDraw(ref Color lightColor)

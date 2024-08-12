@@ -64,14 +64,14 @@ namespace Paracosm.Content.Items.Weapons.Magic
             Recipe recipe1 = CreateRecipe();
             recipe1.AddIngredient(ItemID.SoulofFlight, 10);
             recipe1.AddIngredient(ItemID.Feather, 4);
-            recipe1.AddIngredient(ItemID.TitaniumBar, 8);
+            recipe1.AddIngredient(ItemID.CobaltBar, 8);
             recipe1.AddTile(TileID.MythrilAnvil);
             recipe1.Register();
 
             Recipe recipe2 = CreateRecipe();
             recipe2.AddIngredient(ItemID.SoulofFlight, 10);
             recipe2.AddIngredient(ItemID.Feather, 4);
-            recipe2.AddIngredient(ItemID.AdamantiteBar, 8);
+            recipe2.AddIngredient(ItemID.PalladiumBar, 8);
             recipe2.AddTile(TileID.MythrilAnvil);
             recipe2.Register();
         }

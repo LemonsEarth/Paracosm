@@ -357,6 +357,16 @@ Items: {
 		DisplayName: Defiled Glaive
 		Tooltip: ""
 	}
+
+	ScarletRod: {
+		DisplayName: Scarlet Rod
+		Tooltip: ""
+	}
+
+	OccultFlames: {
+		DisplayName: Occult Flames
+		Tooltip: ""
+	}
 }
 
 Projectiles: {
@@ -390,6 +400,10 @@ Projectiles: {
 	ShadowOrbProj.DisplayName: Shadow Orb Proj
 	ParacosmicFlameHostile.DisplayName: Paracosmic Flame Hostile
 	DefiledGlaiveProjectile.DisplayName: Defiled Glaive Projectile
+	BloodDrop.DisplayName: Blood Drop
+	ScarletCloud.DisplayName: Scarlet Cloud
+	ScarletCloudMoving.DisplayName: Scarlet Cloud Moving
+	CursedSpiritFlameFriendly.DisplayName: Cursed Spirit Flame Friendly
 }
 
 NPCs: {

@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Paracosm.Content.Items.Materials;
 using Paracosm.Content.Projectiles;
 using Terraria;
 using Terraria.Audio;
@@ -52,12 +53,20 @@ namespace Paracosm.Content.Items.Weapons.Melee
                 if (useCounter < 3)
                 {
                     Projectile.NewProjectile(source, position, velocity, Item.shoot, damage * damageBoost, knockback, ai0: 0);
+                    if (damageBoost > 1)
+                    {
+                        for (int i = 0; i < 3; i++)
+                        {
+                            Dust.NewDust(position, 2, 2, DustID.OrangeTorch, velocity.X, velocity.Y, Scale: 3f);
+                        }
+                    }  
                     damageBoost = 1;
                     useCounter++;
                 }
                 else
                 {
                     Projectile.NewProjectile(source, position, velocity, Item.shoot, damage, knockback, ai0: 1);
+                    SoundEngine.PlaySound(SoundID.Item4, player.MountedCenter);
                     damageBoost = 10;
                     useCounter = 0;
                 }
@@ -74,6 +83,15 @@ namespace Paracosm.Content.Items.Weapons.Melee
             }
 
             return null;
+        }
+
+        public override void AddRecipes()
+        {
+            Recipe recipe1 = CreateRecipe();
+            recipe1.AddIngredient(ItemID.TheRottedFork, 1);
+            recipe1.AddIngredient(ModContent.ItemType<DivineFlesh>(), 16);
+            recipe1.AddTile(TileID.MythrilAnvil);
+            recipe1.Register();
         }
     }
 }
