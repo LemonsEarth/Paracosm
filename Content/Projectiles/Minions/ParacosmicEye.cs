@@ -55,16 +55,16 @@ namespace Paracosm.Content.Projectiles.Minions
                 return;
             }
             AITimer++;
-            if (Projectile.frameCounter == 0)
+            Projectile.frameCounter++;
+            if (Projectile.frameCounter == 9)
             {
-                if (Projectile.frame + 1 == 4)
+                Projectile.frame++;
+                Projectile.frameCounter = 0;
+                if (Projectile.frame >= 5)
                 {
                     Projectile.frame = 0;
                 }
-                Projectile.frame++;
-                Projectile.frameCounter = 9;
             }
-            Projectile.frameCounter--;
 
             SearchForEnemies(owner, out bool hasTarget, out Vector2 targetCenter, out float DistanceToTarget);
             Movement(owner, hasTarget, targetCenter, DistanceToTarget);

@@ -367,6 +367,20 @@ Items: {
 		DisplayName: Occult Flames
 		Tooltip: ""
 	}
+
+	CrimsonDragonStaff: {
+		DisplayName: Crimson Dragon Staff
+		Tooltip: Summons a baby Crimson Dragon to fight for you
+	}
+
+	CorruptDragonStaff: {
+		DisplayName: Corrupt Dragon Staff
+		Tooltip:
+			'''
+			Summons a baby Corrupt Dragon to fight for you
+			Requires 2 minion slots to use
+			'''
+	}
 }
 
 Projectiles: {
@@ -404,6 +418,8 @@ Projectiles: {
 	ScarletCloud.DisplayName: Scarlet Cloud
 	ScarletCloudMoving.DisplayName: Scarlet Cloud Moving
 	CursedSpiritFlameFriendly.DisplayName: Cursed Spirit Flame Friendly
+	CrimsonDragon.DisplayName: Crimson Dragon
+	CorruptDragon.DisplayName: Corrupt Dragon
 }
 
 NPCs: {
@@ -447,7 +463,17 @@ Buffs: {
 
 	Infected: {
 		DisplayName: Infected
-		Description: Mods.Paracosm.Buffs.Infected.Description
+		Description: The infection is taking over your body
+	}
+
+	CrimsonDragonBuff: {
+		DisplayName: Crimson Dragon Buff
+		Description: The baby Crimson Dragon stays by your side
+	}
+
+	CorruptDragonBuff: {
+		DisplayName: Corrupt Dragon Buff
+		Description: The baby Corrupt Dragon stays by your side
 	}
 }
 
