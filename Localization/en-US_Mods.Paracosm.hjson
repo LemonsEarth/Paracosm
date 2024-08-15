@@ -355,7 +355,7 @@ Items: {
 
 	DefiledGlaive: {
 		DisplayName: Defiled Glaive
-		Tooltip: ""
+		Tooltip: Spin the glaive every few strikes, giving it increased damage
 	}
 
 	ScarletRod: {

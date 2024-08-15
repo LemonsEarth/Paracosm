@@ -8,6 +8,7 @@ using Terraria.WorldBuilding;
 using Terraria.GameContent.Generation;
 using Terraria.IO;
 using Paracosm.Content.Tiles;
+using System;
 
 namespace Paracosm.Common.Systems
 {
@@ -70,10 +71,9 @@ namespace Paracosm.Common.Systems
             {
                 Point16 dims = Point16.Zero;
                 Generator.GetDimensions("Content/Structures/ParacosmicDistortionCore", Mod, ref dims);
-                int x = WorldGen.genRand.Next((int)((float)Main.maxTilesX * (1f/3f)), (int)((float)Main.maxTilesX * (2f / 3f)));
+                int x = WorldGen.genRand.Next((int)((float)Main.maxTilesX * (1f / 3f)), (int)((float)Main.maxTilesX * (2f / 3f)));
                 int y = WorldGen.genRand.Next((int)GenVars.rockLayer, (Main.maxTilesY - 200) / 2);
 
-                Tile tile = Main.tile[x, y];
                 point = new Point16(x, y);
                 if (!CheckForTiles(x, y, dims.X, dims.Y, TileID.LihzahrdBrick) && !CheckForTiles(x, y, dims.X, dims.Y, ModContent.TileType<ParastoneBlock>()) && !CheckForTiles(x, y, dims.X, dims.Y, TileID.BlueDungeonBrick) && !CheckForTiles(x, y, dims.X, dims.Y, TileID.GreenDungeonBrick) && !CheckForTiles(x, y, dims.X, dims.Y, TileID.PinkDungeonBrick))
                 {
@@ -99,7 +99,6 @@ namespace Paracosm.Common.Systems
                 int x = WorldGen.genRand.Next((int)((float)Main.maxTilesX * (1f / 3f)), (int)((float)Main.maxTilesX * (2f / 3f)));
                 int y = WorldGen.genRand.Next((Main.maxTilesY - 200) / 2, Main.maxTilesY - 200);
 
-                Tile tile = Main.tile[x, y];
                 point = new Point16(x, y);
                 if (!CheckForTiles(x, y, dims.X, dims.Y, TileID.LihzahrdBrick) && !CheckForTiles(x, y, dims.X, dims.Y, ModContent.TileType<ParastoneBlock>()) && !CheckForTiles(x, y, dims.X, dims.Y, TileID.BlueDungeonBrick) && !CheckForTiles(x, y, dims.X, dims.Y, TileID.GreenDungeonBrick) && !CheckForTiles(x, y, dims.X, dims.Y, TileID.PinkDungeonBrick))
                 {
@@ -113,12 +112,44 @@ namespace Paracosm.Common.Systems
             }
         }
 
+
+        private void GenerateAbandonedArmory(GenerationProgress progress, GameConfiguration config)
+        {
+            for (int i = 0; i < GetWorldSize() * 2; i++)
+            {
+                for (int index = 0; index < 5; index++)
+                {
+                    bool successfulGen = false;
+                    Point16 point = Point16.Zero;
+                    while (!successfulGen)
+                    {
+                        Point16 dims = Point16.Zero;
+                        Generator.GetMultistructureDimensions("Content/Structures/AbandonedArmory", Mod, index, ref dims);
+                        int x = WorldGen.genRand.Next(dims.X, Main.maxTilesX - dims.X);
+                        int y = WorldGen.genRand.Next((Main.maxTilesY - 200) / 3, Main.maxTilesY - 200);
+
+                        point = new Point16(x, y);
+                        if (!CheckForTiles(x, y, dims.X, dims.Y, TileID.LihzahrdBrick) && !CheckForTiles(x, y, dims.X, dims.Y, ModContent.TileType<ParastoneBlock>()) && !CheckForTiles(x, y, dims.X, dims.Y, TileID.BlueDungeonBrick) && !CheckForTiles(x, y, dims.X, dims.Y, TileID.GreenDungeonBrick) && !CheckForTiles(x, y, dims.X, dims.Y, TileID.PinkDungeonBrick) && !CheckForTiles(x, y, dims.X, dims.Y, TileID.GrayBrick))
+                        {
+                            successfulGen = true;
+                        }
+                    }
+
+                    if (successfulGen && point != Point16.Zero)
+                    {
+                        Generator.GenerateMultistructureSpecific("Content/Structures/AbandonedArmory", point, Mod, index);
+                    }
+                }
+            }           
+        }
+
         public override void ModifyWorldGenTasks(List<GenPass> tasks, ref double totalWeight)
         {
             int templeIndex = tasks.FindIndex(genpass => genpass.Name.Equals("Jungle Temple"));
             tasks.Insert(templeIndex + 1, new PassLegacy("Paracosmic Core", GenerateParacosmicDistortionCore));
             tasks.Insert(templeIndex + 1, new PassLegacy("Paracosmic Core", GenerateParacosmicDistortionCore));
             tasks.Insert(templeIndex + 2, new PassLegacy("Large Paracosmic Core", GenerateParacosmicDistortionCoreLarge));
+            tasks.Insert(templeIndex + 3, new PassLegacy("Abandoned Armories", GenerateAbandonedArmory));
         }
 
         public override void PostWorldGen()
@@ -142,7 +173,7 @@ namespace Paracosm.Common.Systems
         {
             for (int x = xCoord - distanceX; x < xCoord + distanceX; x++)
             {
-                for (int y = yCoord - distanceY;y < yCoord + distanceY; y++)
+                for (int y = yCoord - distanceY; y < yCoord + distanceY; y++)
                 {
                     if (Main.tile[x, y].HasTile && Main.tile[x, y].TileType == tileID)
                     {
@@ -151,6 +182,24 @@ namespace Paracosm.Common.Systems
                 }
             }
             return false;
+        }
+
+        /// <summary>
+        /// Returns 1 for Small Worlds, 2 for Medium Worlds, 3 for Large Worlds (and bigger?)
+        /// </summary>
+        /// <returns></returns>
+
+        int GetWorldSize()
+        {
+            switch (Main.maxTilesX)
+            {
+                case >= 8400:
+                    return 3;
+                case >= 6400:
+                    return 2;
+                default:
+                    return 1;
+            }
         }
     }
 }
