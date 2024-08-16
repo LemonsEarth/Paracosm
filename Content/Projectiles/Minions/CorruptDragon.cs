@@ -2,6 +2,7 @@
 using Terraria.ID;
 using Terraria.ModLoader;
 using Microsoft.Xna.Framework;
+using Paracosm.Common.Utils;
 using Terraria.DataStructures;
 using Paracosm.Content.Projectiles;
 using rail;
@@ -88,7 +89,7 @@ namespace Paracosm.Content.Projectiles.Minions
 
         void Attack()
         {
-            closestNPC = GetClosestNPC();
+            closestNPC = LemonUtils.GetClosestNPC(Projectile);
             if (closestNPC != null)
             {
                 if (AttackTimer == 0)
@@ -112,27 +113,6 @@ namespace Paracosm.Content.Projectiles.Minions
 
                 AttackTimer--;
             }
-        }
-
-        public NPC GetClosestNPC()
-        {
-            NPC closestEnemy = null;
-            foreach (var npc in Main.ActiveNPCs)
-            {
-                if (npc.CanBeChasedBy())
-                {
-                    if (closestEnemy == null)
-                    {
-                        closestEnemy = npc;
-                    }
-                    float distanceToNPC = Vector2.DistanceSquared(Projectile.Center, npc.Center);
-                    if (distanceToNPC < Projectile.Center.DistanceSQ(closestEnemy.Center))
-                    {
-                        closestEnemy = npc;
-                    }
-                }
-            }
-            return closestEnemy;
         }
 
         bool IsPlayerAlive(Player owner)

@@ -396,6 +396,11 @@ Items: {
 		DisplayName: Infected Revenant Relic
 		Tooltip: ""
 	}
+
+	Solace: {
+		DisplayName: Solace
+		Tooltip: ""
+	}
 }
 
 Projectiles: {
@@ -436,6 +441,7 @@ Projectiles: {
 	CrimsonDragon.DisplayName: Crimson Dragon
 	CorruptDragon.DisplayName: Corrupt Dragon
 	PoisonPetal.DisplayName: Poison Petal
+	SolaceStar.DisplayName: Solace Star
 }
 
 NPCs: {

@@ -5,6 +5,7 @@ using System.Media;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
+using Paracosm.Common.Utils;
 using Terraria;
 using Terraria.Audio;
 using Terraria.DataStructures;
@@ -52,33 +53,12 @@ namespace Paracosm.Content.Projectiles
             if (AITimer >= 30)
             {
                 speed++;
-                closestNPC = GetClosestNPC();
+                closestNPC = LemonUtils.GetClosestNPC(Projectile);
                 if (closestNPC != null)
                 {
                     Projectile.velocity = (closestNPC.Center - Projectile.Center).SafeNormalize(Vector2.Zero) * speed;
                 }
             }
-        }
-
-        public NPC GetClosestNPC()
-        {
-            NPC closestEnemy = null;
-            foreach (var npc in Main.ActiveNPCs)
-            {
-                if (npc.CanBeChasedBy())
-                {
-                    if (closestEnemy == null)
-                    {
-                        closestEnemy = npc;
-                    }
-                    float distanceToNPC = Vector2.DistanceSquared(Projectile.Center, npc.Center);
-                    if (distanceToNPC < Projectile.Center.DistanceSQ(closestEnemy.Center))
-                    {
-                        closestEnemy = npc;
-                    }
-                }
-            }
-            return closestEnemy;
         }
     }
 }

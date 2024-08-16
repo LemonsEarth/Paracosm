@@ -41,8 +41,8 @@ namespace Paracosm.Content.Items.Weapons.Magic
             recipe.AddIngredient(ItemID.ShadowbeamStaff);
             recipe.AddIngredient(ItemID.InfernoFork);
             recipe.AddIngredient(ItemID.SpectreStaff);
-            recipe.AddIngredient(ModContent.ItemType<CosmicFlames>(), 10);
-            recipe.AddIngredient(ItemID.BeetleHusk, 8);
+            recipe.AddIngredient(ModContent.ItemType<NightmareScale>(), 6);
+            recipe.AddIngredient(ModContent.ItemType<DivineFlesh>(), 6);
             recipe.AddTile(TileID.MythrilAnvil);
             recipe.Register();
         }

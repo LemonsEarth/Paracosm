@@ -28,7 +28,7 @@ namespace Paracosm.Content.Items.Weapons.Ranged
             Item.useAnimation = 20;
             Item.useStyle = ItemUseStyleID.Shoot;
             Item.value = Item.sellPrice(0, 20);
-            Item.rare = ItemRarityID.Yellow;
+            Item.rare = ItemRarityID.LightRed;
             Item.UseSound = SoundID.Item5;
             Item.autoReuse = true;
             Item.useAmmo = AmmoID.Arrow;
