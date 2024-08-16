@@ -169,7 +169,7 @@ namespace Paracosm.Common.Systems
             }
         }
 
-        private bool CheckForTiles(int xCoord, int yCoord, int distanceX, int distanceY, int tileID)
+        public static bool CheckForTiles(int xCoord, int yCoord, int distanceX, int distanceY, int tileID)
         {
             for (int x = xCoord - distanceX; x < xCoord + distanceX; x++)
             {
@@ -189,7 +189,7 @@ namespace Paracosm.Common.Systems
         /// </summary>
         /// <returns></returns>
 
-        int GetWorldSize()
+        public static int GetWorldSize()
         {
             switch (Main.maxTilesX)
             {

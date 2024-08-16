@@ -680,6 +680,7 @@ namespace Paracosm.Content.Bosses
             classicRule.OnSuccess(ItemDropRule.Common(ModContent.ItemType<DivineFlesh>(), 1, 15, 25));
             npcLoot.Add(classicRule);
             npcLoot.Add(ItemDropRule.BossBag(ModContent.ItemType<InfectedRevenantBossBag>()));
+            npcLoot.Add(ItemDropRule.MasterModeCommonDrop(ModContent.ItemType<Items.Placeable.Furniture.InfectedRevenantRelic>()));
         }
     }
 }

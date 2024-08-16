@@ -62,6 +62,11 @@ namespace Paracosm.Common.Systems
 
             int spawnItemType1 = ModContent.ItemType<AncientCallingHorn>();
             LocalizedText spawnInfo1 = Language.GetText("Mods.Paracosm.NPCs.InfectedRevenantBody.BossChecklistCompatibility.SpawnInfo");
+
+            List<int> collectibles1 = new List<int>()
+            {
+                ModContent.ItemType<Content.Items.Placeable.Furniture.InfectedRevenantRelic>()
+            };
             Action<SpriteBatch, Rectangle, Color> portrait = (SpriteBatch spriteBatch, Rectangle rect, Color color) =>
             {
                 Texture2D texture = ModContent.Request<Texture2D>("Paracosm/Content/Textures/BossChecklist/InfectedRevenantBossChecklistPortrait").Value;
@@ -73,6 +78,7 @@ namespace Paracosm.Common.Systems
             {
                 ["spawnItems"] = spawnItemType1,
                 ["spawnInfo"] = spawnInfo1,
+                ["collectibles"] = collectibles1,
                 ["customPortrait"] = portrait
             };
 

@@ -381,6 +381,21 @@ Items: {
 			Requires 2 minion slots to use
 			'''
 	}
+
+	Sunblade: {
+		DisplayName: Sunblade
+		Tooltip: Shoots stars
+	}
+
+	PetalStaff: {
+		DisplayName: Petal Staff
+		Tooltip: ""
+	}
+
+	InfectedRevenantRelic: {
+		DisplayName: Infected Revenant Relic
+		Tooltip: ""
+	}
 }
 
 Projectiles: {
@@ -420,6 +435,7 @@ Projectiles: {
 	CursedSpiritFlameFriendly.DisplayName: Cursed Spirit Flame Friendly
 	CrimsonDragon.DisplayName: Crimson Dragon
 	CorruptDragon.DisplayName: Corrupt Dragon
+	PoisonPetal.DisplayName: Poison Petal
 }
 
 NPCs: {

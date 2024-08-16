@@ -8,31 +8,31 @@ using Paracosm.Content.Items.Materials;
 
 namespace Paracosm.Content.Items.Weapons.Melee
 {
-    public class LightsEnd : ModItem
+    public class Sunblade : ModItem
     {
         public override void SetDefaults()
         {
-            Item.damage = 200;
+            Item.damage = 16;
             Item.DamageType = DamageClass.Melee;
             Item.width = 64;
             Item.height = 64;
-            Item.useTime = 20;
-            Item.useAnimation = 20;
+            Item.useTime = 40;
+            Item.useAnimation = 40;
             Item.useStyle = ItemUseStyleID.Swing;
             Item.knockBack = 6;
             Item.value = Item.buyPrice(gold: 15);
-            Item.rare = ItemRarityID.LightPurple;
+            Item.rare = ItemRarityID.Yellow;
             Item.UseSound = SoundID.Item1;
             Item.autoReuse = true;
             Item.useTurn = false;
-            Item.shoot = ModContent.ProjectileType<LightsEndBeam>();
-            Item.shootSpeed = 30;
+            Item.shoot = ProjectileID.HallowStar;
+            Item.shootSpeed = 10;
         }
 
         public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
         {
             type = Item.shoot;
-            damage = Item.damage;
+            damage = Item.damage / 2;
             velocity = (Main.MouseWorld - player.MountedCenter).SafeNormalize(Vector2.Zero) * Item.shootSpeed;
         }
 
@@ -40,7 +40,10 @@ namespace Paracosm.Content.Items.Weapons.Melee
         {
             if (Main.myPlayer == player.whoAmI)
             {
-                Projectile.NewProjectile(source, position, velocity, type, damage, knockback);
+                for (int i = 0; i < 3; i++)
+                {
+                    Projectile.NewProjectile(source, position, velocity.RotatedBy(MathHelper.ToRadians(Main.rand.Next(-15, 15))) * Main.rand.NextFloat(0.8f, 1.2f), type, damage, knockback);
+                }
             }
             return false;
         }
@@ -48,11 +51,16 @@ namespace Paracosm.Content.Items.Weapons.Melee
         public override void AddRecipes()
         {
             Recipe recipe1 = CreateRecipe();
-            recipe1.AddIngredient(ModContent.ItemType<Nightslash>(), 1);
-            recipe1.AddIngredient(ItemID.LightsBane, 1);
-            recipe1.AddIngredient(ModContent.ItemType<NightmareScale>(), 16);
-            recipe1.AddTile(TileID.MythrilAnvil);
+            recipe1.AddIngredient(ItemID.PlatinumBroadsword, 1);
+            recipe1.AddIngredient(ItemID.FallenStar, 7);
+            recipe1.AddTile(TileID.Anvils);
             recipe1.Register();
+
+            Recipe recipe2 = CreateRecipe();
+            recipe2.AddIngredient(ItemID.GoldBroadsword, 1);
+            recipe2.AddIngredient(ItemID.FallenStar, 7);
+            recipe2.AddTile(TileID.Anvils);
+            recipe2.Register();
         }
     }
 }
