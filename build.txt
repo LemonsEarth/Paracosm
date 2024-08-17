@@ -2,3 +2,4 @@ displayName = Paracosm
 author = LemonEarth
 version = 0.1
 modReferences = StructureHelper
+homepage = https://github.com/LemonsEarth/Paracosm

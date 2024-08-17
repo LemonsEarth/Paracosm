@@ -62,6 +62,56 @@ namespace Paracosm.Common.Systems
             }
         }
 
+        private void GenerateJungleHouse(GenerationProgress progress, GameConfiguration config)
+        {
+            bool successfulGen = false;
+            Point16 point = Point16.Zero;
+            while (!successfulGen)
+            {
+                Point16 dims = Point16.Zero;
+                Generator.GetDimensions("Content/Structures/JungleHouse", Mod, ref dims);
+                int x = WorldGen.genRand.Next(0 + dims.X, Main.maxTilesX - dims.X);
+                int y = WorldGen.genRand.Next((int)GenVars.worldSurfaceLow, (int)GenVars.worldSurfaceHigh);
+                Tile tile = Main.tile[x, y];
+                Tile tileAbove = Main.tile[x, y - 1];
+                point = new Point16(x, y);
+                if (tile.HasTile && (tile.TileType == TileID.Mud || tile.TileType == TileID.JungleGrass) && !tileAbove.HasTile)
+                {
+                    successfulGen = true;
+                }
+            }
+
+            if (successfulGen && point != Point16.Zero)
+            {
+                Generator.GenerateStructure("Content/Structures/JungleHouse", point, Mod);
+            }
+        }
+
+        private void GenerateIceCastle(GenerationProgress progress, GameConfiguration config)
+        {
+            bool successfulGen = false;
+            Point16 point = Point16.Zero;
+
+            while (!successfulGen)
+            {
+                Point16 dims = Point16.Zero;
+                Generator.GetDimensions("Content/Structures/IceCastle", Mod, ref dims);
+                int x = WorldGen.genRand.Next(0 + dims.X, Main.maxTilesX - dims.X);
+                int y = WorldGen.genRand.Next((int)(Main.rockLayer + dims.Y), Main.maxTilesY - 200);
+                Tile tile = Main.tile[x, y];
+                point = new Point16(x, y);
+                if ((tile.HasTile && (tile.TileType == TileID.IceBlock || tile.TileType == TileID.SnowBlock)) && (!CheckForTiles(x, y, dims.X, dims.Y, ModContent.TileType<ParastoneBlock>()) && !CheckForTiles(x, y, dims.X, dims.Y, TileID.BlueDungeonBrick) && !CheckForTiles(x, y, dims.X, dims.Y, TileID.GreenDungeonBrick) && !CheckForTiles(x, y, dims.X, dims.Y, TileID.PinkDungeonBrick)))
+                {
+                    successfulGen = true;
+                }
+            }
+
+            if (successfulGen && point != Point16.Zero)
+            {
+                Generator.GenerateStructure("Content/Structures/IceCastle", point, Mod);
+            }
+        }
+
         private void GenerateParacosmicDistortionCore(GenerationProgress progress, GameConfiguration config)
         {
             bool successfulGen = false;
@@ -150,6 +200,8 @@ namespace Paracosm.Common.Systems
             tasks.Insert(templeIndex + 1, new PassLegacy("Paracosmic Core", GenerateParacosmicDistortionCore));
             tasks.Insert(templeIndex + 2, new PassLegacy("Large Paracosmic Core", GenerateParacosmicDistortionCoreLarge));
             tasks.Insert(templeIndex + 3, new PassLegacy("Abandoned Armories", GenerateAbandonedArmory));
+            tasks.Insert(templeIndex + 4, new PassLegacy("Jungle House", GenerateJungleHouse));
+            tasks.Insert(templeIndex + 5, new PassLegacy("Ice Castle", GenerateIceCastle));
         }
 
         public override void PostWorldGen()

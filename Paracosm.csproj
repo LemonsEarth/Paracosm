@@ -13,6 +13,7 @@
 	  <None Remove="Content\Projectiles\Hostile\CursedSpiritFlame.png" />
 	  <None Remove="Content\Projectiles\Hostile\ParacosmicFlameHostile.png" />
 	  <None Remove="Content\Projectiles\ParashardSwordProjectile.png" />
+	  <None Remove="Content\Projectiles\PoisonPetal.png" />
 	  <None Remove="content\shaders\DivineSeekerShader.fx" />
 	  <None Remove="Content\Walls\ParastoneWallUnsafe.png" />
 	  <None Remove="localization\LocCommon.txt" />

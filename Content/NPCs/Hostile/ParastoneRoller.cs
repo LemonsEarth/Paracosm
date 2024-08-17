@@ -127,14 +127,5 @@ namespace Paracosm.Content.NPCs.Hostile
         {
             NPC.velocity = (RandomPos - NPC.Center).SafeNormalize(Vector2.Zero) * 30;
         }
-
-        public override float SpawnChance(NPCSpawnInfo spawnInfo)
-        {
-            if (spawnInfo.Player.InModBiome(ModContent.GetInstance<ParacosmicDistortion>()))
-            {
-                return 1.7f;
-            }
-            return 0f;
-        }
     }
 }

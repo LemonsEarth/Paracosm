@@ -1,1 +1,15 @@
-Modify this file with a description of your mod.
+Paracosm is a content mod that adds new bosses, weapons, accessories and structures to the game.
+
+Currently adds:
+
+- 2 Hardmode Bosses
+- 26 Weapons
+- 8 Accessories
+- 5 Structures
+- 1 new minibiome
+
+The mod was designed with multiplayer and other mods in mind, but there may still be bugs.
+
+Developed by LemonEarth.
+
+GitHub:

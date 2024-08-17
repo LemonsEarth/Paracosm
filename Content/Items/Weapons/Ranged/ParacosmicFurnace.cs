@@ -32,7 +32,7 @@ namespace Paracosm.Content.Items.Weapons.Ranged
             Item.rare = ItemRarityID.Purple;
             Item.UseSound = SoundID.Item8;
             Item.autoReuse = true;
-            Item.shoot = ModContent.ProjectileType<ParacosmicFlameHostile>();
+            Item.shoot = ModContent.ProjectileType<ParacosmicFlame>();
             Item.noMelee = true;
         }
 
@@ -40,7 +40,7 @@ namespace Paracosm.Content.Items.Weapons.Ranged
         {
             position = player.MountedCenter + (Main.MouseWorld - player.MountedCenter).SafeNormalize(Vector2.Zero) * 40;
             velocity = (Main.MouseWorld - player.MountedCenter).SafeNormalize(Vector2.Zero) * 30;
-            type = ModContent.ProjectileType<ParacosmicFlameHostile>();
+            type = ModContent.ProjectileType<ParacosmicFlame>();
             damage = Item.damage;
             knockback = Item.knockBack;
         }

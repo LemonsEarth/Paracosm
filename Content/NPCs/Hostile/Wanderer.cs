@@ -132,14 +132,5 @@ namespace Paracosm.Content.NPCs.Hostile
                 }
             }
         }
-
-        public override float SpawnChance(NPCSpawnInfo spawnInfo)
-        {
-            if (spawnInfo.Player.InModBiome(ModContent.GetInstance<ParacosmicDistortion>()))
-            {
-                return 2f;
-            }
-            return 0f;
-        }
     }
 }
