@@ -9,7 +9,9 @@ Currently adds:
 - 5 Structures
 - 1 new minibiome
 
-The mod was designed with multiplayer and other mods in mind, but there may still be bugs.
+Paracosm doesn't add much QoL, so I recommend using some like Recipe Browser and Boss Checklist
+
+The mod was designed with multiplayer and other mods in mind, but there may still be bugs, so please report them.
 
 Developed by LemonEarth.
 
