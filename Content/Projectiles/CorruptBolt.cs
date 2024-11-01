@@ -30,6 +30,7 @@ namespace Paracosm.Content.Projectiles
             Projectile.DamageType = DamageClass.Magic;
             Projectile.tileCollide = false;
             Projectile.aiStyle = -1;
+            Projectile.timeLeft = 120;
         }
 
         public override void AI()

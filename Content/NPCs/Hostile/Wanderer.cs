@@ -28,9 +28,9 @@ namespace Paracosm.Content.NPCs.Hostile
         {
             NPC.width = 28;
             NPC.height = 50;
-            NPC.lifeMax = 300;
-            NPC.defense = 12;
-            NPC.damage = 75;
+            NPC.lifeMax = 160;
+            NPC.defense = 4;
+            NPC.damage = 30;
             NPC.HitSound = SoundID.NPCHit54;
             NPC.DeathSound = SoundID.NPCDeath52;
             NPC.value = 200;
@@ -103,7 +103,6 @@ namespace Paracosm.Content.NPCs.Hostile
         {
             if (AITimer == 0 || AITimer % 60 == 0)
             {
-
                 speed = 1;
             }
             NPC.velocity = NPC.Center.DirectionTo(player.MountedCenter) * speed;

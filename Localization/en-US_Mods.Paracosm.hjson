@@ -401,6 +401,16 @@ Items: {
 		DisplayName: Solace
 		Tooltip: ""
 	}
+
+	LemonHead: {
+		Tooltip: Lemon Lemon
+		DisplayName: Lemon Head
+	}
+
+	CatHat: {
+		Tooltip: Cat hat for the Roy Boy
+		DisplayName: Cat Hat
+	}
 }
 
 Projectiles: {
@@ -442,6 +452,7 @@ Projectiles: {
 	CorruptDragon.DisplayName: Corrupt Dragon
 	PoisonPetal.DisplayName: Poison Petal
 	SolaceStar.DisplayName: Solace Star
+	SolarBlade.DisplayName: Solar Blade
 }
 
 NPCs: {
@@ -460,6 +471,7 @@ NPCs: {
 	InfectedRevenantCorruptHead.DisplayName: Infected Revenant
 	InfectedRevenantCrimsonHead.DisplayName: Infected Revenant
 	InfectedRevenantWings.DisplayName: ""
+	SolarChampion.DisplayName: Solar Champion
 }
 
 Buffs: {

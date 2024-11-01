@@ -30,5 +30,10 @@ namespace Paracosm.Common.Utils
             }
             return closestEnemy;
         }
+
+        public static Vector2 ApproxPos(Vector2 pos, float errorX, float errorY)
+        {
+            return pos + new Vector2(Main.rand.NextFloat(-errorX, errorX), Main.rand.NextFloat(-errorX, errorX));
+        }
     }
 }
