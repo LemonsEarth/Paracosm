@@ -99,9 +99,9 @@ namespace Paracosm.Content.Projectiles.Minions
                         Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Projectile.Center.DirectionTo(closestNPC.Center) * 12, ProjectileID.CursedFlameFriendly, Projectile.damage, 1f);
                         Projectile.netUpdate = true;
                     }
-                    AttackTimer = 60;
+                    AttackTimer = 45;
                     AttackCount++;
-                    if (AttackCount == 9)
+                    if (AttackCount == 3)
                     {
                         AttackCount = 0;
                         if (Main.myPlayer == Projectile.owner)

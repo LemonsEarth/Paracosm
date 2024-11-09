@@ -55,21 +55,11 @@ namespace Paracosm.Content.Biomes
 
     public class ParacosmicDistortionNPC : GlobalNPC
     {
-        public override void EditSpawnRate(Player player, ref int spawnRate, ref int maxSpawns)
-        {
-            if (player.InModBiome<ParacosmicDistortion>())
-            {
-                maxSpawns = 10;
-                spawnRate *= 2;
-            }
-        }
-
         public override void EditSpawnPool(IDictionary<int, float> pool, NPCSpawnInfo spawnInfo)
         {
             if (spawnInfo.Player.InModBiome<ParacosmicDistortion>())
             {
                 pool.Clear();
-
                 pool.Add(ModContent.NPCType<Wanderer>(), 0.3f);
                 pool.Add(ModContent.NPCType<ParastoneRoller>(), 0.1f);
             }

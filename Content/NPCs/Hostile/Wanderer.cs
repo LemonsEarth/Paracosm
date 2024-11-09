@@ -28,8 +28,8 @@ namespace Paracosm.Content.NPCs.Hostile
         {
             NPC.width = 28;
             NPC.height = 50;
-            NPC.lifeMax = 160;
-            NPC.defense = 4;
+            NPC.lifeMax = 80;
+            NPC.defense = 2;
             NPC.damage = 30;
             NPC.HitSound = SoundID.NPCHit54;
             NPC.DeathSound = SoundID.NPCDeath52;

@@ -30,6 +30,7 @@ namespace Paracosm.Content.Items.Accessories
             Item.accessory = true;
             Item.value = Item.sellPrice(0, 10);
             Item.rare = ItemRarityID.Red;
+            Item.maxStack = 999;
         }
 
         public override void UpdateAccessory(Player player, bool hideVisual)
@@ -84,9 +85,29 @@ namespace Paracosm.Content.Items.Accessories
     {
         public override void ModifyNPCLoot(NPC npc, NPCLoot npcLoot)
         {
-            if (npc.type == NPCID.Demon)
+            switch (npc.type)
             {
-                npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<DemonCoin>(), 20, 1, 1));
+                case NPCID.VoodooDemon:
+                    npcLoot.Add(ItemDropRule.NormalvsExpert(ModContent.ItemType<DemonCoin>(), 5, 4));
+                    break;
+                case NPCID.Demon:
+                    npcLoot.Add(ItemDropRule.NormalvsExpert(ModContent.ItemType<DemonCoin>(), 20, 10));
+                    break;
+                case NPCID.Tim:
+                    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<DemonCoin>(), 1, 1, 3));
+                    break;
+                case NPCID.WallofFlesh or NPCID.BloodNautilus:
+                    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<DemonCoin>(), minimumDropped: 3, maximumDropped: 6));
+                    break;
+                case NPCID.Mimic or NPCID.GoblinShark:
+                    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<DemonCoin>()));
+                    break;
+                case NPCID.RuneWizard:
+                    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<DemonCoin>(), 1, 3, 5));
+                    break;
+                case NPCID.BigMimicCorruption or NPCID.BigMimicCrimson or NPCID.BigMimicHallow or NPCID.Moth or NPCID.SandElemental or NPCID.IceGolem or NPCID.BloodEelHead or NPCID.RainbowSlime or NPCID.GoblinSummoner or NPCID.PirateShip:
+                    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<DemonCoin>(), minimumDropped: 2, maximumDropped: 4));
+                    break;
             }
         }
     }

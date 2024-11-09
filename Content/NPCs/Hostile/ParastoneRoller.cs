@@ -39,7 +39,7 @@ namespace Paracosm.Content.NPCs.Hostile
             NPC.width = 84;
             NPC.height = 84;
             NPC.lifeMax = 100;
-            NPC.defense = 20;
+            NPC.defense = 5;
             NPC.damage = 50;
             NPC.HitSound = SoundID.NPCHit41;
             NPC.DeathSound = SoundID.NPCDeath43;
@@ -62,7 +62,6 @@ namespace Paracosm.Content.NPCs.Hostile
         {
             npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Parashard>(), minimumDropped: 2, maximumDropped: 4));
             npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Parastone>(), minimumDropped: 12, maximumDropped: 24));
-            npcLoot.Add(ItemDropRule.NormalvsExpert(ModContent.ItemType<DemonCoin>(), 100, 50));
         }
 
         public override bool? CanFallThroughPlatforms()

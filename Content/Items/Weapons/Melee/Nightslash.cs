@@ -12,7 +12,7 @@ namespace Paracosm.Content.Items.Weapons.Melee
     {
         public override void SetDefaults()
         {
-            Item.damage = 15;
+            Item.damage = 30;
             Item.DamageType = DamageClass.Melee;
             Item.width = 50;
             Item.height = 60;

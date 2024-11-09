@@ -50,7 +50,7 @@ namespace Paracosm.Content.Projectiles
         {
             if (Projectile.alpha > 0)
             {
-                Projectile.alpha -= 5;
+                Projectile.alpha -= 15;
             }
             var dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, DustID.RedTorch);
             Projectile.velocity = Vector2.Zero;

@@ -1,5 +1,5 @@
 displayName = Paracosm
 author = LemonEarth
-version = 0.26
+version = 0.3
 modReferences = StructureHelper
 homepage = https://github.com/LemonsEarth/Paracosm

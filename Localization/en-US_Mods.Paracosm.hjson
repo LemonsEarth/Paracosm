@@ -453,6 +453,8 @@ Projectiles: {
 	PoisonPetal.DisplayName: Poison Petal
 	SolaceStar.DisplayName: Solace Star
 	SolarBlade.DisplayName: Solar Blade
+	SolarHammer.DisplayName: Solar Hammer
+	SolarFireball.DisplayName: Solar Fireball
 }
 
 NPCs: {

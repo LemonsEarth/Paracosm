@@ -170,9 +170,9 @@ namespace Paracosm.Content.Bosses
 
         public override void ApplyDifficultyAndPlayerScaling(int numPlayers, float balance, float bossAdjustment)
         {
-            NPC.lifeMax = (int)Math.Ceiling(NPC.lifeMax * balance * 1f);
+            NPC.lifeMax = (int)Math.Ceiling(NPC.lifeMax * balance * 0.6f);
             NPC.damage = (int)(NPC.damage * balance * 0.5f);
-            NPC.defense = 70;
+            NPC.defense = 50;
         }
 
         public override void AI()
@@ -194,6 +194,7 @@ namespace Paracosm.Content.Bosses
             {
                 phaseTransition = true;
                 phase = 2;
+                NPC.defDefense = 25;
                 phase2FirstTime = false;
                 NPC.netUpdate = true;
             }

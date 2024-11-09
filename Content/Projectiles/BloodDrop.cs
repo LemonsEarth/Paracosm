@@ -32,14 +32,26 @@ namespace Paracosm.Content.Projectiles
             Projectile.aiStyle = 0;
             Projectile.friendly = true;
             Projectile.timeLeft = 180;
+            Projectile.alpha = 255;
         }
 
         public override void AI()
         {
+            if (Projectile.alpha > 0)
+            {
+                Projectile.alpha -= 15;
+            }
             AITimer++;
             Projectile.rotation = Projectile.velocity.ToRotation() - MathHelper.PiOver2;
             var dust = Dust.NewDustDirect(Projectile.Center, 2, 2, DustID.RedTorch);
             Projectile.velocity *= 1.01f;
+        }
+        public override void OnKill(int timeLeft)
+        {
+            for (int i = 0; i < 2; i++)
+            {
+                Dust.NewDust(Projectile.position, 16, 16, DustID.CrimsonTorch);
+            }
         }
     }
 }

@@ -24,6 +24,8 @@ namespace Paracosm.Content.Projectiles.Hostile
         public override void SetStaticDefaults()
         {
             Main.projFrames[Projectile.type] = 1;
+            ProjectileID.Sets.TrailCacheLength[Projectile.type] = 4;
+            ProjectileID.Sets.TrailingMode[Projectile.type] = 2;
         }
 
         public override void SetDefaults()
@@ -35,11 +37,26 @@ namespace Paracosm.Content.Projectiles.Hostile
             Projectile.ignoreWater = true;
             Projectile.tileCollide = false;
             Projectile.timeLeft = 3600;
+            Projectile.alpha = 255;
+            DrawOffsetX = -15;
+            DrawOriginOffsetY = -20;
         }
 
         public override void AI()
         {
+            if (AITimer == 0)
+            {
+                Projectile.scale = 0.01f;
+            }
+            if (Projectile.scale < 1)
+            {
+                Projectile.scale += 2f / 30f;
+            }
             Projectile.rotation = Projectile.velocity.ToRotation() + MathHelper.PiOver2;
+            if (AITimer < 30 && Projectile.alpha > 0)
+            {
+                Projectile.alpha -= 255 / 20;
+            }
             AITimer++;
             Lighting.AddLight(Projectile.Center, new Vector3(100, 100, 100));
         }
