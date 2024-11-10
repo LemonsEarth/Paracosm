@@ -21,6 +21,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Terraria.GameContent;
 using Paracosm.Content.Projectiles.Hostile;
 using System.Linq;
+using Paracosm.Content.Buffs;
 
 
 namespace Paracosm.Content.Bosses
@@ -36,16 +37,21 @@ namespace Paracosm.Content.Bosses
         public int AttackTimer2 = 0;
         public int AttackCount2 = 0;
 
+        bool phase2FirstTime = false;
         int phase = 1;
 
         public float attackDuration = 0;
         int[] attackDurations = { 1200, 900, 1200, 900, 1200 };
+        int[] attackDurations2 = { 1200, 900, 1200, 900, 1200 };
+        List<Projectile> Spheres = new List<Projectile>();
 
         Dictionary<string, int> Proj = new Dictionary<string, int>
         {
             {"Sword", ModContent.ProjectileType<SolarBlade>()},
             {"Hammer", ModContent.ProjectileType<SolarHammer>()},
-            {"Fireball", ModContent.ProjectileType<SolarFireball>()}
+            {"Axe", ModContent.ProjectileType<SolarAxe>()},
+            {"Fireball", ModContent.ProjectileType<SolarFireball>()},
+            {"Sphere", ModContent.ProjectileType<SolarSphere>()}
         };
 
         Player player;
@@ -54,7 +60,15 @@ namespace Paracosm.Content.Bosses
         enum Attacks
         {
             DashingSword,
-            OrbitingSwords
+            OrbitingSwords,
+            AxeSpin
+        }
+
+        enum Attacks2
+        {
+            DashingSword2,
+            OrbitingSwords2,
+            AxeSpin2
         }
 
         public override void SetStaticDefaults()
@@ -91,7 +105,7 @@ namespace Paracosm.Content.Bosses
             NPC.width = 100;
             NPC.height = 100;
             NPC.Opacity = 0;
-            NPC.lifeMax = 200000;
+            NPC.lifeMax = 300000;
             NPC.defense = 100;
             NPC.damage = 20;
             NPC.HitSound = SoundID.NPCHit1;
@@ -117,13 +131,18 @@ namespace Paracosm.Content.Bosses
             }
 
             player = Main.player[NPC.target];
+            player.solarMonolithShader = true;
             playerDirection = (player.Center - NPC.Center);
 
-            if (player.dead || NPC.Center.Distance(player.MountedCenter) > 2500)
+            if (player.dead || NPC.Center.Distance(player.MountedCenter) > 5000)
             {
                 NPC.EncourageDespawn(300);
             }
             Arena();
+            if (!Terraria.Graphics.Effects.Filters.Scene["DivineSeekerShader"].IsActive() && Main.netMode != NetmodeID.Server)
+            {
+                Terraria.Graphics.Effects.Filters.Scene.Activate("DivineSeekerShader").GetShader().UseColor(new Color(255, 192, 100));
+            }
 
             if (AITimer < 60)
             {
@@ -136,9 +155,11 @@ namespace Paracosm.Content.Bosses
             }
             NPC.dontTakeDamage = false;
 
-            if (NPC.life <= NPC.lifeMax / 2)
+            if (NPC.life <= (NPC.lifeMax / 2) && !phase2FirstTime)
             {
+                phase2FirstTime = true;
                 phase = 2;
+                SwitchAttacks();
             }
 
 
@@ -156,21 +177,43 @@ namespace Paracosm.Content.Bosses
                 SwitchAttacks();
             }
 
-            switch (Attack)
+            if (phase == 1)
             {
-                case (int)Attacks.DashingSword:
-                    DashingSword(player);
-                    break;
-                case (int)Attacks.OrbitingSwords:
-                    OrbitingSwords(player);
-                    break;
-                case 2:
-                    DashingSword(player);
-                    break;
-                case 3:
-                    OrbitingSwords(player);
-                    break;
+                switch (Attack)
+                {
+                    case (int)Attacks.DashingSword:
+                        DashingSword(player);
+                        break;
+                    case (int)Attacks.OrbitingSwords:
+                        OrbitingSwords(player);
+                        break;
+                    case (int)Attacks.AxeSpin:
+                        AxeSpin(player);
+                        break;
+                    case 3:
+                        OrbitingSwords(player);
+                        break;
+                }
             }
+            else
+            {
+                switch (Attack)
+                {
+                    case (int)Attacks2.DashingSword2:
+                        DashingSword2(player);
+                        break;
+                    case (int)Attacks2.OrbitingSwords2:
+                        OrbitingSwords2(player);
+                        break;
+                    case (int)Attacks2.AxeSpin2:
+                        AxeSpin2(player);
+                        break;
+                    case 3:
+                        OrbitingSwords2(player);
+                        break;
+                }
+            }
+
             attackDuration--;
             AITimer++;
         }
@@ -182,16 +225,20 @@ namespace Paracosm.Content.Bosses
             {
                 Attack = 0;
             }
-            attackDuration = attackDurations[(int)Attack];
+            if (phase == 1) attackDuration = attackDurations[(int)Attack];
+            else attackDuration = attackDurations2[(int)Attack];
+
             AttackCount = 0;
             AttackTimer = 0;
             AttackTimer2 = 0;
             Swords.Clear();
+            Axes.Clear();
             grow = true;
             rotSpeedMul = 1;
             foreach (var proj in Proj)
             {
-                DeleteProjectiles(proj.Value);
+                if (proj.Key != "Sphere")
+                    DeleteProjectiles(proj.Value);
             }
         }
 
@@ -202,15 +249,43 @@ namespace Paracosm.Content.Bosses
         float rotSpeedMul = 1;
         bool isDashing = false;
         List<Projectile> Swords = new List<Projectile>();
+        List<Projectile> Axes = new List<Projectile>();
+
 
         public void DashingSword(Player player)
         {
             swordOffset = 200;
             if (AttackCount < 4)
             {
-                if (AttackTimer == 0)
+                switch (AttackTimer)
                 {
-                    targetPosition = player.Center + new Vector2(Main.rand.Next(350, 500) * -Math.Sign(player.Center.X - NPC.Center.X), Main.rand.NextFloat(-100, 100));
+                    case 0:
+                        targetPosition = player.Center + new Vector2(Main.rand.Next(350, 500) * -Math.Sign(player.Center.X - NPC.Center.X), Main.rand.NextFloat(-100, 100));
+                        break;
+                    case < 60:
+                        if (rotSpeedMul > 0.04f)
+                        {
+                            rotSpeedMul -= 0.04f;
+                        }
+                        break;
+                    case > 60 and < 120:
+                        rotSpeedMul += 0.02f;
+                        isDashing = true;
+                        NPC.velocity = -playerDirection.SafeNormalize(Vector2.Zero) * 2;
+                        break;
+                    case 130:
+                        tempPos = player.Center;
+                        break;
+                    case 160:
+                        NPC.velocity = NPC.Center.DirectionTo(tempPos).SafeNormalize(Vector2.Zero) * 50;
+                        rotSpeedMul = 8;
+                        break;
+                    case >= 200:
+                        isDashing = false;
+                        AttackTimer = -1;
+                        NPC.velocity = Vector2.Zero;
+                        AttackCount++;
+                        break;
                 }
                 if (Swords.Count < 4 || Swords.Any(proj => proj.active == false))
                 {
@@ -225,50 +300,10 @@ namespace Paracosm.Content.Bosses
                     sword.velocity = (sword.Center - NPC.Center).SafeNormalize(Vector2.Zero);
                     sword.timeLeft = 180;
                 }
-                if (AttackTimer < 60)
-                {
-                    rotSpeedMul -= 0.04f;
-                }
-
-                if (AttackTimer > 60 && AttackTimer < 120)
-                {
-                    rotSpeedMul += 0.02f;
-                    isDashing = true;
-                    NPC.velocity = -playerDirection.SafeNormalize(Vector2.Zero) * 2;
-                }
-                if (AttackTimer == 120)
-                {
-                    tempPos = player.Center;
-                }
-                if (AttackTimer == 160 && isDashing)
-                {
-                    NPC.velocity = NPC.Center.DirectionTo(tempPos).SafeNormalize(Vector2.Zero) * 50;
-                    if (phase == 2)
-                    {
-                        if (Main.netMode != NetmodeID.MultiplayerClient)
-                        {
-                            for (int i = 0; i < 8; i++)
-                            {
-                                Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, new Vector2(0, -10).RotatedBy(i * MathHelper.PiOver4), ModContent.ProjectileType<SolarFireball>(), NPC.damage, 0);
-                                Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, new Vector2(0, -5).RotatedBy(i * MathHelper.PiOver4), ModContent.ProjectileType<SolarFireball>(), NPC.damage, 0);
-                                Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, new Vector2(0, -2).RotatedBy(i * MathHelper.PiOver4), ModContent.ProjectileType<SolarFireball>(), NPC.damage, 0);
-                            }
-                        }
-                    }
-                    rotSpeedMul = 8;
-                }
 
                 if (!isDashing)
                 {
                     NPC.velocity += new Vector2(0.1f * Math.Sign(playerDirection.X), 0.1f * Math.Sign(playerDirection.Y));
-                }
-
-                if (AttackTimer >= 200 && isDashing)
-                {
-                    isDashing = false;
-                    AttackTimer = -1;
-                    NPC.velocity = Vector2.Zero;
-                    AttackCount++;
                 }
             }
             else
@@ -284,18 +319,19 @@ namespace Paracosm.Content.Bosses
                     {
                         sword.velocity *= 20;
                     }
+                    SoundEngine.PlaySound(SoundID.DD2_SonicBoomBladeSlash);
                     AttackCount2++;
                     Swords.Clear();
                 }
                 if (AttackTimer > 10)
                 {
-                    if (Swords.Count < 8)
+                    if (Swords.Count < 4 || Swords.Any(proj => proj.active == false))
                     {
                         SummonSword();
                         for (int i = 0; i < Swords.Count; i++)
                         {
                             var sword = Swords[i];
-                            Vector2 rotatedPos = new Vector2(0, swordOffset).RotatedBy(i * MathHelper.PiOver4).RotatedBy(MathHelper.ToRadians(15 * AttackCount2));
+                            Vector2 rotatedPos = new Vector2(0, swordOffset).RotatedBy(i * MathHelper.PiOver2).RotatedBy(MathHelper.ToRadians(15 * AttackCount2));
                             sword.Center = NPC.Center + rotatedPos;
                             sword.velocity = (sword.Center - NPC.Center).SafeNormalize(Vector2.Zero);
                         }
@@ -305,14 +341,13 @@ namespace Paracosm.Content.Bosses
             AttackTimer++;
         }
 
-        bool grow = true;
         public void OrbitingSwords(Player player)
         {
             float XaccelMod = Math.Sign(playerDirection.X) - Math.Sign(NPC.velocity.X);
             float YaccelMod = Math.Sign(playerDirection.Y) - Math.Sign(NPC.velocity.Y);
             NPC.velocity += new Vector2((XaccelMod * 0.04f) + 0.02f * Math.Sign(playerDirection.X), (YaccelMod * 0.04f) + 0.02f * Math.Sign(playerDirection.Y));
 
-            if (Swords.Count < 8)
+            if (Swords.Count < 8 || Swords.Any(proj => proj.active == false))
             {
                 SummonSword();
             }
@@ -342,11 +377,283 @@ namespace Paracosm.Content.Bosses
                 if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
                     Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, playerDirection.SafeNormalize(Vector2.Zero) * 10, Proj["Hammer"], NPC.damage, 0, ai0: 1, ai1: player.Center.X, ai2: player.Center.Y);
-                    if (phase == 2)
+                }
+            }
+            AttackTimer++;
+        }
+
+        public void AxeSpin(Player player)
+        {
+            if (Axes.Count < 11 || Axes.Any(proj => proj.active == false))
+            {
+                if (Main.netMode != NetmodeID.MultiplayerClient)
+                {
+                    Axes.Add(Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center, new Vector2(0, -1), Proj["Axe"], NPC.damage, 0, ai1: NPC.whoAmI));
+                }
+            }
+
+            NPC.velocity /= 1.2f;
+            switch (AttackTimer)
+            {
+                case <= 120:
+                    for (int i = 0; i < Axes.Count(); i++)
                     {
-                        Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, playerDirection.SafeNormalize(Vector2.Zero) * 20, Proj["Hammer"], NPC.damage, 0, ai0: 1, ai1: player.Center.X, ai2: player.Center.Y);
+                        Vector2 pos = new Vector2(0, (i + 1) * -150);
+                        Axes[i].Center = Vector2.Lerp(Axes[i].Center, NPC.Center + pos, AttackTimer / 120f);
+                    }
+                    break;
+                case > 120:
+                    for (int i = 0; i < Axes.Count(); i++)
+                    {
+                        Vector2 pos = new Vector2(0, (i + 1) * -150);
+                        Axes[i].Center = NPC.Center + pos.RotatedBy(MathHelper.ToRadians(-AttackTimer2));
+                        Axes[i].velocity = (Axes[i].Center - NPC.Center).SafeNormalize(Vector2.Zero);
+                        Axes[i].timeLeft = 30;
+                    }
+                    if (AttackTimer2 % 120 == 0)
+                    {
+                        if (Main.netMode != NetmodeID.MultiplayerClient)
+                        {
+                            for (int i = 0; i < 8; i++)
+                            {
+                                Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, new Vector2(0, -5).RotatedBy(i * MathHelper.PiOver4), ProjectileID.CultistBossFireBall, NPC.damage, 1);
+                            }
+                        }
+                    }
+                    AttackTimer2++;
+                    break;
+            }
+            AttackTimer++;
+        }
+
+        public void DashingSword2(Player player)
+        {
+            swordOffset = 200;
+            if (AttackCount < 4)
+            {
+                switch (AttackTimer)
+                {
+                    case 0:
+                        targetPosition = player.Center + new Vector2(Main.rand.Next(350, 500) * -Math.Sign(player.Center.X - NPC.Center.X), Main.rand.NextFloat(-100, 100));
+                        break;
+                    case < 50:
+                        if (rotSpeedMul > 0.04f)
+                        {
+                            rotSpeedMul -= 0.04f;
+                        }
+                        break;
+                    case > 50 and < 100:
+                        rotSpeedMul += 0.02f;
+                        isDashing = true;
+                        NPC.velocity = -playerDirection.SafeNormalize(Vector2.Zero) * 2;
+                        break;
+                    case 120:
+                        tempPos = player.Center;
+                        break;
+                    case 140:
+                        NPC.velocity = NPC.Center.DirectionTo(tempPos).SafeNormalize(Vector2.Zero) * 50;
+                        if (Main.netMode != NetmodeID.MultiplayerClient)
+                        {
+                            for (int i = 0; i < 8; i++)
+                            {
+                                Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, new Vector2(0, -10).RotatedBy(i * MathHelper.PiOver4), Proj["Fireball"], NPC.damage, 0);
+                                Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, new Vector2(0, -5).RotatedBy(i * MathHelper.PiOver4), Proj["Fireball"], NPC.damage, 0);
+                                Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, new Vector2(0, -2).RotatedBy(i * MathHelper.PiOver4), Proj["Fireball"], NPC.damage, 0);
+                            }
+                        }
+                        rotSpeedMul = 8;
+                        break;
+                    case >= 180:
+                        isDashing = false;
+                        AttackTimer = -1;
+                        NPC.velocity = Vector2.Zero;
+                        AttackCount++;
+                        break;
+                }
+                if (Swords.Count < 4 || Swords.Any(proj => proj.active == false))
+                {
+                    SummonSword();
+                }
+
+                for (int i = 0; i < Swords.Count; i++)
+                {
+                    var sword = Swords[i];
+                    Vector2 rotatedPos = new Vector2(0, swordOffset).RotatedBy(MathHelper.ToRadians(AttackTimer * rotSpeedMul)).RotatedBy(i * MathHelper.PiOver2);
+                    sword.Center = NPC.Center + rotatedPos;
+                    sword.velocity = (sword.Center - NPC.Center).SafeNormalize(Vector2.Zero);
+                    sword.timeLeft = 180;
+                }
+
+                if (!isDashing)
+                {
+                    NPC.velocity += new Vector2(0.2f * Math.Sign(playerDirection.X), 0.2f * Math.Sign(playerDirection.Y));
+                }
+            }
+            else
+            {
+                NPC.velocity = playerDirection.SafeNormalize(Vector2.Zero) * 5;
+                if (AttackTimer >= 30)
+                {
+                    AttackTimer = 0;
+                }
+                if (AttackTimer == 0)
+                {
+                    foreach (var sword in Swords)
+                    {
+                        sword.velocity *= 15;
+                    }
+                    SoundEngine.PlaySound(SoundID.DD2_SonicBoomBladeSlash);
+                    AttackCount2++;
+                    Swords.Clear();
+                }
+                if (AttackTimer > 10)
+                {
+                    if (Swords.Count < 8)
+                    {
+                        SummonSword();
+                        for (int i = 0; i < Swords.Count; i++)
+                        {
+                            var sword = Swords[i];
+                            Vector2 rotatedPos = new Vector2(0, swordOffset).RotatedBy(i * MathHelper.PiOver4).RotatedBy(MathHelper.ToRadians(15 * AttackCount2));
+                            sword.Center = NPC.Center + rotatedPos;
+                            sword.velocity = (sword.Center - NPC.Center).SafeNormalize(Vector2.Zero);
+                        }
                     }
                 }
+            }
+            AttackTimer++;
+        }
+
+        bool grow = true;
+        public void OrbitingSwords2(Player player)
+        {
+            float XaccelMod = Math.Sign(playerDirection.X) - Math.Sign(NPC.velocity.X);
+            float YaccelMod = Math.Sign(playerDirection.Y) - Math.Sign(NPC.velocity.Y);
+            NPC.velocity += new Vector2((XaccelMod * 0.06f) + 0.02f * Math.Sign(playerDirection.X), (YaccelMod * 0.06f) + 0.02f * Math.Sign(playerDirection.Y));
+
+            if (Swords.Count < 8 || Swords.Any(proj => proj.active == false))
+            {
+                SummonSword();
+            }
+
+            for (int i = 0; i < Swords.Count; i++)
+            {
+                var sword = Swords[i];
+                Vector2 rotatedPos = new Vector2(0, swordOffset).RotatedBy(MathHelper.ToRadians(AttackTimer)).RotatedBy(i * MathHelper.PiOver4);
+                sword.Center = NPC.Center + rotatedPos;
+                if (swordOffset <= 200)
+                {
+                    grow = true;
+                }
+                if (swordOffset >= 1400)
+                {
+                    grow = false;
+                }
+
+                if (grow) swordOffset += 0.5f;
+                else swordOffset -= 0.5f;
+                sword.velocity = (sword.Center - NPC.Center).SafeNormalize(Vector2.Zero);
+                sword.timeLeft = 180;
+            }
+
+            if (AttackTimer % 120 == 0)
+            {
+                if (Main.netMode != NetmodeID.MultiplayerClient)
+                {
+                    Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, playerDirection.SafeNormalize(Vector2.Zero) * 10, Proj["Hammer"], NPC.damage, 0, ai0: 1, ai1: player.Center.X, ai2: player.Center.Y);
+                    Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, playerDirection.SafeNormalize(Vector2.Zero) * 20, Proj["Hammer"], NPC.damage, 0, ai0: 1, ai1: player.Center.X, ai2: player.Center.Y);
+                }
+            }
+            AttackTimer++;
+        }
+
+        public void AxeSpin2(Player player)
+        {
+            if (Axes.Count < 11 || Axes.Any(proj => proj.active == false))
+            {
+                if (Main.netMode != NetmodeID.MultiplayerClient)
+                {
+                    Axes.Add(Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center, new Vector2(0, -1), Proj["Axe"], NPC.damage, 0, ai1: NPC.whoAmI));
+                }
+            }
+            else if (Axes.Count < 22 || Axes.Any(proj => proj.active == false))
+            {
+                if (Main.netMode != NetmodeID.MultiplayerClient)
+                {
+                    Axes.Add(Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center, new Vector2(0, 1), Proj["Axe"], NPC.damage, 0, ai1: NPC.whoAmI));
+                }
+            }
+
+            NPC.velocity /= 1.2f;
+            switch (AttackTimer)
+            {
+                case <= 120:
+                    for (int i = 0; i < Axes.Count() / 2; i++)
+                    {
+                        Vector2 pos = new Vector2(0, (i + 1) * -150);
+                        Axes[i].Center = Vector2.Lerp(Axes[i].Center, NPC.Center + pos, AttackTimer / 120f);
+                    }
+                    for (int i = 11; i < Axes.Count(); i++)
+                    {
+                        Vector2 pos = new Vector2(0, ((i % 11) + 1) * 150);
+                        Axes[i].Center = Vector2.Lerp(Axes[i].Center, NPC.Center + pos, AttackTimer / 120f);
+                    }
+                    break;
+                case > 120:
+                    for (int i = 0; i < Axes.Count() / 2; i++)
+                    {
+                        Vector2 pos = new Vector2(0, (i + 1) * -150);
+                        Axes[i].Center = NPC.Center + pos.RotatedBy(MathHelper.ToRadians(-AttackTimer2 * (1 + AttackCount)));
+                        Axes[i].timeLeft = 30;
+                    }
+                    for (int i = 11; i < Axes.Count(); i++)
+                    {
+                        Vector2 pos = new Vector2(0, ((i % 11) + 1) * 150);
+                        Axes[i].Center = NPC.Center + pos.RotatedBy(MathHelper.ToRadians(-AttackTimer2 * (1 + AttackCount)));
+                        Axes[i].timeLeft = 30;
+                    }
+                    if (AttackTimer2 % 60 == 0)
+                    {
+                        if (Main.netMode != NetmodeID.MultiplayerClient)
+                        {
+                            if (AttackTimer < 120)
+                            {
+                                for (int i = 0; i < 8; i++)
+                                {
+                                    Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, new Vector2(0, -1).RotatedBy(i * MathHelper.PiOver4), ProjectileID.CultistBossFireBall, NPC.damage, 1);
+                                }
+                            }
+                            else
+                            {
+                                for (int i = -1; i <= 1; i++)
+                                {
+                                    Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, playerDirection.SafeNormalize(Vector2.Zero).RotatedBy(i * (MathHelper.Pi / 8)) * 15, Proj["Fireball"], NPC.damage, 1);
+                                }
+                            }
+                        }
+                    }
+                    if (AttackTimer2 > 120 && AttackTimer2 < 600)
+                    {
+                        if (arenaDistance < BaseArenaDistance + 500)
+                        {
+                            arenaDistance += 500f / 120f;
+                        }
+                    }
+                    else if (AttackTimer2 >= 600)
+                    {
+                        if (AttackCount > 0.25)
+                        {
+                            AttackCount -= 0.05f;
+                        }
+                        if (arenaDistance > BaseArenaDistance)
+                        {
+                            arenaDistance -= 500f / 150f;
+                        }
+                    }
+                    if (AttackCount < 7 && AttackTimer2 < 600)
+                        AttackCount += 0.001f;
+                    AttackTimer2++;
+                    break;
             }
             AttackTimer++;
         }
@@ -368,12 +675,36 @@ namespace Paracosm.Content.Bosses
             }
         }
 
+        float arenaDistance = 0;
+        const float BaseArenaDistance = 1800;
         public void Arena()
         {
-            for (int i = 0; i < 100; i++)
+            if (Spheres.Count < 40)
             {
-                var dust = Dust.NewDustDirect(NPC.Center + new Vector2(0, -1200).RotatedBy(MathHelper.ToRadians(i * 10)), 16, 16, DustID.SolarFlare, Scale: Main.rand.NextFloat(0.8f, 1.5f));
-                dust.noGravity = true;
+                for (int i = 0; i < 40; i++)
+                {
+                    var sphere = Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center + new Vector2(0, -arenaDistance).RotatedBy(i * MathHelper.ToRadians(9)), Vector2.Zero, Proj["Sphere"], NPC.damage, 1, ai1: 60f);
+                    Spheres.Add(sphere);
+                }
+            }
+
+            for (int i = 0; i < Spheres.Count; i++)
+            {
+                Vector2 pos = NPC.Center + new Vector2(0, -arenaDistance).RotatedBy(i * MathHelper.ToRadians(9)).RotatedBy(MathHelper.ToRadians(AITimer));
+                Spheres[i].velocity = (pos - Spheres[i].position).SafeNormalize(Vector2.Zero) * (Spheres[i].position.Distance(pos) / 20);
+                Spheres[i].timeLeft = 180;
+            }
+            if (arenaDistance < BaseArenaDistance)
+            {
+                arenaDistance += BaseArenaDistance / 60f;
+            }
+
+            foreach (var player in Main.ActivePlayers)
+            {
+                if (NPC.Center.Distance(player.MountedCenter) > arenaDistance + 50)
+                {
+                    player.AddBuff(ModContent.BuffType<Infected>(), 2);
+                }
             }
         }
 
@@ -386,6 +717,12 @@ namespace Paracosm.Content.Bosses
                     proj.Kill();
                 }
             }
+        }
+
+        public override bool CheckDead()
+        {
+            Terraria.Graphics.Effects.Filters.Scene.Deactivate("DivineSeekerShader");
+            return true;
         }
 
         public override void ApplyDifficultyAndPlayerScaling(int numPlayers, float balance, float bossAdjustment)

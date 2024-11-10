@@ -16,9 +16,10 @@ using Terraria.ModLoader;
 
 namespace Paracosm.Content.Projectiles.Hostile
 {
-    public class SolarBlade : ModProjectile
+    public class SolarAxe : ModProjectile
     {
         ref float AITimer => ref Projectile.ai[0];
+        ref float ChampID => ref Projectile.ai[1];
         public override void SetStaticDefaults()
         {
             Main.projFrames[Projectile.type] = 1;
@@ -36,20 +37,11 @@ namespace Paracosm.Content.Projectiles.Hostile
             Projectile.tileCollide = false;
             Projectile.timeLeft = 3600;
             Projectile.alpha = 255;
-            DrawOffsetX = -15;
-            DrawOriginOffsetY = -20;
         }
 
         public override void AI()
         {
-            if (AITimer == 0)
-            {
-                Projectile.scale = 0.01f;
-            }
-            if (Projectile.scale < 1)
-            {
-                Projectile.scale += 2f / 30f;
-            }
+            Projectile.velocity = Main.npc[(int)ChampID].Center.DirectionTo(Projectile.Center);
             Projectile.rotation = Projectile.velocity.ToRotation() + MathHelper.PiOver2;
             if (AITimer < 30 && Projectile.alpha > 0)
             {
@@ -57,6 +49,21 @@ namespace Paracosm.Content.Projectiles.Hostile
             }
             AITimer++;
             Lighting.AddLight(Projectile.Center, new Vector3(100, 100, 100));
+        }
+
+        public override bool PreDraw(ref Color lightColor)
+        {
+            Texture2D texture = TextureAssets.Projectile[Type].Value;
+
+            Vector2 drawOrigin = new Vector2(texture.Width * 0.5f, Projectile.height * 0.5f);
+            for (int k = Projectile.oldPos.Length - 1; k > 0; k--)
+            {
+                Vector2 drawPos = (Projectile.oldPos[k] - Main.screenPosition) + drawOrigin + new Vector2(0f, Projectile.gfxOffY);
+                Color color = Projectile.GetAlpha(lightColor) * ((Projectile.oldPos.Length - k) / (float)Projectile.oldPos.Length);
+                Main.EntitySpriteDraw(texture, drawPos, null, color, Projectile.oldRot[k], drawOrigin, Projectile.scale, SpriteEffects.None, 0);
+            }
+
+            return true;
         }
     }
 }

@@ -455,6 +455,8 @@ Projectiles: {
 	SolarBlade.DisplayName: Solar Blade
 	SolarHammer.DisplayName: Solar Hammer
 	SolarFireball.DisplayName: Solar Fireball
+	SolarSphere.DisplayName: Solar Sphere
+	SolarAxe.DisplayName: Solar Axe
 }
 
 NPCs: {
