@@ -21,7 +21,7 @@ namespace Paracosm.Content.Projectiles.Hostile
     {
         float AITimer = 0;
 
-        ref float ShotCount => ref Projectile.ai[0];
+        ref float TimeToReach => ref Projectile.ai[0];
         public Vector2 TargetPosition
         {
             get { return new Vector2(Projectile.ai[1], Projectile.ai[2]); }
@@ -68,40 +68,19 @@ namespace Paracosm.Content.Projectiles.Hostile
 
         public override void AI()
         {
-            if (!reachedPos)
+            if (AITimer == 0)
             {
-                Projectile.rotation += MathHelper.ToRadians(Projectile.velocity.Length());
-                if (Projectile.Center.Distance(TargetPosition) < 50)
-                {
-                    reachedPos = true;
-                    Projectile.timeLeft = (int)ShotCount * 60;
-                    Projectile.velocity = Vector2.Zero;
-                    Projectile.netUpdate = true;
-                }
+                Projectile.timeLeft = (int)TimeToReach;
+                Projectile.velocity = Projectile.Center.DirectionTo(TargetPosition) * (Projectile.Center.Distance(TargetPosition)/ TimeToReach);
             }
-            else
+            Projectile.rotation += MathHelper.ToRadians(Projectile.velocity.Length());
+
+            if (Projectile.timeLeft < 10)
             {
-                Projectile.rotation = MathHelper.ToRadians(AITimer * 4);
-                Projectile.velocity = Vector2.Zero;
-                if (attackTimer == 0)
-                {
-                    if (Main.netMode != NetmodeID.MultiplayerClient)
-                    {
-                        for (int i = 0; i < 8; i++)
-                        {
-                            Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, new Vector2(0, -10).RotatedBy(i * MathHelper.PiOver4), ModContent.ProjectileType<SolarFireball>(), Projectile.damage, 0);
-                        }
-                    }
-                    ShotCount--;
-                    if (ShotCount == 0)
-                    {
-                        Projectile.Kill();
-                    }
-                    attackTimer = 60;
-                }
-                attackTimer--;
+                Projectile.scale += 0.05f;
             }
-            if (AITimer < 30 && Projectile.alpha > 0)
+
+            if (AITimer < 30 && Projectile.alpha > 0 && Projectile.timeLeft > 30)
             {
                 Projectile.alpha -= 255 / 20;
             }
@@ -112,6 +91,17 @@ namespace Paracosm.Content.Projectiles.Hostile
         public override void OnKill(int timeLeft)
         {
             SoundEngine.PlaySound(SoundID.Item14);
+            for (int i = 0; i < 10; i++)
+            {
+                Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, DustID.SolarFlare);
+            }
+            if (Main.netMode != NetmodeID.MultiplayerClient)
+            {
+                for (int i = 0; i < 8; i++)
+                {
+                    Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, new Vector2(0, -10).RotatedBy(i * MathHelper.PiOver4), ModContent.ProjectileType<SolarFireball>(), Projectile.damage, 0);
+                }
+            }
         }
     }
 }

@@ -35,7 +35,7 @@ namespace Paracosm.Content.Projectiles.Hostile
             Projectile.friendly = false;
             Projectile.ignoreWater = true;
             Projectile.tileCollide = false;
-            Projectile.timeLeft = 3600;
+            Projectile.timeLeft = 1200;
             Projectile.alpha = 255;
         }
 
@@ -43,12 +43,24 @@ namespace Paracosm.Content.Projectiles.Hostile
         {
             Projectile.velocity = Main.npc[(int)ChampID].Center.DirectionTo(Projectile.Center);
             Projectile.rotation = Projectile.velocity.ToRotation() + MathHelper.PiOver2;
-            if (AITimer < 30 && Projectile.alpha > 0)
+            if (AITimer < 30 && Projectile.alpha > 0 && Projectile.timeLeft > 30)
             {
                 Projectile.alpha -= 255 / 20;
             }
+            if (Projectile.timeLeft < 30)
+            {
+                Projectile.alpha += 255 / 30;
+            }
             AITimer++;
             Lighting.AddLight(Projectile.Center, new Vector3(100, 100, 100));
+        }
+
+        public override void OnKill(int timeLeft)
+        {
+            for (int i = 0; i < 10; i++)
+            {
+                Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, DustID.SolarFlare);
+            }
         }
 
         public override bool PreDraw(ref Color lightColor)

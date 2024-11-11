@@ -39,11 +39,11 @@ namespace Paracosm.Content.Projectiles.Hostile
             Projectile.tileCollide = false;
             Projectile.timeLeft = 180;
             Projectile.alpha = 255;
-
         }
 
         public override void AI()
         {
+            Projectile.timeLeft = 10;
             if (Projectile.alpha > 0)
             {
                 Projectile.alpha -= 255 / 60;
