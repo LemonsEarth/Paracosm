@@ -10,6 +10,7 @@
 	<ItemGroup>
 	  <None Remove="Content\Items\Placeable\ParastoneWallUnsafeItem.png" />
 	  <None Remove="Content\Projectiles\ArchmageBolt.png" />
+	  <None Remove="Content\Projectiles\HorizonSplitterProj.png" />
 	  <None Remove="Content\Projectiles\Hostile\CursedSpiritFlame.png" />
 	  <None Remove="Content\Projectiles\Hostile\ParacosmicFlameHostile.png" />
 	  <None Remove="Content\Projectiles\ParashardSwordProjectile.png" />

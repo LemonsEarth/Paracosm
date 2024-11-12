@@ -18,11 +18,11 @@ using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using System.IO;
 
-namespace Paracosm.Content.Bosses
+namespace Paracosm.Content.Bosses.InfectedRevenant
 {
     public class InfectedRevenantCrimsonHead : ModNPC
     {
-        private const string NeckTexturePath = "Paracosm/Content/Bosses/InfectedRevenantCrimsonNeck";
+        private const string NeckTexturePath = "Paracosm/Content/Bosses/InfectedRevenant/InfectedRevenantCrimsonNeck";
         private static Asset<Texture2D> NeckTexture;
 
         public int ParentIndex
@@ -195,12 +195,12 @@ namespace Paracosm.Content.Bosses
                 }
                 if (body.transitionDuration > 150)
                 {
-                    NPC.velocity = ((defaultHeadPos + new Vector2(0, 20)) - NPC.Center).SafeNormalize(Vector2.Zero) * (NPC.Center.Distance(defaultHeadPos + new Vector2(0, 20)) / 36);
+                    NPC.velocity = (defaultHeadPos + new Vector2(0, 20) - NPC.Center).SafeNormalize(Vector2.Zero) * (NPC.Center.Distance(defaultHeadPos + new Vector2(0, 20)) / 36);
                     AttackTimer = 60;
                 }
                 else
                 {
-                    NPC.velocity = ((defaultHeadPos - new Vector2(0, 20)) - NPC.Center).SafeNormalize(Vector2.Zero) * (NPC.Center.Distance(defaultHeadPos - new Vector2(0, 20)) / 12);
+                    NPC.velocity = (defaultHeadPos - new Vector2(0, 20) - NPC.Center).SafeNormalize(Vector2.Zero) * (NPC.Center.Distance(defaultHeadPos - new Vector2(0, 20)) / 12);
                     AttackTimer = 20;
                 }
                 return;
@@ -439,7 +439,7 @@ namespace Paracosm.Content.Bosses
                 if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
                     Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, (body.player.MountedCenter - NPC.Center).SafeNormalize(Vector2.Zero) * 12, ProjectileID.GoldenShowerHostile, (int)(NPC.damage * 0.8f), 1);
-                    
+
                 }
                 NPC.velocity -= (body.player.MountedCenter - NPC.Center).SafeNormalize(Vector2.Zero) * 10;
                 AttackCount++;
@@ -664,7 +664,7 @@ namespace Paracosm.Content.Bosses
                 distanceLeft = drawPosition.Distance(NPC.Center);
                 drawnSegments++;
                 distanceLeft -= segmentHeight;
-                spriteBatch.Draw(NeckTexture.Value, drawPosition - screenPos, null, new Color(255 - (drawnSegments * 10), 255 - (drawnSegments * 10), 255 - (drawnSegments * 10), 255 - NPC.alpha), rotation, new Vector2(NeckTexture.Value.Width / 2f, NeckTexture.Value.Height / 2f), 1f, SpriteEffects.None, 0f);
+                spriteBatch.Draw(NeckTexture.Value, drawPosition - screenPos, null, new Color(255 - drawnSegments * 10, 255 - drawnSegments * 10, 255 - drawnSegments * 10, 255 - NPC.alpha), rotation, new Vector2(NeckTexture.Value.Width / 2f, NeckTexture.Value.Height / 2f), 1f, SpriteEffects.None, 0f);
             }
 
             return true;

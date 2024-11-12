@@ -21,7 +21,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Terraria.GameContent;
 
 
-namespace Paracosm.Content.Bosses
+namespace Paracosm.Content.Bosses.DivineSeeker
 {
     [AutoloadBossHead]
     public class DivineSeeker : ModNPC
@@ -87,9 +87,9 @@ namespace Paracosm.Content.Bosses
                 BestiaryDatabaseNPCsPopulator.CommonTags.SpawnConditions.Times.NightTime,
                 new MoonLordPortraitBackgroundProviderBestiaryInfoElement(),
                 new FlavorTextBestiaryInfoElement("A monster who arrived from a different world. Though feral in nature, it possesses high intelligence, suggesting its arrival was not without purpose."),
-            }); 
+            });
         }
-        
+
 
         public override void SetDefaults()
         {
@@ -174,7 +174,7 @@ namespace Paracosm.Content.Bosses
             }
             AITimer++;
             Vector2 playerDirection = (player.MountedCenter - NPC.Center).SafeNormalize(Vector2.Zero);
-            shootOffset = (playerDirection).SafeNormalize(Vector2.Zero) * new Vector2(NPC.width / 2, NPC.height / 2).Length();
+            shootOffset = playerDirection.SafeNormalize(Vector2.Zero) * new Vector2(NPC.width / 2, NPC.height / 2).Length();
             if (!isDashing && !spinning)
             {
                 NPC.rotation = playerDirection.ToRotation() - MathHelper.PiOver2;
@@ -365,7 +365,7 @@ namespace Paracosm.Content.Bosses
                         {
                             NPC.Center = player.MountedCenter + new Vector2(0, -450).RotatedBy(circlingTime / 10);
                             circlingTime++;
-                            if ((Math.Atan2(playerDirection.Y, playerDirection.X) > MathHelper.ToRadians(-30) && Math.Atan2(playerDirection.Y, playerDirection.X) < MathHelper.ToRadians(30)) || (Math.Atan2(playerDirection.Y, playerDirection.X) > MathHelper.ToRadians(60) && Math.Atan2(playerDirection.Y, playerDirection.X) < MathHelper.ToRadians(120)) || (Math.Atan2(playerDirection.Y, playerDirection.X) > MathHelper.ToRadians(150) || Math.Atan2(playerDirection.Y, playerDirection.X) < MathHelper.ToRadians(-150)) || (Math.Atan2(playerDirection.Y, playerDirection.X) < MathHelper.ToRadians(-60) && Math.Atan2(playerDirection.Y, playerDirection.X) > MathHelper.ToRadians(-120)))
+                            if (Math.Atan2(playerDirection.Y, playerDirection.X) > MathHelper.ToRadians(-30) && Math.Atan2(playerDirection.Y, playerDirection.X) < MathHelper.ToRadians(30) || Math.Atan2(playerDirection.Y, playerDirection.X) > MathHelper.ToRadians(60) && Math.Atan2(playerDirection.Y, playerDirection.X) < MathHelper.ToRadians(120) || Math.Atan2(playerDirection.Y, playerDirection.X) > MathHelper.ToRadians(150) || Math.Atan2(playerDirection.Y, playerDirection.X) < MathHelper.ToRadians(-150) || Math.Atan2(playerDirection.Y, playerDirection.X) < MathHelper.ToRadians(-60) && Math.Atan2(playerDirection.Y, playerDirection.X) > MathHelper.ToRadians(-120))
                             {
                                 if (circlingTime % 8 == 0 && Main.netMode != NetmodeID.MultiplayerClient)
                                 {
@@ -714,7 +714,7 @@ namespace Paracosm.Content.Bosses
                         {
                             NPC.Center = player.MountedCenter + new Vector2(0, -450).RotatedBy(circlingTime / 9);
                             circlingTime++;
-                            if ((Math.Atan2(playerDirection.Y, playerDirection.X) > MathHelper.ToRadians(-30) && Math.Atan2(playerDirection.Y, playerDirection.X) < MathHelper.ToRadians(30)) || (Math.Atan2(playerDirection.Y, playerDirection.X) > MathHelper.ToRadians(60) && Math.Atan2(playerDirection.Y, playerDirection.X) < MathHelper.ToRadians(120)) || (Math.Atan2(playerDirection.Y, playerDirection.X) > MathHelper.ToRadians(150) || Math.Atan2(playerDirection.Y, playerDirection.X) < MathHelper.ToRadians(-150)) || (Math.Atan2(playerDirection.Y, playerDirection.X) < MathHelper.ToRadians(-60) && Math.Atan2(playerDirection.Y, playerDirection.X) > MathHelper.ToRadians(-120)))
+                            if (Math.Atan2(playerDirection.Y, playerDirection.X) > MathHelper.ToRadians(-30) && Math.Atan2(playerDirection.Y, playerDirection.X) < MathHelper.ToRadians(30) || Math.Atan2(playerDirection.Y, playerDirection.X) > MathHelper.ToRadians(60) && Math.Atan2(playerDirection.Y, playerDirection.X) < MathHelper.ToRadians(120) || Math.Atan2(playerDirection.Y, playerDirection.X) > MathHelper.ToRadians(150) || Math.Atan2(playerDirection.Y, playerDirection.X) < MathHelper.ToRadians(-150) || Math.Atan2(playerDirection.Y, playerDirection.X) < MathHelper.ToRadians(-60) && Math.Atan2(playerDirection.Y, playerDirection.X) > MathHelper.ToRadians(-120))
                             {
                                 if (circlingTime % 6 == 0 && Main.netMode != NetmodeID.MultiplayerClient)
                                 {
@@ -1017,7 +1017,7 @@ namespace Paracosm.Content.Bosses
             Vector2 drawOrigin = new Vector2(texture.Width * 0.5f, NPC.height * 0.5f);
             for (int k = 0; k < NPC.oldPos.Length; k++)
             {
-                Vector2 drawPos = (NPC.oldPos[k] - Main.screenPosition) + drawOrigin + new Vector2(0f, NPC.gfxOffY);
+                Vector2 drawPos = NPC.oldPos[k] - Main.screenPosition + drawOrigin + new Vector2(0f, NPC.gfxOffY);
                 Color color = NPC.GetAlpha(drawColor) * ((NPC.oldPos.Length - k) / (float)NPC.oldPos.Length);
                 Main.EntitySpriteDraw(texture, drawPos, null, color, NPC.rotation, drawOrigin, NPC.scale, SpriteEffects.None, 0);
             }

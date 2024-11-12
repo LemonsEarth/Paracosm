@@ -11,7 +11,7 @@ using Newtonsoft.Json.Linq;
 using System.IO;
 using Terraria.Audio;
 
-namespace Paracosm.Content.Bosses
+namespace Paracosm.Content.Bosses.InfectedRevenant
 {
     public class InfectedRevenantWings : ModNPC
     {
@@ -74,7 +74,7 @@ namespace Paracosm.Content.Bosses
         public override void AI()
         {
             NPC bodyNPC = Main.npc[ParentIndex];
-            if (Main.netMode != NetmodeID.MultiplayerClient && (Main.npc[(int)ParentIndex] == null || !Main.npc[(int)ParentIndex].active || Main.npc[(int)ParentIndex].type != BodyType()))
+            if (Main.netMode != NetmodeID.MultiplayerClient && (Main.npc[ParentIndex] == null || !Main.npc[ParentIndex].active || Main.npc[ParentIndex].type != BodyType()))
             {
                 NPC.active = false;
                 NPC.life = 0;

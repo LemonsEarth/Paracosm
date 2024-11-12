@@ -26,7 +26,7 @@ using System.IO;
 using Terraria.Graphics.Shaders;
 
 
-namespace Paracosm.Content.Bosses
+namespace Paracosm.Content.Bosses.SolarChampion
 {
     [AutoloadBossHead]
     public class SolarChampion : ModNPC
@@ -214,7 +214,7 @@ namespace Paracosm.Content.Bosses
             {
                 p.solarMonolithShader = true;
             }
-            playerDirection = (player.Center - NPC.Center);
+            playerDirection = player.Center - NPC.Center;
 
             if (player.dead || !player.active || NPC.Center.Distance(player.MountedCenter) > 8000)
             {
@@ -230,14 +230,14 @@ namespace Paracosm.Content.Bosses
             {
                 NPC.dontTakeDamage = true;
                 NPC.velocity = new Vector2(0, -2);
-                NPC.Opacity += (1f / 60f);
+                NPC.Opacity += 1f / 60f;
                 AITimer++;
                 Attack = -1;
                 return;
             }
             NPC.dontTakeDamage = false;
 
-            if (NPC.life <= (NPC.lifeMax / 2) && !phase2FirstTime)
+            if (NPC.life <= NPC.lifeMax / 2 && !phase2FirstTime)
             {
                 phase2FirstTime = true;
                 phase = 2;
@@ -248,11 +248,11 @@ namespace Paracosm.Content.Bosses
 
             if (NPC.velocity.Length() > 10)
             {
-                NPC.rotation = Utils.AngleLerp(NPC.rotation, playerDirection.X * MathHelper.ToRadians(30), MathHelper.ToRadians(1));
+                NPC.rotation = NPC.rotation.AngleLerp(playerDirection.X * MathHelper.ToRadians(30), MathHelper.ToRadians(1));
             }
             else
             {
-                NPC.rotation = Utils.AngleLerp(NPC.rotation, 0, MathHelper.ToRadians(3));
+                NPC.rotation = NPC.rotation.AngleLerp(0, MathHelper.ToRadians(3));
             }
 
             if (attackDuration <= 0)
@@ -438,7 +438,7 @@ namespace Paracosm.Content.Bosses
         {
             float XaccelMod = Math.Sign(playerDirection.X) - Math.Sign(NPC.velocity.X);
             float YaccelMod = Math.Sign(playerDirection.Y) - Math.Sign(NPC.velocity.Y);
-            NPC.velocity += new Vector2((XaccelMod * 0.04f) + 0.02f * Math.Sign(playerDirection.X), (YaccelMod * 0.04f) + 0.02f * Math.Sign(playerDirection.Y));
+            NPC.velocity += new Vector2(XaccelMod * 0.04f + 0.02f * Math.Sign(playerDirection.X), YaccelMod * 0.04f + 0.02f * Math.Sign(playerDirection.Y));
 
             if (Main.netMode != NetmodeID.MultiplayerClient)
             {
@@ -664,7 +664,7 @@ namespace Paracosm.Content.Bosses
         {
             float XaccelMod = Math.Sign(playerDirection.X) - Math.Sign(NPC.velocity.X);
             float YaccelMod = Math.Sign(playerDirection.Y) - Math.Sign(NPC.velocity.Y);
-            NPC.velocity += new Vector2((XaccelMod * 0.06f) + 0.02f * Math.Sign(playerDirection.X), (YaccelMod * 0.06f) + 0.02f * Math.Sign(playerDirection.Y));
+            NPC.velocity += new Vector2(XaccelMod * 0.06f + 0.02f * Math.Sign(playerDirection.X), YaccelMod * 0.06f + 0.02f * Math.Sign(playerDirection.Y));
 
             if (Main.netMode != NetmodeID.MultiplayerClient)
             {
@@ -744,7 +744,7 @@ namespace Paracosm.Content.Bosses
                     }
                     for (int i = 11; i < Axes.Count; i++)
                     {
-                        Vector2 pos = new Vector2(0, ((i % 11) + 1) * 150);
+                        Vector2 pos = new Vector2(0, (i % 11 + 1) * 150);
                         Axes[i].Center = Vector2.Lerp(Axes[i].Center, NPC.Center + pos, AttackTimer / 120f);
                     }
                     break;
@@ -756,7 +756,7 @@ namespace Paracosm.Content.Bosses
                     }
                     for (int i = 11; i < Axes.Count; i++)
                     {
-                        Vector2 pos = new Vector2(0, ((i % 11) + 1) * 150);
+                        Vector2 pos = new Vector2(0, (i % 11 + 1) * 150);
                         Axes[i].Center = NPC.Center + pos.RotatedBy(MathHelper.ToRadians(-AttackTimer2 * (1 + AttackCount)));
                     }
                     if (AttackTimer2 % 90 == 0)

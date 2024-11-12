@@ -23,11 +23,11 @@ using Terraria.Chat;
 using Terraria.Localization;
 using System.Threading;
 
-namespace Paracosm.Content.Bosses
+namespace Paracosm.Content.Bosses.InfectedRevenant
 {
     public class InfectedRevenantCorruptHead : ModNPC
     {
-        private const string NeckTexturePath = "Paracosm/Content/Bosses/InfectedRevenantCorruptNeck";
+        private const string NeckTexturePath = "Paracosm/Content/Bosses/InfectedRevenant/InfectedRevenantCorruptNeck";
         private static Asset<Texture2D> NeckTexture;
 
         public int ParentIndex
@@ -154,7 +154,7 @@ namespace Paracosm.Content.Bosses
         public override void AI()
         {
             NPC bodyNPC = Main.npc[ParentIndex];
-            if (Main.netMode != NetmodeID.MultiplayerClient && (Main.npc[(int)ParentIndex] == null || !Main.npc[(int)ParentIndex].active || Main.npc[(int)ParentIndex].type != BodyType()))
+            if (Main.netMode != NetmodeID.MultiplayerClient && (Main.npc[ParentIndex] == null || !Main.npc[ParentIndex].active || Main.npc[ParentIndex].type != BodyType()))
             {
                 NPC.active = false;
                 NPC.life = 0;
@@ -176,12 +176,12 @@ namespace Paracosm.Content.Bosses
             {
                 if (body.transitionDuration > 150)
                 {
-                    NPC.velocity = ((defaultHeadPos + new Vector2(0, 20)) - NPC.Center).SafeNormalize(Vector2.Zero) * (NPC.Center.Distance(defaultHeadPos + new Vector2(0, 20)) / 36);
+                    NPC.velocity = (defaultHeadPos + new Vector2(0, 20) - NPC.Center).SafeNormalize(Vector2.Zero) * (NPC.Center.Distance(defaultHeadPos + new Vector2(0, 20)) / 36);
                     AttackTimer = 60;
                 }
                 else
                 {
-                    NPC.velocity = ((defaultHeadPos - new Vector2(0, 20)) - NPC.Center).SafeNormalize(Vector2.Zero) * (NPC.Center.Distance(defaultHeadPos - new Vector2(0, 20)) / 12);
+                    NPC.velocity = (defaultHeadPos - new Vector2(0, 20) - NPC.Center).SafeNormalize(Vector2.Zero) * (NPC.Center.Distance(defaultHeadPos - new Vector2(0, 20)) / 12);
                     AttackTimer = 20;
                 }
                 return;
@@ -370,7 +370,7 @@ namespace Paracosm.Content.Bosses
                 {
                     for (int i = -1; i < 2; i += 2)
                     {
-                        var proj = Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), body.NPC.Center + new Vector2(i * 1200, 1200 - (AttackCount * 30)), Vector2.Zero, ModContent.ProjectileType<CursedSpiritFlame>(), (int)(NPC.damage * 0.8f), 1, ai0: 5, ai1: -i, ai2: 0);
+                        var proj = Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), body.NPC.Center + new Vector2(i * 1200, 1200 - AttackCount * 30), Vector2.Zero, ModContent.ProjectileType<CursedSpiritFlame>(), (int)(NPC.damage * 0.8f), 1, ai0: 5, ai1: -i, ai2: 0);
                         CursedSpiritFlame CursedSpiritFlame = (CursedSpiritFlame)proj.ModProjectile;
                         CursedSpiritFlame.speed = 40;
                     }
@@ -485,7 +485,7 @@ namespace Paracosm.Content.Bosses
                 {
                     if (Main.netMode != NetmodeID.MultiplayerClient)
                     {
-                        var proj = Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center, (body.player.MountedCenter - NPC.Center).SafeNormalize(Vector2.Zero) * 8, ModContent.ProjectileType<CursedSpiritFlame>(), (int)(NPC.damage * 0.8f), 1, ai0: 60 - (AttackCount * cursedSpiritCD), ai1: body.player.MountedCenter.X - NPC.Center.X, ai2: body.player.MountedCenter.Y - NPC.Center.Y);
+                        var proj = Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center, (body.player.MountedCenter - NPC.Center).SafeNormalize(Vector2.Zero) * 8, ModContent.ProjectileType<CursedSpiritFlame>(), (int)(NPC.damage * 0.8f), 1, ai0: 60 - AttackCount * cursedSpiritCD, ai1: body.player.MountedCenter.X - NPC.Center.X, ai2: body.player.MountedCenter.Y - NPC.Center.Y);
                         CursedSpiritFlame CursedSpiritFlame = (CursedSpiritFlame)proj.ModProjectile;
                         CursedSpiritFlame.speed = 60;
                         AttackCount++;
@@ -655,7 +655,7 @@ namespace Paracosm.Content.Bosses
                 distanceLeft = drawPosition.Distance(NPC.Center);
                 drawnSegments++;
                 distanceLeft -= segmentHeight;
-                spriteBatch.Draw(NeckTexture.Value, drawPosition - screenPos, null, new Color(255 - (drawnSegments * 10), 255 - (drawnSegments * 10), 255 - (drawnSegments * 10), 255 - NPC.alpha), rotation, new Vector2(NeckTexture.Value.Width / 2f, NeckTexture.Value.Height / 2f), 1f, SpriteEffects.None, 0f);
+                spriteBatch.Draw(NeckTexture.Value, drawPosition - screenPos, null, new Color(255 - drawnSegments * 10, 255 - drawnSegments * 10, 255 - drawnSegments * 10, 255 - NPC.alpha), rotation, new Vector2(NeckTexture.Value.Width / 2f, NeckTexture.Value.Height / 2f), 1f, SpriteEffects.None, 0f);
             }
             Utils.DrawLaser(spriteBatch, NeckTexture.Value, body.CorruptHeadPos, body.CrimsonHeadPos, new Vector2(1, 1), new Utils.LaserLineFraming(DelegateMethods.RainbowLaserDraw));
 

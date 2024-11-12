@@ -2,8 +2,8 @@
 using Terraria.ID;
 using Terraria.ModLoader;
 using Microsoft.Xna.Framework;
-using Paracosm.Content.Bosses;
 using Terraria.Audio;
+using Paracosm.Content.Bosses.DivineSeeker;
 
 namespace Paracosm.Content.Items.Consumables
 {

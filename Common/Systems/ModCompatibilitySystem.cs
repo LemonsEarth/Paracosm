@@ -1,6 +1,5 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
-using Paracosm.Content.Bosses;
 using Paracosm.Content.Items.Consumables;
 using System;
 using System.Collections.Generic;
@@ -9,6 +8,8 @@ using Terraria;
 using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
+using Paracosm.Content.Bosses.DivineSeeker;
+using Paracosm.Content.Bosses.InfectedRevenant;
 
 namespace Paracosm.Common.Systems
 {

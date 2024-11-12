@@ -411,6 +411,11 @@ Items: {
 		Tooltip: Cat hat for the Roy Boy
 		DisplayName: Cat Hat
 	}
+
+	HorizonSplitter: {
+		DisplayName: Horizon Splitter
+		Tooltip: ""
+	}
 }
 
 Projectiles: {
@@ -457,6 +462,7 @@ Projectiles: {
 	SolarFireball.DisplayName: Solar Fireball
 	SolarSphere.DisplayName: Solar Sphere
 	SolarAxe.DisplayName: Solar Axe
+	HorizonSplitterProj.DisplayName: Horizon Splitter Proj
 }
 
 NPCs: {

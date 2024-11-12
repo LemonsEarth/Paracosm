@@ -26,7 +26,7 @@ using Paracosm.Content.Items.Weapons.Magic;
 using Paracosm.Content.Items.Weapons.Ranged;
 using Paracosm.Content.Items.Weapons.Summon;
 
-namespace Paracosm.Content.Bosses
+namespace Paracosm.Content.Bosses.InfectedRevenant
 {
     [AutoloadBossHead]
     public class InfectedRevenantBody : ModNPC
@@ -186,7 +186,7 @@ namespace Paracosm.Content.Bosses
             playerDirection = (player.MountedCenter - NPC.Center).SafeNormalize(Vector2.Zero);
 
 
-            if (NPC.life > (NPC.lifeMax * 0.66f))
+            if (NPC.life > NPC.lifeMax * 0.66f)
             {
                 phase = 1;
             }
@@ -313,7 +313,7 @@ namespace Paracosm.Content.Bosses
                     SoundEngine.PlaySound(SoundID.DD2_BetsyFireballShot with { MaxInstances = 1, Pitch = -0.1f }, NPC.Center);
                     break;
                 case > 540:
-                    NPC.velocity = ((player.MountedCenter - new Vector2(0, 800)) - NPC.Center).SafeNormalize(Vector2.Zero) * (NPC.Center.Distance(player.MountedCenter - new Vector2(0, 800)) / 5);
+                    NPC.velocity = (player.MountedCenter - new Vector2(0, 800) - NPC.Center).SafeNormalize(Vector2.Zero) * (NPC.Center.Distance(player.MountedCenter - new Vector2(0, 800)) / 5);
                     if (NPC.alpha < 255)
                     {
                         NPC.alpha += 7;
@@ -321,7 +321,7 @@ namespace Paracosm.Content.Bosses
                     break;
                 case > 180:
                     NPC.dontTakeDamage = true;
-                    NPC.velocity = ((arenaCenter - new Vector2(0, 1400)) - NPC.Center).SafeNormalize(Vector2.Zero) * (NPC.Center.Distance(arenaCenter - new Vector2(0, 1400)) / 5);
+                    NPC.velocity = (arenaCenter - new Vector2(0, 1400) - NPC.Center).SafeNormalize(Vector2.Zero) * (NPC.Center.Distance(arenaCenter - new Vector2(0, 1400)) / 5);
                     if (AttackTimer == 0)
                     {
                         if (Main.netMode != NetmodeID.MultiplayerClient)
@@ -348,7 +348,7 @@ namespace Paracosm.Content.Bosses
                     SoundEngine.PlaySound(SoundID.Roar with { MaxInstances = 2, Pitch = -1f }, NPC.Center);
                     SoundEngine.PlaySound(SoundID.NPCDeath62 with { MaxInstances = 2, Pitch = -0.5f }, NPC.Center);
                     NPC.dontTakeDamage = false;
-                    NPC.velocity = ((arenaCenter - new Vector2(0, 1400)) - NPC.Center).SafeNormalize(Vector2.Zero) * (NPC.Center.Distance(arenaCenter - new Vector2(0, 1400)) / 5);
+                    NPC.velocity = (arenaCenter - new Vector2(0, 1400) - NPC.Center).SafeNormalize(Vector2.Zero) * (NPC.Center.Distance(arenaCenter - new Vector2(0, 1400)) / 5);
                     break;
                 case > 170:
                     NPC.alpha = 0;
