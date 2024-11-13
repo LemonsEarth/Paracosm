@@ -224,11 +224,7 @@ Items: {
 
 	DemonCoin: {
 		DisplayName: Demon Coin
-		Tooltip:
-			'''
-			Increases damage dealt based on missing health
-			Increases damage taken based on missing health
-			'''
+		Tooltip: ""
 	}
 
 	Nightslash: {
@@ -416,6 +412,15 @@ Items: {
 		DisplayName: Horizon Splitter
 		Tooltip: ""
 	}
+
+	ChallengersSeal: {
+		DisplayName: Challenger's Seal
+		Tooltip:
+			'''
+			Not Consumable
+			Initiate a challenge towards the late Champion of the Celestial Colosseum
+			'''
+	}
 }
 
 Projectiles: {
@@ -469,11 +474,19 @@ NPCs: {
 	DivineSeeker: {
 		DisplayName: Divine Seeker
 		BossChecklistCompatibility.SpawnInfo: Use a [i:Paracosm/CosmicDust] at night
+		Bestiary: A monster who arrived from a different world. Though feral in nature, it possesses high intelligence, suggesting its arrival was not without purpose.
 	}
 
 	InfectedRevenantBody: {
 		DisplayName: Infected Revenant
 		BossChecklistCompatibility.SpawnInfo: Use a [i:Paracosm/AncientCallingHorn] at night in the Corruption or Crimson
+		Bestiary: The infected remains of an ancient dragon, who cast aside his flesh to traverse a different realm.
+	}
+
+	SolarChampion: {
+		DisplayName: Solar Champion
+		BossChecklistCompatibility.SpawnInfo: Use a [i:Paracosm/ChallengersSeal]
+		Bestiary: The Legend of the Celestial Colosseum, this fallen warrior fought hundreds of foes thoughout his life and lost only once, now twice.
 	}
 
 	Wanderer.DisplayName: Wanderer
@@ -481,7 +494,6 @@ NPCs: {
 	InfectedRevenantCorruptHead.DisplayName: Infected Revenant
 	InfectedRevenantCrimsonHead.DisplayName: Infected Revenant
 	InfectedRevenantWings.DisplayName: ""
-	SolarChampion.DisplayName: Solar Champion
 }
 
 Buffs: {
@@ -518,6 +530,11 @@ Buffs: {
 	CorruptDragonBuff: {
 		DisplayName: Corrupt Dragon Buff
 		Description: The baby Corrupt Dragon stays by your side
+	}
+
+	SolarBurn: {
+		DisplayName: Solar Burn
+		Description: You feel like you are touching the sun
 	}
 }
 

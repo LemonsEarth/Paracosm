@@ -1,13 +1,9 @@
-﻿using Terraria;
-using Terraria.ID;
-using Terraria.ModLoader;
-using Microsoft.Xna.Framework;
-using Terraria.GameContent.ItemDropRules;
-using Paracosm.Content.Items.Materials;
-using Paracosm.Content.Items.Weapons;
-using Paracosm.Content.Projectiles;
-using Terraria.Localization;
+﻿using Microsoft.Xna.Framework;
 using System;
+using Terraria;
+using Terraria.ID;
+using Terraria.Localization;
+using Terraria.ModLoader;
 
 namespace Paracosm.Content.Items.Armor
 {
@@ -42,7 +38,6 @@ namespace Paracosm.Content.Items.Armor
         {
             player.GetDamage(DamageClass.Generic) += damageBoost / 100;
             player.maxMinions += maxMinionBoost;
-            player.GetModPlayer<WindWarriorHeadgearPlayer>().WindWarriorHeadgear = true;
         }
 
         public override bool IsArmorSet(Item head, Item body, Item legs)
@@ -71,24 +66,6 @@ namespace Paracosm.Content.Items.Armor
             recipe2.AddIngredient(ItemID.PalladiumBar, 5);
             recipe2.AddTile(TileID.MythrilAnvil);
             recipe2.Register();
-        }
-    }
-
-    public class WindWarriorHeadgearPlayer : ModPlayer
-    {
-        public bool WindWarriorHeadgear = false;
-
-        public override void ResetEffects()
-        {
-            WindWarriorHeadgear = false;
-        }
-
-        public override void PostUpdateEquips()
-        {
-            if (WindWarriorHeadgear == false)
-            {
-                return;
-            }
         }
     }
 }

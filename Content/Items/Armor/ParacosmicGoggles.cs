@@ -1,13 +1,9 @@
-﻿using Terraria;
-using Terraria.ID;
-using Terraria.ModLoader;
-using Microsoft.Xna.Framework;
-using Terraria.GameContent.ItemDropRules;
+﻿using Paracosm.Common.Players;
 using Paracosm.Content.Items.Materials;
-using Paracosm.Content.Items.Weapons;
-using Paracosm.Content.Projectiles;
+using Terraria;
+using Terraria.ID;
 using Terraria.Localization;
-using Paracosm.Content.Buffs;
+using Terraria.ModLoader;
 
 namespace Paracosm.Content.Items.Armor
 {
@@ -25,7 +21,7 @@ namespace Paracosm.Content.Items.Armor
 
         static readonly float setBonusDamage = 20;
         static readonly float setBonusManaUsage = 40;
-        
+
 
         public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(damageMSBoost, minionBoost);
         public static LocalizedText setBonusText;
@@ -33,7 +29,7 @@ namespace Paracosm.Content.Items.Armor
         public override void SetStaticDefaults()
         {
             ArmorIDs.Head.Sets.DrawFullHair[Item.headSlot] = true;
-            setBonusText = this.GetLocalization("SetBonus").WithFormatArgs(setBonusMSDamage, setBonusMagicCrit, setBonusMana, setBonusMinionBoost, setBonusSentryBoost ,setBonusDamage, setBonusManaUsage);
+            setBonusText = this.GetLocalization("SetBonus").WithFormatArgs(setBonusMSDamage, setBonusMagicCrit, setBonusMana, setBonusMinionBoost, setBonusSentryBoost, setBonusDamage, setBonusManaUsage);
         }
 
         public override void SetDefaults()
@@ -51,7 +47,7 @@ namespace Paracosm.Content.Items.Armor
             player.GetDamage(DamageClass.Summon) += damageMSBoost / 100;
             player.maxMinions += minionBoost;
 
-            player.GetModPlayer<ParacosmicGogglesPlayer>().paracosmicGoggles = true;
+            player.GetModPlayer<ParacosmPlayer>().paracosmicGoggles = true;
         }
 
         public override bool IsArmorSet(Item head, Item body, Item legs)
@@ -61,7 +57,7 @@ namespace Paracosm.Content.Items.Armor
 
         public override void UpdateArmorSet(Player player)
         {
-            player.GetModPlayer<ParacosmicGogglesPlayer>().paracosmicGogglesSet = true;
+            player.GetModPlayer<ParacosmPlayer>().paracosmicGogglesSet = true;
             player.setBonus = setBonusText.Value;
             player.GetDamage(DamageClass.Magic) += setBonusMSDamage / 100;
             player.GetDamage(DamageClass.Summon) += setBonusMSDamage / 100;
@@ -79,40 +75,6 @@ namespace Paracosm.Content.Items.Armor
             recipe.AddIngredient(ItemID.HallowedBar, 10);
             recipe.AddTile(TileID.MythrilAnvil);
             recipe.Register();
-        }
-    }
-
-    public class ParacosmicGogglesPlayer : ModPlayer
-    {
-        public bool paracosmicGoggles = false;
-        public bool paracosmicGogglesSet = false;
-
-        public override void ResetEffects()
-        {
-            paracosmicGoggles = false;
-            paracosmicGogglesSet = false;
-        }
-
-        public override void PostUpdateEquips()
-        {
-            if (paracosmicGoggles == false)
-            {
-                return;
-            }
-
-            if (paracosmicGogglesSet == false)
-            {
-                return;
-            }
-            if (Player.statLife <= (Player.statLifeMax2 / 2))
-            {
-                Player.AddBuff(ModContent.BuffType<ParacosmicGogglesBuff>(), 10);
-            }
-
-            if (Player.statLife > (Player.statLifeMax2 / 2))
-            {
-                Player.ClearBuff(ModContent.BuffType<ParacosmicGogglesBuff>());
-            }
         }
     }
 }

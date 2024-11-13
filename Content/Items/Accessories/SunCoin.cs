@@ -1,15 +1,9 @@
-﻿using Terraria;
-using Terraria.ID;
-using Terraria.ModLoader;
-using Microsoft.Xna.Framework;
-using Terraria.GameContent.ItemDropRules;
-using Paracosm.Content.Items.Materials;
-using Paracosm.Content.Items.Weapons;
-using Paracosm.Content.Projectiles;
-using Terraria.Localization;
+﻿using Paracosm.Common.Players;
+using Terraria;
 using Terraria.DataStructures;
-using System;
-using Terraria.WorldBuilding;
+using Terraria.ID;
+using Terraria.Localization;
+using Terraria.ModLoader;
 
 namespace Paracosm.Content.Items.Accessories
 {
@@ -34,38 +28,7 @@ namespace Paracosm.Content.Items.Accessories
 
         public override void UpdateAccessory(Player player, bool hideVisual)
         {
-            player.GetModPlayer<SunCoinPlayer>().sunCoin = true;
-        }
-
-    }
-    public class SunCoinPlayer : ModPlayer
-    {
-        public bool sunCoin = false;
-
-        public override void ResetEffects()
-        {
-            sunCoin = false;
-        }
-
-        public override void PostUpdateEquips()
-        {
-            if (sunCoin == false)
-            {
-                return;
-            }
-
-            Player.AddBuff(BuffID.Sunflower, 10);
-        }
-    }
-
-    public class MerchantShop : GlobalNPC
-    {
-        public override void ModifyShop(NPCShop shop)
-        {
-            if (shop.NpcType == NPCID.Merchant)
-            {
-                shop.Add(ModContent.ItemType<SunCoin>());
-            }
+            player.GetModPlayer<ParacosmPlayer>().sunCoin = true;
         }
     }
 }

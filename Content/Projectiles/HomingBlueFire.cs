@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Media;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Paracosm.Common.Utils;
 using Terraria;
 using Terraria.Audio;
@@ -38,7 +32,7 @@ namespace Paracosm.Content.Projectiles
 
         public override void OnSpawn(IEntitySource source)
         {
-            
+
         }
 
         public override void AI()

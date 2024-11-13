@@ -1,10 +1,8 @@
-﻿using Terraria;
+﻿using Microsoft.Xna.Framework;
+using Terraria;
+using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Microsoft.Xna.Framework;
-using Terraria.DataStructures;
-using Paracosm.Content.Projectiles;
-using System.Collections.Generic;
 
 namespace Paracosm.Content.Items.Weapons.Magic
 {

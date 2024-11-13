@@ -1,17 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Media;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework;
 using Paracosm.Common.Utils;
-using Paracosm.Content.Buffs;
 using Terraria;
-using Terraria.Audio;
-using Terraria.DataStructures;
-using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -75,7 +64,7 @@ namespace Paracosm.Content.Projectiles
                         }
                         closestEnemy = LemonUtils.GetClosestNPC(Projectile);
                         RandomRot = Main.rand.Next(-15, 15);
-                        Projectile.NewProjectile(Projectile.GetSource_Death(), Projectile.Center, Projectile.Center.DirectionTo(closestEnemy.Center).RotatedBy(MathHelper.ToRadians(RandomRot)) * 16, ProjectileID.HallowStar, Projectile.damage, 1f); 
+                        Projectile.NewProjectile(Projectile.GetSource_Death(), Projectile.Center, Projectile.Center.DirectionTo(closestEnemy.Center).RotatedBy(MathHelper.ToRadians(RandomRot)) * 16, ProjectileID.HallowStar, Projectile.damage, 1f);
                         Projectile.netUpdate = true;
                     }
                 }

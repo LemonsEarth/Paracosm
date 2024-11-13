@@ -1,12 +1,8 @@
-﻿using Terraria;
+﻿using Paracosm.Content.Items.Materials;
+using Paracosm.Content.Tiles;
+using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Microsoft.Xna.Framework;
-using Terraria.DataStructures;
-using Paracosm.Content.Projectiles;
-using System.Collections.Generic;
-using Paracosm.Content.Tiles;
-using Paracosm.Content.Items.Materials;
 
 namespace Paracosm.Content.Items.Placeable
 {

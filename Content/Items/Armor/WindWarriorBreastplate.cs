@@ -1,12 +1,8 @@
-﻿using Terraria;
+﻿using Paracosm.Common.Players;
+using Terraria;
 using Terraria.ID;
-using Terraria.ModLoader;
-using Microsoft.Xna.Framework;
-using Terraria.GameContent.ItemDropRules;
-using Paracosm.Content.Items.Materials;
-using Paracosm.Content.Items.Weapons;
-using Paracosm.Content.Projectiles;
 using Terraria.Localization;
+using Terraria.ModLoader;
 
 namespace Paracosm.Content.Items.Armor
 {
@@ -31,7 +27,7 @@ namespace Paracosm.Content.Items.Armor
         {
             player.GetDamage(DamageClass.Generic) += damageBoost / 100;
             player.manaCost -= manaCostReduction / 100;
-            player.GetModPlayer<WindWarriorBreastplatePlayer>().WindWarriorBreastplate = true;
+            player.GetModPlayer<ParacosmPlayer>().windWarriorBreastplate = true;
         }
 
         public override void AddRecipes()
@@ -49,26 +45,6 @@ namespace Paracosm.Content.Items.Armor
             recipe2.AddIngredient(ItemID.PalladiumBar, 12);
             recipe2.AddTile(TileID.MythrilAnvil);
             recipe2.Register();
-        }
-    }
-
-    public class WindWarriorBreastplatePlayer : ModPlayer
-    {
-        public bool WindWarriorBreastplate = false;
-
-        public override void ResetEffects()
-        {
-            WindWarriorBreastplate = false;
-        }
-
-        public override void PostUpdateEquips()
-        {
-            if (WindWarriorBreastplate == false)
-            {
-                return;
-            }
-
-            Player.wingTimeMax += Player.wingTimeMax / 2;
         }
     }
 }

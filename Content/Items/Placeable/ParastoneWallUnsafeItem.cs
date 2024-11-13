@@ -1,7 +1,7 @@
-﻿using Terraria;
+﻿using Paracosm.Content.Walls;
+using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Paracosm.Content.Walls;
 
 namespace Paracosm.Content.Items.Placeable
 {

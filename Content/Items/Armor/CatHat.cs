@@ -1,14 +1,6 @@
 ﻿using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Microsoft.Xna.Framework;
-using Terraria.GameContent.ItemDropRules;
-using Paracosm.Content.Items.Materials;
-using Paracosm.Content.Items.Weapons;
-using Paracosm.Content.Projectiles;
-using Terraria.Localization;
-using Paracosm.Content.Buffs;
-using Microsoft.Xna.Framework.Graphics;
 
 namespace Paracosm.Content.Items.Armor
 {

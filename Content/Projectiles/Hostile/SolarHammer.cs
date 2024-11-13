@@ -1,17 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Media;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework;
 using Paracosm.Content.Buffs;
+using System.IO;
 using Terraria;
 using Terraria.Audio;
-using Terraria.DataStructures;
-using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -71,7 +62,7 @@ namespace Paracosm.Content.Projectiles.Hostile
             if (AITimer == 0)
             {
                 Projectile.timeLeft = (int)TimeToReach;
-                Projectile.velocity = Projectile.Center.DirectionTo(TargetPosition) * (Projectile.Center.Distance(TargetPosition)/ TimeToReach);
+                Projectile.velocity = Projectile.Center.DirectionTo(TargetPosition) * (Projectile.Center.Distance(TargetPosition) / TimeToReach);
             }
             Projectile.rotation += MathHelper.ToRadians(Projectile.velocity.Length());
 
@@ -86,6 +77,11 @@ namespace Paracosm.Content.Projectiles.Hostile
             }
             AITimer++;
             Lighting.AddLight(Projectile.Center, 100, 80, 0);
+        }
+
+        public override void OnHitPlayer(Player target, Player.HurtInfo hurtInfo)
+        {
+            target.AddBuff(ModContent.BuffType<SolarBurn>(), 120);
         }
 
         public override void OnKill(int timeLeft)

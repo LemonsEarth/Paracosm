@@ -1,10 +1,10 @@
-﻿using Terraria;
+﻿using Microsoft.Xna.Framework;
+using Paracosm.Content.Items.Materials;
+using Paracosm.Content.Projectiles;
+using Terraria;
+using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Microsoft.Xna.Framework;
-using Paracosm.Content.Projectiles;
-using Terraria.DataStructures;
-using Paracosm.Content.Items.Materials;
 
 namespace Paracosm.Content.Items.Weapons.Melee
 {

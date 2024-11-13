@@ -1,16 +1,7 @@
-﻿using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework;
-using Paracosm.Content.Bosses;
-using Paracosm.Content.Items.Consumables;
-using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using Paracosm.Content.Items.Accessories;
 using Terraria;
-using Terraria.Localization;
-using Terraria.ModLoader;
-using Terraria.ModLoader.IO;
 using Terraria.ID;
-using Paracosm.Content.Items.Accessories;
+using Terraria.ModLoader;
 
 namespace Paracosm.Common.Systems
 {

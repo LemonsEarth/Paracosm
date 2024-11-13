@@ -1,13 +1,6 @@
-﻿using Paracosm.Content.Bosses;
-using Paracosm.Content.Items.Consumables;
-using Paracosm.Content.Tiles;
+﻿using Paracosm.Content.Tiles;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using Terraria;
-using Terraria.Localization;
 using Terraria.ModLoader;
-using Terraria.ModLoader.IO;
 
 namespace Paracosm.Common.Systems
 {

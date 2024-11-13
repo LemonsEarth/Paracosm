@@ -1,24 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using Terraria;
-using Terraria.ID;
-using Terraria.ModLoader;
-using Microsoft.Xna.Framework;
-using Terraria.Audio;
-using Paracosm.Content.Projectiles.Hostile;
-using Terraria.GameContent.ItemDropRules;
-using Paracosm.Content.Items.Materials;
-using Terraria.DataStructures;
-using Paracosm.Content.Items.BossBags;
-using Paracosm.Content.Projectiles;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Paracosm.Common.Systems;
-using Terraria.GameContent.Bestiary;
-using Paracosm.Content.Items.Weapons.Melee;
+using Paracosm.Content.Items.BossBags;
+using Paracosm.Content.Items.Materials;
 using Paracosm.Content.Items.Weapons.Magic;
+using Paracosm.Content.Items.Weapons.Melee;
 using Paracosm.Content.Items.Weapons.Ranged;
 using Paracosm.Content.Items.Weapons.Summon;
-using Microsoft.Xna.Framework.Graphics;
+using Paracosm.Content.Projectiles.Hostile;
+using System;
+using System.Collections.Generic;
+using Terraria;
+using Terraria.Audio;
+using Terraria.DataStructures;
 using Terraria.GameContent;
+using Terraria.GameContent.Bestiary;
+using Terraria.GameContent.ItemDropRules;
+using Terraria.ID;
+using Terraria.Localization;
+using Terraria.ModLoader;
 
 
 namespace Paracosm.Content.Bosses.DivineSeeker
@@ -86,7 +86,7 @@ namespace Paracosm.Content.Bosses.DivineSeeker
                 BestiaryDatabaseNPCsPopulator.CommonTags.SpawnConditions.Biomes.Surface,
                 BestiaryDatabaseNPCsPopulator.CommonTags.SpawnConditions.Times.NightTime,
                 new MoonLordPortraitBackgroundProviderBestiaryInfoElement(),
-                new FlavorTextBestiaryInfoElement("A monster who arrived from a different world. Though feral in nature, it possesses high intelligence, suggesting its arrival was not without purpose."),
+                new FlavorTextBestiaryInfoElement(Language.GetTextValue("Mods.Paracosm.NPCs.DivineSeeker.Bestiary")),
             });
         }
 
@@ -963,6 +963,7 @@ namespace Paracosm.Content.Bosses.DivineSeeker
 
 
         }
+
         public override void FindFrame(int frameHeight)
         {
             int frameDur = 10;
@@ -1012,14 +1013,14 @@ namespace Paracosm.Content.Bosses.DivineSeeker
                 return true;
             }
             Texture2D texture = TextureAssets.Npc[Type].Value;
+            Rectangle drawRect = texture.Frame(1, Main.npcFrameCount[Type], 0, 0);
 
-            // Redraw the projectile with the color not influenced by light
             Vector2 drawOrigin = new Vector2(texture.Width * 0.5f, NPC.height * 0.5f);
             for (int k = 0; k < NPC.oldPos.Length; k++)
             {
                 Vector2 drawPos = NPC.oldPos[k] - Main.screenPosition + drawOrigin + new Vector2(0f, NPC.gfxOffY);
                 Color color = NPC.GetAlpha(drawColor) * ((NPC.oldPos.Length - k) / (float)NPC.oldPos.Length);
-                Main.EntitySpriteDraw(texture, drawPos, null, color, NPC.rotation, drawOrigin, NPC.scale, SpriteEffects.None, 0);
+                Main.EntitySpriteDraw(texture, drawPos, drawRect, color, NPC.rotation, drawOrigin, NPC.scale, SpriteEffects.None, 0);
             }
             return true;
         }

@@ -1,15 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Media;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Paracosm.Content.Buffs;
 using Terraria;
 using Terraria.Audio;
-using Terraria.DataStructures;
 using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -19,6 +12,7 @@ namespace Paracosm.Content.Projectiles.Hostile
     public class SolarFireball : ModProjectile
     {
         ref float AITimer => ref Projectile.ai[0];
+        ref float Acceleration => ref Projectile.ai[1];
         public override void SetStaticDefaults()
         {
             Main.projFrames[Projectile.type] = 3;
@@ -38,6 +32,7 @@ namespace Paracosm.Content.Projectiles.Hostile
 
         }
 
+
         public override void AI()
         {
             if (Projectile.alpha > 0)
@@ -55,6 +50,11 @@ namespace Paracosm.Content.Projectiles.Hostile
             Lighting.AddLight(Projectile.Center, 100, 80, 0);
             Projectile.rotation = AITimer;
             AITimer++;
+            if (Acceleration > 0)
+            {
+                Projectile.velocity = Projectile.velocity.SafeNormalize(Vector2.Zero) * Acceleration;
+                Acceleration++;
+            }
 
             Projectile.frameCounter++;
             if (Projectile.frameCounter == 6)
@@ -66,6 +66,11 @@ namespace Paracosm.Content.Projectiles.Hostile
                     Projectile.frame = 0;
                 }
             }
+        }
+
+        public override void OnHitPlayer(Player target, Player.HurtInfo hurtInfo)
+        {
+            target.AddBuff(ModContent.BuffType<SolarBurn>(), 60);
         }
 
         public override bool PreDraw(ref Color lightColor)

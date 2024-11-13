@@ -59,7 +59,7 @@ namespace Paracosm.Content.Items.Weapons.Melee
                         {
                             Dust.NewDust(position, 2, 2, DustID.OrangeTorch, velocity.X, velocity.Y, Scale: 3f);
                         }
-                    }  
+                    }
                     damageBoost = 1;
                     useCounter++;
                 }

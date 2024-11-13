@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Media;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Paracosm.Content.Buffs;
 using Terraria;
@@ -35,12 +29,12 @@ namespace Paracosm.Content.Projectiles.Hostile
             Projectile.ignoreWater = true;
             Projectile.tileCollide = false;
             Projectile.timeLeft = 240;
-            
+
         }
 
         public override void OnSpawn(IEntitySource source)
         {
-            
+
         }
 
         public override void AI()

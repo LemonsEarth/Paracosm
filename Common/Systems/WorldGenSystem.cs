@@ -1,14 +1,13 @@
-﻿using System.Collections.Generic;
-using Terraria;
-using Terraria.ModLoader;
+﻿using Paracosm.Content.Tiles;
 using StructureHelper;
+using System.Collections.Generic;
+using Terraria;
 using Terraria.DataStructures;
-using Terraria.ID;
-using Terraria.WorldBuilding;
 using Terraria.GameContent.Generation;
+using Terraria.ID;
 using Terraria.IO;
-using Paracosm.Content.Tiles;
-using System;
+using Terraria.ModLoader;
+using Terraria.WorldBuilding;
 
 namespace Paracosm.Common.Systems
 {
@@ -190,7 +189,7 @@ namespace Paracosm.Common.Systems
                         Generator.GenerateMultistructureSpecific("Content/Structures/AbandonedArmory", point, Mod, index);
                     }
                 }
-            }           
+            }
         }
 
         public override void ModifyWorldGenTasks(List<GenPass> tasks, ref double totalWeight)

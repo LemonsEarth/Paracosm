@@ -1,13 +1,8 @@
-﻿using Terraria;
+﻿using Paracosm.Common.Players;
+using Terraria;
 using Terraria.ID;
-using Terraria.ModLoader;
-using Microsoft.Xna.Framework;
-using Terraria.GameContent.ItemDropRules;
-using Paracosm.Content.Items.Materials;
-using Paracosm.Content.Items.Weapons;
-using Paracosm.Content.Projectiles;
 using Terraria.Localization;
-using Microsoft.Build.Execution;
+using Terraria.ModLoader;
 
 namespace Paracosm.Content.Items.Accessories
 {
@@ -29,38 +24,7 @@ namespace Paracosm.Content.Items.Accessories
         public override void UpdateAccessory(Player player, bool hideVisual)
         {
             player.statLifeMax2 += player.statLifeMax2 / maxLifeBoost;
-            player.GetModPlayer<CorruptedDragonHeartPlayer>().corruptedDragonHeart = true;
-        }
-    }
-
-    public class CorruptedDragonHeartPlayer : ModPlayer
-    {
-        public bool corruptedDragonHeart = false;
-
-        public override void ResetEffects()
-        {
-            corruptedDragonHeart = false;
-        }
-
-        public override void PostUpdateEquips()
-        {
-            if (!corruptedDragonHeart)
-            {
-                return;
-            }
-
-            Player.buffImmune[BuffID.CursedInferno] = true;
-            Player.buffImmune[BuffID.Ichor] = true;
-        }
-
-        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
-        {
-            if (!corruptedDragonHeart)
-            {
-                return;
-            }
-            target.AddBuff(BuffID.CursedInferno, 180);
-            target.AddBuff(BuffID.Ichor, 180);
+            player.GetModPlayer<ParacosmPlayer>().corruptedDragonHeart = true;
         }
     }
 }

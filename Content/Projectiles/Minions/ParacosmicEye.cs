@@ -1,10 +1,7 @@
-﻿using Terraria;
+﻿using Microsoft.Xna.Framework;
+using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Microsoft.Xna.Framework;
-using Terraria.DataStructures;
-using Paracosm.Content.Projectiles;
-using rail;
 
 namespace Paracosm.Content.Projectiles.Minions
 {
@@ -161,7 +158,7 @@ namespace Paracosm.Content.Projectiles.Minions
                 if (attackTimer < 15)
                 {
                     if (randomPos != Vector2.Zero)
-                    Projectile.velocity = (randomPos - Projectile.Center).SafeNormalize(Vector2.Zero) * Projectile.Center.Distance(randomPos) / Main.rand.Next(15, 20);
+                        Projectile.velocity = (randomPos - Projectile.Center).SafeNormalize(Vector2.Zero) * Projectile.Center.Distance(randomPos) / Main.rand.Next(15, 20);
                 }
                 else if (attackTimer == 15)
                 {
@@ -170,7 +167,7 @@ namespace Paracosm.Content.Projectiles.Minions
                 else if (attackTimer > 15 && attackTimer < 30)
                 {
                     if (dashDirection != Vector2.Zero)
-                    Projectile.velocity = dashDirection * 40;
+                        Projectile.velocity = dashDirection * 40;
                 }
                 else
                 {

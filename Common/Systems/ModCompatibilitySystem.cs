@@ -1,15 +1,13 @@
-﻿using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Paracosm.Content.Bosses.DivineSeeker;
+using Paracosm.Content.Bosses.InfectedRevenant;
+using Paracosm.Content.Bosses.SolarChampion;
 using Paracosm.Content.Items.Consumables;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using Terraria;
 using Terraria.Localization;
 using Terraria.ModLoader;
-using Terraria.ModLoader.IO;
-using Paracosm.Content.Bosses.DivineSeeker;
-using Paracosm.Content.Bosses.InfectedRevenant;
 
 namespace Paracosm.Common.Systems
 {
@@ -84,6 +82,23 @@ namespace Paracosm.Common.Systems
             };
 
             BossChecklist.Call("LogBoss", Mod, internalName1, progression1, downed1, bossType1, additional1);
+
+            //Log SolarChampion
+            string internalName2 = "SolarChampion";
+            float progression2 = 18.1f; //Moon Lord - 18f
+            Func<bool> downed2 = () => DownedBossSystem.downedSolarChampion;
+            int bossType2 = ModContent.NPCType<SolarChampion>();
+
+            int spawnItemType2 = ModContent.ItemType<ChallengersSeal>();
+            LocalizedText spawnInfo2 = Language.GetText("Mods.Paracosm.NPCs.SolarChampion.BossChecklistCompatibility.SpawnInfo");
+
+            Dictionary<string, object> additional2 = new Dictionary<string, object>()
+            {
+                ["spawnItems"] = spawnItemType2,
+                ["spawnInfo"] = spawnInfo2
+            };
+
+            BossChecklist.Call("LogBoss", Mod, internalName2, progression2, downed2, bossType2, additional2);
         }
 
 

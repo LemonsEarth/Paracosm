@@ -1,27 +1,15 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Paracosm.Content.Projectiles.Hostile;
+using ReLogic.Content;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using Terraria;
+using Terraria.Audio;
+using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Microsoft.Xna.Framework;
-using Terraria.Audio;
-using Paracosm.Content.Projectiles.Hostile;
-using Terraria.GameContent.ItemDropRules;
-using Paracosm.Content.Items.Materials;
-using Terraria.DataStructures;
-using Paracosm.Content.Items.BossBags;
-using Paracosm.Content.Items.Weapons;
-using Paracosm.Content.Projectiles;
-using Paracosm.Common.Systems;
-using Terraria.GameContent.Bestiary;
-using Microsoft.Xna.Framework.Graphics;
-using ReLogic.Content;
-using Newtonsoft.Json.Linq;
-using System.IO;
-using Microsoft.Build.Tasks;
-using Terraria.Chat;
-using Terraria.Localization;
-using System.Threading;
 
 namespace Paracosm.Content.Bosses.InfectedRevenant
 {

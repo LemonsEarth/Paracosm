@@ -1,29 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using Terraria;
-using Terraria.ID;
-using Terraria.ModLoader;
-using Microsoft.Xna.Framework;
-using Terraria.Audio;
-using Paracosm.Common.Utils;
-using Terraria.GameContent.ItemDropRules;
-using Paracosm.Content.Items.Materials;
-using Terraria.DataStructures;
-using Paracosm.Content.Items.BossBags;
-using Paracosm.Content.Projectiles;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Paracosm.Common.Systems;
-using Terraria.GameContent.Bestiary;
-using Paracosm.Content.Items.Weapons.Melee;
+using Paracosm.Content.Buffs;
+using Paracosm.Content.Items.BossBags;
+using Paracosm.Content.Items.Materials;
 using Paracosm.Content.Items.Weapons.Magic;
+using Paracosm.Content.Items.Weapons.Melee;
 using Paracosm.Content.Items.Weapons.Ranged;
 using Paracosm.Content.Items.Weapons.Summon;
-using Microsoft.Xna.Framework.Graphics;
-using Terraria.GameContent;
 using Paracosm.Content.Projectiles.Hostile;
-using System.Linq;
-using Paracosm.Content.Buffs;
+using System;
+using System.Collections.Generic;
 using System.IO;
-using Terraria.Graphics.Shaders;
+using System.Linq;
+using Terraria;
+using Terraria.Audio;
+using Terraria.GameContent;
+using Terraria.GameContent.Bestiary;
+using Terraria.GameContent.ItemDropRules;
+using Terraria.ID;
+using Terraria.Localization;
+using Terraria.ModLoader;
 
 
 namespace Paracosm.Content.Bosses.SolarChampion
@@ -90,26 +87,21 @@ namespace Paracosm.Content.Bosses.SolarChampion
         {
             NPCID.Sets.SpecificDebuffImmunity[Type][BuffID.Confused] = true;
             NPCID.Sets.MPAllowedEnemies[Type] = true;
-            Main.npcFrameCount[NPC.type] = 1;
+            NPCID.Sets.TrailCacheLength[NPC.type] = 5;
+            NPCID.Sets.TrailingMode[NPC.type] = 3;
+            Main.npcFrameCount[NPC.type] = 3;
             NPCID.Sets.CantTakeLunchMoney[Type] = true;
             NPCID.Sets.DontDoHardmodeScaling[Type] = true;
             NPCID.Sets.BossBestiaryPriority.Add(Type);
-            /* NPCID.Sets.NPCBestiaryDrawModifiers drawMod = new NPCID.Sets.NPCBestiaryDrawModifiers()
-             {
-                 PortraitPositionYOverride = -15f,
-                 PortraitScale = 0.8f
-             };
-             NPCID.Sets.NPCBestiaryDrawOffset.Add(Type, drawMod);*/
         }
 
         public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
         {
             bestiaryEntry.Info.AddRange(new List<IBestiaryInfoElement>
             {
-                BestiaryDatabaseNPCsPopulator.CommonTags.SpawnConditions.Biomes.Surface,
-                BestiaryDatabaseNPCsPopulator.CommonTags.SpawnConditions.Times.NightTime,
+                BestiaryDatabaseNPCsPopulator.CommonTags.SpawnConditions.Biomes.SolarPillar,
                 new MoonLordPortraitBackgroundProviderBestiaryInfoElement(),
-                new FlavorTextBestiaryInfoElement("A monster who arrived from a different world. Though feral in nature, it possesses high intelligence, suggesting its arrival was not without purpose."),
+                new FlavorTextBestiaryInfoElement(Language.GetTextValue("Mods.Paracosm.NPCs.SolarChampion.Bestiary")),
             });
         }
 
@@ -117,14 +109,14 @@ namespace Paracosm.Content.Bosses.SolarChampion
         {
             NPC.boss = true;
             NPC.aiStyle = -1;
-            NPC.width = 100;
-            NPC.height = 100;
-            NPC.Opacity = 0;
+            NPC.width = 106;
+            NPC.height = 106;
+            NPC.Opacity = 1;
             NPC.lifeMax = 400000;
             NPC.defense = 100;
             NPC.damage = 20;
-            NPC.HitSound = SoundID.NPCHit1;
-            NPC.DeathSound = SoundID.NPCHit1;
+            NPC.HitSound = SoundID.NPCHit57;
+            NPC.DeathSound = SoundID.NPCHit57;
             NPC.value = 100000;
             NPC.noTileCollide = true;
             NPC.knockBackResist = 0;
@@ -134,7 +126,7 @@ namespace Paracosm.Content.Bosses.SolarChampion
 
             if (!Main.dedServ)
             {
-                Music = MusicLoader.GetMusicSlot(Mod, "Content/Audio/Music/SeveredSpace");
+                Music = MusicLoader.GetMusicSlot(Mod, "Content/Audio/Music/SunBornCyclone");
             }
         }
 
@@ -207,24 +199,39 @@ namespace Paracosm.Content.Bosses.SolarChampion
             {
                 NPC.TargetClosest();
             }
-
             player = Main.player[NPC.target];
-
-            foreach (var p in Main.player)
-            {
-                p.solarMonolithShader = true;
-            }
             playerDirection = player.Center - NPC.Center;
-
             if (player.dead || !player.active || NPC.Center.Distance(player.MountedCenter) > 8000)
             {
                 NPC.active = false;
             }
-            Arena();
+
+            //Visuals
+            if (AITimer == 0)
+            {
+                NPC.Opacity = 0;
+            }
+            Dust.NewDust(NPC.position, NPC.width, NPC.height, DustID.IchorTorch);
+            if (NPC.velocity.Length() > 10)
+            {
+                NPC.rotation = NPC.rotation.AngleLerp(playerDirection.X * MathHelper.ToRadians(30), MathHelper.ToRadians(1));
+            }
+            else
+            {
+                NPC.rotation = NPC.rotation.AngleLerp(0, MathHelper.ToRadians(3));
+            }
+
             if (!Terraria.Graphics.Effects.Filters.Scene["DivineSeekerShader"].IsActive() && Main.netMode != NetmodeID.Server)
             {
                 Terraria.Graphics.Effects.Filters.Scene.Activate("DivineSeekerShader").GetShader().UseColor(new Color(255, 192, 100));
             }
+            foreach (var p in Main.player)
+            {
+                p.solarMonolithShader = true;
+            }
+
+
+            Arena();
 
             if (AITimer < 60)
             {
@@ -243,16 +250,6 @@ namespace Paracosm.Content.Bosses.SolarChampion
                 phase = 2;
                 SwitchAttacks();
                 NPC.netUpdate = true;
-            }
-
-
-            if (NPC.velocity.Length() > 10)
-            {
-                NPC.rotation = NPC.rotation.AngleLerp(playerDirection.X * MathHelper.ToRadians(30), MathHelper.ToRadians(1));
-            }
-            else
-            {
-                NPC.rotation = NPC.rotation.AngleLerp(0, MathHelper.ToRadians(3));
             }
 
             if (attackDuration <= 0)
@@ -370,6 +367,12 @@ namespace Paracosm.Content.Bosses.SolarChampion
                         NPC.velocity = Vector2.Zero;
                         AttackCount++;
                         NPC.netUpdate = true;
+                        break;
+                    case > 160:
+                        if (AttackTimer % 10 == 0)
+                        {
+                            Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, playerDirection, Proj["Fireball"], NPC.damage, 0, ai1: 2f);
+                        }
                         break;
                 }
 
@@ -598,6 +601,12 @@ namespace Paracosm.Content.Bosses.SolarChampion
                         AttackCount++;
                         NPC.netUpdate = true;
                         break;
+                    case > 140:
+                        if (AttackTimer % 6 == 0)
+                        {
+                            Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, playerDirection, Proj["Fireball"], NPC.damage, 0, ai1: 3f);
+                        }
+                        break;
                 }
 
                 if (Main.netMode != NetmodeID.MultiplayerClient)
@@ -737,6 +746,7 @@ namespace Paracosm.Content.Bosses.SolarChampion
             switch (AttackTimer)
             {
                 case <= 120:
+                    AttackCount2 = 90;
                     for (int i = 0; i < Axes.Count / 2; i++)
                     {
                         Vector2 pos = new Vector2(0, (i + 1) * -150);
@@ -759,13 +769,13 @@ namespace Paracosm.Content.Bosses.SolarChampion
                         Vector2 pos = new Vector2(0, (i % 11 + 1) * 150);
                         Axes[i].Center = NPC.Center + pos.RotatedBy(MathHelper.ToRadians(-AttackTimer2 * (1 + AttackCount)));
                     }
-                    if (AttackTimer2 % 90 == 0)
+                    if (AttackTimer2 % AttackCount2 == 0)
                     {
                         if (Main.netMode != NetmodeID.MultiplayerClient)
                         {
                             for (int i = -2; i <= 2; i++)
                             {
-                                Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, playerDirection.SafeNormalize(Vector2.Zero).RotatedBy(i * (MathHelper.Pi / 16)) * 15, Proj["Fireball"], NPC.damage, 1);
+                                Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, playerDirection.SafeNormalize(Vector2.Zero).RotatedBy(i * (MathHelper.Pi / 8)) * 15, Proj["Fireball"], NPC.damage, 1);
                             }
                         }
                     }
@@ -775,6 +785,7 @@ namespace Paracosm.Content.Bosses.SolarChampion
                         {
                             arenaDistance += 500f / 120f;
                         }
+                        AttackCount2 = 75;
                     }
                     else if (AttackTimer2 >= 600)
                     {
@@ -783,6 +794,7 @@ namespace Paracosm.Content.Bosses.SolarChampion
                         {
                             arenaDistance -= 500f / 150f;
                         }
+                        AttackCount2 = 90;
                     }
                     if (AttackCount < 7 && AttackTimer2 < 600)
                         AttackCount += 0.001f;
@@ -842,7 +854,7 @@ namespace Paracosm.Content.Bosses.SolarChampion
 
             foreach (var player in Main.ActivePlayers)
             {
-                if (NPC.Center.Distance(player.MountedCenter) > arenaDistance + 50)
+                if (NPC.Center.Distance(player.MountedCenter) > arenaDistance + 50 && AITimer > 120)
                 {
                     player.AddBuff(ModContent.BuffType<Infected>(), 2);
                 }
@@ -885,6 +897,22 @@ namespace Paracosm.Content.Bosses.SolarChampion
 
         public override void FindFrame(int frameHeight)
         {
+            int frameDur = 8;
+            NPC.frameCounter += 1;
+            if (NPC.frameCounter > frameDur)
+            {
+                NPC.frame.Y += frameHeight;
+                NPC.frameCounter = 0;
+                if (NPC.frame.Y > 2 * frameHeight)
+                {
+                    NPC.frame.Y = 0;
+                }
+            }
+        }
+
+        public override void OnHitPlayer(Player target, Player.HurtInfo hurtInfo)
+        {
+            target.AddBuff(ModContent.BuffType<SolarBurn>(), 180);
         }
 
         public override void ModifyNPCLoot(NPCLoot npcLoot)
@@ -909,11 +937,24 @@ namespace Paracosm.Content.Bosses.SolarChampion
             return true;
         }
 
-
         public override void OnKill()
         {
             DeleteProjectiles(Proj["Sphere"]);
-            NPC.SetEventFlagCleared(ref DownedBossSystem.downedDivineSeeker, -1);
+            NPC.SetEventFlagCleared(ref DownedBossSystem.downedSolarChampion, -1);
+        }
+        public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
+        {
+            Texture2D texture = TextureAssets.Npc[Type].Value;
+            Rectangle drawRect = texture.Frame(1, Main.npcFrameCount[Type], 0, 0);
+
+            Vector2 drawOrigin = new Vector2(texture.Width * 0.5f, NPC.height * 0.5f);
+            for (int k = 0; k < NPC.oldPos.Length; k++)
+            {
+                Vector2 drawPos = NPC.oldPos[k] - Main.screenPosition + drawOrigin + new Vector2(0f, NPC.gfxOffY);
+                Color color = NPC.GetAlpha(drawColor) * ((NPC.oldPos.Length - k) / (float)NPC.oldPos.Length);
+                Main.EntitySpriteDraw(texture, drawPos, drawRect, color, NPC.rotation, drawOrigin, NPC.scale, SpriteEffects.None, 0);
+            }
+            return true;
         }
     }
 }

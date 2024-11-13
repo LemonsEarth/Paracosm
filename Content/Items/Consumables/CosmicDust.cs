@@ -1,9 +1,8 @@
-﻿using Terraria;
+﻿using Paracosm.Content.Bosses.DivineSeeker;
+using Terraria;
+using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Microsoft.Xna.Framework;
-using Terraria.Audio;
-using Paracosm.Content.Bosses.DivineSeeker;
 
 namespace Paracosm.Content.Items.Consumables
 {
@@ -43,7 +42,7 @@ namespace Paracosm.Content.Items.Consumables
             SoundEngine.PlaySound(SoundID.Roar, player.position);
             if (Main.netMode != NetmodeID.MultiplayerClient)
             {
-                NPC.SpawnOnPlayer(player.whoAmI, ModContent.NPCType<DivineSeeker>());
+                NPC.SpawnBoss((int)player.MountedCenter.X, (int)player.MountedCenter.Y - 600, ModContent.NPCType<DivineSeeker>(), player.whoAmI);
             }
             else
             {

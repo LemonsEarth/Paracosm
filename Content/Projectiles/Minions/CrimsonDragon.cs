@@ -1,12 +1,9 @@
-﻿using Terraria;
+﻿using Microsoft.Xna.Framework;
+using Paracosm.Common.Utils;
+using System;
+using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Microsoft.Xna.Framework;
-using Terraria.DataStructures;
-using Paracosm.Content.Projectiles;
-using rail;
-using System;
-using Paracosm.Common.Utils;
 
 namespace Paracosm.Content.Projectiles.Minions
 {

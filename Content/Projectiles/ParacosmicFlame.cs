@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Media;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Xna.Framework;
-using Paracosm.Content.Buffs;
+﻿using Paracosm.Content.Buffs;
 using Terraria;
 using Terraria.Audio;
 using Terraria.DataStructures;
@@ -39,7 +32,7 @@ namespace Paracosm.Content.Projectiles
 
         public override void OnSpawn(IEntitySource source)
         {
-            
+
         }
 
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)

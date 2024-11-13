@@ -1,9 +1,8 @@
-﻿using Terraria;
+﻿using Paracosm.Content.Bosses.InfectedRevenant;
+using Terraria;
+using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Microsoft.Xna.Framework;
-using Terraria.Audio;
-using Paracosm.Content.Bosses.InfectedRevenant;
 
 namespace Paracosm.Content.Items.Consumables
 {

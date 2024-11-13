@@ -1,19 +1,13 @@
-﻿using Terraria;
+﻿using Microsoft.Xna.Framework;
+using Paracosm.Content.Biomes;
+using Paracosm.Content.Items.Materials;
+using Paracosm.Content.Items.Placeable;
+using System.Collections.Generic;
+using Terraria;
+using Terraria.GameContent.Bestiary;
+using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Microsoft.Xna.Framework;
-using Paracosm.Content.Biomes;
-using Terraria.GameContent.ItemDropRules;
-using Paracosm.Content.Items.Materials;
-using Mono.Cecil;
-using System;
-using Terraria.DataStructures;
-using Terraria.ModLoader.Utilities;
-using Terraria.GameContent.Bestiary;
-using System.Collections.Generic;
-using Paracosm.Content.Items.Placeable;
-using Paracosm.Content.Items.Accessories;
-using Terraria.ModLoader.IO;
 
 namespace Paracosm.Content.NPCs.Hostile
 {

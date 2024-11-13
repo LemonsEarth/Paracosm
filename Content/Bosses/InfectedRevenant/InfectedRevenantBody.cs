@@ -1,30 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using Terraria;
-using Terraria.ID;
-using Terraria.ModLoader;
-using Microsoft.Xna.Framework;
-using Terraria.Audio;
-using Paracosm.Content.Projectiles.Hostile;
-using Terraria.GameContent.ItemDropRules;
-using Paracosm.Content.Items.Materials;
-using Terraria.DataStructures;
-using Paracosm.Content.Items.BossBags;
-using Paracosm.Content.Projectiles;
+﻿using Microsoft.Xna.Framework;
 using Paracosm.Common.Systems;
-using Terraria.GameContent.Bestiary;
-using Microsoft.Xna.Framework.Graphics;
-using ReLogic.Content;
-using Microsoft.CodeAnalysis.Host.Mef;
 using Paracosm.Content.Buffs;
-using Terraria.Chat;
-using Terraria.Localization;
-using Terraria.Graphics.CameraModifiers;
+using Paracosm.Content.Items.BossBags;
+using Paracosm.Content.Items.Materials;
+using Paracosm.Content.Projectiles.Hostile;
+using System;
+using System.Collections.Generic;
 using System.IO;
-using Paracosm.Content.Items.Weapons.Melee;
-using Paracosm.Content.Items.Weapons.Magic;
-using Paracosm.Content.Items.Weapons.Ranged;
-using Paracosm.Content.Items.Weapons.Summon;
+using Terraria;
+using Terraria.Audio;
+using Terraria.GameContent.Bestiary;
+using Terraria.GameContent.ItemDropRules;
+using Terraria.Graphics.CameraModifiers;
+using Terraria.ID;
+using Terraria.Localization;
+using Terraria.ModLoader;
 
 namespace Paracosm.Content.Bosses.InfectedRevenant
 {
@@ -101,7 +91,7 @@ namespace Paracosm.Content.Bosses.InfectedRevenant
                 BestiaryDatabaseNPCsPopulator.CommonTags.SpawnConditions.Biomes.TheCrimson,
                 BestiaryDatabaseNPCsPopulator.CommonTags.SpawnConditions.Times.NightTime,
                 new MoonLordPortraitBackgroundProviderBestiaryInfoElement(),
-                new FlavorTextBestiaryInfoElement("The infected remains of an ancient dragon, who cast aside his flesh to traverse a different realm."),
+                new FlavorTextBestiaryInfoElement(Language.GetTextValue("Mods.Paracosm.NPCs.InfectedRevenantBody.Bestiary")),
             });
         }
 

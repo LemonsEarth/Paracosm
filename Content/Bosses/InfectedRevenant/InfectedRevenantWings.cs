@@ -1,15 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using Terraria;
+﻿using Terraria;
+using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Microsoft.Xna.Framework;
-using Paracosm.Content.Projectiles.Hostile;
-using Terraria.DataStructures;
-using Microsoft.Xna.Framework.Graphics;
-using Newtonsoft.Json.Linq;
-using System.IO;
-using Terraria.Audio;
 
 namespace Paracosm.Content.Bosses.InfectedRevenant
 {

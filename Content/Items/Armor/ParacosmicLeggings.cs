@@ -1,12 +1,8 @@
-﻿using Terraria;
+﻿using Paracosm.Content.Items.Materials;
+using Terraria;
 using Terraria.ID;
-using Terraria.ModLoader;
-using Microsoft.Xna.Framework;
-using Terraria.GameContent.ItemDropRules;
-using Paracosm.Content.Items.Materials;
-using Paracosm.Content.Items.Weapons;
-using Paracosm.Content.Projectiles;
 using Terraria.Localization;
+using Terraria.ModLoader;
 
 namespace Paracosm.Content.Items.Armor
 {
@@ -32,7 +28,6 @@ namespace Paracosm.Content.Items.Armor
             player.GetCritChance(DamageClass.Generic) += critBoost;
             player.moveSpeed += moveSpeedBoost / 100;
             player.jumpSpeedBoost += 1;
-            player.GetModPlayer<ParacosmicLeggingsPlayer>().ParacosmicLeggings = true;
         }
 
         public override void AddRecipes()
@@ -43,24 +38,6 @@ namespace Paracosm.Content.Items.Armor
             recipe.AddIngredient(ItemID.HallowedBar, 12);
             recipe.AddTile(TileID.MythrilAnvil);
             recipe.Register();
-        }
-    }
-
-    public class ParacosmicLeggingsPlayer : ModPlayer
-    {
-        public bool ParacosmicLeggings = false;
-
-        public override void ResetEffects()
-        {
-            ParacosmicLeggings = false;
-        }
-
-        public override void PostUpdateEquips()
-        {
-            if (ParacosmicLeggings == false)
-            {
-                return;
-            }
         }
     }
 }

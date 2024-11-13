@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Paracosm.Common.Utils;
-using Paracosm.Content.Items.Weapons;
+using Paracosm.Content.Buffs;
+using System;
 using Terraria;
 using Terraria.Audio;
-using Terraria.DataStructures;
 using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -42,7 +37,7 @@ namespace Paracosm.Content.Projectiles
             Projectile.height = 138;
             Projectile.friendly = true;
             Projectile.usesLocalNPCImmunity = true;
-            Projectile.localNPCHitCooldown = -1;
+            Projectile.localNPCHitCooldown = 60;
             Projectile.penetrate = -1;
             Projectile.DamageType = DamageClass.Melee;
             Projectile.tileCollide = false;
@@ -65,7 +60,7 @@ namespace Paracosm.Content.Projectiles
                 savedDamage = Projectile.damage;
                 Projectile.scale = 0.1f;
                 LemonUtils.DustCircle(Projectile.position, 16, 10, DustID.SolarFlare, 2f, true);
-                SoundEngine.PlaySound(SoundID.Item92 with { PitchRange = (-0.3f, 0.3f)});
+                SoundEngine.PlaySound(SoundID.Item92 with { PitchRange = (-0.3f, 0.3f) });
             }
             if (Projectile.scale < 1)
             {
@@ -115,6 +110,11 @@ namespace Paracosm.Content.Projectiles
             AITimer++;
         }
 
+        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
+        {
+            target.AddBuff(ModContent.BuffType<SolarBurn>(), 60);
+        }
+
         public override void OnKill(int timeLeft)
         {
             SoundEngine.PlaySound(SoundID.Item14 with { MaxInstances = 2 });
@@ -123,6 +123,7 @@ namespace Paracosm.Content.Projectiles
                 Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, DustID.SolarFlare);
             }
         }
+
         public override bool PreDraw(ref Color lightColor)
         {
             Texture2D texture = TextureAssets.Projectile[Type].Value;
@@ -140,9 +141,7 @@ namespace Paracosm.Content.Projectiles
                 }
                 Main.EntitySpriteDraw(texture, drawPos, null, color, Projectile.oldRot[k], drawOrigin, Projectile.scale, spriteEffects, 0);
             }
-
             return true;
         }
-
     }
 }

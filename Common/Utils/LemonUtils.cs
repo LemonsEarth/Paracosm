@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.Xna.Framework;
 using Terraria;
-using Microsoft.Xna.Framework;
 
 namespace Paracosm.Common.Utils
 {
@@ -32,7 +27,7 @@ namespace Paracosm.Common.Utils
                 {
                     dust.noGravity = true;
                 }
-            
+
             }
         }
         public static NPC GetClosestNPC(Projectile projectile)

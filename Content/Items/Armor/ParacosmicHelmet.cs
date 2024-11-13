@@ -1,13 +1,9 @@
-﻿using Terraria;
-using Terraria.ID;
-using Terraria.ModLoader;
-using Microsoft.Xna.Framework;
-using Terraria.GameContent.ItemDropRules;
+﻿using Paracosm.Common.Players;
 using Paracosm.Content.Items.Materials;
-using Paracosm.Content.Items.Weapons;
-using Paracosm.Content.Projectiles;
+using Terraria;
+using Terraria.ID;
 using Terraria.Localization;
-using Paracosm.Content.Buffs;
+using Terraria.ModLoader;
 
 namespace Paracosm.Content.Items.Armor
 {
@@ -49,7 +45,7 @@ namespace Paracosm.Content.Items.Armor
             player.GetCritChance(DamageClass.Melee) += critWRBoost;
             player.GetCritChance(DamageClass.Ranged) += critWRBoost;
 
-            player.GetModPlayer<ParacosmicHelmetPlayer>().ParacosmicHelmet = true;
+            player.GetModPlayer<ParacosmPlayer>().paracosmicHelmet = true;
         }
 
         public override bool IsArmorSet(Item head, Item body, Item legs)
@@ -59,7 +55,7 @@ namespace Paracosm.Content.Items.Armor
 
         public override void UpdateArmorSet(Player player)
         {
-            player.GetModPlayer<ParacosmicHelmetPlayer>().ParacosmicHelmetSet = true;
+            player.GetModPlayer<ParacosmPlayer>().paracosmicHelmetSet = true;
             player.setBonus = setBonusText.Value;
             player.GetDamage(DamageClass.Melee) += setBonusWRDamage / 100;
             player.GetDamage(DamageClass.Ranged) += setBonusWRDamage / 100;
@@ -75,41 +71,6 @@ namespace Paracosm.Content.Items.Armor
             recipe.AddIngredient(ItemID.HallowedBar, 10);
             recipe.AddTile(TileID.MythrilAnvil);
             recipe.Register();
-        }
-    }
-
-    public class ParacosmicHelmetPlayer : ModPlayer
-    {
-        public bool ParacosmicHelmet = false;
-        public bool ParacosmicHelmetSet = false;
-
-        public override void ResetEffects()
-        {
-            ParacosmicHelmet = false;
-            ParacosmicHelmetSet = false;
-        }
-
-        public override void PostUpdateEquips()
-        {
-            if (ParacosmicHelmet == false)
-            {
-                return;
-            }
-
-            if (ParacosmicHelmetSet == false)
-            {
-                return;
-            }
-
-            if (Player.statLife <= (Player.statLifeMax2 / 2))
-            {
-                Player.AddBuff(ModContent.BuffType<ParacosmicHelmetBuff>(), 10);
-            }
-
-            if (Player.statLife > (Player.statLifeMax2 / 2))
-            {
-                Player.ClearBuff(ModContent.BuffType<ParacosmicHelmetBuff>());
-            }
         }
     }
 }

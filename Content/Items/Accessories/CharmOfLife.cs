@@ -1,12 +1,7 @@
 ﻿using Terraria;
 using Terraria.ID;
-using Terraria.ModLoader;
-using Microsoft.Xna.Framework;
-using Terraria.GameContent.ItemDropRules;
-using Paracosm.Content.Items.Materials;
-using Paracosm.Content.Items.Weapons;
-using Paracosm.Content.Projectiles;
 using Terraria.Localization;
+using Terraria.ModLoader;
 
 namespace Paracosm.Content.Items.Accessories
 {
@@ -37,7 +32,7 @@ namespace Paracosm.Content.Items.Accessories
                 player.buffTime[potionSickness] -= player.buffTime[potionSickness] / 4;
                 timer = 45 * 60;
             }
-            
+
             if (!player.HasBuff(BuffID.PotionSickness))
             {
                 timer = 0;
