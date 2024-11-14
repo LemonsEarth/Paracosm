@@ -101,7 +101,7 @@ namespace Paracosm.Content.Bosses.SolarChampion
             {
                 BestiaryDatabaseNPCsPopulator.CommonTags.SpawnConditions.Biomes.SolarPillar,
                 new MoonLordPortraitBackgroundProviderBestiaryInfoElement(),
-                new FlavorTextBestiaryInfoElement(Language.GetTextValue("Mods.Paracosm.NPCs.SolarChampion.Bestiary")),
+                new FlavorTextBestiaryInfoElement(this.GetLocalizedValue("Bestiary")),
             });
         }
 
@@ -484,6 +484,18 @@ namespace Paracosm.Content.Bosses.SolarChampion
                     Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, new Vector2(0, 1), Proj["Hammer"], NPC.damage, 0, ai0: 60, ai1: player.Center.X, ai2: player.Center.Y);
                 }
             }
+
+            if (attackDuration == 30)
+            {
+                if (Main.netMode != NetmodeID.MultiplayerClient)
+                {
+                    for (int i = -1; i < 2; i += 2)
+                    {
+                        Vector2 indicatorDistancePos = NPC.Center + new Vector2(0, i * arenaDistance);
+                        Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, i * new Vector2(0, 1) / 10, ModContent.ProjectileType<IndicatorLaser>(), 10, 0, ai1: indicatorDistancePos.X, ai2: indicatorDistancePos.Y);
+                    }
+                }
+            }
             AttackTimer++;
         }
 
@@ -506,6 +518,9 @@ namespace Paracosm.Content.Bosses.SolarChampion
             NPC.velocity /= 1.2f;
             switch (AttackTimer)
             {
+                case 0:
+                    SoundEngine.PlaySound(SoundID.Item71);
+                    break;
                 case <= 120:
                     for (int i = 0; i < Axes.Count; i++)
                     {
@@ -713,6 +728,17 @@ namespace Paracosm.Content.Bosses.SolarChampion
                     Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, new Vector2(0, 1), Proj["Hammer"], NPC.damage, 0, ai0: 30, ai1: player.Center.X, ai2: player.Center.Y);
                 }
             }
+            if (attackDuration == 30)
+            {
+                if (Main.netMode != NetmodeID.MultiplayerClient)
+                {
+                    for (int i = -1; i < 2; i += 2)
+                    {
+                        Vector2 indicatorDistancePos = NPC.Center + new Vector2(0, i * arenaDistance);
+                        Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, i * new Vector2(0, 1) / 10, ModContent.ProjectileType<IndicatorLaser>(), 10, 0, ai1: indicatorDistancePos.X, ai2: indicatorDistancePos.Y);
+                    }
+                }
+            }
             AttackTimer++;
         }
 
@@ -745,6 +771,9 @@ namespace Paracosm.Content.Bosses.SolarChampion
             NPC.velocity /= 1.2f;
             switch (AttackTimer)
             {
+                case 0:
+                    SoundEngine.PlaySound(SoundID.Item71);
+                    break;
                 case <= 120:
                     AttackCount2 = 90;
                     for (int i = 0; i < Axes.Count / 2; i++)
@@ -922,8 +951,7 @@ namespace Paracosm.Content.Bosses.SolarChampion
             classicRule.OnSuccess(ItemDropRule.Common(ModContent.ItemType<CosmicFlames>(), 1, 10, 20));
             classicRule.OnSuccess(ItemDropRule.OneFromOptions(1, ModContent.ItemType<ParashardSword>(), ModContent.ItemType<ParacosmicFurnace>(), ModContent.ItemType<GravityBarrage>(), ModContent.ItemType<ParacosmicEyeStaff>()));
             npcLoot.Add(classicRule);
-            npcLoot.Add(ItemDropRule.BossBag(ModContent.ItemType<DivineSeekerBossBag>()));
-            npcLoot.Add(ItemDropRule.MasterModeCommonDrop(ModContent.ItemType<Items.Placeable.Furniture.DivineSeekerRelic>()));
+            npcLoot.Add(ItemDropRule.BossBag(ModContent.ItemType<SolarChampionBossBag>()));
         }
 
         public override void BossLoot(ref string name, ref int potionType)

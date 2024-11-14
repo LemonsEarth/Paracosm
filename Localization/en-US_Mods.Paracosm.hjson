@@ -421,6 +421,23 @@ Items: {
 			Initiate a challenge towards the late Champion of the Celestial Colosseum
 			'''
 	}
+
+	ChampionsCrown: {
+		SetBonus: Mods.Paracosm.Items.ChampionsCrown.SetBonus
+		DisplayName: Champion's Crown
+		Tooltip:
+			'''
+			{$CommonItemTooltip.PercentIncreasedMeleeDamage}
+			{$CommonItemTooltip.PercentIncreasedMeleeCritChance@1}
+			{$CommonItemTooltip.PercentIncreasedMeleeSpeed@2}
+			Increases life regeneration by 2
+			'''
+	}
+
+	SolarChampionBossBag: {
+		DisplayName: Solar Champion Boss Bag
+		Tooltip: ""
+	}
 }
 
 Projectiles: {
@@ -536,6 +553,11 @@ Buffs: {
 		DisplayName: Solar Burn
 		Description: You feel like you are touching the sun
 	}
+
+	SolarExplosionCooldown: {
+		DisplayName: Solar Explosion Cooldown
+		Description: Mods.Paracosm.Buffs.SolarExplosionCooldown.Description
+	}
 }
 
 Biomes: {
@@ -544,3 +566,5 @@ Biomes: {
 		TownNPCDialogueName: the Paracosmic Distortion
 	}
 }
+
+Keybinds.SolarExplosion.DisplayName: Solar Explosion

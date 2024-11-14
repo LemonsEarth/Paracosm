@@ -2,32 +2,30 @@
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Paracosm.Content.Items.Armor
+namespace Paracosm.Content.Items.Armor.Vanity
 {
     [AutoloadEquip(EquipType.Head)]
-    public class CatHat : ModItem
+    public class LemonHead : ModItem
     {
 
         public override void SetStaticDefaults()
         {
             ArmorIDs.Head.Sets.DrawFullHair[Item.headSlot] = false;
-            ArmorIDs.Head.Sets.DrawHead[Item.headSlot] = false;
         }
 
         public override void SetDefaults()
         {
-            Item.width = 32;
-            Item.height = 32;
+            Item.width = 40;
+            Item.height = 28;
             Item.defense = 7;
-            Item.rare = ItemRarityID.Gray;
+            Item.rare = ItemRarityID.Yellow;
             Item.value = Item.sellPrice(0, 5, 0, 0);
         }
 
         public override void AddRecipes()
         {
             Recipe recipe = CreateRecipe();
-            recipe.AddIngredient(ItemID.FlinxFur, 1);
-            recipe.AddIngredient(ItemID.RichMahogany, 69);
+            recipe.AddIngredient(ItemID.Lemon, 1);
             recipe.AddTile(TileID.Anvils);
             recipe.Register();
         }

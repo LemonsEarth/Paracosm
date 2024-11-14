@@ -3,7 +3,7 @@ using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
 
-namespace Paracosm.Content.Items.Armor
+namespace Paracosm.Content.Items.Armor.WindWarrior
 {
     [AutoloadEquip(EquipType.Legs)]
     public class WindWarriorLeggings : ModItem

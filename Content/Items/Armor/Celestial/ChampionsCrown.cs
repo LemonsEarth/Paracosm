@@ -1,54 +1,57 @@
 ﻿using Microsoft.Xna.Framework;
+using Paracosm.Common.Players;
 using System;
 using Terraria;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
 
-namespace Paracosm.Content.Items.Armor
+namespace Paracosm.Content.Items.Armor.Celestial
 {
     [AutoloadEquip(EquipType.Head)]
-    public class WindWarriorHeadgear : ModItem
+    public class ChampionsCrown : ModItem
     {
-        static readonly int maxMinionBoost = 1;
-        static readonly float damageBoost = 5;
+        static readonly float meleeDamageBoost = 15;
+        static readonly float meleeCritBoost = 20;
+        static readonly float meleeSpeedBoost = 10;
+        static readonly int lifeRegenBoost = 2;
 
-        static readonly float setBonusDamage = 15;
-        static readonly float setBonusCrit = 10;
-
-        public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(damageBoost, maxMinionBoost);
+        public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(meleeDamageBoost, meleeCritBoost, meleeSpeedBoost, lifeRegenBoost);
         public static LocalizedText setBonusText;
 
         public override void SetStaticDefaults()
         {
             ArmorIDs.Head.Sets.DrawFullHair[Item.headSlot] = true;
-            setBonusText = this.GetLocalization("SetBonus").WithFormatArgs(setBonusDamage, setBonusCrit);
+            setBonusText = this.GetLocalization("SetBonus");
         }
 
         public override void SetDefaults()
         {
-            Item.width = 30;
-            Item.height = 30;
-            Item.defense = 3;
-            Item.rare = ItemRarityID.Cyan;
-            Item.value = Item.sellPrice(0, 5, 0, 0);
+            Item.width = 32;
+            Item.height = 32;
+            Item.defense = 18;
+            Item.lifeRegen = lifeRegenBoost;
+            
+            Item.rare = ItemRarityID.Yellow;
+            Item.value = Item.sellPrice(0, 15, 0, 0);
         }
 
         public override void UpdateEquip(Player player)
         {
-            player.GetDamage(DamageClass.Generic) += damageBoost / 100;
-            player.maxMinions += maxMinionBoost;
+            player.GetDamage(DamageClass.Melee) += meleeDamageBoost / 100;
+            player.GetCritChance(DamageClass.Melee) += meleeCritBoost;
+            player.GetAttackSpeed(DamageClass.Melee) += meleeSpeedBoost / 100;
         }
 
         public override bool IsArmorSet(Item head, Item body, Item legs)
         {
-            return body.type == ModContent.ItemType<WindWarriorBreastplate>() && legs.type == ModContent.ItemType<WindWarriorLeggings>();
+            return body.type == ItemID.SolarFlareBreastplate && legs.type == ItemID.SolarFlareLeggings;
         }
 
         public override void UpdateArmorSet(Player player)
         {
             player.setBonus = setBonusText.Value;
-            player.GetDamage(DamageClass.Generic) += (15 + MathHelper.Clamp(Math.Abs(player.velocity.Y), 0, 20)) / 100;
+            player.GetModPlayer<ParacosmPlayer>().championsCrownSet = true;
         }
 
         public override void AddRecipes()

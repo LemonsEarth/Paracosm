@@ -91,7 +91,7 @@ namespace Paracosm.Content.Bosses.InfectedRevenant
                 BestiaryDatabaseNPCsPopulator.CommonTags.SpawnConditions.Biomes.TheCrimson,
                 BestiaryDatabaseNPCsPopulator.CommonTags.SpawnConditions.Times.NightTime,
                 new MoonLordPortraitBackgroundProviderBestiaryInfoElement(),
-                new FlavorTextBestiaryInfoElement(Language.GetTextValue("Mods.Paracosm.NPCs.InfectedRevenantBody.Bestiary")),
+                new FlavorTextBestiaryInfoElement(this.GetLocalizedValue("Bestiary")),
             });
         }
 

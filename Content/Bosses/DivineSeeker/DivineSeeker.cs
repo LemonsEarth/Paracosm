@@ -86,7 +86,7 @@ namespace Paracosm.Content.Bosses.DivineSeeker
                 BestiaryDatabaseNPCsPopulator.CommonTags.SpawnConditions.Biomes.Surface,
                 BestiaryDatabaseNPCsPopulator.CommonTags.SpawnConditions.Times.NightTime,
                 new MoonLordPortraitBackgroundProviderBestiaryInfoElement(),
-                new FlavorTextBestiaryInfoElement(Language.GetTextValue("Mods.Paracosm.NPCs.DivineSeeker.Bestiary")),
+                new FlavorTextBestiaryInfoElement(this.GetLocalizedValue("Bestiary")),
             });
         }
 
@@ -454,11 +454,11 @@ namespace Paracosm.Content.Bosses.DivineSeeker
                             {
                                 for (int i = 0; i < 8; i++)
                                 {
-                                    Projectile.NewProjectile(NPC.GetSource_FromAI(), tempPlayerCenter + new Vector2(-1200, i * 200), new Vector2(40, 0), ModContent.ProjectileType<IndicatorLaser>(), 0, 3);
+                                    Projectile.NewProjectile(NPC.GetSource_FromAI(), tempPlayerCenter + new Vector2(-1200, i * 200), new Vector2(1, 0) / 10, ModContent.ProjectileType<IndicatorLaser>(), 0, 3, ai1: tempPlayerCenter.X + 1200, ai2: tempPlayerCenter.Y + i * 200);
                                 }
                                 for (int i = 1; i < 8; i++)
                                 {
-                                    Projectile.NewProjectile(NPC.GetSource_FromAI(), tempPlayerCenter + new Vector2(-1200, -i * 200), new Vector2(40, 0), ModContent.ProjectileType<IndicatorLaser>(), 0, 3);
+                                    Projectile.NewProjectile(NPC.GetSource_FromAI(), tempPlayerCenter + new Vector2(-1200, -i * 200), new Vector2(1, 0) / 10, ModContent.ProjectileType<IndicatorLaser>(), 0, 3, ai1: tempPlayerCenter.X + 1200, ai2: tempPlayerCenter.Y + -i * 200);
 
                                 }
                                 NPC.netUpdate = true;
@@ -910,19 +910,19 @@ namespace Paracosm.Content.Bosses.DivineSeeker
                             tempPlayerCenter = player.MountedCenter;
                             for (int i = 0; i < 16; i++)
                             {
-                                Projectile.NewProjectile(NPC.GetSource_FromAI(), tempPlayerCenter + new Vector2(-1200, i * 150), new Vector2(40, 0), ModContent.ProjectileType<IndicatorLaser>(), 0, 3);
+                                Projectile.NewProjectile(NPC.GetSource_FromAI(), tempPlayerCenter + new Vector2(-1200, i * 150), new Vector2(1, 0) / 10, ModContent.ProjectileType<IndicatorLaser>(), 0, 0, ai1: tempPlayerCenter.X + 1200, ai2: tempPlayerCenter.Y + i * 150);
                             }
                             for (int i = 1; i < 16; i++)
                             {
-                                Projectile.NewProjectile(NPC.GetSource_FromAI(), tempPlayerCenter + new Vector2(-1200, -i * 150), new Vector2(40, 0), ModContent.ProjectileType<IndicatorLaser>(), 0, 3);
+                                Projectile.NewProjectile(NPC.GetSource_FromAI(), tempPlayerCenter + new Vector2(-1200, -i * 150), new Vector2(1, 0) / 10, ModContent.ProjectileType<IndicatorLaser>(), 0, 0, ai1: tempPlayerCenter.X + 1200, ai2: tempPlayerCenter.Y + -i * 150);
                             }
                             for (int i = 0; i < 20; i++)
                             {
-                                Projectile.NewProjectile(NPC.GetSource_FromAI(), tempPlayerCenter + new Vector2(i * 150, -1000), new Vector2(0, 40), ModContent.ProjectileType<IndicatorLaser>(), 0, 3);
+                                Projectile.NewProjectile(NPC.GetSource_FromAI(), tempPlayerCenter + new Vector2(i * 150, -1000), new Vector2(0, 1) / 10, ModContent.ProjectileType<IndicatorLaser>(), 0, 0, ai2: tempPlayerCenter.Y + 1000, ai1: tempPlayerCenter.X + i * 150);
                             }
                             for (int i = 0; i < 20; i++)
                             {
-                                Projectile.NewProjectile(NPC.GetSource_FromAI(), tempPlayerCenter + new Vector2(-i * 150, -1000), new Vector2(0, 40), ModContent.ProjectileType<IndicatorLaser>(), 0, 3);
+                                Projectile.NewProjectile(NPC.GetSource_FromAI(), tempPlayerCenter + new Vector2(-i * 150, -1000), new Vector2(0, 1) / 10, ModContent.ProjectileType<IndicatorLaser>(), 0, 0, ai2: tempPlayerCenter.Y + 1000, ai1: tempPlayerCenter.X + -i * 150);
 
                             }
                             NPC.netUpdate = true;

@@ -4,7 +4,7 @@ using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
 
-namespace Paracosm.Content.Items.Armor
+namespace Paracosm.Content.Items.Armor.Paracosmic
 {
     [AutoloadEquip(EquipType.Body)]
     public class ParacosmicChestplate : ModItem

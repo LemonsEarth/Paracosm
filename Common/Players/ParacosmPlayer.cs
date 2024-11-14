@@ -1,6 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
+using Paracosm.Common.Systems;
 using Paracosm.Content.Biomes;
 using Paracosm.Content.Buffs;
+using Paracosm.Content.Items.Armor.Celestial;
 using Paracosm.Content.Projectiles;
 using Terraria;
 using Terraria.ID;
@@ -15,6 +17,8 @@ namespace Paracosm.Common.Players
         public bool paracosmicGoggles = false;
         public bool paracosmicGogglesSet = false;
         public bool windWarriorBreastplate = false;
+        public bool championsCrownSet = false;
+        float solarExplosionTimer = 600;
 
         public bool sunCoin = false;
         public bool corruptedDragonHeart = false;
@@ -28,6 +32,7 @@ namespace Paracosm.Common.Players
         public bool infected = false;
         public bool paracosmicBurn = false;
         public bool solarBurn = false;
+        public bool solarExplosion = false;
 
         public override void ResetEffects()
         {
@@ -36,6 +41,7 @@ namespace Paracosm.Common.Players
             paracosmicGoggles = false;
             paracosmicGogglesSet = false;
             windWarriorBreastplate = false;
+            championsCrownSet = false;
 
             sunCoin = false;
             corruptedDragonHeart = false;
@@ -47,6 +53,7 @@ namespace Paracosm.Common.Players
             infected = false;
             paracosmicBurn = false;
             solarBurn = false;
+            solarExplosion = false;
         }
 
         public override void PostUpdateEquips()
@@ -60,7 +67,6 @@ namespace Paracosm.Common.Players
             {
                 Player.wingTimeMax += Player.wingTimeMax / 2;
             }
-
 
             if (paracosmicHelmetBuff)
             {
@@ -107,6 +113,33 @@ namespace Paracosm.Common.Players
                 {
                     Player.ClearBuff(ModContent.BuffType<ParacosmicGogglesBuff>());
                 }
+            }
+
+            if (championsCrownSet)
+            {
+                if (KeybindSystem.SolarExplosion.JustPressed && !Player.HasBuff(ModContent.BuffType<SolarExplosionCooldown>()))
+                {
+                    Player.AddBuff(ModContent.BuffType<SolarExplosionCooldown>(), 3600);
+                    solarExplosionTimer = 600;
+                    foreach (var enemy in Main.ActiveNPCs)
+                    {
+                        if (!enemy.friendly)
+                        {
+                            enemy.AddBuff(ModContent.BuffType<SolarBurn>(), 600);
+                        }
+                    }
+                }
+                if (Player.HasBuff(ModContent.BuffType<SolarExplosionCooldown>()))
+                {
+                    if (solarExplosionTimer > 0 && solarExplosionTimer % 5 == 0)
+                    {
+                        if (Main.myPlayer == Player.whoAmI)
+                        {
+                            var proj = Projectile.NewProjectileDirect(Player.GetSource_FromThis(), Player.Center + new Vector2(Main.rand.Next(-1200, 1200), Main.rand.Next(-1200, 1200)), Vector2.Zero, ProjectileID.SolarCounter, 300, 2);
+                        }
+                    }
+                    solarExplosionTimer--;
+                }      
             }
 
             if (corruptedDragonHeart)

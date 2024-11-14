@@ -29,7 +29,6 @@ namespace Paracosm.Content.Projectiles.Hostile
             Projectile.ignoreWater = true;
             Projectile.tileCollide = false;
             Projectile.timeLeft = 480;
-
         }
 
 
@@ -49,11 +48,19 @@ namespace Paracosm.Content.Projectiles.Hostile
             }
             Lighting.AddLight(Projectile.Center, 100, 80, 0);
             Projectile.rotation = AITimer;
-            AITimer++;
             if (Acceleration > 0)
             {
-                Projectile.velocity = Projectile.velocity.SafeNormalize(Vector2.Zero) * Acceleration;
+                Vector2 direction = Projectile.velocity.SafeNormalize(Vector2.Zero);
+                Projectile.velocity = direction * Acceleration;
                 Acceleration++;
+                if (AITimer == 0)
+                {
+                    if (Main.netMode != NetmodeID.MultiplayerClient)
+                    {
+                        Vector2 indicatorDistancePos = Projectile.Center + direction * 64 * 50;
+                        Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Projectile.velocity.SafeNormalize(Vector2.Zero) / 10, ModContent.ProjectileType<IndicatorLaser>(), 10, 0, ai1: indicatorDistancePos.X, ai2: indicatorDistancePos.Y);
+                    }
+                }
             }
 
             Projectile.frameCounter++;
@@ -66,6 +73,7 @@ namespace Paracosm.Content.Projectiles.Hostile
                     Projectile.frame = 0;
                 }
             }
+            AITimer++;
         }
 
         public override void OnHitPlayer(Player target, Player.HurtInfo hurtInfo)
@@ -76,7 +84,6 @@ namespace Paracosm.Content.Projectiles.Hostile
         public override bool PreDraw(ref Color lightColor)
         {
             Texture2D texture = TextureAssets.Projectile[Type].Value;
-
             Vector2 drawOrigin = new Vector2(texture.Width * 0.5f, Projectile.height * 0.5f);
             for (int k = Projectile.oldPos.Length - 1; k > 0; k--)
             {
