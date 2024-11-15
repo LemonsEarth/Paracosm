@@ -1,4 +1,5 @@
 ﻿using Paracosm.Content.Items.Accessories;
+using Paracosm.Content.Items.Armor.Celestial;
 using Paracosm.Content.Items.Materials;
 using Paracosm.Content.Items.Weapons.Magic;
 using Paracosm.Content.Items.Weapons.Melee;
@@ -39,8 +40,8 @@ namespace Paracosm.Content.Items.BossBags
         {
             itemLoot.Add(ItemDropRule.Common(ItemID.FragmentSolar, 1, 15, 30));
             itemLoot.Add(ItemDropRule.Common(ItemID.LunarBar, 1, 5, 12));
-            itemLoot.Add(ItemDropRule.OneFromOptions(1, ModContent.ItemType<HorizonSplitter>(), ModContent.ItemType<ParacosmicFurnace>(), ModContent.ItemType<GravityBarrage>(), ModContent.ItemType<ParacosmicEyeStaff>()));
-            itemLoot.Add(ItemDropRule.Common(ModContent.ItemType<ParashardSigil>(), 1, 1, 1));
+            itemLoot.Add(ItemDropRule.OneFromOptions(1, ModContent.ItemType<HorizonSplitter>(), ModContent.ItemType<TheCrucible>()));
+            itemLoot.Add(ItemDropRule.Common(ModContent.ItemType<ChampionsCrown>(), 1, 1, 1));
         }
     }
 }

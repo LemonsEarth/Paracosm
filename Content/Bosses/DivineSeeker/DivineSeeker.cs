@@ -156,6 +156,11 @@ namespace Paracosm.Content.Bosses.DivineSeeker
             {
                 NPC.EncourageDespawn(300);
             }
+
+            if (AITimer == 0)
+            {
+                NPC.Opacity = 0;
+            }
             if (NPC.life > NPC.lifeMax / 2)
             {
                 phase = 1;
@@ -199,6 +204,7 @@ namespace Paracosm.Content.Bosses.DivineSeeker
             if (AITimer <= 60)
             {
                 Terraria.Graphics.Effects.Filters.Scene["ScreenTintShader"].GetShader().UseProgress(60 / AITimer);
+                NPC.Opacity += 1f / 60f;
             }
 
             switch (phase)

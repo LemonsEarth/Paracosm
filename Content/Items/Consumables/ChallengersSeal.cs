@@ -41,7 +41,7 @@ namespace Paracosm.Content.Items.Consumables
             SoundEngine.PlaySound(SoundID.Roar, player.position);
             if (Main.netMode != NetmodeID.MultiplayerClient)
             {
-                NPC.SpawnBoss((int)player.MountedCenter.X, (int)player.MountedCenter.Y - 600, ModContent.NPCType<SolarChampion>(), player.whoAmI);
+                NPC.SpawnBoss((int)player.MountedCenter.X, (int)player.MountedCenter.Y - 300, ModContent.NPCType<SolarChampion>(), player.whoAmI);
             }
             else
             {
