@@ -6,17 +6,18 @@ using Terraria.ModLoader;
 
 namespace Paracosm.Content.Buffs
 {
-    public class SolarExplosionCooldown : ModBuff
+    public class ChampionsCrownCooldown : ModBuff
     {
         public override void SetStaticDefaults()
         {
             Main.debuff[Type] = true;
             BuffID.Sets.LongerExpertDebuff[Type] = false;
+            BuffID.Sets.NurseCannotRemoveDebuff[Type] = true;
         }
 
         public override void Update(Player player, ref int buffIndex)
         {
-            player.GetModPlayer<ParacosmPlayer>().solarExplosion = true;
+            player.GetModPlayer<ParacosmPlayer>().championsCrownCD = true;
         }
     }
 }

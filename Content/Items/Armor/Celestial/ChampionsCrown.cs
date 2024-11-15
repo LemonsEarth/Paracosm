@@ -21,7 +21,7 @@ namespace Paracosm.Content.Items.Armor.Celestial
 
         public override void SetStaticDefaults()
         {
-            ArmorIDs.Head.Sets.DrawFullHair[Item.headSlot] = true;
+            ArmorIDs.Head.Sets.DrawFullHair[Item.headSlot] = false;
             setBonusText = this.GetLocalization("SetBonus");
         }
 
@@ -32,7 +32,7 @@ namespace Paracosm.Content.Items.Armor.Celestial
             Item.defense = 18;
             Item.lifeRegen = lifeRegenBoost;
             
-            Item.rare = ItemRarityID.Yellow;
+            Item.rare = ItemRarityID.Red;
             Item.value = Item.sellPrice(0, 15, 0, 0);
         }
 
@@ -52,6 +52,11 @@ namespace Paracosm.Content.Items.Armor.Celestial
         {
             player.setBonus = setBonusText.Value;
             player.GetModPlayer<ParacosmPlayer>().championsCrownSet = true;
+        }
+
+        public override void DrawArmorColor(Player drawPlayer, float shadow, ref Color color, ref int glowMask, ref Color glowMaskColor)
+        {
+            color = Color.White;
         }
 
         public override void AddRecipes()

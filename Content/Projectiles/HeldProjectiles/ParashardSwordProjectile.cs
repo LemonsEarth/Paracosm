@@ -9,7 +9,7 @@ using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Paracosm.Content.Projectiles
+namespace Paracosm.Content.Projectiles.HeldProjectiles
 {
     public class ParashardSwordProjectile : ModProjectile
     {
@@ -137,7 +137,7 @@ namespace Paracosm.Content.Projectiles
 
             for (int i = 0; i < Projectile.oldPos.Length; i += 2)
             {
-                Vector2 drawPos = (Projectile.oldPos[i] - Main.screenPosition) + drawOrigin + new Vector2(0, Projectile.gfxOffY);
+                Vector2 drawPos = Projectile.oldPos[i] - Main.screenPosition + drawOrigin + new Vector2(0, Projectile.gfxOffY);
                 Color color = Projectile.GetAlpha(lightColor) * ((Projectile.oldPos.Length - i) / (float)Projectile.oldPos.Length);
                 Main.EntitySpriteDraw(Texture, drawPos, null, color, Projectile.rotation, drawOrigin, Projectile.scale, SpriteEffects.None, 0f);
             }

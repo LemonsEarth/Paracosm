@@ -4,16 +4,16 @@ namespace Paracosm.Common.Systems
 {
     public class KeybindSystem : ModSystem
     {
-        public static ModKeybind SolarExplosion;
+        public static ModKeybind ChampionsCrown;
 
         public override void Load()
         {
-            SolarExplosion = KeybindLoader.RegisterKeybind(Mod, "SolarExplosion", "U");
+            ChampionsCrown = KeybindLoader.RegisterKeybind(Mod, "Champion's Crown", "U");
         }
 
         public override void Unload()
         {
-            SolarExplosion = null;
+            ChampionsCrown = null;
         }
     }
 }

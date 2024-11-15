@@ -8,19 +8,20 @@
 		
 	</PropertyGroup>
 	<ItemGroup>
+	  <None Remove="Content\Buffs\ChampionsCrownCooldown.png" />
 	  <None Remove="Content\Items\Placeable\ParastoneWallUnsafeItem.png" />
 	  <None Remove="Content\Projectiles\ArchmageBolt.png" />
+	  <None Remove="Content\Projectiles\HeldProjectiles\TheCrucibleProj.png" />
 	  <None Remove="Content\Projectiles\HorizonSplitterProj.png" />
 	  <None Remove="Content\Projectiles\Hostile\CursedSpiritFlame.png" />
 	  <None Remove="Content\Projectiles\Hostile\ParacosmicFlameHostile.png" />
 	  <None Remove="Content\Projectiles\ParashardSwordProjectile.png" />
 	  <None Remove="Content\Projectiles\PoisonPetal.png" />
-	  <None Remove="content\shaders\DivineSeekerShader.fx" />
+	  <None Remove="Content\Shaders\ScreenTintShader.fx" />
 	  <None Remove="Content\Walls\ParastoneWallUnsafe.png" />
 	  <None Remove="localization\LocCommon.txt" />
 	</ItemGroup>
 	<ItemGroup>
-	  <Folder Include="Content\Shaders\" />
 	  <Folder Include="lib\" />
 	</ItemGroup>
 	<ItemGroup>

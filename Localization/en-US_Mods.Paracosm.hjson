@@ -423,7 +423,14 @@ Items: {
 	}
 
 	ChampionsCrown: {
-		SetBonus: Mods.Paracosm.Items.ChampionsCrown.SetBonus
+		SetBonus:
+			'''
+			Press the Champion's Crown key to melt everything:
+				- Enemies around you explode
+				- You and all enemies are inflicted with Melted and Solar Burn
+				- Melted reduces defense to zero for its duration
+			This effect has a 90 second cooldown
+			'''
 		DisplayName: Champion's Crown
 		Tooltip:
 			'''
@@ -436,7 +443,17 @@ Items: {
 
 	SolarChampionBossBag: {
 		DisplayName: Solar Champion Boss Bag
-		Tooltip: ""
+		Tooltip: "{$CommonItemTooltip.RightClickToOpen}"
+	}
+
+	TheCrucible: {
+		DisplayName: The Crucible
+		Tooltip:
+			'''
+			Hold LMB to charge explosions
+			Release to cast explosions at your cursor
+			"Don't hold it in for too long!"
+			'''
 	}
 }
 
@@ -485,6 +502,8 @@ Projectiles: {
 	SolarSphere.DisplayName: Solar Sphere
 	SolarAxe.DisplayName: Solar Axe
 	HorizonSplitterProj.DisplayName: Horizon Splitter Proj
+	SolarExplosionMagic.DisplayName: Solar Explosion Magic
+	TheCrucibleProj.DisplayName: The Crucible Proj
 }
 
 NPCs: {
@@ -551,12 +570,17 @@ Buffs: {
 
 	SolarBurn: {
 		DisplayName: Solar Burn
-		Description: You feel like you are touching the sun
+		Description: You feel like you are touching the sun...
 	}
 
-	SolarExplosionCooldown: {
-		DisplayName: Solar Explosion Cooldown
-		Description: Mods.Paracosm.Buffs.SolarExplosionCooldown.Description
+	MeltingDebuff: {
+		DisplayName: Melting
+		Description: Your armor is melting...
+	}
+
+	ChampionsCrownCooldown: {
+		DisplayName: Champions Crown Cooldown
+		Description: You can not use the Champion's Crown effect
 	}
 }
 
@@ -567,4 +591,7 @@ Biomes: {
 	}
 }
 
-Keybinds.SolarExplosion.DisplayName: Solar Explosion
+Keybinds: {
+	SolarExplosion.DisplayName: Solar Explosion
+	"Champion's Crown.DisplayName": Champion's  Crown
+}

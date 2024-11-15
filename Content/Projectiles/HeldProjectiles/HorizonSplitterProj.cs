@@ -9,7 +9,7 @@ using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Paracosm.Content.Projectiles
+namespace Paracosm.Content.Projectiles.HeldProjectiles
 {
     public class HorizonSplitterProj : ModProjectile
     {
@@ -72,9 +72,8 @@ namespace Paracosm.Content.Projectiles
             }
 
             Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, DustID.IchorTorch);
-
             Vector2 playerToProj = player.Center.DirectionTo(Projectile.Center);
-            Projectile.rotation = (playerToProj).ToRotation() + MathHelper.PiOver2;
+            Projectile.rotation = playerToProj.ToRotation() + MathHelper.PiOver2;
             if (player.channel && rotated == 0)
             {
                 Projectile.timeLeft = 180;
@@ -83,7 +82,7 @@ namespace Paracosm.Content.Projectiles
                 Projectile.velocity = Vector2.Zero;
                 Projectile.Center = player.Center + new Vector2(-MouseSide, -1) * distance * DistanceIndex;
                 Projectile.damage = 0;
-                if (AITimer == 60 && DistanceIndex < 5)
+                if (AITimer == (int)(60 / player.GetAttackSpeed(DamageClass.Melee)) && DistanceIndex < 5)
                 {
                     if (Main.myPlayer == Projectile.owner)
                     {
@@ -95,7 +94,7 @@ namespace Paracosm.Content.Projectiles
             {
                 Projectile.Center = player.Center + new Vector2(-MouseSide, -1).RotatedBy(MathHelper.ToRadians(rotated)) * DistanceIndex * distance;
                 Projectile.damage = savedDamage * (int)DistanceIndex;
-                rotated += 6 * MouseSide;
+                rotated += 6 * MouseSide * player.GetAttackSpeed(DamageClass.Melee);
             }
             if (Math.Abs(rotated) >= maxRotation)
             {
@@ -131,7 +130,7 @@ namespace Paracosm.Content.Projectiles
             Vector2 drawOrigin = new Vector2(texture.Width * 0.5f, Projectile.height * 0.5f);
             for (int k = Projectile.oldPos.Length - 1; k > 0; k--)
             {
-                Vector2 drawPos = (Projectile.oldPos[k] - Main.screenPosition) + drawOrigin + new Vector2(DrawOffsetX, Projectile.gfxOffY);
+                Vector2 drawPos = Projectile.oldPos[k] - Main.screenPosition + drawOrigin + new Vector2(DrawOffsetX, Projectile.gfxOffY);
                 Color color = Projectile.GetAlpha(lightColor) * ((Projectile.oldPos.Length - k) / (float)Projectile.oldPos.Length);
                 color.A /= 2;
                 SpriteEffects spriteEffects = SpriteEffects.None;

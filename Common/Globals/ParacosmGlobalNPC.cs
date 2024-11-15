@@ -2,6 +2,7 @@
 using Paracosm.Content.NPCs.Hostile;
 using System.Collections.Generic;
 using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Paracosm.Common.Globals
@@ -12,11 +13,13 @@ namespace Paracosm.Common.Globals
 
         public bool paracosmicBurn = false;
         public bool solarBurn = false;
+        public bool melting = false;
 
         public override void ResetEffects(NPC npc)
         {
             paracosmicBurn = false;
             solarBurn = false;
+            melting = false;
         }
 
         public override void UpdateLifeRegen(NPC npc, ref int damage)
@@ -47,6 +50,12 @@ namespace Paracosm.Common.Globals
                 {
                     damage = 300;
                 }
+            }
+
+            if (melting)
+            {
+                npc.defense = 0;
+                Dust.NewDust(npc.position, npc.width, npc.height, DustID.SolarFlare);
             }
         }
 

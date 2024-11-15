@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Paracosm.Content.Items.Materials;
-using Paracosm.Content.Projectiles;
+using Paracosm.Content.Projectiles.HeldProjectiles;
 using Terraria;
 using Terraria.Audio;
 using Terraria.DataStructures;

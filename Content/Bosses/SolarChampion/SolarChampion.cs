@@ -221,10 +221,17 @@ namespace Paracosm.Content.Bosses.SolarChampion
                 NPC.rotation = NPC.rotation.AngleLerp(0, MathHelper.ToRadians(3));
             }
 
-            if (!Terraria.Graphics.Effects.Filters.Scene["DivineSeekerShader"].IsActive() && Main.netMode != NetmodeID.Server)
+            if (!Terraria.Graphics.Effects.Filters.Scene["ScreenTintShader"].IsActive() && Main.netMode != NetmodeID.Server)
             {
-                Terraria.Graphics.Effects.Filters.Scene.Activate("DivineSeekerShader").GetShader().UseColor(new Color(255, 192, 100));
+                Terraria.Graphics.Effects.Filters.Scene.Activate("ScreenTintShader").GetShader().UseColor(new Color(255, 192, 100));
+                Terraria.Graphics.Effects.Filters.Scene["ScreenTintShader"].GetShader().UseIntensity(10);
             }
+
+            if (AITimer <= 60)
+            {
+                Terraria.Graphics.Effects.Filters.Scene["ScreenTintShader"].GetShader().UseProgress(AITimer / 60);
+            }
+
             foreach (var p in Main.player)
             {
                 p.solarMonolithShader = true;
@@ -908,7 +915,7 @@ namespace Paracosm.Content.Bosses.SolarChampion
 
         public override bool CheckDead()
         {
-            Terraria.Graphics.Effects.Filters.Scene.Deactivate("DivineSeekerShader");
+            Terraria.Graphics.Effects.Filters.Scene.Deactivate("ScreenTintShader");
             return true;
         }
 
@@ -947,9 +954,9 @@ namespace Paracosm.Content.Bosses.SolarChampion
         public override void ModifyNPCLoot(NPCLoot npcLoot)
         {
             LeadingConditionRule classicRule = new LeadingConditionRule(new Conditions.NotExpert());
-            classicRule.OnSuccess(ItemDropRule.Common(ModContent.ItemType<Parashard>(), 1, 20, 30));
-            classicRule.OnSuccess(ItemDropRule.Common(ModContent.ItemType<CosmicFlames>(), 1, 10, 20));
-            classicRule.OnSuccess(ItemDropRule.OneFromOptions(1, ModContent.ItemType<ParashardSword>(), ModContent.ItemType<ParacosmicFurnace>(), ModContent.ItemType<GravityBarrage>(), ModContent.ItemType<ParacosmicEyeStaff>()));
+            classicRule.OnSuccess(ItemDropRule.Common(ItemID.FragmentSolar, 1, 10, 20));
+            classicRule.OnSuccess(ItemDropRule.Common(ItemID.LunarBar, 1, 5, 12));
+            classicRule.OnSuccess(ItemDropRule.OneFromOptions(1, ModContent.ItemType<HorizonSplitter>(), ModContent.ItemType<TheCrucible>()));
             npcLoot.Add(classicRule);
             npcLoot.Add(ItemDropRule.BossBag(ModContent.ItemType<SolarChampionBossBag>()));
         }

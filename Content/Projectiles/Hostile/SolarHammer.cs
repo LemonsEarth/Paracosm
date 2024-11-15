@@ -82,6 +82,7 @@ namespace Paracosm.Content.Projectiles.Hostile
         public override void OnHitPlayer(Player target, Player.HurtInfo hurtInfo)
         {
             target.AddBuff(ModContent.BuffType<SolarBurn>(), 120);
+            target.AddBuff(ModContent.BuffType<MeltingDebuff>(), 120);
         }
 
         public override void OnKill(int timeLeft)

@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Paracosm.Common.Systems;
+using Paracosm.Common.Utils;
 using Paracosm.Content.Biomes;
 using Paracosm.Content.Buffs;
 using Paracosm.Content.Items.Armor.Celestial;
@@ -18,7 +19,6 @@ namespace Paracosm.Common.Players
         public bool paracosmicGogglesSet = false;
         public bool windWarriorBreastplate = false;
         public bool championsCrownSet = false;
-        float solarExplosionTimer = 600;
 
         public bool sunCoin = false;
         public bool corruptedDragonHeart = false;
@@ -32,7 +32,9 @@ namespace Paracosm.Common.Players
         public bool infected = false;
         public bool paracosmicBurn = false;
         public bool solarBurn = false;
-        public bool solarExplosion = false;
+        public bool melting = false;
+        public bool championsCrownCD = false;
+        int championsCrownTimer = 0;
 
         public override void ResetEffects()
         {
@@ -53,7 +55,8 @@ namespace Paracosm.Common.Players
             infected = false;
             paracosmicBurn = false;
             solarBurn = false;
-            solarExplosion = false;
+            melting = false;
+            championsCrownCD = false;
         }
 
         public override void PostUpdateEquips()
@@ -117,29 +120,31 @@ namespace Paracosm.Common.Players
 
             if (championsCrownSet)
             {
-                if (KeybindSystem.SolarExplosion.JustPressed && !Player.HasBuff(ModContent.BuffType<SolarExplosionCooldown>()))
+                if (KeybindSystem.ChampionsCrown.JustPressed && !championsCrownCD)
                 {
-                    Player.AddBuff(ModContent.BuffType<SolarExplosionCooldown>(), 3600);
-                    solarExplosionTimer = 600;
+                    Player.AddBuff(ModContent.BuffType<MeltingDebuff>(), 1200);
+                    Player.AddBuff(ModContent.BuffType<ChampionsCrownCooldown>(), 5400);
+                    Player.AddBuff(ModContent.BuffType<SolarBurn>(), 240);
+
                     foreach (var enemy in Main.ActiveNPCs)
                     {
-                        if (!enemy.friendly)
+                        if (enemy.CanBeChasedBy() && enemy.Center.Distance(Player.Center) < 1200)
                         {
-                            enemy.AddBuff(ModContent.BuffType<SolarBurn>(), 600);
+                            enemy.AddBuff(ModContent.BuffType<MeltingDebuff>(), 600);
+                            enemy.AddBuff(ModContent.BuffType<SolarBurn>(), 1200);
+                            if (Main.myPlayer == Player.whoAmI)
+                            {
+                                var proj = Projectile.NewProjectileDirect(Player.GetSource_FromThis(), enemy.Center, Vector2.Zero, ProjectileID.SolarWhipSwordExplosion, 600, 2);
+                            }
                         }
                     }
+                    LemonUtils.DustCircle(Player.Center, 16, 5, DustID.SolarFlare, Main.rand.NextFloat(0.8f, 1.2f));
                 }
-                if (Player.HasBuff(ModContent.BuffType<SolarExplosionCooldown>()))
-                {
-                    if (solarExplosionTimer > 0 && solarExplosionTimer % 5 == 0)
-                    {
-                        if (Main.myPlayer == Player.whoAmI)
-                        {
-                            var proj = Projectile.NewProjectileDirect(Player.GetSource_FromThis(), Player.Center + new Vector2(Main.rand.Next(-1200, 1200), Main.rand.Next(-1200, 1200)), Vector2.Zero, ProjectileID.SolarCounter, 300, 2);
-                        }
-                    }
-                    solarExplosionTimer--;
-                }      
+            }
+
+            if (melting)
+            {
+                Player.statDefense *= 0;
             }
 
             if (corruptedDragonHeart)
@@ -166,16 +171,28 @@ namespace Paracosm.Common.Players
         {
             if (Player.InModBiome<ParacosmicDistortion>())
             {
-                if (!Terraria.Graphics.Effects.Filters.Scene["DivineSeekerShader"].IsActive() && Main.netMode != NetmodeID.Server)
+                if (!Terraria.Graphics.Effects.Filters.Scene["ScreenTintShader"].IsActive() && Main.netMode != NetmodeID.Server)
                 {
-                    Terraria.Graphics.Effects.Filters.Scene.Activate("DivineSeekerShader").GetShader().UseColor(new Color(152, 152, 255));
+                    Terraria.Graphics.Effects.Filters.Scene.Activate("ScreenTintShader").GetShader().UseColor(new Color(152, 152, 255));
+                    Terraria.Graphics.Effects.Filters.Scene["ScreenTintShader"].GetShader().UseProgress(1);
+                    Terraria.Graphics.Effects.Filters.Scene["ScreenTintShader"].GetShader().UseIntensity(10);
                 }
             }
             else
             {
-                if (Terraria.Graphics.Effects.Filters.Scene["DivineSeekerShader"].IsActive())
+                if (Terraria.Graphics.Effects.Filters.Scene["ScreenTintShader"].IsActive())
                 {
-                    Terraria.Graphics.Effects.Filters.Scene.Deactivate("DivineSeekerShader");
+                    Terraria.Graphics.Effects.Filters.Scene.Deactivate("ScreenTintShader");
+                }
+            }
+
+            if (melting)
+            {
+                if (!Terraria.Graphics.Effects.Filters.Scene["ScreenTintShader"].IsActive() && Main.netMode != NetmodeID.Server)
+                {
+                    Terraria.Graphics.Effects.Filters.Scene.Activate("ScreenTintShader").GetShader().UseColor(new Color(255, 192, 100));
+                    Terraria.Graphics.Effects.Filters.Scene["ScreenTintShader"].GetShader().UseProgress(1);
+                    Terraria.Graphics.Effects.Filters.Scene["ScreenTintShader"].GetShader().UseIntensity(10);
                 }
             }
         }

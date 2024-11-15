@@ -11,8 +11,8 @@ namespace Paracosm
     {
         public override void Load()
         {
-            Asset<Effect> filterShader = this.Assets.Request<Effect>("Content/Shaders/DivineSeekerShader");
-            Filters.Scene["DivineSeekerShader"] = new Filter(new ScreenShaderData(filterShader, "ScreenTint"), EffectPriority.Medium);
+            Asset<Effect> filterShader = this.Assets.Request<Effect>("Content/Shaders/ScreenTintShader");
+            Filters.Scene["ScreenTintShader"] = new Filter(new ScreenShaderData(filterShader, "ScreenTint"), EffectPriority.Medium);
         }
     }
 }

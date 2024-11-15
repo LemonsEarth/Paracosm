@@ -135,7 +135,7 @@ namespace Paracosm.Content.Bosses.DivineSeeker
 
         public override bool CheckDead()
         {
-            Terraria.Graphics.Effects.Filters.Scene.Deactivate("DivineSeekerShader");
+            Terraria.Graphics.Effects.Filters.Scene.Deactivate("ScreenTintShader");
             return true;
         }
 
@@ -191,9 +191,14 @@ namespace Paracosm.Content.Bosses.DivineSeeker
 
 
 
-            if (!Terraria.Graphics.Effects.Filters.Scene["DivineSeekerShader"].IsActive() && Main.netMode != NetmodeID.Server)
+            if (!Terraria.Graphics.Effects.Filters.Scene["ScreenTintShader"].IsActive() && Main.netMode != NetmodeID.Server)
             {
-                Terraria.Graphics.Effects.Filters.Scene.Activate("DivineSeekerShader").GetShader().UseColor(new Color(152, 152, 255));
+                Terraria.Graphics.Effects.Filters.Scene.Activate("ScreenTintShader").GetShader().UseColor(new Color(152, 152, 255));
+                Terraria.Graphics.Effects.Filters.Scene["ScreenTintShader"].GetShader().UseIntensity(10);
+            }
+            if (AITimer <= 60)
+            {
+                Terraria.Graphics.Effects.Filters.Scene["ScreenTintShader"].GetShader().UseProgress(60 / AITimer);
             }
 
             switch (phase)
