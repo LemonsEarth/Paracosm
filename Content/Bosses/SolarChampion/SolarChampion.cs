@@ -224,7 +224,6 @@ namespace Paracosm.Content.Bosses.SolarChampion
             if (!Terraria.Graphics.Effects.Filters.Scene["ScreenTintShader"].IsActive() && Main.netMode != NetmodeID.Server)
             {
                 Terraria.Graphics.Effects.Filters.Scene.Activate("ScreenTintShader").GetShader().UseColor(new Color(255, 192, 100));
-                Terraria.Graphics.Effects.Filters.Scene["ScreenTintShader"].GetShader().UseIntensity(10);
             }
 
             if (AITimer <= 60)
@@ -236,7 +235,6 @@ namespace Paracosm.Content.Bosses.SolarChampion
             {
                 p.solarMonolithShader = true;
             }
-
 
             Arena();
 
@@ -867,21 +865,28 @@ namespace Paracosm.Content.Bosses.SolarChampion
         const float BaseArenaDistance = 1800;
         public void Arena()
         {
-            if (Spheres.Count < 40)
+            if (Main.netMode != NetmodeID.MultiplayerClient)
             {
-                for (int i = 0; i < 40; i++)
+                if (Spheres.Count < 40)
                 {
-                    var sphere = Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center + new Vector2(0, -arenaDistance).RotatedBy(i * MathHelper.ToRadians(9)), Vector2.Zero, Proj["Sphere"], NPC.damage, 1, ai1: 60f);
-                    Spheres.Add(sphere);
+                    for (int i = 0; i < 40; i++)
+                    {
+                        var sphere = Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center + new Vector2(0, -arenaDistance).RotatedBy(i * MathHelper.ToRadians(9)), Vector2.Zero, Proj["Sphere"], NPC.damage, 1, ai1: 60f);
+
+                        Spheres.Add(sphere);
+                    }
+                    NPC.netUpdate = true;
                 }
-                NPC.netUpdate = true;
             }
 
             for (int i = 0; i < Spheres.Count; i++)
             {
                 Vector2 pos = NPC.Center + new Vector2(0, -arenaDistance).RotatedBy(i * MathHelper.ToRadians(9)).RotatedBy(MathHelper.ToRadians(AITimer));
+
                 Spheres[i].velocity = (pos - Spheres[i].position).SafeNormalize(Vector2.Zero) * (Spheres[i].position.Distance(pos) / 20);
                 Spheres[i].timeLeft = 180;
+
+
             }
             if (arenaDistance < BaseArenaDistance)
             {

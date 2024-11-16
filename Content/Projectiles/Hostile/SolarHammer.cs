@@ -54,6 +54,7 @@ namespace Paracosm.Content.Projectiles.Hostile
             Projectile.tileCollide = false;
             Projectile.timeLeft = 300;
             Projectile.alpha = 255;
+            Projectile.penetrate = -1;
             DrawOffsetX = -18;
         }
 

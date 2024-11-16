@@ -175,7 +175,6 @@ namespace Paracosm.Common.Players
                 {
                     Terraria.Graphics.Effects.Filters.Scene.Activate("ScreenTintShader").GetShader().UseColor(new Color(152, 152, 255));
                     Terraria.Graphics.Effects.Filters.Scene["ScreenTintShader"].GetShader().UseProgress(1);
-                    Terraria.Graphics.Effects.Filters.Scene["ScreenTintShader"].GetShader().UseIntensity(10);
                 }
             }
             else
@@ -192,7 +191,6 @@ namespace Paracosm.Common.Players
                 {
                     Terraria.Graphics.Effects.Filters.Scene.Activate("ScreenTintShader").GetShader().UseColor(new Color(255, 192, 100));
                     Terraria.Graphics.Effects.Filters.Scene["ScreenTintShader"].GetShader().UseProgress(1);
-                    Terraria.Graphics.Effects.Filters.Scene["ScreenTintShader"].GetShader().UseIntensity(10);
                 }
             }
         }
