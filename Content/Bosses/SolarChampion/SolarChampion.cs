@@ -63,7 +63,7 @@ namespace Paracosm.Content.Bosses.SolarChampion
             {"Hammer", ModContent.ProjectileType<SolarHammer>()},
             {"Axe", ModContent.ProjectileType<SolarAxe>()},
             {"Fireball", ModContent.ProjectileType<SolarFireball>()},
-            {"Sphere", ModContent.ProjectileType<SolarSphere>()}
+            {"Sphere", ModContent.ProjectileType<BorderSphere>()}
         };
 
 
@@ -113,11 +113,11 @@ namespace Paracosm.Content.Bosses.SolarChampion
             NPC.height = 106;
             NPC.Opacity = 1;
             NPC.lifeMax = 400000;
-            NPC.defense = 100;
+            NPC.defense = 30;
             NPC.damage = 20;
             NPC.HitSound = SoundID.NPCHit57;
             NPC.DeathSound = SoundID.NPCHit57;
-            NPC.value = 100000;
+            NPC.value = 5000000;
             NPC.noTileCollide = true;
             NPC.knockBackResist = 0;
             NPC.noGravity = true;
@@ -968,7 +968,7 @@ namespace Paracosm.Content.Bosses.SolarChampion
 
         public override void BossLoot(ref string name, ref int potionType)
         {
-            potionType = ItemID.GreaterHealingPotion;
+            potionType = ItemID.SuperHealingPotion;
         }
 
         public override bool CanHitPlayer(Player target, ref int cooldownSlot)

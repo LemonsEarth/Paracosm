@@ -645,7 +645,6 @@ namespace Paracosm.Content.Bosses.InfectedRevenant
                 distanceLeft -= segmentHeight;
                 spriteBatch.Draw(NeckTexture.Value, drawPosition - screenPos, null, new Color(255 - drawnSegments * 10, 255 - drawnSegments * 10, 255 - drawnSegments * 10, 255 - NPC.alpha), rotation, new Vector2(NeckTexture.Value.Width / 2f, NeckTexture.Value.Height / 2f), 1f, SpriteEffects.None, 0f);
             }
-            Utils.DrawLaser(spriteBatch, NeckTexture.Value, body.CorruptHeadPos, body.CrimsonHeadPos, new Vector2(1, 1), new Utils.LaserLineFraming(DelegateMethods.RainbowLaserDraw));
 
             return true;
         }

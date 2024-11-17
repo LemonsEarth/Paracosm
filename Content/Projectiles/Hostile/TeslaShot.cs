@@ -9,83 +9,83 @@ using Terraria.ModLoader;
 
 namespace Paracosm.Content.Projectiles.Hostile
 {
-    public class SolarSphere : ModProjectile
+    public class TeslaShot : ModProjectile
     {
         ref float AITimer => ref Projectile.ai[0];
-        ref float DamageNullTimer => ref Projectile.ai[1];
-        ref float SavedDamage => ref Projectile.ai[2];
-
+        ref float Acceleration => ref Projectile.ai[1];
         public override void SetStaticDefaults()
         {
-            Main.projFrames[Projectile.type] = 2;
-            ProjectileID.Sets.TrailCacheLength[Projectile.type] = 4;
-            ProjectileID.Sets.TrailingMode[Projectile.type] = 0;
+            Main.projFrames[Projectile.type] = 15;
+            ProjectileID.Sets.TrailCacheLength[Projectile.type] = 10;
+            ProjectileID.Sets.TrailingMode[Projectile.type] = 2;
         }
 
         public override void SetDefaults()
         {
-            Projectile.width = 60;
-            Projectile.height = 60;
+            Projectile.width = 32;
+            Projectile.height = 32;
             Projectile.hostile = true;
             Projectile.friendly = false;
             Projectile.ignoreWater = true;
             Projectile.tileCollide = false;
-            Projectile.timeLeft = 180;
-            Projectile.alpha = 255;
-            Projectile.penetrate = -1;
+            Projectile.timeLeft = 480;
         }
+
 
         public override void AI()
         {
-            Projectile.timeLeft = 10;
             if (Projectile.alpha > 0)
             {
-                Projectile.alpha -= 255 / 60;
+                Projectile.alpha -= 7;
             }
             if (AITimer == 0)
             {
-                SoundEngine.PlaySound(SoundID.Item20 with { MaxInstances = 2 });
-                SavedDamage = Projectile.damage;
-                Projectile.damage = 0;
-                Projectile.netUpdate = true;
+                SoundEngine.PlaySound(SoundID.DD2_LightningBugZap);
+                SoundEngine.PlaySound(SoundID.DD2_LightningAuraZap);
+                SoundEngine.PlaySound(SoundID.Item94 with { PitchRange = (0.2f, 0.4f)});
             }
-
-            if (DamageNullTimer == 0)
+            for (int i = 0; i < 3; i++)
             {
-                Projectile.damage = (int)SavedDamage;
-                Projectile.netUpdate = true;
+                Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, DustID.Vortex);
             }
             Lighting.AddLight(Projectile.Center, 100, 80, 0);
-            Projectile.rotation = AITimer;
+            Projectile.rotation = Projectile.velocity.ToRotation();
+            if (Acceleration > 0)
+            {
+                Vector2 direction = Projectile.velocity.SafeNormalize(Vector2.Zero);
+                Projectile.velocity = direction * Acceleration;
+                Acceleration++;
+                if (AITimer == 0)
+                {
+                    if (Main.netMode != NetmodeID.MultiplayerClient)
+                    {
+                        Vector2 indicatorDistancePos = Projectile.Center + direction * 64 * 50;
+                        Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Projectile.velocity.SafeNormalize(Vector2.Zero) / 10, ModContent.ProjectileType<IndicatorLaser>(), 10, 0, ai1: indicatorDistancePos.X, ai2: indicatorDistancePos.Y);
+                    }
+                }
+            }
 
             Projectile.frameCounter++;
             if (Projectile.frameCounter == 6)
             {
                 Projectile.frame++;
                 Projectile.frameCounter = 0;
-                if (Projectile.frame >= 2)
+                if (Projectile.frame >= 15)
                 {
                     Projectile.frame = 0;
                 }
             }
             AITimer++;
-            DamageNullTimer--;
-        }
-
-        public override void OnKill(int timeLeft)
-        {
-            Main.NewText(timeLeft);
         }
 
         public override void OnHitPlayer(Player target, Player.HurtInfo hurtInfo)
         {
-            target.AddBuff(ModContent.BuffType<SolarBurn>(), 60);
+            
         }
 
         public override bool PreDraw(ref Color lightColor)
         {
-            Texture2D texture = TextureAssets.Projectile[Type].Value;
-
+            /*Texture2D texture = TextureAssets.Projectile[Type].Value;
             Vector2 drawOrigin = new Vector2(texture.Width * 0.5f, Projectile.height * 0.5f);
             for (int k = Projectile.oldPos.Length - 1; k > 0; k--)
             {
@@ -95,7 +95,7 @@ namespace Paracosm.Content.Projectiles.Hostile
                 Color color = Projectile.GetAlpha(lightColor) * ((Projectile.oldPos.Length - k) / (float)Projectile.oldPos.Length);
                 Main.EntitySpriteDraw(texture, drawPos, drawRectangle, color, Projectile.rotation, drawOrigin, Projectile.scale, SpriteEffects.None, 0);
             }
-
+            */
             return true;
         }
     }

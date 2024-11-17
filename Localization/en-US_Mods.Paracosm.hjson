@@ -504,6 +504,8 @@ Projectiles: {
 	HorizonSplitterProj.DisplayName: Horizon Splitter Proj
 	SolarExplosionMagic.DisplayName: Solar Explosion Magic
 	TheCrucibleProj.DisplayName: The Crucible Proj
+	BorderSphere.DisplayName: Border Sphere
+	TeslaShot.DisplayName: Tesla Shot
 }
 
 NPCs: {
@@ -530,6 +532,9 @@ NPCs: {
 	InfectedRevenantCorruptHead.DisplayName: Infected Revenant
 	InfectedRevenantCrimsonHead.DisplayName: Infected Revenant
 	InfectedRevenantWings.DisplayName: ""
+	VortexMothership.DisplayName: Vortex Mothership
+	VortexMothershipBody.DisplayName: Vortex Mothership Body
+	VortexTeslaGun.DisplayName: Vortex Tesla Gun
 }
 
 Buffs: {
