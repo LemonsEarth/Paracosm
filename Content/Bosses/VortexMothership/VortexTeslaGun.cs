@@ -24,11 +24,11 @@ namespace Paracosm.Content.Bosses.VortexMothership
                 NPC.ai[0] = value;
             }
         }
+        public ref float GunCount => ref NPC.ai[1];
+        ref float Attack => ref NPC.ai[2];
+        ref float AttackTimer => ref NPC.ai[3];
         float AITimer = 0;
-        public ref float Attack => ref NPC.ai[1];
-        public ref float AttackCount => ref NPC.ai[2];
-        public float attackDuration = 0;
-        public ref float AttackTimer => ref NPC.ai[3];
+        float attackDuration = 0;
         int[] attackDurations = { 300, 300, 360, 400, 600 };
 
         VortexMothershipBody body;
@@ -108,7 +108,7 @@ namespace Paracosm.Content.Bosses.VortexMothership
             body = (VortexMothershipBody)bodyNPC.ModNPC;
             NPC.Opacity = body.NPC.Opacity;
             NPC.rotation = NPC.Center.DirectionTo(body.player.Center).ToRotation() + MathHelper.PiOver2;
-            NPC.Center = body.teslaGunPos;
+            NPC.Center = body.NPC.Center + body.gunOffsets[(int)GunCount];
             if (AITimer < 60)
             {
                 AITimer++;

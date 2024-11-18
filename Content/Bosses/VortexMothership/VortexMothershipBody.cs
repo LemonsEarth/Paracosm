@@ -52,7 +52,6 @@ namespace Paracosm.Content.Bosses.VortexMothership
         Vector2 targetPosition = Vector2.Zero;
         float arenaDistance = 0;
 
-
         List<Projectile> Spheres = new List<Projectile>();
         Dictionary<string, int> Proj = new Dictionary<string, int>
         {
@@ -63,8 +62,15 @@ namespace Paracosm.Content.Bosses.VortexMothership
         {
             {"Tesla", ModContent.NPCType<VortexTeslaGun>()}
         };
-        public Vector2 teslaGunPos => NPC.Center + new Vector2(-52, 91);
-        VortexTeslaGun teslaGun;
+
+        public Vector2[] gunOffsets { get; private set; } =
+        {
+            new Vector2(-60, 90),
+            new Vector2(60, 90),
+            new Vector2(-100, -90),
+            new Vector2(100, -90),
+        };
+        VortexTeslaGun[] teslaGuns = new VortexTeslaGun[4];
 
         enum Attacks
         {
@@ -263,14 +269,16 @@ namespace Paracosm.Content.Bosses.VortexMothership
                 return;
             }
 
-            NPC teslaGunNPC = NPC.NewNPCDirect(NPC.GetSource_FromAI(), teslaGunPos, Weapons["Tesla"], NPC.whoAmI, NPC.whoAmI);
-            teslaGun = (VortexTeslaGun)teslaGunNPC.ModNPC;
-            teslaGun.ParentIndex = NPC.whoAmI;
-
-            if (Main.netMode == NetmodeID.Server)
+            for (int i = 0; i < 4; i++)
             {
-                NetMessage.SendData(MessageID.SyncNPC, number: teslaGunNPC.whoAmI);
-            }
+                NPC teslaGunNPC = NPC.NewNPCDirect(NPC.GetSource_FromAI(), NPC.Center + gunOffsets[i], Weapons["Tesla"], NPC.whoAmI, NPC.whoAmI, i);
+                teslaGuns[i] = (VortexTeslaGun)teslaGunNPC.ModNPC;
+
+                if (Main.netMode == NetmodeID.Server)
+                {
+                    NetMessage.SendData(MessageID.SyncNPC, number: teslaGunNPC.whoAmI);
+                }
+            }         
         }
 
         const float BaseArenaDistance = 1500;
