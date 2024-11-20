@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Paracosm.Common.Utils;
+using Paracosm.Content.Projectiles.Friendly;
 using System;
 using Terraria;
 using Terraria.ID;

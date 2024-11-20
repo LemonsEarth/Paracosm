@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Paracosm.Content.Items.Materials;
-using Paracosm.Content.Projectiles;
+using Paracosm.Content.Projectiles.Friendly;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.DataStructures;

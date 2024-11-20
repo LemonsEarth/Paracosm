@@ -5,7 +5,7 @@ using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Paracosm.Content.Projectiles
+namespace Paracosm.Content.Projectiles.Friendly
 {
     public class ParacosmicFlame : ModProjectile
     {

@@ -4,7 +4,7 @@ using Paracosm.Common.Utils;
 using Paracosm.Content.Biomes;
 using Paracosm.Content.Buffs;
 using Paracosm.Content.Items.Armor.Celestial;
-using Paracosm.Content.Projectiles;
+using Paracosm.Content.Projectiles.Friendly;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;

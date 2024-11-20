@@ -5,10 +5,10 @@ using Paracosm.Content.Buffs;
 using System;
 using Terraria;
 using Terraria.Audio;
-using Paracosm.Content.Projectiles;
 using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Paracosm.Content.Projectiles.Friendly;
 
 namespace Paracosm.Content.Projectiles.HeldProjectiles
 {

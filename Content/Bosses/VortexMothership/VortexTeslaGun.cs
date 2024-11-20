@@ -25,18 +25,11 @@ namespace Paracosm.Content.Bosses.VortexMothership
             }
         }
         public ref float GunCount => ref NPC.ai[1];
-        ref float Attack => ref NPC.ai[2];
         ref float AttackTimer => ref NPC.ai[3];
+        int AttackCount = 0;
         float AITimer = 0;
         float attackDuration = 0;
-        int[] attackDurations = { 300, 300, 360, 400, 600 };
-
         VortexMothershipBody body;
-
-        enum Attacks
-        {
-
-        }
 
         public override void SetStaticDefaults()
         {
@@ -113,18 +106,57 @@ namespace Paracosm.Content.Bosses.VortexMothership
             {
                 AITimer++;
                 return;
-            }
+            }          
 
-            if (AITimer % 60 == 0)
+            switch(body.Attack)
             {
-                if (Main.netMode != NetmodeID.MultiplayerClient)
-                {
-                    Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, NPC.Center.DirectionTo(body.player.Center) * 10, ModContent.ProjectileType<TeslaShot>(), body.damage, 1);
-                }
+                case (int)VortexMothershipBody.Attacks.TeslashotSpam:
+                    TeslaShotSpam();
+                    break;
+                case (int)VortexMothershipBody.Attacks.CenterBlast:
+                    CenterBlast();
+                    break;
             }
 
             attackDuration--;
             AITimer++;
+        }
+
+        public void SwitchAttacks(int attack)
+        {
+            if (Main.netMode != NetmodeID.MultiplayerClient)
+            {
+                AttackTimer = 0;
+                AttackCount = 0;
+            }
+            NPC.netUpdate = true;
+        }
+
+        void TeslaShotSpam()
+        {
+            if (AttackTimer <= 0 - AttackCount)
+            {
+                if (Main.netMode != NetmodeID.MultiplayerClient)
+                {
+                    AttackCount = Main.rand.Next(-10, 2);
+                    NPC.netUpdate = true;
+                    Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, NPC.Center.DirectionTo(body.player.Center) * 10, ModContent.ProjectileType<TeslaShot>(), body.damage, 1, ai1: 2f);
+                }
+                AttackTimer = 30;
+            }
+            AttackTimer--;
+        }
+
+        void CenterBlast()
+        {
+            if (AttackTimer <= 0)
+            {
+                if (Main.netMode != NetmodeID.MultiplayerClient)
+                {
+                    Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<TeslaCore>(), body.damage, 1, ai0: body.NPC.Center.X, ai1: body.NPC.Center.Y, ai2: GunCount);
+                }
+                AttackTimer = 2;
+            }
         }
 
         public override void FindFrame(int frameHeight)

@@ -28,18 +28,18 @@ namespace Paracosm.Content.Bosses.SolarChampion
     [AutoloadBossHead]
     public class SolarChampion : ModNPC
     {
-        public ref float AITimer => ref NPC.ai[0];
-        public ref float Attack => ref NPC.ai[1];
-        public ref float AttackTimer => ref NPC.ai[2];
-        public ref float AttackCount => ref NPC.ai[3];
+        ref float AITimer => ref NPC.ai[0];
+        ref float Attack => ref NPC.ai[1];
+        ref float AttackTimer => ref NPC.ai[2];
+        ref float AttackCount => ref NPC.ai[3];
 
-        public int AttackTimer2 = 0;
-        public int AttackCount2 = 0;
+        int AttackTimer2 = 0;
+        int AttackCount2 = 0;
 
         bool phase2FirstTime = false;
         int phase = 1;
 
-        public float attackDuration = 0;
+        float attackDuration = 0;
         int[] attackDurations = { 1200, 900, 1200, 600 };
         int[] attackDurations2 = { 1200, 900, 1200, 600 };
         Player player;
@@ -65,7 +65,6 @@ namespace Paracosm.Content.Bosses.SolarChampion
             {"Fireball", ModContent.ProjectileType<SolarFireball>()},
             {"Sphere", ModContent.ProjectileType<BorderSphere>()}
         };
-
 
         enum Attacks
         {
@@ -226,11 +225,6 @@ namespace Paracosm.Content.Bosses.SolarChampion
                 Terraria.Graphics.Effects.Filters.Scene.Activate("ScreenTintShader").GetShader().UseColor(new Color(255, 192, 100));
             }
 
-            if (AITimer <= 60)
-            {
-                Terraria.Graphics.Effects.Filters.Scene["ScreenTintShader"].GetShader().UseProgress(AITimer / 60);
-            }
-
             foreach (var p in Main.player)
             {
                 p.solarMonolithShader = true;
@@ -245,6 +239,7 @@ namespace Paracosm.Content.Bosses.SolarChampion
                 NPC.Opacity += 1f / 60f;
                 AITimer++;
                 Attack = -1;
+                Terraria.Graphics.Effects.Filters.Scene["ScreenTintShader"].GetShader().UseProgress(AITimer / 60);
                 return;
             }
             NPC.dontTakeDamage = false;

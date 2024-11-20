@@ -455,6 +455,15 @@ Items: {
 			"Don't hold it in for too long!"
 			'''
 	}
+
+	StarSpanCommunicator: {
+		DisplayName: Star-Span Communicator
+		Tooltip:
+			'''
+			Not Consumable
+			Attracts the wrath of a cosmic empire
+			'''
+	}
 }
 
 Projectiles: {
@@ -506,6 +515,7 @@ Projectiles: {
 	TheCrucibleProj.DisplayName: The Crucible Proj
 	BorderSphere.DisplayName: Border Sphere
 	TeslaShot.DisplayName: Tesla Shot
+	TeslaCore.DisplayName: Tesla Core
 }
 
 NPCs: {

@@ -3,7 +3,7 @@ using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Paracosm.Content.Projectiles
+namespace Paracosm.Content.Projectiles.Friendly
 {
     public class CorruptBolt : ModProjectile
     {

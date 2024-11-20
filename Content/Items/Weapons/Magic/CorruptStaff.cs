@@ -1,4 +1,4 @@
-﻿using Paracosm.Content.Projectiles;
+﻿using Paracosm.Content.Projectiles.Friendly;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;

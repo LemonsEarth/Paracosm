@@ -29,13 +29,20 @@ namespace Paracosm.Content.Bosses.VortexMothership
     [AutoloadBossHead]
     public class VortexMothershipBody : ModNPC
     {
-        public ref float AITimer => ref NPC.ai[0];
-        public ref float Attack => ref NPC.ai[1];
-        public ref float AttackTimer => ref NPC.ai[2];
-        public ref float AttackCount => ref NPC.ai[3];
+        ref float AITimer => ref NPC.ai[0];
+        public float Attack
+        {
+            get { return NPC.ai[1]; }
+            private set
+            {
+                NPC.ai[1] = value;
+            }
+        }
+        ref float AttackTimer => ref NPC.ai[2];
+        ref float AttackCount => ref NPC.ai[3];
 
-        public int AttackTimer2 = 0;
-        public int AttackCount2 = 0;
+        int AttackTimer2 = 0;
+        int AttackCount2 = 0;
 
         public int damage = 20;
 
@@ -44,11 +51,11 @@ namespace Paracosm.Content.Bosses.VortexMothership
 
         bool spawnedWeapons = false;
 
-        public float attackDuration = 0;
-        int[] attackDurations = { 1200, 900, 1200, 600 };
+        float attackDuration = 0;
+        int[] attackDurations = { 300, 180, 1200, 600 };
         int[] attackDurations2 = { 1200, 900, 1200, 600 };
-        public Player player;
-        public Vector2 playerDirection;
+        public Player player { get; private set; }
+        public Vector2 playerDirection { get; private set; }
         Vector2 targetPosition = Vector2.Zero;
         float arenaDistance = 0;
 
@@ -67,17 +74,18 @@ namespace Paracosm.Content.Bosses.VortexMothership
         {
             new Vector2(-60, 90),
             new Vector2(60, 90),
-            new Vector2(-100, -90),
-            new Vector2(100, -90),
+            new Vector2(-400, -60),
+            new Vector2(400, -60),
         };
         VortexTeslaGun[] teslaGuns = new VortexTeslaGun[4];
 
-        enum Attacks
+        public enum Attacks
         {
-            
+            TeslashotSpam,
+            CenterBlast
         }
 
-        enum Attacks2
+        public enum Attacks2
         {
 
         }
@@ -175,11 +183,6 @@ namespace Paracosm.Content.Bosses.VortexMothership
                 Terraria.Graphics.Effects.Filters.Scene.Activate("ScreenTintShader").GetShader().UseColor(new Color(89, 255, 225));
             }
 
-            if (AITimer <= 60)
-            {
-                Terraria.Graphics.Effects.Filters.Scene["ScreenTintShader"].GetShader().UseProgress(AITimer / 60);
-            }
-
             foreach (var p in Main.player)
             {
                 p.vortexMonolithShader = true;
@@ -191,10 +194,11 @@ namespace Paracosm.Content.Bosses.VortexMothership
             if (AITimer < 60)
             {
                 NPC.dontTakeDamage = true;
-                NPC.velocity = new Vector2(0, -2);
+                NPC.velocity = new Vector2(0, 2);
                 NPC.Opacity += 1f / 60f;
                 AITimer++;
                 Attack = -1;
+                Terraria.Graphics.Effects.Filters.Scene["ScreenTintShader"].GetShader().UseProgress(AITimer / 60);
                 return;
             }
             NPC.dontTakeDamage = false;
@@ -214,19 +218,6 @@ namespace Paracosm.Content.Bosses.VortexMothership
                 SwitchAttacks();
             }
 
-            if (phase == 1)
-            {
-                switch (Attack)
-                {
-                    
-                }
-            }
-            else
-            {
-
-            }
-
-
             attackDuration--;
             AITimer++;
         }
@@ -236,22 +227,21 @@ namespace Paracosm.Content.Bosses.VortexMothership
             if (Main.netMode != NetmodeID.MultiplayerClient)
             {
                 Attack++;
-                if (Attack > 3)
+                if (Attack > 1)
                 {
                     Attack = 0;
                 }
                 if (phase == 1) attackDuration = attackDurations[(int)Attack];
                 else attackDuration = attackDurations2[(int)Attack];
+                foreach (VortexTeslaGun gun in teslaGuns)
+                {
+                    gun.SwitchAttacks((int)Attack);
+                }
 
                 AttackCount = 0;
                 AttackCount2 = 0;
                 AttackTimer = 0;
                 AttackTimer2 = 0;
-                /*foreach (var proj in Proj)
-                {
-                    if (proj.Key != "Sphere")
-                        DeleteProjectiles(proj.Value);
-                }*/
             }
             NPC.netUpdate = true;
         }
@@ -278,7 +268,7 @@ namespace Paracosm.Content.Bosses.VortexMothership
                 {
                     NetMessage.SendData(MessageID.SyncNPC, number: teslaGunNPC.whoAmI);
                 }
-            }         
+            }
         }
 
         const float BaseArenaDistance = 1500;
