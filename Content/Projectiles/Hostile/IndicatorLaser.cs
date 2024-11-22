@@ -2,7 +2,6 @@
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.Audio;
-using Terraria.DataStructures;
 using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -47,7 +46,7 @@ namespace Paracosm.Content.Projectiles.Hostile
             if (Projectile.timeLeft > 10)
             {
                 if (Projectile.alpha > 0)
-                Projectile.alpha -= 255 / 10;
+                    Projectile.alpha -= 255 / 10;
             }
             else if (Projectile.timeLeft < 10)
             {

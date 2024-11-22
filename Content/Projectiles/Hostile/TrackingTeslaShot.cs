@@ -1,9 +1,5 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Paracosm.Content.Buffs;
-using Terraria;
+﻿using Terraria;
 using Terraria.Audio;
-using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -29,26 +25,24 @@ namespace Paracosm.Content.Projectiles.Hostile
             Projectile.ignoreWater = true;
             Projectile.tileCollide = false;
             Projectile.timeLeft = 120;
-            Projectile.alpha = 255;
         }
 
         public override void AI()
         {
-            if (Projectile.alpha > 0)
-            {
-                Projectile.alpha -= 7;
-            }
             if (AITimer == 0)
             {
+                Projectile.Opacity = 0;
                 SoundEngine.PlaySound(SoundID.DD2_LightningBugZap);
                 SoundEngine.PlaySound(SoundID.DD2_LightningAuraZap);
                 SoundEngine.PlaySound(SoundID.Item94 with { PitchRange = (0.5f, 0.7f) });
             }
             Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, DustID.BlueMoss);
-
             Lighting.AddLight(Projectile.Center, 0, 80, 80);
             Projectile.rotation = Projectile.velocity.ToRotation();
-            //Projectile.velocity += Projectile.Center.DirectionTo(Main.player[(int)Target].Center);
+            if (AITimer > 60)
+            {
+                Projectile.velocity += Projectile.Center.DirectionTo(Main.player[(int)Target].Center) * 1.5f;
+            }
 
             Projectile.frameCounter++;
             if (Projectile.frameCounter == 2)
@@ -58,6 +52,17 @@ namespace Paracosm.Content.Projectiles.Hostile
                 if (Projectile.frame >= 4)
                 {
                     Projectile.frame = 0;
+                }
+            }
+            if (Projectile.timeLeft < 30)
+            {
+                Projectile.Opacity -= 1f / 30f;
+            }
+            else
+            {
+                if (Projectile.Opacity < 1)
+                {
+                    Projectile.Opacity += 1f / 30f;
                 }
             }
             AITimer++;

@@ -7,7 +7,7 @@ using Terraria.ModLoader;
 
 namespace Paracosm.Content.Projectiles.Hostile
 {
-    public class TeslaCore : ModProjectile
+    public class VortexMine : ModProjectile
     {
         float AITimer = 0;
         Vector2 targetPos
@@ -28,27 +28,25 @@ namespace Paracosm.Content.Projectiles.Hostile
 
         public override void SetDefaults()
         {
-            Projectile.width = 64;
-            Projectile.height = 64;
+            Projectile.width = 50;
+            Projectile.height = 50;
             Projectile.hostile = true;
             Projectile.friendly = false;
             Projectile.ignoreWater = true;
             Projectile.tileCollide = false;
-            Projectile.timeLeft = 60;
+            Projectile.timeLeft = 90;
             Projectile.alpha = 255;
+            Projectile.penetrate = -1;
         }
 
         public override void OnKill(int timeLeft)
         {
-            SoundEngine.PlaySound(SoundID.Item62);
+            SoundEngine.PlaySound(SoundID.Item14);
+            SoundEngine.PlaySound(SoundID.NPCDeath6 with { Pitch = -0.5f });
             LemonUtils.DustCircle(Projectile.Center, 16, 10, DustID.MushroomTorch, 1.2f);
             if (Main.netMode != NetmodeID.MultiplayerClient)
             {
-                for (int i = 0; i < 16; i++)
-                {
-                    Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, new Vector2(0, 1).RotatedBy(MathHelper.ToRadians(i * 22.5f + gunMod * 20)) * 5, ModContent.ProjectileType<TeslaShot>(), Projectile.damage, Projectile.knockBack, ai1: 3f, ai2: 1);
-                }
-                Projectile.netUpdate = true;
+                Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Vector2.Zero, ModContent.ProjectileType<VortexExplosion>(), Projectile.damage * 2, Projectile.knockBack);
             }
         }
 
@@ -62,7 +60,8 @@ namespace Paracosm.Content.Projectiles.Hostile
             {
                 Projectile.alpha -= 7;
             }
-            Projectile.Center = Vector2.Lerp(Projectile.Center, targetPos, AITimer / (60 + gunMod * 30));
+            Projectile.velocity = Vector2.Lerp(Projectile.velocity, Vector2.Zero, AITimer / 90);
+            Projectile.rotation = MathHelper.ToRadians(AITimer * Projectile.velocity.Length());
 
             Projectile.frameCounter++;
             if (Projectile.frameCounter == 6)

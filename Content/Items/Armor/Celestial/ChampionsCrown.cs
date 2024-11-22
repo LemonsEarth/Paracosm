@@ -1,6 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using Paracosm.Common.Players;
-using System;
 using Terraria;
 using Terraria.ID;
 using Terraria.Localization;
@@ -31,7 +30,7 @@ namespace Paracosm.Content.Items.Armor.Celestial
             Item.height = 32;
             Item.defense = 18;
             Item.lifeRegen = lifeRegenBoost;
-            
+
             Item.rare = ItemRarityID.Red;
             Item.value = Item.sellPrice(0, 15, 0, 0);
         }

@@ -1,5 +1,4 @@
-﻿using Paracosm.Common.Globals;
-using Paracosm.Common.Players;
+﻿using Paracosm.Common.Players;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;

@@ -1,10 +1,6 @@
-﻿using Paracosm.Content.Items.Accessories;
-using Paracosm.Content.Items.Armor.Celestial;
-using Paracosm.Content.Items.Materials;
+﻿using Paracosm.Content.Items.Armor.Celestial;
 using Paracosm.Content.Items.Weapons.Magic;
 using Paracosm.Content.Items.Weapons.Melee;
-using Paracosm.Content.Items.Weapons.Ranged;
-using Paracosm.Content.Items.Weapons.Summon;
 using Terraria;
 using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;

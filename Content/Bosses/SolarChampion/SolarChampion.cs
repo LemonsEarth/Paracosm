@@ -3,11 +3,8 @@ using Microsoft.Xna.Framework.Graphics;
 using Paracosm.Common.Systems;
 using Paracosm.Content.Buffs;
 using Paracosm.Content.Items.BossBags;
-using Paracosm.Content.Items.Materials;
 using Paracosm.Content.Items.Weapons.Magic;
 using Paracosm.Content.Items.Weapons.Melee;
-using Paracosm.Content.Items.Weapons.Ranged;
-using Paracosm.Content.Items.Weapons.Summon;
 using Paracosm.Content.Projectiles.Hostile;
 using System;
 using System.Collections.Generic;
@@ -19,7 +16,6 @@ using Terraria.GameContent;
 using Terraria.GameContent.Bestiary;
 using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
-using Terraria.Localization;
 using Terraria.ModLoader;
 
 
@@ -29,7 +25,22 @@ namespace Paracosm.Content.Bosses.SolarChampion
     public class SolarChampion : ModNPC
     {
         ref float AITimer => ref NPC.ai[0];
-        ref float Attack => ref NPC.ai[1];
+
+        float Attack
+        {
+            get { return NPC.ai[1]; }
+            set
+            {
+                if (value > 3 || value < 0)
+                {
+                    NPC.ai[1] = 0;
+                }
+                else
+                {
+                    NPC.ai[1] = value;
+                }
+            }
+        }
         ref float AttackTimer => ref NPC.ai[2];
         ref float AttackCount => ref NPC.ai[3];
 
@@ -238,7 +249,8 @@ namespace Paracosm.Content.Bosses.SolarChampion
                 NPC.velocity = new Vector2(0, -2);
                 NPC.Opacity += 1f / 60f;
                 AITimer++;
-                Attack = -1;
+                Attack = 0;
+                attackDuration = attackDurations[(int)Attack];
                 Terraria.Graphics.Effects.Filters.Scene["ScreenTintShader"].GetShader().UseProgress(AITimer / 60);
                 return;
             }
@@ -303,10 +315,6 @@ namespace Paracosm.Content.Bosses.SolarChampion
             if (Main.netMode != NetmodeID.MultiplayerClient)
             {
                 Attack++;
-                if (Attack > 3)
-                {
-                    Attack = 0;
-                }
                 if (phase == 1) attackDuration = attackDurations[(int)Attack];
                 else attackDuration = attackDurations2[(int)Attack];
 
@@ -347,28 +355,28 @@ namespace Paracosm.Content.Bosses.SolarChampion
                             rotSpeedMul -= 0.04f;
                         }
                         break;
-                    case > 60 and < 120:
+                    case > 60 and < 120: // Sling
                         rotSpeedMul += 0.02f;
                         isDashing = true;
                         NPC.velocity = -playerDirection.SafeNormalize(Vector2.Zero) * 2;
                         break;
-                    case 130:
+                    case 130: // Set target as old player location
                         tempPos = player.Center;
                         NPC.netUpdate = true;
                         break;
-                    case 160:
+                    case 160: // Charge
                         NPC.velocity = NPC.Center.DirectionTo(tempPos).SafeNormalize(Vector2.Zero) * 50;
                         NPC.netUpdate = true;
                         rotSpeedMul = 8;
                         break;
-                    case >= 200:
+                    case >= 200: // Stop charging
                         isDashing = false;
                         AttackTimer = -1;
                         NPC.velocity = Vector2.Zero;
                         AttackCount++;
                         NPC.netUpdate = true;
                         break;
-                    case > 160:
+                    case > 160: // Create projs
                         if (AttackTimer % 10 == 0)
                         {
                             Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, playerDirection, Proj["Fireball"], NPC.damage, 0, ai1: 2f);
@@ -443,7 +451,7 @@ namespace Paracosm.Content.Bosses.SolarChampion
             float YaccelMod = Math.Sign(playerDirection.Y) - Math.Sign(NPC.velocity.Y);
             NPC.velocity += new Vector2(XaccelMod * 0.04f + 0.02f * Math.Sign(playerDirection.X), YaccelMod * 0.04f + 0.02f * Math.Sign(playerDirection.Y));
 
-            if (Main.netMode != NetmodeID.MultiplayerClient)
+            if (Main.netMode != NetmodeID.MultiplayerClient) // Creating swords
             {
                 if (Swords.Count < 8 || Swords.Any(proj => proj.active == false))
                 {
@@ -456,7 +464,7 @@ namespace Paracosm.Content.Bosses.SolarChampion
                 }
             }
 
-            for (int i = 0; i < Swords.Count; i++)
+            for (int i = 0; i < Swords.Count; i++) // Rotating swords
             {
                 var sword = Swords[i];
                 Vector2 rotatedPos = new Vector2(0, swordOffset).RotatedBy(MathHelper.ToRadians(AttackTimer)).RotatedBy(i * MathHelper.PiOver4);
@@ -477,7 +485,7 @@ namespace Paracosm.Content.Bosses.SolarChampion
                 sword.timeLeft = 180;
             }
 
-            if (AttackTimer % 120 == 0)
+            if (AttackTimer % 120 == 0) // Firing hammers
             {
                 if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
@@ -485,7 +493,7 @@ namespace Paracosm.Content.Bosses.SolarChampion
                 }
             }
 
-            if (attackDuration == 30)
+            if (attackDuration == 30) // Indicator for axes - next attack
             {
                 if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
@@ -501,7 +509,7 @@ namespace Paracosm.Content.Bosses.SolarChampion
 
         public void AxeSpin(Player player)
         {
-            if (Main.netMode != NetmodeID.MultiplayerClient)
+            if (Main.netMode != NetmodeID.MultiplayerClient) // Creating axes
             {
                 if (Axes.Count < 11 || Axes.Any(proj => proj.active == false))
                 {
@@ -521,20 +529,20 @@ namespace Paracosm.Content.Bosses.SolarChampion
                 case 0:
                     SoundEngine.PlaySound(SoundID.Item71);
                     break;
-                case <= 120:
+                case <= 120: // Lerp axes to position
                     for (int i = 0; i < Axes.Count; i++)
                     {
                         Vector2 pos = new Vector2(0, (i + 1) * -150);
                         Axes[i].Center = Vector2.Lerp(Axes[i].Center, NPC.Center + pos, AttackTimer / 120f);
                     }
                     break;
-                case > 120:
+                case > 120: // Speen
                     for (int i = 0; i < Axes.Count; i++)
                     {
                         Vector2 pos = new Vector2(0, (i + 1) * -150);
                         Axes[i].Center = NPC.Center + pos.RotatedBy(MathHelper.ToRadians(-AttackTimer2));
                     }
-                    if (AttackTimer2 % 120 == 0)
+                    if (AttackTimer2 % 120 == 0) // Create projs
                     {
                         if (Main.netMode != NetmodeID.MultiplayerClient)
                         {

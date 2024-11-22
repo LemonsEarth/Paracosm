@@ -1,26 +1,18 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Paracosm.Common.Systems;
-using Paracosm.Content.Bosses.InfectedRevenant;
 using Paracosm.Content.Buffs;
 using Paracosm.Content.Items.BossBags;
-using Paracosm.Content.Items.Materials;
 using Paracosm.Content.Items.Weapons.Magic;
 using Paracosm.Content.Items.Weapons.Melee;
-using Paracosm.Content.Items.Weapons.Ranged;
-using Paracosm.Content.Items.Weapons.Summon;
 using Paracosm.Content.Projectiles.Hostile;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using Terraria;
-using Terraria.Audio;
-using Terraria.GameContent;
 using Terraria.GameContent.Bestiary;
 using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
-using Terraria.Localization;
 using Terraria.ModLoader;
 
 
@@ -35,13 +27,13 @@ namespace Paracosm.Content.Bosses.VortexMothership
             get { return NPC.ai[1]; }
             private set
             {
-                if (value <= 2 && value >= 0)
+                if (value > 2 || value < 0)
                 {
-                    NPC.ai[1] = value;
+                    NPC.ai[1] = 0;
                 }
                 else
                 {
-                    NPC.ai[1] = 0;
+                    NPC.ai[1] = value;
                 }
             }
         }
@@ -54,13 +46,14 @@ namespace Paracosm.Content.Bosses.VortexMothership
         public int damage = 20;
 
         bool phase2FirstTime = false;
-        int phase = 1;
+        public int phase { get; private set; } = 1;
 
         bool spawnedWeapons = false;
+        bool spawnedUFOs = false;
 
         float attackDuration = 0;
         int[] attackDurations = { 300, 180, 900, 600 };
-        int[] attackDurations2 = { 1200, 900, 1200, 600 };
+        int[] attackDurations2 = { 900, 900, 1200, 600 };
         public Player player { get; private set; }
         public Vector2 playerDirection { get; private set; }
         Vector2 targetPosition = Vector2.Zero;
@@ -72,9 +65,12 @@ namespace Paracosm.Content.Bosses.VortexMothership
             {"Sphere", ModContent.ProjectileType<BorderSphere>()}
         };
 
-        Dictionary<string, int> Weapons = new Dictionary<string, int>
+        Dictionary<string, int> Summonables = new Dictionary<string, int>
         {
-            {"Tesla", ModContent.NPCType<VortexTeslaGun>()}
+            {"Tesla", ModContent.NPCType<VortexTeslaGun>()},
+            {"UFO", ModContent.NPCType<VortexUFO>()},
+            {"StormDiver", NPCID.VortexRifleman },
+            {"HornetQueen", NPCID.VortexHornetQueen }
         };
 
         public Vector2[] gunOffsets { get; private set; } =
@@ -95,7 +91,9 @@ namespace Paracosm.Content.Bosses.VortexMothership
 
         public enum Attacks2
         {
-
+            ChillTeslaShots,
+            MineSpam,
+            ChillTeslaShots3,
         }
 
         public override void SetStaticDefaults()
@@ -127,7 +125,7 @@ namespace Paracosm.Content.Bosses.VortexMothership
             NPC.width = 1124;
             NPC.height = 368;
             NPC.Opacity = 1;
-            NPC.lifeMax = 500000;
+            NPC.lifeMax = 200000;
             NPC.defense = 100;
             NPC.damage = 0;
             NPC.HitSound = SoundID.NPCHit4;
@@ -212,12 +210,27 @@ namespace Paracosm.Content.Bosses.VortexMothership
             }
             NPC.dontTakeDamage = false;
 
-            if (NPC.life <= NPC.lifeMax / 2 && !phase2FirstTime)
+            if (NPC.life <= NPC.lifeMax * 0.66f && !phase2FirstTime)
             {
                 phase2FirstTime = true;
                 phase = 2;
                 SwitchAttacks();
                 NPC.netUpdate = true;
+            }
+
+            if (phase == 2)
+            {
+                if (AttackTimer % 600 == 0)
+                {
+                    SpawnEnemies();
+                }
+
+                if (AttackTimer % 2400 == 0)
+                {
+                    SpawnUFOs();
+                    spawnedUFOs = false;
+                }
+                AttackTimer++;
             }
 
             NPC.velocity = Vector2.Zero;
@@ -266,7 +279,7 @@ namespace Paracosm.Content.Bosses.VortexMothership
 
             for (int i = 0; i < 4; i++)
             {
-                NPC teslaGunNPC = NPC.NewNPCDirect(NPC.GetSource_FromAI(), NPC.Center + gunOffsets[i], Weapons["Tesla"], NPC.whoAmI, NPC.whoAmI, i);
+                NPC teslaGunNPC = NPC.NewNPCDirect(NPC.GetSource_FromAI(), NPC.Center + gunOffsets[i], Summonables["Tesla"], NPC.whoAmI, NPC.whoAmI, i);
                 teslaGuns[i] = (VortexTeslaGun)teslaGunNPC.ModNPC;
 
                 if (Main.netMode == NetmodeID.Server)
@@ -274,6 +287,58 @@ namespace Paracosm.Content.Bosses.VortexMothership
                     NetMessage.SendData(MessageID.SyncNPC, number: teslaGunNPC.whoAmI);
                 }
             }
+        }
+
+        void SpawnUFOs()
+        {
+            if (spawnedUFOs)
+            {
+                return;
+            }
+
+            spawnedUFOs = true;
+            if (Main.netMode == NetmodeID.MultiplayerClient)
+            {
+                return;
+            }
+            for (int i = 0; i < 4; i++)
+            {
+                NPC ufoNPC = NPC.NewNPCDirect(NPC.GetSource_FromAI(), NPC.Center + gunOffsets[i] / 2, Summonables["UFO"], NPC.whoAmI, NPC.whoAmI);
+
+                if (Main.netMode == NetmodeID.Server)
+                {
+                    NetMessage.SendData(MessageID.SyncNPC, number: ufoNPC.whoAmI);
+                }
+            }
+        }
+
+        void SpawnEnemies()
+        {
+            if (Main.netMode == NetmodeID.MultiplayerClient)
+            {
+                return;
+            }
+
+            for (int i = 0; i < Main.rand.Next(2, 5); i++)
+            {
+                NPC diver = NPC.NewNPCDirect(NPC.GetSource_FromAI(), NPC.Center + new Vector2(Main.rand.Next(-100, 100)), Summonables["StormDiver"], NPC.whoAmI, NPC.whoAmI);
+
+                if (Main.netMode == NetmodeID.Server)
+                {
+                    NetMessage.SendData(MessageID.SyncNPC, number: diver.whoAmI);
+                }
+            }
+
+            for (int i = 0; i < Main.rand.Next(1, 2); i++)
+            {
+                NPC queen = NPC.NewNPCDirect(NPC.GetSource_FromAI(), NPC.Center + new Vector2(Main.rand.Next(-100, 100)), Summonables["HornetQueen"], NPC.whoAmI, NPC.whoAmI);
+
+                if (Main.netMode == NetmodeID.Server)
+                {
+                    NetMessage.SendData(MessageID.SyncNPC, number: queen.whoAmI);
+                }
+            }
+
         }
 
         const float BaseArenaDistance = 1500;
@@ -315,7 +380,6 @@ namespace Paracosm.Content.Bosses.VortexMothership
                 }
             }
         }
-
 
         public void DeleteProjectiles(int projID)
         {

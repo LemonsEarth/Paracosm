@@ -1,5 +1,4 @@
-﻿using Paracosm.Content.Bosses.SolarChampion;
-using Paracosm.Content.Bosses.VortexMothership;
+﻿using Paracosm.Content.Bosses.VortexMothership;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ID;

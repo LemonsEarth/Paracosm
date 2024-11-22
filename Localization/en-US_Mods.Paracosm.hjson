@@ -517,6 +517,8 @@ Projectiles: {
 	TeslaShot.DisplayName: Tesla Shot
 	TeslaCore.DisplayName: Tesla Core
 	TrackingTeslaShot.DisplayName: Tracking Tesla Shot
+	VortexExplosion.DisplayName: Vortex Explosion
+	VortexMine.DisplayName: Vortex Mine
 }
 
 NPCs: {
@@ -546,6 +548,7 @@ NPCs: {
 	VortexMothership.DisplayName: Vortex Mothership
 	VortexMothershipBody.DisplayName: Vortex Mothership
 	VortexTeslaGun.DisplayName: " "
+	VortexUFO.DisplayName: Vortex U F O
 }
 
 Buffs: {

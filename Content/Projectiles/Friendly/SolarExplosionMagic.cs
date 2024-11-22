@@ -1,8 +1,5 @@
-﻿using Microsoft.Xna.Framework;
-using Paracosm.Content.Buffs;
-using Paracosm.Content.Projectiles.Hostile;
+﻿using Paracosm.Content.Buffs;
 using Terraria;
-using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 

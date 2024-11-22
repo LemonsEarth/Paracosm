@@ -1,14 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Paracosm.Content.Bosses.VortexMothership;
 using Paracosm.Content.Projectiles.Hostile;
-using ReLogic.Content;
-using System;
-using System.Collections.Generic;
 using System.IO;
 using Terraria;
-using Terraria.Audio;
-using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -111,17 +105,35 @@ namespace Paracosm.Content.Bosses.VortexMothership
                 return;
             }
 
-            switch (body.Attack)
+            if (body.phase == 1)
             {
-                case (int)VortexMothershipBody.Attacks.TeslashotSpam:
-                    TeslaShotSpam();
-                    break;
-                case (int)VortexMothershipBody.Attacks.CenterBlast:
-                    CenterBlast();
-                    break;
-                case (int)VortexMothershipBody.Attacks.PredictiveShots:
-                    PredictiveShots();
-                    break;
+                switch (body.Attack)
+                {
+                    case (int)VortexMothershipBody.Attacks.TeslashotSpam:
+                        TeslaShotSpam();
+                        break;
+                    case (int)VortexMothershipBody.Attacks.CenterBlast:
+                        CenterBlast();
+                        break;
+                    case (int)VortexMothershipBody.Attacks.PredictiveShots:
+                        PredictiveShots();
+                        break;
+                }
+            }
+            else if (body.phase == 2)
+            {
+                switch (body.Attack)
+                {
+                    case (int)VortexMothershipBody.Attacks2.ChillTeslaShots:
+                        ChillTeslaShots();
+                        break;
+                    case (int)VortexMothershipBody.Attacks2.MineSpam:
+                        MineSpam();
+                        break;
+                    case (int)VortexMothershipBody.Attacks2.ChillTeslaShots3:
+                        ChillTeslaShots();
+                        break;
+                }
             }
 
             attackDuration--;
@@ -141,7 +153,7 @@ namespace Paracosm.Content.Bosses.VortexMothership
         const int TESLA_SHOT_CD = 30;
         void TeslaShotSpam()
         {
-            if (AttackTimer <= 0 - AttackCount)
+            if (AttackTimer <= 0 - AttackCount) // Slightly randomized fire rate
             {
                 if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
@@ -172,16 +184,13 @@ namespace Paracosm.Content.Bosses.VortexMothership
         const int PREDICTIVE_SHOT_CD2 = 20;
         void PredictiveShots()
         {
-            if (GunCount % 2 == 0) // 2 guns
+            if (GunCount < 2) // 2 bottom guns
             {
-                if (AttackTimer == 6)
-                {
-                    shootDirection = playerDirection + body.player.velocity / 8;
-                }
                 if (AttackTimer <= 0)
                 {
                     if (Main.netMode != NetmodeID.MultiplayerClient)
                     {
+                        shootDirection = playerDirection + body.player.velocity / 6;
                         Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, shootDirection.SafeNormalize(Vector2.Zero) * 20, ModContent.ProjectileType<TrackingTeslaShot>(), body.damage, 1, ai1: body.player.whoAmI);
                     }
                     if (AttackCount < 6)
@@ -196,7 +205,7 @@ namespace Paracosm.Content.Bosses.VortexMothership
                     }
                 }
             }
-            else //other 2 guns
+            else // 2 top guns
             {
                 if (AttackTimer <= 0)
                 {
@@ -211,6 +220,48 @@ namespace Paracosm.Content.Bosses.VortexMothership
                 AttackTimer--;
             }
 
+            AttackTimer--;
+        }
+
+        const int CHILL_TESLA_SHOT_CD = 120;
+        void ChillTeslaShots()
+        {
+            if (AttackTimer <= 0 - AttackCount) // Slightly randomized fire rate
+            {
+                if (Main.netMode != NetmodeID.MultiplayerClient)
+                {
+                    AttackCount = Main.rand.Next(-10, 2);
+                    shootDirection = playerDirection;
+                    Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, shootDirection * 10, ModContent.ProjectileType<TeslaShot>(), body.damage, 1, ai1: 2f);
+                    NPC.netUpdate = true;
+                }
+                AttackTimer = CHILL_TESLA_SHOT_CD;
+            }
+            AttackTimer--;
+        }
+
+        const int MINE_SPAM_CD1 = 15;
+        const int MINE_SPAM_CD2 = 60;
+        void MineSpam()
+        {
+            if (AttackTimer <= 0)
+            {
+                if (Main.netMode != NetmodeID.MultiplayerClient)
+                {
+                    shootDirection = playerDirection;
+                    Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, shootDirection.SafeNormalize(Vector2.Zero) * 60, ModContent.ProjectileType<VortexMine>(), body.damage / 2, 1);
+                }
+                if (AttackCount < 4)
+                {
+                    AttackTimer = MINE_SPAM_CD1;
+                    AttackCount++;
+                }
+                else
+                {
+                    AttackTimer = MINE_SPAM_CD2 * (GunCount + 1);
+                    AttackCount = 0;
+                }
+            }
             AttackTimer--;
         }
 

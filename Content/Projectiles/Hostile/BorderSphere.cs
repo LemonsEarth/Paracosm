@@ -1,6 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Paracosm.Content.Buffs;
 using Terraria;
 using Terraria.Audio;
 using Terraria.GameContent;
@@ -74,7 +73,7 @@ namespace Paracosm.Content.Projectiles.Hostile
 
         public override void OnKill(int timeLeft)
         {
-            
+
         }
 
         public override bool PreDraw(ref Color lightColor)

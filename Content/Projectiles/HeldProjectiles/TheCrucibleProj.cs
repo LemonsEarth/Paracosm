@@ -2,13 +2,11 @@
 using Microsoft.Xna.Framework.Graphics;
 using Paracosm.Common.Utils;
 using Paracosm.Content.Buffs;
-using System;
+using Paracosm.Content.Projectiles.Friendly;
 using Terraria;
-using Terraria.Audio;
 using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Paracosm.Content.Projectiles.Friendly;
 
 namespace Paracosm.Content.Projectiles.HeldProjectiles
 {
