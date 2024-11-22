@@ -35,7 +35,14 @@ namespace Paracosm.Content.Bosses.VortexMothership
             get { return NPC.ai[1]; }
             private set
             {
-                NPC.ai[1] = value;
+                if (value <= 2 && value >= 0)
+                {
+                    NPC.ai[1] = value;
+                }
+                else
+                {
+                    NPC.ai[1] = 0;
+                }
             }
         }
         ref float AttackTimer => ref NPC.ai[2];
@@ -52,7 +59,7 @@ namespace Paracosm.Content.Bosses.VortexMothership
         bool spawnedWeapons = false;
 
         float attackDuration = 0;
-        int[] attackDurations = { 300, 180, 1200, 600 };
+        int[] attackDurations = { 300, 180, 900, 600 };
         int[] attackDurations2 = { 1200, 900, 1200, 600 };
         public Player player { get; private set; }
         public Vector2 playerDirection { get; private set; }
@@ -82,7 +89,8 @@ namespace Paracosm.Content.Bosses.VortexMothership
         public enum Attacks
         {
             TeslashotSpam,
-            CenterBlast
+            CenterBlast,
+            PredictiveShots
         }
 
         public enum Attacks2
@@ -197,7 +205,8 @@ namespace Paracosm.Content.Bosses.VortexMothership
                 NPC.velocity = new Vector2(0, 2);
                 NPC.Opacity += 1f / 60f;
                 AITimer++;
-                Attack = -1;
+                Attack = 0;
+                attackDuration = attackDurations[(int)Attack];
                 Terraria.Graphics.Effects.Filters.Scene["ScreenTintShader"].GetShader().UseProgress(AITimer / 60);
                 return;
             }
@@ -227,10 +236,6 @@ namespace Paracosm.Content.Bosses.VortexMothership
             if (Main.netMode != NetmodeID.MultiplayerClient)
             {
                 Attack++;
-                if (Attack > 1)
-                {
-                    Attack = 0;
-                }
                 if (phase == 1) attackDuration = attackDurations[(int)Attack];
                 else attackDuration = attackDurations2[(int)Attack];
                 foreach (VortexTeslaGun gun in teslaGuns)

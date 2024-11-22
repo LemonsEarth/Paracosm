@@ -516,6 +516,7 @@ Projectiles: {
 	BorderSphere.DisplayName: Border Sphere
 	TeslaShot.DisplayName: Tesla Shot
 	TeslaCore.DisplayName: Tesla Core
+	TrackingTeslaShot.DisplayName: Tracking Tesla Shot
 }
 
 NPCs: {
@@ -543,8 +544,8 @@ NPCs: {
 	InfectedRevenantCrimsonHead.DisplayName: Infected Revenant
 	InfectedRevenantWings.DisplayName: ""
 	VortexMothership.DisplayName: Vortex Mothership
-	VortexMothershipBody.DisplayName: Vortex Mothership Body
-	VortexTeslaGun.DisplayName: Vortex Tesla Gun
+	VortexMothershipBody.DisplayName: Vortex Mothership
+	VortexTeslaGun.DisplayName: " "
 }
 
 Buffs: {
