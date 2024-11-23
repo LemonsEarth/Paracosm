@@ -21,6 +21,7 @@ namespace Paracosm.Content.Bosses.VortexMothership
         public ref float GunCount => ref NPC.ai[1];
         ref float AttackTimer => ref NPC.ai[3];
         int AttackCount = 0;
+        float randNum = 0;
         float AITimer = 0;
         float attackDuration = 0;
         Vector2 shootDirection = Vector2.Zero;
@@ -130,8 +131,8 @@ namespace Paracosm.Content.Bosses.VortexMothership
                     case (int)VortexMothershipBody.Attacks2.MineSpam:
                         MineSpam();
                         break;
-                    case (int)VortexMothershipBody.Attacks2.ChillTeslaShots3:
-                        ChillTeslaShots();
+                    case (int)VortexMothershipBody.Attacks2.Lasers:
+                        Lasers();
                         break;
                 }
             }
@@ -146,6 +147,11 @@ namespace Paracosm.Content.Bosses.VortexMothership
             {
                 AttackTimer = 0;
                 AttackCount = 0;
+                randNum = 0;
+                if ((int)body.Attack == (int)VortexMothershipBody.Attacks2.Lasers)
+                {
+                    AttackTimer = 30;
+                }
             }
             NPC.netUpdate = true;
         }
@@ -248,8 +254,10 @@ namespace Paracosm.Content.Bosses.VortexMothership
             {
                 if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
+                    randNum = Main.rand.NextFloat(35, 60);
                     shootDirection = playerDirection;
-                    Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, shootDirection.SafeNormalize(Vector2.Zero) * 60, ModContent.ProjectileType<VortexMine>(), body.damage / 2, 1);
+                    NPC.netUpdate = true;
+                    Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, shootDirection.SafeNormalize(Vector2.Zero) * randNum, ModContent.ProjectileType<VortexMine>(), body.damage / 2, 1);
                 }
                 if (AttackCount < 4)
                 {
@@ -261,6 +269,28 @@ namespace Paracosm.Content.Bosses.VortexMothership
                     AttackTimer = MINE_SPAM_CD2 * (GunCount + 1);
                     AttackCount = 0;
                 }
+            }
+            AttackTimer--;
+        }
+
+        void Lasers()
+        {
+            if (AttackTimer == 30)
+            {
+                shootDirection = playerDirection;
+                if (Main.netMode != NetmodeID.MultiplayerClient)
+                {
+                    Vector2 indicatorDistancePos = NPC.Center + shootDirection * 64 * 50;
+                    Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, shootDirection / 10, ModContent.ProjectileType<IndicatorLaser>(), 10, 0, ai1: indicatorDistancePos.X, ai2: indicatorDistancePos.Y);
+                }
+            }
+            if (AttackTimer <= 0)
+            {
+                if (Main.netMode != NetmodeID.MultiplayerClient)
+                {    
+                    Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, shootDirection, ModContent.ProjectileType<VortexLaser>(), body.damage, 1, ai0: 50, ai1: 0);
+                }
+                AttackTimer = 300;
             }
             AttackTimer--;
         }
@@ -278,12 +308,6 @@ namespace Paracosm.Content.Bosses.VortexMothership
                     NPC.frame.Y = 0;
                 }
             }
-        }
-
-        public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
-        {
-
-            return true;
         }
 
         public override void DrawBehind(int index)

@@ -43,7 +43,7 @@ namespace Paracosm.Content.Bosses.VortexMothership
         int AttackTimer2 = 0;
         int AttackCount2 = 0;
 
-        public int damage = 20;
+        public int damage { get; private set; } = 40;
 
         bool phase2FirstTime = false;
         public int phase { get; private set; } = 1;
@@ -93,7 +93,7 @@ namespace Paracosm.Content.Bosses.VortexMothership
         {
             ChillTeslaShots,
             MineSpam,
-            ChillTeslaShots3,
+            Lasers,
         }
 
         public override void SetStaticDefaults()
@@ -125,7 +125,7 @@ namespace Paracosm.Content.Bosses.VortexMothership
             NPC.width = 1124;
             NPC.height = 368;
             NPC.Opacity = 1;
-            NPC.lifeMax = 200000;
+            NPC.lifeMax = 500000;
             NPC.defense = 100;
             NPC.damage = 0;
             NPC.HitSound = SoundID.NPCHit4;
@@ -210,7 +210,7 @@ namespace Paracosm.Content.Bosses.VortexMothership
             }
             NPC.dontTakeDamage = false;
 
-            if (NPC.life <= NPC.lifeMax * 0.66f && !phase2FirstTime)
+            if (NPC.life <= NPC.lifeMax * 0.4f && !phase2FirstTime)
             {
                 phase2FirstTime = true;
                 phase = 2;
@@ -220,12 +220,12 @@ namespace Paracosm.Content.Bosses.VortexMothership
 
             if (phase == 2)
             {
-                if (AttackTimer % 600 == 0)
+                if (AttackTimer % 900 == 0)
                 {
                     SpawnEnemies();
                 }
 
-                if (AttackTimer % 2400 == 0)
+                if (AttackTimer % 3000 == 0)
                 {
                     SpawnUFOs();
                     spawnedUFOs = false;
@@ -402,12 +402,12 @@ namespace Paracosm.Content.Bosses.VortexMothership
             Terraria.Graphics.Effects.Filters.Scene.Deactivate("ScreenTintShader");
             return true;
         }
-
+        
         public override void ApplyDifficultyAndPlayerScaling(int numPlayers, float balance, float bossAdjustment)
         {
-            NPC.lifeMax = (int)Math.Ceiling(NPC.lifeMax * balance * 0.65f);
+            NPC.lifeMax = (int)Math.Ceiling(NPC.lifeMax * balance * 0.8f);
             damage = (int)(damage * balance);
-            NPC.defense = 50;
+            NPC.defense = 75;
         }
 
         public override bool? CanFallThroughPlatforms()

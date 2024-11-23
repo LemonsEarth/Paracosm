@@ -1,7 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Paracosm.Common.Utils;
 using Terraria;
 using Terraria.Audio;
+using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -10,16 +12,6 @@ namespace Paracosm.Content.Projectiles.Hostile
     public class VortexMine : ModProjectile
     {
         float AITimer = 0;
-        Vector2 targetPos
-        {
-            get { return new Vector2(Projectile.ai[0], Projectile.ai[1]); }
-            set
-            {
-                Projectile.ai[0] = value.X;
-                Projectile.ai[1] = value.Y;
-            }
-        }
-        ref float gunMod => ref Projectile.ai[2];
 
         public override void SetStaticDefaults()
         {
@@ -34,7 +26,7 @@ namespace Paracosm.Content.Projectiles.Hostile
             Projectile.friendly = false;
             Projectile.ignoreWater = true;
             Projectile.tileCollide = false;
-            Projectile.timeLeft = 90;
+            Projectile.timeLeft = 180;
             Projectile.alpha = 255;
             Projectile.penetrate = -1;
         }
@@ -44,6 +36,10 @@ namespace Paracosm.Content.Projectiles.Hostile
             SoundEngine.PlaySound(SoundID.Item14);
             SoundEngine.PlaySound(SoundID.NPCDeath6 with { Pitch = -0.5f });
             LemonUtils.DustCircle(Projectile.Center, 16, 10, DustID.MushroomTorch, 1.2f);
+            for (int i = 0; i < 6; i++)
+            {
+                Gore gore = Gore.NewGoreDirect(Projectile.GetSource_FromThis(), Projectile.Center, new Vector2(Main.rand.NextFloat(-5, 5)), Main.rand.Next(61, 64), Main.rand.NextFloat(0.8f, 1.2f));
+            }
             if (Main.netMode != NetmodeID.MultiplayerClient)
             {
                 Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Vector2.Zero, ModContent.ProjectileType<VortexExplosion>(), Projectile.damage * 2, Projectile.knockBack);
@@ -52,17 +48,12 @@ namespace Paracosm.Content.Projectiles.Hostile
 
         public override void AI()
         {
-            if (AITimer == 0)
-            {
-                Projectile.timeLeft += (int)gunMod * 30;
-            }
             if (Projectile.alpha > 0)
             {
                 Projectile.alpha -= 7;
             }
-            Projectile.velocity = Vector2.Lerp(Projectile.velocity, Vector2.Zero, AITimer / 90);
+            Projectile.velocity = Vector2.Lerp(Projectile.velocity, Vector2.Zero, AITimer / 180);
             Projectile.rotation = MathHelper.ToRadians(AITimer * Projectile.velocity.Length());
-
             Projectile.frameCounter++;
             if (Projectile.frameCounter == 6)
             {

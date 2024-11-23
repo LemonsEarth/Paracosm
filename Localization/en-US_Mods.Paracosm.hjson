@@ -519,6 +519,7 @@ Projectiles: {
 	TrackingTeslaShot.DisplayName: Tracking Tesla Shot
 	VortexExplosion.DisplayName: Vortex Explosion
 	VortexMine.DisplayName: Vortex Mine
+	VortexLaser.DisplayName: Vortex Laser
 }
 
 NPCs: {

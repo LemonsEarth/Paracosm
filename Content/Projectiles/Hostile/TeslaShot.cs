@@ -88,11 +88,6 @@ namespace Paracosm.Content.Projectiles.Hostile
             AITimer++;
         }
 
-        public override void OnHitPlayer(Player target, Player.HurtInfo hurtInfo)
-        {
-
-        }
-
         public override bool PreDraw(ref Color lightColor)
         {
             Texture2D texture = TextureAssets.Projectile[Type].Value;

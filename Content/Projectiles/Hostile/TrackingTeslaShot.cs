@@ -25,6 +25,8 @@ namespace Paracosm.Content.Projectiles.Hostile
             Projectile.ignoreWater = true;
             Projectile.tileCollide = false;
             Projectile.timeLeft = 120;
+            DrawOffsetX = -20;
+            DrawOriginOffsetX = 10;
         }
 
         public override void AI()
