@@ -20,7 +20,6 @@ namespace Paracosm.Content.Items.Weapons.Ranged
         public override void SetDefaults()
         {
             Item.damage = 10;
-            Item.knockBack = 1f;
             Item.DamageType = DamageClass.Ranged;
             Item.width = 70;
             Item.height = 24;

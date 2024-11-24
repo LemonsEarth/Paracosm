@@ -59,7 +59,7 @@ namespace Paracosm.Content.Bosses.VortexMothership
             NPC.aiStyle = -1;
             NPC.width = 60;
             NPC.height = 60;
-            NPC.lifeMax = 5000;
+            NPC.lifeMax = 10000;
             NPC.defense = 50;
             NPC.value = 0;
             NPC.damage = 0;

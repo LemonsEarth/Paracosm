@@ -127,7 +127,7 @@ namespace Paracosm.Content.Bosses.VortexMothership
             NPC.width = 1124;
             NPC.height = 368;
             NPC.Opacity = 1;
-            NPC.lifeMax = 600000;
+            NPC.lifeMax = 700000;
             NPC.defense = 100;
             NPC.damage = 0;
             NPC.HitSound = SoundID.NPCHit4;
@@ -144,7 +144,6 @@ namespace Paracosm.Content.Bosses.VortexMothership
                 Music = MusicLoader.GetMusicSlot(Mod, "Content/Audio/Music/SunBornCyclone");
             }
         }
-
 
         public override void ApplyDifficultyAndPlayerScaling(int numPlayers, float balance, float bossAdjustment)
         {
@@ -231,12 +230,13 @@ namespace Paracosm.Content.Bosses.VortexMothership
             if (phase == 2)
             {
                 NPC.defDefense = 200;
-                if (AttackTimer % 900 == 0)
+                int spawnSpeedDiv = (NPC.life < NPC.lifeMax / 4) ? 2 : 1;
+                if (AttackTimer % (900 / spawnSpeedDiv) == 0)
                 {
                     SpawnEnemies();
                 }
 
-                if (AttackTimer % 3000 == 0)
+                if (AttackTimer % (3000 / spawnSpeedDiv) == 0)
                 {
                     SpawnUFOs();
                     spawnedUFOs = false;
@@ -312,9 +312,10 @@ namespace Paracosm.Content.Bosses.VortexMothership
             {
                 return;
             }
-            for (int i = 0; i < 3; i++)
+            int count = NPC.life < (NPC.lifeMax / 4) ? 5 : 3;
+            for (int i = 0; i < count; i++)
             {
-                NPC ufoNPC = NPC.NewNPCDirect(NPC.GetSource_FromAI(), NPC.Center + gunOffsets[i] / 2, Summonables["UFO"], NPC.whoAmI, NPC.whoAmI);
+                NPC ufoNPC = NPC.NewNPCDirect(NPC.GetSource_FromAI(), NPC.Center, Summonables["UFO"], NPC.whoAmI, NPC.whoAmI);
 
                 if (Main.netMode == NetmodeID.Server)
                 {
@@ -330,7 +331,8 @@ namespace Paracosm.Content.Bosses.VortexMothership
                 return;
             }
 
-            for (int i = 0; i < Main.rand.Next(2, 3); i++)
+            int count = NPC.life < (NPC.lifeMax / 4) ? 4 : 2;
+            for (int i = 0; i < Main.rand.Next(count, count + 1); i++)
             {
                 NPC diver = NPC.NewNPCDirect(NPC.GetSource_FromAI(), NPC.Center + new Vector2(Main.rand.Next(-100, 100)), Summonables["StormDiver"], NPC.whoAmI, NPC.whoAmI);
 

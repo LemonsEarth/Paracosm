@@ -469,6 +469,11 @@ Items: {
 		DisplayName: Treasure Bag (Vortex Mothership)
 		Tooltip: "{$CommonItemTooltip.RightClickToOpen}"
 	}
+
+	Hyperion: {
+		DisplayName: Hyperion
+		Tooltip: ""
+	}
 }
 
 Projectiles: {
