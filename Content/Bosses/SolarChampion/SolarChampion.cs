@@ -927,11 +927,27 @@ namespace Paracosm.Content.Bosses.SolarChampion
             return true;
         }
 
+        public override void HitEffect(NPC.HitInfo hit)
+        {
+            if (Main.netMode == NetmodeID.Server)
+            {
+                return;
+            }
+            if (NPC.life <= 0)
+            {
+                int goreType1 = Mod.Find<ModGore>("SolarChampion_Gore1").Type;
+                int goreType2 = Mod.Find<ModGore>("SolarChampion_Gore2").Type;
+
+                Gore.NewGore(NPC.GetSource_Death(), NPC.position, new Vector2(Main.rand.Next(-6, 7), Main.rand.Next(-6, 7)), goreType1);
+                Gore.NewGore(NPC.GetSource_Death(), NPC.position, new Vector2(Main.rand.Next(-6, 7), Main.rand.Next(-6, 7)), goreType2);
+            }
+        }
+
         public override void ApplyDifficultyAndPlayerScaling(int numPlayers, float balance, float bossAdjustment)
         {
             NPC.lifeMax = (int)Math.Ceiling(NPC.lifeMax * balance * 0.65f);
             NPC.damage = (int)(NPC.damage * balance);
-            NPC.defense = 30;
+            NPC.defense = 50;
         }
 
         public override bool? CanFallThroughPlatforms()

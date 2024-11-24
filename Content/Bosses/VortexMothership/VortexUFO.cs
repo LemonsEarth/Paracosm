@@ -26,7 +26,7 @@ namespace Paracosm.Content.Bosses.VortexMothership
         float AITimer = 0;
         Vector2 shootDirection = Vector2.Zero;
         Vector2 playerDirection => NPC.Center.DirectionTo(body.player.Center);
-        VortexMothershipBody body;
+        VortexMothership body;
 
         Vector2[] offSets { get; } =
         {
@@ -69,13 +69,13 @@ namespace Paracosm.Content.Bosses.VortexMothership
             NPC.npcSlots = 1;
             NPC.hide = true;
             NPC.netAlways = true;
-            NPC.HitSound = SoundID.NPCHit4;
-            NPC.DeathSound = SoundID.NPCDeath14;
+            NPC.HitSound = SoundID.NPCHit42;
+            NPC.DeathSound = SoundID.NPCDeath44;
         }
 
         public static int BodyType()
         {
-            return ModContent.NPCType<VortexMothershipBody>();
+            return ModContent.NPCType<VortexMothership>();
         }
 
         public override bool CheckActive()
@@ -93,7 +93,7 @@ namespace Paracosm.Content.Bosses.VortexMothership
                 NetMessage.SendData(MessageID.SyncNPC, number: NPC.whoAmI);
                 return;
             }
-            body = (VortexMothershipBody)bodyNPC.ModNPC;
+            body = (VortexMothership)bodyNPC.ModNPC;
             NPC.Opacity = body.NPC.Opacity;
             if (shootDirection == Vector2.Zero) shootDirection = playerDirection; // By default, face the player
             NPC.rotation = shootDirection.ToRotation() - MathHelper.PiOver2;

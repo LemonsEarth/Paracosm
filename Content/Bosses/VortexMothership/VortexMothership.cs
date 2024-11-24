@@ -19,7 +19,7 @@ using Terraria.ModLoader;
 namespace Paracosm.Content.Bosses.VortexMothership
 {
     [AutoloadBossHead]
-    public class VortexMothershipBody : ModNPC
+    public class VortexMothership : ModNPC
     {
         ref float AITimer => ref NPC.ai[0];
         public float Attack
@@ -27,7 +27,8 @@ namespace Paracosm.Content.Bosses.VortexMothership
             get { return NPC.ai[1]; }
             private set
             {
-                if (value > 2 || value < 0)
+                int maxVal = phase == 2 ? 2 : 3;
+                if (value > maxVal || value < 0)
                 {
                     NPC.ai[1] = 0;
                 }
@@ -52,8 +53,8 @@ namespace Paracosm.Content.Bosses.VortexMothership
         bool spawnedUFOs = false;
 
         float attackDuration = 0;
-        int[] attackDurations = { 300, 180, 900, 600 };
-        int[] attackDurations2 = { 900, 900, 1200, 600 };
+        int[] attackDurations = { 300, 180, 900, 1260 };
+        int[] attackDurations2 = { 900, 900, 1200};
         public Player player { get; private set; }
         public Vector2 playerDirection { get; private set; }
         Vector2 targetPosition = Vector2.Zero;
@@ -86,7 +87,8 @@ namespace Paracosm.Content.Bosses.VortexMothership
         {
             TeslashotSpam,
             CenterBlast,
-            PredictiveShots
+            PredictiveShots,
+            Mix
         }
 
         public enum Attacks2
@@ -125,7 +127,7 @@ namespace Paracosm.Content.Bosses.VortexMothership
             NPC.width = 1124;
             NPC.height = 368;
             NPC.Opacity = 1;
-            NPC.lifeMax = 500000;
+            NPC.lifeMax = 600000;
             NPC.defense = 100;
             NPC.damage = 0;
             NPC.HitSound = SoundID.NPCHit4;
@@ -141,6 +143,14 @@ namespace Paracosm.Content.Bosses.VortexMothership
             {
                 Music = MusicLoader.GetMusicSlot(Mod, "Content/Audio/Music/SunBornCyclone");
             }
+        }
+
+
+        public override void ApplyDifficultyAndPlayerScaling(int numPlayers, float balance, float bossAdjustment)
+        {
+            NPC.lifeMax = (int)Math.Ceiling(NPC.lifeMax * balance * 0.8f);
+            damage = (int)(damage * balance);
+            NPC.defense = 100;
         }
 
         public override void SendExtraAI(BinaryWriter writer)
@@ -220,6 +230,7 @@ namespace Paracosm.Content.Bosses.VortexMothership
 
             if (phase == 2)
             {
+                NPC.defDefense = 200;
                 if (AttackTimer % 900 == 0)
                 {
                     SpawnEnemies();
@@ -301,7 +312,7 @@ namespace Paracosm.Content.Bosses.VortexMothership
             {
                 return;
             }
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < 3; i++)
             {
                 NPC ufoNPC = NPC.NewNPCDirect(NPC.GetSource_FromAI(), NPC.Center + gunOffsets[i] / 2, Summonables["UFO"], NPC.whoAmI, NPC.whoAmI);
 
@@ -319,7 +330,7 @@ namespace Paracosm.Content.Bosses.VortexMothership
                 return;
             }
 
-            for (int i = 0; i < Main.rand.Next(2, 5); i++)
+            for (int i = 0; i < Main.rand.Next(2, 3); i++)
             {
                 NPC diver = NPC.NewNPCDirect(NPC.GetSource_FromAI(), NPC.Center + new Vector2(Main.rand.Next(-100, 100)), Summonables["StormDiver"], NPC.whoAmI, NPC.whoAmI);
 
@@ -402,47 +413,40 @@ namespace Paracosm.Content.Bosses.VortexMothership
             Terraria.Graphics.Effects.Filters.Scene.Deactivate("ScreenTintShader");
             return true;
         }
-        
-        public override void ApplyDifficultyAndPlayerScaling(int numPlayers, float balance, float bossAdjustment)
-        {
-            NPC.lifeMax = (int)Math.Ceiling(NPC.lifeMax * balance * 0.8f);
-            damage = (int)(damage * balance);
-            NPC.defense = 75;
-        }
 
         public override bool? CanFallThroughPlatforms()
         {
             return true;
         }
 
-        public override void FindFrame(int frameHeight)
-        {
-            /*int frameDur = 8;
-            NPC.frameCounter += 1;
-            if (NPC.frameCounter > frameDur)
-            {
-                NPC.frame.Y += frameHeight;
-                NPC.frameCounter = 0;
-                if (NPC.frame.Y > 2 * frameHeight)
-                {
-                    NPC.frame.Y = 0;
-                }
-            }*/
-        }
+        //public override void FindFrame(int frameHeight)
+        //{
+        //    /*int frameDur = 8;
+        //    NPC.frameCounter += 1;
+        //    if (NPC.frameCounter > frameDur)
+        //    {
+        //        NPC.frame.Y += frameHeight;
+        //        NPC.frameCounter = 0;
+        //        if (NPC.frame.Y > 2 * frameHeight)
+        //        {
+        //            NPC.frame.Y = 0;
+        //        }
+        //    }*/
+        //}
 
-        public override void OnHitPlayer(Player target, Player.HurtInfo hurtInfo)
-        {
-            //target.AddBuff(ModContent.BuffType<SolarBurn>(), 180);
-        }
+        //public override void OnHitPlayer(Player target, Player.HurtInfo hurtInfo)
+        //{
+        //    target.AddBuff(ModContent.BuffType<SolarBurn>(), 180);
+        //}
 
         public override void ModifyNPCLoot(NPCLoot npcLoot)
         {
             LeadingConditionRule classicRule = new LeadingConditionRule(new Conditions.NotExpert());
-            classicRule.OnSuccess(ItemDropRule.Common(ItemID.FragmentSolar, 1, 10, 20));
+            classicRule.OnSuccess(ItemDropRule.Common(ItemID.FragmentVortex, 1, 10, 20));
             classicRule.OnSuccess(ItemDropRule.Common(ItemID.LunarBar, 1, 5, 12));
             classicRule.OnSuccess(ItemDropRule.OneFromOptions(1, ModContent.ItemType<HorizonSplitter>(), ModContent.ItemType<TheCrucible>()));
             npcLoot.Add(classicRule);
-            npcLoot.Add(ItemDropRule.BossBag(ModContent.ItemType<SolarChampionBossBag>()));
+            npcLoot.Add(ItemDropRule.BossBag(ModContent.ItemType<VortexMothershipBossBag>()));
         }
 
         public override void BossLoot(ref string name, ref int potionType)
@@ -460,7 +464,12 @@ namespace Paracosm.Content.Bosses.VortexMothership
         {
             DeleteProjectiles(Proj["Sphere"]);
             NPC.SetEventFlagCleared(ref DownedBossSystem.downedSolarChampion, -1);
+            for (int i = 0; i < 16; i++)
+            {
+                Gore gore = Gore.NewGoreDirect(NPC.GetSource_FromThis(), NPC.position + new Vector2(Main.rand.Next(0, NPC.width), Main.rand.Next(0, NPC.height)), new Vector2(Main.rand.NextFloat(-5, 5)), Main.rand.Next(61, 64), Main.rand.NextFloat(2f, 5f));
+            }
         }
+
         public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
         {
             /*Texture2D texture = TextureAssets.Npc[Type].Value;

@@ -9,6 +9,7 @@ namespace Paracosm.Content.Projectiles.Hostile
 {
     public class VortexExplosion : ModProjectile
     {
+        int AITimer = 0;
         public override void SetStaticDefaults()
         {
             Main.projFrames[Projectile.type] = 6;
@@ -28,6 +29,10 @@ namespace Paracosm.Content.Projectiles.Hostile
 
         public override void AI()
         {
+            if (AITimer == 0)
+            {
+                Projectile.rotation = MathHelper.ToRadians(Main.rand.NextFloat(0, 360));
+            }
             Projectile.frameCounter++;
             if (Projectile.frameCounter == 4)
             {
@@ -38,6 +43,7 @@ namespace Paracosm.Content.Projectiles.Hostile
                     Projectile.frame = 0;
                 }
             }
+            AITimer++;
         }
     }
 }

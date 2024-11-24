@@ -32,6 +32,7 @@ namespace Paracosm.Content.NPCs.Hostile
             NPC.HitSound = SoundID.NPCHit54;
             NPC.DeathSound = SoundID.NPCDeath52;
             NPC.value = 200;
+            NPC.npcSlots = 3;
             NPC.aiStyle = -1;
             SpawnModBiomes = new int[1] { ModContent.GetInstance<ParacosmicDistortion>().Type };
             NPC.noTileCollide = true;

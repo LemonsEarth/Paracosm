@@ -22,7 +22,7 @@ namespace Paracosm.Content.Projectiles.Hostile
         {
             Projectile.width = 50;
             Projectile.height = 50;
-            Projectile.hostile = true;
+            Projectile.hostile = false;
             Projectile.friendly = false;
             Projectile.ignoreWater = true;
             Projectile.tileCollide = false;
@@ -36,7 +36,7 @@ namespace Paracosm.Content.Projectiles.Hostile
             SoundEngine.PlaySound(SoundID.Item14);
             SoundEngine.PlaySound(SoundID.NPCDeath6 with { Pitch = -0.5f });
             LemonUtils.DustCircle(Projectile.Center, 16, 10, DustID.MushroomTorch, 1.2f);
-            for (int i = 0; i < 6; i++)
+            for (int i = 0; i < 9; i++)
             {
                 Gore gore = Gore.NewGoreDirect(Projectile.GetSource_FromThis(), Projectile.Center, new Vector2(Main.rand.NextFloat(-5, 5)), Main.rand.Next(61, 64), Main.rand.NextFloat(0.8f, 1.2f));
             }
@@ -51,6 +51,10 @@ namespace Paracosm.Content.Projectiles.Hostile
             if (Projectile.alpha > 0)
             {
                 Projectile.alpha -= 7;
+            }
+            if (AITimer == 0)
+            {
+                SoundEngine.PlaySound(SoundID.Zombie67 with { Volume = 0.5f});
             }
             Projectile.velocity = Vector2.Lerp(Projectile.velocity, Vector2.Zero, AITimer / 180);
             Projectile.rotation = MathHelper.ToRadians(AITimer * Projectile.velocity.Length());

@@ -442,7 +442,7 @@ Items: {
 	}
 
 	SolarChampionBossBag: {
-		DisplayName: Solar Champion Boss Bag
+		DisplayName: Treasure Bag (Solar Champion)
 		Tooltip: "{$CommonItemTooltip.RightClickToOpen}"
 	}
 
@@ -463,6 +463,11 @@ Items: {
 			Not Consumable
 			Attracts the wrath of a cosmic empire
 			'''
+	}
+
+	VortexMothershipBossBag: {
+		DisplayName: Treasure Bag (Vortex Mothership)
+		Tooltip: "{$CommonItemTooltip.RightClickToOpen}"
 	}
 }
 
@@ -547,7 +552,6 @@ NPCs: {
 	InfectedRevenantCrimsonHead.DisplayName: Infected Revenant
 	InfectedRevenantWings.DisplayName: ""
 	VortexMothership.DisplayName: Vortex Mothership
-	VortexMothershipBody.DisplayName: Vortex Mothership
 	VortexTeslaGun.DisplayName: " "
 	VortexUFO.DisplayName: Vortex U F O
 }

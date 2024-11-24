@@ -33,7 +33,7 @@ namespace Paracosm.Content.Items.Consumables
 
         public override bool CanUseItem(Player player)
         {
-            return !NPC.AnyNPCs(ModContent.NPCType<VortexMothershipBody>());
+            return !NPC.AnyNPCs(ModContent.NPCType<VortexMothership>());
         }
 
         public override bool? UseItem(Player player)
@@ -41,7 +41,7 @@ namespace Paracosm.Content.Items.Consumables
             SoundEngine.PlaySound(SoundID.Roar, player.position);
             if (Main.netMode != NetmodeID.MultiplayerClient)
             {
-                NPC.SpawnBoss((int)player.MountedCenter.X, (int)player.MountedCenter.Y - 100, ModContent.NPCType<VortexMothershipBody>(), player.whoAmI);
+                NPC.SpawnBoss((int)player.MountedCenter.X, (int)player.MountedCenter.Y - 100, ModContent.NPCType<VortexMothership>(), player.whoAmI);
             }
             else
             {
