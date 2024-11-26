@@ -40,6 +40,7 @@ namespace Paracosm.Content.Items.Armor.Celestial
             player.GetDamage(DamageClass.Melee) += meleeDamageBoost / 100;
             player.GetCritChance(DamageClass.Melee) += meleeCritBoost;
             player.GetAttackSpeed(DamageClass.Melee) += meleeSpeedBoost / 100;
+            player.aggro += 600;
         }
 
         public override bool IsArmorSet(Item head, Item body, Item legs)
@@ -56,23 +57,6 @@ namespace Paracosm.Content.Items.Armor.Celestial
         public override void DrawArmorColor(Player drawPlayer, float shadow, ref Color color, ref int glowMask, ref Color glowMaskColor)
         {
             color = Color.White;
-        }
-
-        public override void AddRecipes()
-        {
-            Recipe recipe1 = CreateRecipe();
-            recipe1.AddIngredient(ItemID.SoulofFlight, 10);
-            recipe1.AddIngredient(ItemID.Feather, 2);
-            recipe1.AddIngredient(ItemID.CobaltBar, 5);
-            recipe1.AddTile(TileID.MythrilAnvil);
-            recipe1.Register();
-
-            Recipe recipe2 = CreateRecipe();
-            recipe2.AddIngredient(ItemID.SoulofFlight, 10);
-            recipe2.AddIngredient(ItemID.Feather, 2);
-            recipe2.AddIngredient(ItemID.PalladiumBar, 5);
-            recipe2.AddTile(TileID.MythrilAnvil);
-            recipe2.Register();
         }
     }
 }

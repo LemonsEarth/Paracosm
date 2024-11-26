@@ -264,7 +264,7 @@ namespace Paracosm.Content.Bosses.VortexMothership
                         {
                             shootDirection = playerDirection;
                             NPC.netUpdate = true;
-                            Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, shootDirection * 5, ModContent.ProjectileType<TeslaShot>(), body.damage, 1, ai1: 1f);
+                            Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, shootDirection * 10, ModContent.ProjectileType<TeslaShot>(), body.damage, 1);
                         }
                         AttackTimer = MIX_TESLA_SHOT_CD;
                     }

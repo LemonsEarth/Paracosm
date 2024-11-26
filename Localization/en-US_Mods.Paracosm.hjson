@@ -425,7 +425,7 @@ Items: {
 	ChampionsCrown: {
 		SetBonus:
 			'''
-			Press the Champion's Crown key to melt everything:
+			Press the "Champion's Crown" key to melt everything:
 				- Enemies around you explode
 				- You and all enemies are inflicted with Melted and Solar Burn
 				- Melted reduces defense to zero for its duration
@@ -472,7 +472,32 @@ Items: {
 
 	Hyperion: {
 		DisplayName: Hyperion
-		Tooltip: ""
+		Tooltip: Fish!
+	}
+
+	SolarCore: {
+		DisplayName: Solar Core
+		Tooltip: The compressed core of a fallen star...
+	}
+
+	VortexianPlating: {
+		DisplayName: Vortexian Plating
+		Tooltip: The culmination of alien engineering...
+	}
+
+	VortexControlUnit: {
+		SetBonus:
+			'''
+			Press the "Vortex Control" key to force all your projectiles to home in on the cursor
+			This effect has an 80 second cooldown
+			'''
+		DisplayName: Vortex Control Unit
+		Tooltip:
+			'''
+			{$CommonItemTooltip.PercentIncreasedRangedDamage}
+			{$CommonItemTooltip.PercentIncreasedRangedCritChance@1}
+			{$CommonItemTooltip.PercentIncreasedMovementSpeed@2}
+			'''
 	}
 }
 
@@ -556,7 +581,12 @@ NPCs: {
 	InfectedRevenantCorruptHead.DisplayName: Infected Revenant
 	InfectedRevenantCrimsonHead.DisplayName: Infected Revenant
 	InfectedRevenantWings.DisplayName: ""
-	VortexMothership.DisplayName: Vortex Mothership
+
+	VortexMothership: {
+		DisplayName: Vortex Mothership
+		Bestiary: The vortex legion has ruled the majority of the galaxy for millennia. The wrath of this faction has been witnessed first hand by almost every living being, and they won't take kindly to your destruction of their vessel.
+	}
+
 	VortexTeslaGun.DisplayName: " "
 	VortexUFO.DisplayName: Vortex U F O
 }
@@ -611,6 +641,16 @@ Buffs: {
 		DisplayName: Champions Crown Cooldown
 		Description: You can not use the Champion's Crown effect
 	}
+
+	VortexForceCooldown: {
+		DisplayName: Vortex Force Cooldown
+		Description: You're not in control
+	}
+
+	VortexForce: {
+		DisplayName: Vortex Force
+		Description: You're in control
+	}
 }
 
 Biomes: {
@@ -623,4 +663,6 @@ Biomes: {
 Keybinds: {
 	SolarExplosion.DisplayName: Solar Explosion
 	"Champion's Crown.DisplayName": Champion's  Crown
+	"Vortex Control.DisplayName": Vortex  Control
+	"Champions Crown.DisplayName": Champions  Crown
 }

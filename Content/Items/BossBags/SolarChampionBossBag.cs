@@ -1,4 +1,5 @@
 ﻿using Paracosm.Content.Items.Armor.Celestial;
+using Paracosm.Content.Items.Materials;
 using Paracosm.Content.Items.Weapons.Magic;
 using Paracosm.Content.Items.Weapons.Melee;
 using Terraria;
@@ -34,9 +35,9 @@ namespace Paracosm.Content.Items.BossBags
 
         public override void ModifyItemLoot(ItemLoot itemLoot)
         {
+            itemLoot.Add(ItemDropRule.Common(ModContent.ItemType<SolarCore>(), 1, 5, 14));
             itemLoot.Add(ItemDropRule.Common(ItemID.FragmentSolar, 1, 15, 30));
             itemLoot.Add(ItemDropRule.Common(ItemID.LunarBar, 1, 5, 12));
-            itemLoot.Add(ItemDropRule.OneFromOptions(1, ModContent.ItemType<HorizonSplitter>(), ModContent.ItemType<TheCrucible>()));
             itemLoot.Add(ItemDropRule.Common(ModContent.ItemType<ChampionsCrown>(), 1, 1, 1));
         }
     }

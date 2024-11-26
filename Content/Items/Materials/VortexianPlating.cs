@@ -5,23 +5,20 @@ using Terraria.ModLoader;
 
 namespace Paracosm.Content.Items.Materials
 {
-    public class CosmicFlames : ModItem
+    public class VortexianPlating : ModItem
     {
         public override void SetStaticDefaults()
         {
             Item.ResearchUnlockCount = 100;
-            Main.RegisterItemAnimation(Item.type, new DrawAnimationVertical(6, 4));   
-			ItemID.Sets.ItemIconPulse[Item.type] = true;
-			ItemID.Sets.ItemNoGravity[Item.type] = true;
         }
 
         public override void SetDefaults()
         {
-            Item.width = 12;
-            Item.height = 22;
+            Item.width = 40;
+            Item.height = 40;
             Item.maxStack = Item.CommonMaxStack;
-            Item.value = Item.sellPrice(0, 0, 30);
-            Item.rare = ItemRarityID.Purple;
+            Item.value = Item.sellPrice(0, 0, 50);
+            Item.rare = ItemRarityID.Red;
         }
     }
 }

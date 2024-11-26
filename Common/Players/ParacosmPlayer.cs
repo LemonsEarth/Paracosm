@@ -3,6 +3,7 @@ using Paracosm.Common.Systems;
 using Paracosm.Common.Utils;
 using Paracosm.Content.Biomes;
 using Paracosm.Content.Buffs;
+using Paracosm.Content.Buffs.Cooldowns;
 using Paracosm.Content.Projectiles.Friendly;
 using Terraria;
 using Terraria.ID;
@@ -18,6 +19,7 @@ namespace Paracosm.Common.Players
         public bool paracosmicGogglesSet = false;
         public bool windWarriorBreastplate = false;
         public bool championsCrownSet = false;
+        public bool vortexControlUnitSet = false;
 
         public bool sunCoin = false;
         public bool corruptedDragonHeart = false;
@@ -32,8 +34,7 @@ namespace Paracosm.Common.Players
         public bool paracosmicBurn = false;
         public bool solarBurn = false;
         public bool melting = false;
-        public bool championsCrownCD = false;
-        int championsCrownTimer = 0;
+        public bool vortexForce = false;
 
         public override void ResetEffects()
         {
@@ -43,6 +44,7 @@ namespace Paracosm.Common.Players
             paracosmicGogglesSet = false;
             windWarriorBreastplate = false;
             championsCrownSet = false;
+            vortexControlUnitSet = false;
 
             sunCoin = false;
             corruptedDragonHeart = false;
@@ -55,7 +57,7 @@ namespace Paracosm.Common.Players
             paracosmicBurn = false;
             solarBurn = false;
             melting = false;
-            championsCrownCD = false;
+            vortexForce = false;
         }
 
         public override void PostUpdateEquips()
@@ -119,7 +121,7 @@ namespace Paracosm.Common.Players
 
             if (championsCrownSet)
             {
-                if (KeybindSystem.ChampionsCrown.JustPressed && !championsCrownCD)
+                if (KeybindSystem.ChampionsCrown.JustPressed && !Player.HasBuff(ModContent.BuffType<ChampionsCrownCooldown>()))
                 {
                     Player.AddBuff(ModContent.BuffType<MeltingDebuff>(), 1200);
                     Player.AddBuff(ModContent.BuffType<ChampionsCrownCooldown>(), 5400);
@@ -144,6 +146,30 @@ namespace Paracosm.Common.Players
             if (melting)
             {
                 Player.statDefense *= 0;
+            }
+
+            if (vortexControlUnitSet)
+            {
+                if (KeybindSystem.VortexControl.JustPressed && !Player.HasBuff(ModContent.BuffType<VortexForceCooldown>()))
+                {
+                    Player.AddBuff(ModContent.BuffType<VortexForce>(), 600);
+                    Player.AddBuff(ModContent.BuffType<VortexForceCooldown>(), 4800);
+                }
+            }
+
+            if (vortexForce)
+            {
+                foreach (var proj in Main.ActiveProjectiles)
+                {
+                    if (proj.friendly && !proj.IsMinionOrSentryRelated && proj.owner == Player.whoAmI)
+                    {
+                        proj.velocity += proj.Center.DirectionTo(Main.MouseWorld) * 1.5f;
+                    }
+                }
+                if (Main.myPlayer == Player.whoAmI)
+                {
+                    LemonUtils.DustCircle(Main.MouseWorld, 8, 2, DustID.HallowSpray, Main.rand.NextFloat(0.8f, 1.2f));
+                }
             }
 
             if (corruptedDragonHeart)

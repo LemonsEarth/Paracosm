@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Paracosm.Content.Items.Materials;
 using Terraria;
 using Terraria.Audio;
 using Terraria.DataStructures;
@@ -63,6 +64,17 @@ namespace Paracosm.Content.Items.Weapons.Ranged
         public override Vector2? HoldoutOffset()
         {
             return new Vector2(-60, 6);
+        }
+
+        public override void AddRecipes()
+        {
+            Recipe r = CreateRecipe();
+            r.AddIngredient(ItemID.Megashark);
+            r.AddIngredient(ItemID.VortexBeater);
+            r.AddIngredient(ModContent.ItemType<VortexianPlating>(), 8);
+            r.AddIngredient(ItemID.FragmentVortex, 12);
+            r.AddIngredient(ItemID.LunarBar, 8);
+            r.Register();
         }
     }
 }

@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Paracosm.Common.Systems;
 using Paracosm.Content.Buffs;
 using Paracosm.Content.Items.BossBags;
+using Paracosm.Content.Items.Materials;
 using Paracosm.Content.Items.Weapons.Magic;
 using Paracosm.Content.Items.Weapons.Melee;
 using Paracosm.Content.Projectiles.Hostile;
@@ -107,16 +108,20 @@ namespace Paracosm.Content.Bosses.VortexMothership
             Main.npcFrameCount[NPC.type] = 1;
             NPCID.Sets.CantTakeLunchMoney[Type] = true;
             NPCID.Sets.DontDoHardmodeScaling[Type] = true;
-            NPCID.Sets.BossBestiaryPriority.Add(Type);
+            NPCID.Sets.NPCBestiaryDrawModifiers drawModifiers = new NPCID.Sets.NPCBestiaryDrawModifiers()
+            {
+                PortraitScale = 0.2f,
+                PortraitPositionYOverride = -150
+            };
+            NPCID.Sets.NPCBestiaryDrawOffset.Add(Type, drawModifiers);
         }
 
         public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
         {
             bestiaryEntry.Info.AddRange(new List<IBestiaryInfoElement>
             {
-                BestiaryDatabaseNPCsPopulator.CommonTags.SpawnConditions.Biomes.SolarPillar,
-                new MoonLordPortraitBackgroundProviderBestiaryInfoElement(),
-                //new FlavorTextBestiaryInfoElement(this.GetLocalizedValue("Bestiary")),
+                BestiaryDatabaseNPCsPopulator.CommonTags.SpawnConditions.Biomes.VortexPillar,
+                new FlavorTextBestiaryInfoElement(this.GetLocalizedValue("Bestiary")),
             });
         }
 
@@ -421,29 +426,10 @@ namespace Paracosm.Content.Bosses.VortexMothership
             return true;
         }
 
-        //public override void FindFrame(int frameHeight)
-        //{
-        //    /*int frameDur = 8;
-        //    NPC.frameCounter += 1;
-        //    if (NPC.frameCounter > frameDur)
-        //    {
-        //        NPC.frame.Y += frameHeight;
-        //        NPC.frameCounter = 0;
-        //        if (NPC.frame.Y > 2 * frameHeight)
-        //        {
-        //            NPC.frame.Y = 0;
-        //        }
-        //    }*/
-        //}
-
-        //public override void OnHitPlayer(Player target, Player.HurtInfo hurtInfo)
-        //{
-        //    target.AddBuff(ModContent.BuffType<SolarBurn>(), 180);
-        //}
-
         public override void ModifyNPCLoot(NPCLoot npcLoot)
         {
             LeadingConditionRule classicRule = new LeadingConditionRule(new Conditions.NotExpert());
+            classicRule.OnSuccess(ItemDropRule.Common(ModContent.ItemType<VortexianPlating>(), 1, 4, 8));
             classicRule.OnSuccess(ItemDropRule.Common(ItemID.FragmentVortex, 1, 10, 20));
             classicRule.OnSuccess(ItemDropRule.Common(ItemID.LunarBar, 1, 5, 12));
             classicRule.OnSuccess(ItemDropRule.OneFromOptions(1, ModContent.ItemType<HorizonSplitter>(), ModContent.ItemType<TheCrucible>()));

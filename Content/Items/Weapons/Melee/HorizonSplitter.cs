@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Paracosm.Content.Items.Materials;
 using Paracosm.Content.Projectiles.HeldProjectiles;
 using Terraria;
 using Terraria.DataStructures;
@@ -47,6 +48,17 @@ namespace Paracosm.Content.Items.Weapons.Melee
         public override bool MeleePrefix()
         {
             return true;
+        }
+
+        public override void AddRecipes()
+        {
+            Recipe r = CreateRecipe();
+            r.AddIngredient(ItemID.LunarHamaxeSolar);
+            r.AddIngredient(ItemID.LucyTheAxe);
+            r.AddIngredient(ModContent.ItemType<SolarCore>(), 8);
+            r.AddIngredient(ItemID.FragmentSolar, 12);
+            r.AddIngredient(ItemID.LunarBar, 8);
+            r.Register();
         }
     }
 }

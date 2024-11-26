@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Paracosm.Common.Systems;
 using Paracosm.Content.Buffs;
 using Paracosm.Content.Items.BossBags;
+using Paracosm.Content.Items.Materials;
 using Paracosm.Content.Items.Weapons.Magic;
 using Paracosm.Content.Items.Weapons.Melee;
 using Paracosm.Content.Projectiles.Hostile;
@@ -17,6 +18,7 @@ using Terraria.GameContent.Bestiary;
 using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.UI;
 
 
 namespace Paracosm.Content.Bosses.SolarChampion
@@ -110,7 +112,6 @@ namespace Paracosm.Content.Bosses.SolarChampion
             bestiaryEntry.Info.AddRange(new List<IBestiaryInfoElement>
             {
                 BestiaryDatabaseNPCsPopulator.CommonTags.SpawnConditions.Biomes.SolarPillar,
-                new MoonLordPortraitBackgroundProviderBestiaryInfoElement(),
                 new FlavorTextBestiaryInfoElement(this.GetLocalizedValue("Bestiary")),
             });
         }
@@ -978,9 +979,9 @@ namespace Paracosm.Content.Bosses.SolarChampion
         public override void ModifyNPCLoot(NPCLoot npcLoot)
         {
             LeadingConditionRule classicRule = new LeadingConditionRule(new Conditions.NotExpert());
+            classicRule.OnSuccess(ItemDropRule.Common(ModContent.ItemType<SolarCore>(), 1, 4, 8));
             classicRule.OnSuccess(ItemDropRule.Common(ItemID.FragmentSolar, 1, 10, 20));
             classicRule.OnSuccess(ItemDropRule.Common(ItemID.LunarBar, 1, 5, 12));
-            classicRule.OnSuccess(ItemDropRule.OneFromOptions(1, ModContent.ItemType<HorizonSplitter>(), ModContent.ItemType<TheCrucible>()));
             npcLoot.Add(classicRule);
             npcLoot.Add(ItemDropRule.BossBag(ModContent.ItemType<SolarChampionBossBag>()));
         }

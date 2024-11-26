@@ -78,5 +78,10 @@ namespace Paracosm.Content.Projectiles.Hostile
 
             AITimer++;
         }
+
+        public override void OnHitPlayer(Player target, Player.HurtInfo info)
+        {
+            target.AddBuff(BuffID.VortexDebuff, 120);
+        }
     }
 }

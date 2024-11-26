@@ -3,20 +3,15 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Paracosm.Content.Buffs
+namespace Paracosm.Content.Buffs.Cooldowns
 {
-    public class ChampionsCrownCooldown : ModBuff
+    public class VortexForceCooldown : ModBuff
     {
         public override void SetStaticDefaults()
         {
             Main.debuff[Type] = true;
             BuffID.Sets.LongerExpertDebuff[Type] = false;
             BuffID.Sets.NurseCannotRemoveDebuff[Type] = true;
-        }
-
-        public override void Update(Player player, ref int buffIndex)
-        {
-            player.GetModPlayer<ParacosmPlayer>().championsCrownCD = true;
         }
     }
 }

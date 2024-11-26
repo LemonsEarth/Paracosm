@@ -5,7 +5,7 @@ using Terraria.ModLoader;
 
 namespace Paracosm.Content.Items.Materials
 {
-    public class CosmicFlames : ModItem
+    public class SolarCore : ModItem
     {
         public override void SetStaticDefaults()
         {
@@ -17,11 +17,11 @@ namespace Paracosm.Content.Items.Materials
 
         public override void SetDefaults()
         {
-            Item.width = 12;
-            Item.height = 22;
+            Item.width = 40;
+            Item.height = 40;
             Item.maxStack = Item.CommonMaxStack;
-            Item.value = Item.sellPrice(0, 0, 30);
-            Item.rare = ItemRarityID.Purple;
+            Item.value = Item.sellPrice(0, 0, 50);
+            Item.rare = ItemRarityID.Red;
         }
     }
 }
