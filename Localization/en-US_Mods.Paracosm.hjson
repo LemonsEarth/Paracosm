@@ -499,6 +499,15 @@ Items: {
 			{$CommonItemTooltip.PercentIncreasedMovementSpeed@2}
 			'''
 	}
+
+	RogueDefender: {
+		DisplayName: Rogue Defender
+		Tooltip:
+			'''
+			Summons Tesla Guns to defend you
+			Tesla Guns attack slower the faster you're moving, but get increased damage
+			'''
+	}
 }
 
 Projectiles: {
@@ -555,6 +564,8 @@ Projectiles: {
 	VortexExplosion.DisplayName: Vortex Explosion
 	VortexMine.DisplayName: Vortex Mine
 	VortexLaser.DisplayName: Vortex Laser
+	TeslaShotFriendly.DisplayName: Tesla Shot Friendly
+	TeslaGunMinion.DisplayName: Tesla Gun Minion
 }
 
 NPCs: {
@@ -651,6 +662,11 @@ Buffs: {
 		DisplayName: Vortex Force
 		Description: You're in control
 	}
+
+	TeslaGunMinionBuff: {
+		DisplayName: Tesla Guns
+		Description: Why use minion when gun do trick?
+	}
 }
 
 Biomes: {
@@ -661,8 +677,6 @@ Biomes: {
 }
 
 Keybinds: {
-	SolarExplosion.DisplayName: Solar Explosion
-	"Champion's Crown.DisplayName": Champion's  Crown
-	"Vortex Control.DisplayName": Vortex  Control
-	"Champions Crown.DisplayName": Champions  Crown
+	ChampionsCrown.DisplayName: Champion's Crown
+	VortexControl.DisplayName: Vortex Control
 }

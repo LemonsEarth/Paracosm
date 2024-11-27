@@ -10,8 +10,8 @@ namespace Paracosm.Common.Systems
 
         public override void Load()
         {
-            ChampionsCrown = KeybindLoader.RegisterKeybind(Mod, "Champion's Crown", "U");
-            VortexControl = KeybindLoader.RegisterKeybind(Mod, "Vortex Control", "Z");
+            ChampionsCrown = KeybindLoader.RegisterKeybind(Mod, "ChampionsCrown", "U");
+            VortexControl = KeybindLoader.RegisterKeybind(Mod, "VortexControl", "Z");
         }
 
         public override void Unload()
