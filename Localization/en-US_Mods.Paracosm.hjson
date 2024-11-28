@@ -508,6 +508,11 @@ Items: {
 			Tesla Guns attack slower the faster you're moving, but get increased damage
 			'''
 	}
+
+	DarkMagicMirror: {
+		DisplayName: Dark Magic Mirror
+		Tooltip: ""
+	}
 }
 
 Projectiles: {
@@ -680,3 +685,5 @@ Keybinds: {
 	ChampionsCrown.DisplayName: Champion's Crown
 	VortexControl.DisplayName: Vortex Control
 }
+
+SubworldName.VoidSubworld: The Void

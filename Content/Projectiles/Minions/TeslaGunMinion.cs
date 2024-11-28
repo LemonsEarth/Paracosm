@@ -99,7 +99,7 @@ namespace Paracosm.Content.Projectiles.Minions
 
             if (AttackTimer > 0)
             {
-                AttackTimer -= 1f / (1 + (owner.velocity.Length() / 10));
+                AttackTimer -= 1f / (1 + (owner.velocity.Length() / 5));
             }
             AITimer++;
         }

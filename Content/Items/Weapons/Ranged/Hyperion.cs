@@ -13,7 +13,7 @@ namespace Paracosm.Content.Items.Weapons.Ranged
         int useCounter = 0;
         public override void SetDefaults()
         {
-            Item.damage = 100;
+            Item.damage = 70;
             Item.crit = 16;
             Item.DamageType = DamageClass.Ranged;
             Item.width = 146;
@@ -51,9 +51,9 @@ namespace Paracosm.Content.Items.Weapons.Ranged
 
                 if (useCounter == 10)
                 {
-                    for (int i = -1; i <= 1; i++)
+                    for (int i = -4; i <= 4; i++)
                     {
-                        Projectile.NewProjectile(Item.GetSource_FromAI(), position, velocity.RotatedBy(MathHelper.ToRadians(30 * i)) * 2, ProjectileID.VortexBeaterRocket, damage * 5, knockback);
+                        Projectile.NewProjectile(Item.GetSource_FromAI(), position, velocity.RotatedBy(MathHelper.ToRadians(10 * i)) * 2, ProjectileID.VortexBeaterRocket, damage * 4, knockback);
                     }
                     useCounter = 0;
                 }

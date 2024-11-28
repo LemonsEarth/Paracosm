@@ -12,7 +12,6 @@ namespace Paracosm.Content.Projectiles.Hostile
     {
         ref float AITimer => ref Projectile.ai[0];
         ref float DamageNullTimer => ref Projectile.ai[1];
-        ref float SavedDamage => ref Projectile.ai[2];
 
         public override void SetStaticDefaults()
         {
@@ -44,14 +43,13 @@ namespace Paracosm.Content.Projectiles.Hostile
             if (AITimer == 0)
             {
                 SoundEngine.PlaySound(SoundID.Item20 with { MaxInstances = 2 });
-                SavedDamage = Projectile.damage;
                 Projectile.damage = 0;
                 Projectile.netUpdate = true;
             }
 
             if (DamageNullTimer == 0)
             {
-                Projectile.damage = (int)SavedDamage;
+                Projectile.damage = Projectile.originalDamage;
                 Projectile.netUpdate = true;
             }
             Lighting.AddLight(Projectile.Center, 100, 80, 0);

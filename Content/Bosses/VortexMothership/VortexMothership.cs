@@ -368,7 +368,7 @@ namespace Paracosm.Content.Bosses.VortexMothership
                 {
                     for (int i = 0; i < 40; i++)
                     {
-                        var sphere = Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center + new Vector2(0, -arenaDistance).RotatedBy(i * MathHelper.ToRadians(9)), Vector2.Zero, Proj["Sphere"], NPC.damage, 1, ai1: 60f);
+                        var sphere = Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center + new Vector2(0, -arenaDistance).RotatedBy(i * MathHelper.ToRadians(9)), Vector2.Zero, Proj["Sphere"], damage, 1, ai1: 60f);
 
                         Spheres.Add(sphere);
                     }

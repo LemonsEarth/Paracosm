@@ -121,7 +121,7 @@ namespace Paracosm.Common.Systems
                 Point16 dims = Point16.Zero;
                 Generator.GetDimensions("Content/Structures/ParacosmicDistortionCore", Mod, ref dims);
                 int x = WorldGen.genRand.Next((int)((float)Main.maxTilesX * (1f / 3f)), (int)((float)Main.maxTilesX * (2f / 3f)));
-                int y = WorldGen.genRand.Next((int)GenVars.rockLayer + 200, (Main.maxTilesY - 200) / 2);
+                int y = WorldGen.genRand.Next((int)GenVars.rockLayer + 400, Main.maxTilesY - 200);
 
                 point = new Point16(x, y);
                 if (!CheckForTiles(x, y, dims.X, dims.Y, TileID.LihzahrdBrick) && !CheckForTiles(x, y, dims.X, dims.Y, ModContent.TileType<ParastoneBlock>()) && !CheckForTiles(x, y, dims.X, dims.Y, TileID.BlueDungeonBrick) && !CheckForTiles(x, y, dims.X, dims.Y, TileID.GreenDungeonBrick) && !CheckForTiles(x, y, dims.X, dims.Y, TileID.PinkDungeonBrick))
