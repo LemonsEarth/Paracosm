@@ -54,7 +54,6 @@ namespace Paracosm.Content.Projectiles.HeldProjectiles
             Player player = Main.player[Projectile.owner];
             player.heldProj = Projectile.whoAmI;
 
-
             Projectile.velocity = Projectile.velocity.SafeNormalize(Vector2.Zero);
 
             if (Projectile.Center.Distance(player.MountedCenter) >= maximumHoldOutRange - 10)

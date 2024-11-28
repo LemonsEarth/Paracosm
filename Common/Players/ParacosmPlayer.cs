@@ -1,7 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Paracosm.Common.Systems;
 using Paracosm.Common.Utils;
-using Paracosm.Content.Biomes;
+using Paracosm.Content.Biomes.Overworld;
+using Paracosm.Content.Biomes.Void;
 using Paracosm.Content.Buffs;
 using Paracosm.Content.Buffs.Cooldowns;
 using Paracosm.Content.Projectiles.Friendly;
@@ -194,6 +195,11 @@ namespace Paracosm.Common.Players
 
         public override void PostUpdate()
         {
+            if (Player.InModBiome<VoidSky>())
+            {
+                Player.moonLordMonolithShader = true;
+            }
+
             if (Player.InModBiome<ParacosmicDistortion>())
             {
                 if (!Terraria.Graphics.Effects.Filters.Scene["ScreenTintShader"].IsActive() && Main.netMode != NetmodeID.Server)

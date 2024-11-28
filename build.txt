@@ -1,6 +1,6 @@
 displayName = Paracosm
 author = LemonEarth
-version = 0.3
+version = 0.4
 modReferences = StructureHelper, SubworldLibrary
 homepage = https://github.com/LemonsEarth/Paracosm
-buildIgnore = lib\*, .vs\*, Properties\*, *.csproj, *.user, obj\*, bin\*, *.config, .git\*, .github\*, LICENSE, README.md, .editorconfig, .gitignore, .gitattributes
+buildIgnore = .vs\*, Properties\*, *.csproj, *.user, obj\*, bin\*, *.config, .git\*, .github\*, LICENSE, README.md, .editorconfig, .gitignore, .gitattributes

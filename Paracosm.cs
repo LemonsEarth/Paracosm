@@ -1,4 +1,5 @@
 using Microsoft.Xna.Framework.Graphics;
+using Paracosm.Content.Shaders.Skies;
 using ReLogic.Content;
 using Terraria.Graphics.Effects;
 using Terraria.Graphics.Shaders;
@@ -13,6 +14,7 @@ namespace Paracosm
         {
             Asset<Effect> filterShader = this.Assets.Request<Effect>("Content/Shaders/ScreenTintShader");
             Filters.Scene["ScreenTintShader"] = new Filter(new ScreenShaderData(filterShader, "ScreenTint"), EffectPriority.Medium);
+            SkyManager.Instance["Paracosm:VoidSkySky"] = new VoidSkySky();
         }
     }
 }

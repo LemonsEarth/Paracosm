@@ -8,11 +8,17 @@
 		
 	</PropertyGroup>
 	<ItemGroup>
+	  <None Remove="Content\Textures\Backgrounds\VoidSky_Background.png" />
+	</ItemGroup>
+	<ItemGroup>
 	  <Folder Include="lib\" />
 	</ItemGroup>
 	<ItemGroup>
 	  <Reference Include="StructureHelper">
 	    <HintPath>..\..\ModReader\StructureHelper\StructureHelper.dll</HintPath>
+	  </Reference>
+	  <Reference Include="SubworldLibrary">
+	    <HintPath>lib\SubworldLibrary.dll</HintPath>
 	  </Reference>
 	</ItemGroup>
 

@@ -1,4 +1,5 @@
-﻿using Paracosm.Content.Bosses.VortexMothership;
+﻿using Microsoft.Xna.Framework;
+using Paracosm.Content.Bosses.VortexMothership;
 using Paracosm.Content.Items.Materials;
 using Paracosm.Content.Subworlds;
 using SubworldLibrary;
@@ -11,6 +12,9 @@ namespace Paracosm.Content.Items.Consumables
 {
     public class DarkMagicMirror : ModItem
     {
+        bool doAnimation = false;
+        float animationTimer = 0;
+
         public override void SetStaticDefaults()
         {
             Item.ResearchUnlockCount = 3;
@@ -19,12 +23,12 @@ namespace Paracosm.Content.Items.Consumables
 
         public override void SetDefaults()
         {
-            Item.width = 44;
+            Item.width = 68;
             Item.height = 68;
             Item.maxStack = 1;
             Item.rare = ItemRarityID.Red;
-            Item.useAnimation = 30;
-            Item.useTime = 30;
+            Item.useAnimation = 122;
+            Item.useTime = 122;
             Item.useStyle = ItemUseStyleID.HoldUp;
             Item.consumable = false;
         }
@@ -34,11 +38,39 @@ namespace Paracosm.Content.Items.Consumables
             itemGroup = ContentSamples.CreativeHelper.ItemGroup.BossSpawners;
         }
 
+        public override bool CanUseItem(Player player)
+        {
+            return !doAnimation;
+        }
+
         public override bool? UseItem(Player player)
         {
             SoundEngine.PlaySound(SoundID.Item6 with { Pitch = -0.6f }, player.position);
-            SubworldSystem.Enter<VoidSubworld>();
+            doAnimation = true;
+
             return true;
+        }
+
+        public override void UpdateInventory(Player player)
+        {
+            if (!doAnimation)
+            {
+                return;
+            }
+            for (int i = 0; i < (animationTimer % 20); i++)
+            {
+                Dust dust = Dust.NewDustDirect(player.Center, 1, 1, DustID.Wraith);
+                dust.velocity = new Vector2(0, Main.rand.Next(1, 20)).RotatedByRandom(MathHelper.Pi * 2);
+            }
+            if (animationTimer > 120)
+            {
+                if (!SubworldSystem.AnyActive())
+                {
+                    SubworldSystem.Enter<VoidSubworld>();
+                }
+                doAnimation = false;
+            }
+            animationTimer++;
         }
 
         public override void AddRecipes()

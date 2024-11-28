@@ -1,5 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
-using Paracosm.Content.Biomes;
+using Paracosm.Content.Biomes.Overworld;
 using Paracosm.Content.Items.Materials;
 using Paracosm.Content.Items.Placeable;
 using System.Collections.Generic;

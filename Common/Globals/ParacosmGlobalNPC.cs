@@ -1,4 +1,4 @@
-﻿using Paracosm.Content.Biomes;
+﻿using Paracosm.Content.Biomes.Overworld;
 using Paracosm.Content.NPCs.Hostile;
 using System.Collections.Generic;
 using Terraria;

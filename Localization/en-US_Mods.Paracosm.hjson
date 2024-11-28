@@ -679,6 +679,11 @@ Biomes: {
 		DisplayName: Paracosmic Distortion
 		TownNPCDialogueName: the Paracosmic Distortion
 	}
+
+	VoidSky: {
+		TownNPCDialogueName: the Void Sky
+		DisplayName: Void Sky
+	}
 }
 
 Keybinds: {

@@ -3,8 +3,7 @@ using Paracosm.Common.Systems;
 using Terraria;
 using Terraria.ModLoader;
 
-
-namespace Paracosm.Content.Biomes
+namespace Paracosm.Content.Biomes.Overworld
 {
     public class ParacosmicDistortion : ModBiome
     {
@@ -17,7 +16,7 @@ namespace Paracosm.Content.Biomes
 
         public override bool IsBiomeActive(Player player)
         {
-            return (player.ZoneRockLayerHeight) && ModContent.GetInstance<BiomeTileCounts>().parastoneCount >= 100;
+            return player.ZoneRockLayerHeight && ModContent.GetInstance<BiomeTileCounts>().parastoneCount >= 100;
         }
     }
 }
