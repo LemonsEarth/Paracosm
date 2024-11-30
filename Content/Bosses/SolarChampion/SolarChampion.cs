@@ -234,7 +234,7 @@ namespace Paracosm.Content.Bosses.SolarChampion
 
             if (!Terraria.Graphics.Effects.Filters.Scene["ScreenTintShader"].IsActive() && Main.netMode != NetmodeID.Server)
             {
-                Terraria.Graphics.Effects.Filters.Scene.Activate("ScreenTintShader").GetShader().UseColor(new Color(255, 192, 100));
+                Terraria.Graphics.Effects.Filters.Scene.Activate("ScreenTintShader").GetShader().UseColor(new Color(1.0f, 0.8f, 0.4f));
             }
 
             foreach (var p in Main.player)
