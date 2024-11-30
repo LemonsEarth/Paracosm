@@ -193,8 +193,6 @@ namespace Paracosm.Content.Bosses.DivineSeeker
 
             Vector2 targetPosition = topLeft;
 
-
-
             if (!Terraria.Graphics.Effects.Filters.Scene["ScreenTintShader"].IsActive() && Main.netMode != NetmodeID.Server)
             {
                 Terraria.Graphics.Effects.Filters.Scene.Activate("ScreenTintShader").GetShader().UseColor(new Color(152, 152, 255));

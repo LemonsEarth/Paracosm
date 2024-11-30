@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Paracosm.Common.Systems;
 using Paracosm.Common.Utils;
 using Paracosm.Content.Biomes.Overworld;
@@ -6,7 +7,9 @@ using Paracosm.Content.Biomes.Void;
 using Paracosm.Content.Buffs;
 using Paracosm.Content.Buffs.Cooldowns;
 using Paracosm.Content.Projectiles.Friendly;
+using ReLogic.Content;
 using Terraria;
+using Terraria.Graphics.Shaders;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -198,6 +201,19 @@ namespace Paracosm.Common.Players
             if (Player.InModBiome<VoidSky>())
             {
                 Player.moonLordMonolithShader = true;
+
+                if (!Terraria.Graphics.Effects.Filters.Scene["DarknessShader"].IsActive() && Main.netMode != NetmodeID.Server)
+                {
+                    ScreenShaderData shader = Terraria.Graphics.Effects.Filters.Scene.Activate("DarknessShader").GetShader();
+                    shader.Shader.Parameters["maxGlow"].SetValue(10);
+                }
+            }
+            else
+            {
+                if (Terraria.Graphics.Effects.Filters.Scene["DarknessShader"].IsActive())
+                {
+                    Terraria.Graphics.Effects.Filters.Scene.Deactivate("DarknessShader");
+                }
             }
 
             if (Player.InModBiome<ParacosmicDistortion>())

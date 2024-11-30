@@ -3,6 +3,7 @@ using Paracosm.Common.Systems;
 using Paracosm.Content.Subworlds;
 using SubworldLibrary;
 using Terraria;
+using Terraria.Graphics.Effects;
 using Terraria.ModLoader;
 
 namespace Paracosm.Content.Biomes.Void
@@ -21,6 +22,18 @@ namespace Paracosm.Content.Biomes.Void
         public override bool IsBiomeActive(Player player)
         {
             return SubworldSystem.Current is VoidSubworld;
+        }
+
+        public override void SpecialVisuals(Player player, bool isActive)
+        {
+            if (isActive && SkyManager.Instance["Paracosm:VoidSky"] != null && IsBiomeActive(player) && !SkyManager.Instance["Paracosm:VoidSky"].IsActive())
+            {
+                SkyManager.Instance.Activate("Paracosm:VoidSky");
+            }
+            else
+            {
+                SkyManager.Instance.Deactivate("Paracosm:VoidSky");
+            }
         }
     }
 

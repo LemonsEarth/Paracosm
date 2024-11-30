@@ -8,6 +8,7 @@
 		
 	</PropertyGroup>
 	<ItemGroup>
+	  <None Remove="Content\Shaders\DarknessShader.fx" />
 	  <None Remove="Content\Textures\Backgrounds\VoidSky_Background.png" />
 	</ItemGroup>
 	<ItemGroup>

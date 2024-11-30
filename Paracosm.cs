@@ -12,9 +12,13 @@ namespace Paracosm
     {
         public override void Load()
         {
-            Asset<Effect> filterShader = this.Assets.Request<Effect>("Content/Shaders/ScreenTintShader");
+            Asset<Effect> filterShader = Assets.Request<Effect>("Content/Shaders/ScreenTintShader");
             Filters.Scene["ScreenTintShader"] = new Filter(new ScreenShaderData(filterShader, "ScreenTint"), EffectPriority.Medium);
-            SkyManager.Instance["Paracosm:VoidSkySky"] = new VoidSkySky();
+
+            Asset<Effect> darknessShader = Assets.Request<Effect>("Content/Shaders/DarknessShader");
+            Filters.Scene["DarknessShader"] = new Filter(new ScreenShaderData(darknessShader, "Darkness"), EffectPriority.Medium);
+
+            SkyManager.Instance["Paracosm:VoidSky"] = new VoidSkySky();
         }
     }
 }

@@ -59,8 +59,9 @@ namespace Paracosm.Content.Items.Consumables
             }
             for (int i = 0; i < (animationTimer % 20); i++)
             {
-                Dust dust = Dust.NewDustDirect(player.Center, 1, 1, DustID.Wraith);
+                Dust dust = Dust.NewDustDirect(player.Center, 1, 1, DustID.Granite, newColor: Color.Black, Scale: Main.rand.NextFloat(1.2f, 2.4f));
                 dust.velocity = new Vector2(0, Main.rand.Next(1, 20)).RotatedByRandom(MathHelper.Pi * 2);
+                dust.noGravity = true;
             }
             if (animationTimer > 120)
             {
