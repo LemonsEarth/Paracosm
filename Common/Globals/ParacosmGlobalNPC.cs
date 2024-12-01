@@ -1,7 +1,9 @@
 ﻿using Paracosm.Content.Biomes.Overworld;
+using Paracosm.Content.Biomes.Void;
 using Paracosm.Content.Bosses.InfectedRevenant;
 using Paracosm.Content.Bosses.VortexMothership;
-using Paracosm.Content.NPCs.Hostile;
+using Paracosm.Content.NPCs.Hostile.Paracosmic;
+using Paracosm.Content.NPCs.Hostile.Void;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.ID;
@@ -67,6 +69,13 @@ namespace Paracosm.Common.Globals
             {
                 pool.Clear();
                 pool.Add(ModContent.NPCType<Wanderer>(), 0.3f);
+                pool.Add(ModContent.NPCType<ParastoneRoller>(), 0.1f);
+            }
+
+            if (spawnInfo.Player.InModBiome<VoidSky>())
+            {
+                pool.Clear();
+                pool.Add(ModContent.NPCType<ShadowSeeker>(), 10f);
                 pool.Add(ModContent.NPCType<ParastoneRoller>(), 0.1f);
             }
         }

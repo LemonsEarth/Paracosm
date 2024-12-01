@@ -336,7 +336,7 @@ namespace Paracosm.Content.Bosses.VortexMothership
             int count = NPC.life < (NPC.lifeMax / 4) ? 4 : 2;
             for (int i = 0; i < Main.rand.Next(count, count + 1); i++)
             {
-                NPC diver = NPC.NewNPCDirect(NPC.GetSource_FromAI(), NPC.Center + new Vector2(Main.rand.Next(-100, 100)), Summonables["StormDiver"], NPC.whoAmI, NPC.whoAmI);
+                NPC diver = NPC.NewNPCDirect(NPC.GetSource_FromAI(), NPC.Center + new Vector2(Main.rand.Next(-100, 100)), Summonables["StormDiver"], NPC.whoAmI);
 
                 if (Main.netMode == NetmodeID.Server)
                 {
@@ -346,14 +346,13 @@ namespace Paracosm.Content.Bosses.VortexMothership
 
             for (int i = 0; i < Main.rand.Next(1, 2); i++)
             {
-                NPC queen = NPC.NewNPCDirect(NPC.GetSource_FromAI(), NPC.Center + new Vector2(Main.rand.Next(-100, 100)), Summonables["HornetQueen"], NPC.whoAmI, NPC.whoAmI);
+                NPC queen = NPC.NewNPCDirect(NPC.GetSource_FromAI(), NPC.Center + new Vector2(Main.rand.Next(-100, 100)), Summonables["HornetQueen"], NPC.whoAmI);
 
                 if (Main.netMode == NetmodeID.Server)
                 {
                     NetMessage.SendData(MessageID.SyncNPC, number: queen.whoAmI);
                 }
             }
-
         }
 
         const float BaseArenaDistance = 1500;

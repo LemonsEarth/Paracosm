@@ -9,7 +9,7 @@ using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Paracosm.Content.NPCs.Hostile
+namespace Paracosm.Content.NPCs.Hostile.Paracosmic
 {
     public class ParastoneRoller : ModNPC
     {
@@ -72,7 +72,7 @@ namespace Paracosm.Content.NPCs.Hostile
             }
             Player player = Main.player[NPC.target];
             AITimer++;
-            NPC.rotation = MathHelper.ToRadians((-AITimer / 2) * (NPC.velocity.Length() + 3));
+            NPC.rotation = MathHelper.ToRadians(-AITimer / 2 * (NPC.velocity.Length() + 3));
 
             if (positionChosen == false)
             {

@@ -606,6 +606,7 @@ NPCs: {
 
 	VortexTeslaGun.DisplayName: " "
 	VortexUFO.DisplayName: Vortex U F O
+	ShadowSeeker.DisplayName: Shadow Seeker
 }
 
 Buffs: {

@@ -10,7 +10,7 @@ using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Paracosm.Content.NPCs.Hostile
+namespace Paracosm.Content.NPCs.Hostile.Paracosmic
 {
     public class Wanderer : ModNPC
     {
@@ -94,7 +94,7 @@ namespace Paracosm.Content.NPCs.Hostile
         void Idle()
         {
             NPC.velocity = new Vector2(0, (float)Math.Sin(MathHelper.ToRadians(AITimer)));
-            NPC.rotation = Utils.AngleLerp(NPC.rotation, 0, MathHelper.ToRadians(5));
+            NPC.rotation = NPC.rotation.AngleLerp(0, MathHelper.ToRadians(5));
             speed = 1;
         }
 
@@ -107,11 +107,11 @@ namespace Paracosm.Content.NPCs.Hostile
             NPC.velocity = NPC.Center.DirectionTo(player.MountedCenter) * speed;
             if (speed > 3)
             {
-                NPC.rotation = Utils.AngleLerp(NPC.rotation, NPC.spriteDirection * MathHelper.ToRadians(30), MathHelper.ToRadians(1));
+                NPC.rotation = NPC.rotation.AngleLerp(NPC.spriteDirection * MathHelper.ToRadians(30), MathHelper.ToRadians(1));
             }
             else
             {
-                NPC.rotation = Utils.AngleLerp(NPC.rotation, 0, MathHelper.ToRadians(1));
+                NPC.rotation = NPC.rotation.AngleLerp(0, MathHelper.ToRadians(1));
             }
             speed += 0.2f;
         }

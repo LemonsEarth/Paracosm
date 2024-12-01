@@ -26,8 +26,8 @@ namespace Paracosm.Content.Items.Consumables
             Item.height = 68;
             Item.maxStack = 1;
             Item.rare = ItemRarityID.Red;
-            Item.useAnimation = 122;
-            Item.useTime = 122;
+            Item.useAnimation = 121;
+            Item.useTime = 121;
             Item.useStyle = ItemUseStyleID.HoldUp;
             Item.consumable = false;
         }
@@ -64,6 +64,8 @@ namespace Paracosm.Content.Items.Consumables
             }
             if (animationTimer > 120)
             {
+                doAnimation = false;
+                animationTimer = 0;
                 if (!SubworldSystem.IsActive("VoidSubworld"))
                 {
                     SubworldSystem.Enter<VoidSubworld>();
@@ -71,9 +73,7 @@ namespace Paracosm.Content.Items.Consumables
                 else
                 {
                     SubworldSystem.Exit();
-                }
-                doAnimation = false;
-                animationTimer = 0;
+                } 
             }
             animationTimer++;
         }
