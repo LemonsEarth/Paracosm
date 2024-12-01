@@ -53,7 +53,7 @@ namespace Paracosm.Content.Items.Weapons.Ranged
                 {
                     for (int i = -4; i <= 4; i++)
                     {
-                        Projectile.NewProjectile(Item.GetSource_FromAI(), position, velocity.RotatedBy(MathHelper.ToRadians(10 * i)) * 2, ProjectileID.VortexBeaterRocket, damage * 4, knockback);
+                        Projectile.NewProjectile(Item.GetSource_FromAI(), position, velocity.RotatedBy(MathHelper.ToRadians(10 * i)) * 2, ProjectileID.VortexBeaterRocket, damage * 2, knockback);
                     }
                     useCounter = 0;
                 }

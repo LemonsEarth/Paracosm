@@ -52,7 +52,7 @@ namespace Paracosm.Content.Bosses.VortexMothership
             NPC.dontTakeDamage = true;
             NPC.defense = 30;
             NPC.value = 0;
-            NPC.damage = 0;
+            NPC.damage = 40;
             NPC.noTileCollide = true;
             NPC.knockBackResist = 1;
             NPC.noGravity = true;
@@ -74,6 +74,11 @@ namespace Paracosm.Content.Bosses.VortexMothership
             AITimer = reader.ReadSingle();
             AttackTimer = reader.ReadSingle();
             attackDuration = reader.ReadSingle();
+        }
+
+        public override void ApplyDifficultyAndPlayerScaling(int numPlayers, float balance, float bossAdjustment)
+        {
+            NPC.damage = (int)(NPC.damage * balance * 0.4f);
         }
 
         public static int BodyType()
@@ -170,7 +175,7 @@ namespace Paracosm.Content.Bosses.VortexMothership
                     AttackCount = Main.rand.Next(-10, 2);
                     shootDirection = playerDirection;
                     NPC.netUpdate = true;
-                    Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, shootDirection * 10, ModContent.ProjectileType<TeslaShot>(), body.damage, 1, ai1: 2f);
+                    Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, shootDirection * 10, ModContent.ProjectileType<TeslaShot>(), NPC.damage, 1, ai1: 2f);
                 }
                 AttackTimer = TESLA_SHOT_CD;
             }
@@ -184,7 +189,7 @@ namespace Paracosm.Content.Bosses.VortexMothership
                 if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
                     shootDirection = NPC.Center.DirectionTo(body.NPC.Center);
-                    Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, shootDirection, ModContent.ProjectileType<TeslaCore>(), body.damage, 1, ai0: body.NPC.Center.X, ai1: body.NPC.Center.Y, ai2: GunCount);
+                    Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, shootDirection, ModContent.ProjectileType<TeslaCore>(), NPC.damage, 1, ai0: body.NPC.Center.X, ai1: body.NPC.Center.Y, ai2: GunCount);
                 }
                 AttackTimer = 2; // Only fire once
             }
@@ -202,7 +207,7 @@ namespace Paracosm.Content.Bosses.VortexMothership
                     {
                         shootDirection = playerDirection + body.player.velocity / 6;
                         NPC.netUpdate = true;
-                        Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, shootDirection.SafeNormalize(Vector2.Zero) * 20, ModContent.ProjectileType<TrackingTeslaShot>(), body.damage, 1, ai1: body.player.whoAmI);
+                        Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, shootDirection.SafeNormalize(Vector2.Zero) * 20, ModContent.ProjectileType<TrackingTeslaShot>(), NPC.damage, 1, ai1: body.player.whoAmI);
                     }
                     if (AttackCount < 6)
                     {
@@ -224,7 +229,7 @@ namespace Paracosm.Content.Bosses.VortexMothership
                     {
                         shootDirection = playerDirection;
                         NPC.netUpdate = true;
-                        Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, shootDirection * 12, ModContent.ProjectileType<TeslaShot>(), body.damage, 1);
+                        Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, shootDirection * 12, ModContent.ProjectileType<TeslaShot>(), NPC.damage, 1);
                     }
                     AttackTimer = TESLA_SHOT_CD;
                 }
@@ -251,7 +256,7 @@ namespace Paracosm.Content.Bosses.VortexMothership
                         {
                             shootDirection = playerDirection;
                             NPC.netUpdate = true;
-                            Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, shootDirection, ModContent.ProjectileType<TeslaCore>(), body.damage, 1, ai0: NPC.Center.X + shootDirection.X * 20, ai1: NPC.Center.Y + shootDirection.Y * 20, ai2: GunCount);
+                            Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, shootDirection, ModContent.ProjectileType<TeslaCore>(), NPC.damage, 1, ai0: NPC.Center.X + shootDirection.X * 20, ai1: NPC.Center.Y + shootDirection.Y * 20, ai2: GunCount);
                         }
                         AttackTimer = MIX_CENTER_BLAST_CD;
                     }
@@ -264,7 +269,7 @@ namespace Paracosm.Content.Bosses.VortexMothership
                         {
                             shootDirection = playerDirection;
                             NPC.netUpdate = true;
-                            Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, shootDirection * 10, ModContent.ProjectileType<TeslaShot>(), body.damage, 1);
+                            Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, shootDirection * 10, ModContent.ProjectileType<TeslaShot>(), NPC.damage, 1);
                         }
                         AttackTimer = MIX_TESLA_SHOT_CD;
                     }
@@ -278,7 +283,7 @@ namespace Paracosm.Content.Bosses.VortexMothership
                             randNum = Main.rand.NextFloat(30, 60);
                             shootDirection = Vector2.UnitY.RotatedBy(22.5f * AttackCount);
                             NPC.netUpdate = true;
-                            Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, shootDirection.SafeNormalize(Vector2.Zero) * randNum, ModContent.ProjectileType<VortexMine>(), body.damage, 1);
+                            Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, shootDirection.SafeNormalize(Vector2.Zero) * randNum, ModContent.ProjectileType<VortexMine>(), NPC.damage, 1);
                         }
                         if (AttackCount < 16)
                         {
@@ -308,7 +313,7 @@ namespace Paracosm.Content.Bosses.VortexMothership
                     {
                         if (Main.netMode != NetmodeID.MultiplayerClient)
                         {
-                            Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, shootDirection, ModContent.ProjectileType<VortexLaser>(), body.damage * 2, 1, ai0: 50, ai1: 0);
+                            Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, shootDirection, ModContent.ProjectileType<VortexLaser>(), NPC.damage * 2, 1, ai0: 50, ai1: 0);
                         }
                         AttackTimer = MIX_LASER_CD;
                     }
@@ -327,7 +332,7 @@ namespace Paracosm.Content.Bosses.VortexMothership
                     AttackCount = Main.rand.Next(-10, 2);
                     shootDirection = playerDirection;
                     NPC.netUpdate = true;
-                    Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, shootDirection * 10, ModContent.ProjectileType<TeslaShot>(), body.damage, 1, ai1: 2f);
+                    Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, shootDirection * 10, ModContent.ProjectileType<TeslaShot>(), NPC.damage, 1, ai1: 2f);
                 }
                 AttackTimer = CHILL_TESLA_SHOT_CD;
             }
@@ -345,7 +350,7 @@ namespace Paracosm.Content.Bosses.VortexMothership
                     randNum = Main.rand.NextFloat(30, 60);
                     shootDirection = playerDirection;
                     NPC.netUpdate = true;
-                    Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, shootDirection.SafeNormalize(Vector2.Zero).RotatedBy(MathHelper.ToRadians(randNum * 3)) * randNum, ModContent.ProjectileType<VortexMine>(), body.damage / 2, 1);
+                    Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, shootDirection.SafeNormalize(Vector2.Zero).RotatedBy(MathHelper.ToRadians(randNum * 3)) * randNum, ModContent.ProjectileType<VortexMine>(), NPC.damage / 2, 1);
                 }
                 if (AttackCount < 8)
                 {
@@ -379,7 +384,7 @@ namespace Paracosm.Content.Bosses.VortexMothership
                 {
                     AttackCount = Main.rand.Next(-10, 5);
                     NPC.netUpdate = true;
-                    Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, shootDirection, ModContent.ProjectileType<VortexLaser>(), body.damage * 2, 1, ai0: 50, ai1: 0);
+                    Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, shootDirection, ModContent.ProjectileType<VortexLaser>(), NPC.damage * 2, 1, ai0: 50, ai1: 0);
                 }
                 AttackTimer = 300;
             }

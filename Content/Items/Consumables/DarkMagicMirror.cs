@@ -1,5 +1,4 @@
 ﻿using Microsoft.Xna.Framework;
-using Paracosm.Content.Bosses.VortexMothership;
 using Paracosm.Content.Items.Materials;
 using Paracosm.Content.Subworlds;
 using SubworldLibrary;
@@ -65,9 +64,13 @@ namespace Paracosm.Content.Items.Consumables
             }
             if (animationTimer > 120)
             {
-                if (!SubworldSystem.AnyActive())
+                if (!SubworldSystem.IsActive("VoidSubworld"))
                 {
                     SubworldSystem.Enter<VoidSubworld>();
+                }
+                else
+                {
+                    SubworldSystem.Exit();
                 }
                 doAnimation = false;
                 animationTimer = 0;

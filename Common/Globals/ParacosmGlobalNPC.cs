@@ -1,4 +1,6 @@
 ﻿using Paracosm.Content.Biomes.Overworld;
+using Paracosm.Content.Bosses.InfectedRevenant;
+using Paracosm.Content.Bosses.VortexMothership;
 using Paracosm.Content.NPCs.Hostile;
 using System.Collections.Generic;
 using Terraria;
@@ -67,6 +69,15 @@ namespace Paracosm.Common.Globals
                 pool.Add(ModContent.NPCType<Wanderer>(), 0.3f);
                 pool.Add(ModContent.NPCType<ParastoneRoller>(), 0.1f);
             }
+        }
+
+        public override bool CanHitPlayer(NPC npc, Player target, ref int cooldownSlot)
+        {
+            if (npc.type == ModContent.NPCType<VortexMothership>() || npc.type == ModContent.NPCType<VortexTeslaGun>() || npc.type == ModContent.NPCType<InfectedRevenantCorruptHead>() || npc.type == ModContent.NPCType<InfectedRevenantCrimsonHead>())
+            {
+                return false;
+            }
+            return true;
         }
     }
 }

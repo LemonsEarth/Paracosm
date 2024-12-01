@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Paracosm.Content.Bosses.DivineSeeker;
 using Paracosm.Content.Bosses.InfectedRevenant;
 using Paracosm.Content.Bosses.SolarChampion;
+using Paracosm.Content.Bosses.VortexMothership;
 using Paracosm.Content.Items.Consumables;
 using System;
 using System.Collections.Generic;
@@ -30,77 +31,115 @@ namespace Paracosm.Common.Systems
                 return;
             }
 
-            //Log Divine Seeker
-            string internalName = "DivineSeeker";
-            float progression = 11.9f; //Plantera - 12f
-            Func<bool> downed = () => DownedBossSystem.downedDivineSeeker;
-            int bossType = ModContent.NPCType<DivineSeeker>();
 
-            int spawnItemType = ModContent.ItemType<CosmicDust>();
-            LocalizedText spawnInfo = Language.GetText("Mods.Paracosm.NPCs.DivineSeeker.BossChecklistCompatibility.SpawnInfo");
-            List<int> collectibles = new List<int>()
+
+
+            //Log Divine Seeker
+            int spawnItemTypeDS = ModContent.ItemType<CosmicDust>();
+            LocalizedText spawnInfoDS = Language.GetText("Mods.Paracosm.NPCs.DivineSeeker.BossChecklistCompatibility.SpawnInfo");
+            List<int> collectiblesDS = new List<int>()
             {
                 ModContent.ItemType<Content.Items.Placeable.Furniture.DivineSeekerRelic>()
             };
 
-            Dictionary<string, object> additional = new Dictionary<string, object>()
+            Dictionary<string, object> additionalDS = new Dictionary<string, object>()
             {
-                ["spawnItems"] = spawnItemType,
-                ["spawnInfo"] = spawnInfo,
-                ["collectibles"] = collectibles
+                ["spawnItems"] = spawnItemTypeDS,
+                ["spawnInfo"] = spawnInfoDS,
+                ["collectibles"] = collectiblesDS
             };
 
-            BossChecklist.Call("LogBoss", Mod, internalName, progression, downed, bossType, additional);
+            LogBoss(
+                BossChecklist,
+                "DivineSeeker",
+                11.9f,
+                () => DownedBossSystem.downedDivineSeeker,
+                ModContent.NPCType<DivineSeeker>(),
+                additionalDS
+                );
+
+
 
 
             //Log Infected Revenant
-            string internalName1 = "InfectedRevenantBody";
-            float progression1 = 16.1f; //Betsy - 16f
-            Func<bool> downed1 = () => DownedBossSystem.downedInfectedRevenant;
-            int bossType1 = ModContent.NPCType<InfectedRevenantBody>();
-
-            int spawnItemType1 = ModContent.ItemType<AncientCallingHorn>();
-            LocalizedText spawnInfo1 = Language.GetText("Mods.Paracosm.NPCs.InfectedRevenantBody.BossChecklistCompatibility.SpawnInfo");
-
-            List<int> collectibles1 = new List<int>()
+            int spawnItemTypeIR = ModContent.ItemType<AncientCallingHorn>();
+            LocalizedText spawnInfoIR = Language.GetText("Mods.Paracosm.NPCs.InfectedRevenantBody.BossChecklistCompatibility.SpawnInfo");
+            List<int> collectiblesIR = new List<int>()
             {
                 ModContent.ItemType<Content.Items.Placeable.Furniture.InfectedRevenantRelic>()
             };
-            Action<SpriteBatch, Rectangle, Color> portrait = (SpriteBatch spriteBatch, Rectangle rect, Color color) =>
+            Action<SpriteBatch, Rectangle, Color> portraitIR = (SpriteBatch spriteBatch, Rectangle rect, Color color) =>
             {
                 Texture2D texture = ModContent.Request<Texture2D>("Paracosm/Content/Textures/BossChecklist/InfectedRevenantBossChecklistPortrait").Value;
                 Vector2 centered = new Vector2((int)(rect.X + (rect.Width / 2) - (texture.Width / 2)), (int)(rect.Y + (rect.Height / 2) - (texture.Height / 2)));
                 spriteBatch.Draw(texture, centered, color);
             };
-
-            Dictionary<string, object> additional1 = new Dictionary<string, object>()
+            Dictionary<string, object> additionalIR = new Dictionary<string, object>()
             {
-                ["spawnItems"] = spawnItemType1,
-                ["spawnInfo"] = spawnInfo1,
-                ["collectibles"] = collectibles1,
-                ["customPortrait"] = portrait
+                ["spawnItems"] = spawnItemTypeIR,
+                ["spawnInfo"] = spawnInfoIR,
+                ["collectibles"] = collectiblesIR,
+                ["customPortrait"] = portraitIR
             };
 
-            BossChecklist.Call("LogBoss", Mod, internalName1, progression1, downed1, bossType1, additional1);
+            LogBoss(
+                BossChecklist,
+                "InfectedRevenantBody",
+                16.1f,
+                () => DownedBossSystem.downedInfectedRevenant,
+                ModContent.NPCType<InfectedRevenantBody>(),
+                additionalIR
+                );
 
-            //Log SolarChampion
-            string internalName2 = "SolarChampion";
-            float progression2 = 18.1f; //Moon Lord - 18f
-            Func<bool> downed2 = () => DownedBossSystem.downedSolarChampion;
-            int bossType2 = ModContent.NPCType<SolarChampion>();
 
-            int spawnItemType2 = ModContent.ItemType<ChallengersSeal>();
-            LocalizedText spawnInfo2 = Language.GetText("Mods.Paracosm.NPCs.SolarChampion.BossChecklistCompatibility.SpawnInfo");
 
-            Dictionary<string, object> additional2 = new Dictionary<string, object>()
+
+            //Log Solar Champion
+            int spawnItemTypeSC = ModContent.ItemType<ChallengersSeal>();
+            LocalizedText spawnInfoSC = Language.GetText("Mods.Paracosm.NPCs.SolarChampion.BossChecklistCompatibility.SpawnInfo");
+
+            Dictionary<string, object> additionalSC = new Dictionary<string, object>()
             {
-                ["spawnItems"] = spawnItemType2,
-                ["spawnInfo"] = spawnInfo2
+                ["spawnItems"] = spawnItemTypeSC,
+                ["spawnInfo"] = spawnInfoSC
             };
 
-            BossChecklist.Call("LogBoss", Mod, internalName2, progression2, downed2, bossType2, additional2);
+            LogBoss(
+                BossChecklist,
+                "SolarChampion",
+                18.1f,
+                () => DownedBossSystem.downedSolarChampion,
+                ModContent.NPCType<SolarChampion>(),
+                additionalSC
+                );
+
+
+
+
+            //Log Vortex Mothership
+            int spawnItemTypeVM = ModContent.ItemType<StarSpanCommunicator>();
+            LocalizedText spawnInfoVM = Language.GetText("Mods.Paracosm.NPCs.VortexMothership.BossChecklistCompatibility.SpawnInfo");
+
+            Dictionary<string, object> additionalVM = new Dictionary<string, object>()
+            {
+                ["spawnItems"] = spawnItemTypeVM,
+                ["spawnInfo"] = spawnInfoVM
+            };
+
+            LogBoss(
+                BossChecklist,
+                "VortexMothership",
+                18.2f,
+                () => DownedBossSystem.downedVortexMothership,
+                ModContent.NPCType<VortexMothership>(),
+                additionalVM
+                );
         }
 
+        void LogBoss(Mod BossChecklist, string internalName, float progression, Func<bool> downed, int bossType, Dictionary<string, object> additional)
+        {
+            BossChecklist.Call("LogBoss", Mod, internalName, progression, downed, bossType, additional);
+        }
 
     }
 }

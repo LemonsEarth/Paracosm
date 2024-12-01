@@ -1,5 +1,4 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Paracosm.Common.Systems;
 using Paracosm.Content.Buffs;
 using Paracosm.Content.Items.BossBags;
@@ -44,8 +43,6 @@ namespace Paracosm.Content.Bosses.VortexMothership
 
         int AttackTimer2 = 0;
         int AttackCount2 = 0;
-
-        public int damage { get; private set; } = 40;
 
         bool phase2FirstTime = false;
         public int phase { get; private set; } = 1;
@@ -134,7 +131,7 @@ namespace Paracosm.Content.Bosses.VortexMothership
             NPC.Opacity = 1;
             NPC.lifeMax = 700000;
             NPC.defense = 100;
-            NPC.damage = 0;
+            NPC.damage = 40;
             NPC.HitSound = SoundID.NPCHit4;
             NPC.DeathSound = SoundID.NPCHit57;
             NPC.value = 5000000;
@@ -152,8 +149,8 @@ namespace Paracosm.Content.Bosses.VortexMothership
 
         public override void ApplyDifficultyAndPlayerScaling(int numPlayers, float balance, float bossAdjustment)
         {
-            NPC.lifeMax = (int)Math.Ceiling(NPC.lifeMax * balance * 0.8f);
-            damage = (int)(damage * balance);
+            NPC.lifeMax = (int)(NPC.lifeMax * balance * bossAdjustment * 0.6f);
+            NPC.damage = (int)(NPC.damage * balance);
             NPC.defense = 100;
         }
 
@@ -224,7 +221,7 @@ namespace Paracosm.Content.Bosses.VortexMothership
             }
             NPC.dontTakeDamage = false;
 
-            if (NPC.life <= NPC.lifeMax * 0.4f && !phase2FirstTime)
+            if (NPC.life <= (NPC.lifeMax * 0.4f) && !phase2FirstTime)
             {
                 phase2FirstTime = true;
                 phase = 2;
@@ -235,7 +232,7 @@ namespace Paracosm.Content.Bosses.VortexMothership
             if (phase == 2)
             {
                 NPC.defDefense = 200;
-                int spawnSpeedDiv = (NPC.life < NPC.lifeMax / 4) ? 2 : 1;
+                int spawnSpeedDiv = (NPC.life < (NPC.lifeMax / 4)) ? 2 : 1;
                 if (AttackTimer % (900 / spawnSpeedDiv) == 0)
                 {
                     SpawnEnemies();
@@ -368,7 +365,7 @@ namespace Paracosm.Content.Bosses.VortexMothership
                 {
                     for (int i = 0; i < 40; i++)
                     {
-                        var sphere = Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center + new Vector2(0, -arenaDistance).RotatedBy(i * MathHelper.ToRadians(9)), Vector2.Zero, Proj["Sphere"], damage, 1, ai1: 60f);
+                        var sphere = Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center + new Vector2(0, -arenaDistance).RotatedBy(i * MathHelper.ToRadians(9)), Vector2.Zero, Proj["Sphere"], NPC.damage, 1, ai1: 60f);
 
                         Spheres.Add(sphere);
                     }
@@ -451,7 +448,7 @@ namespace Paracosm.Content.Bosses.VortexMothership
         public override void OnKill()
         {
             DeleteProjectiles(Proj["Sphere"]);
-            NPC.SetEventFlagCleared(ref DownedBossSystem.downedSolarChampion, -1);
+            NPC.SetEventFlagCleared(ref DownedBossSystem.downedVortexMothership, -1);
             for (int i = 0; i < 16; i++)
             {
                 Gore gore = Gore.NewGoreDirect(NPC.GetSource_FromThis(), NPC.position + new Vector2(Main.rand.Next(0, NPC.width), Main.rand.Next(0, NPC.height)), new Vector2(Main.rand.NextFloat(-5, 5)), Main.rand.Next(61, 64), Main.rand.NextFloat(2f, 5f));

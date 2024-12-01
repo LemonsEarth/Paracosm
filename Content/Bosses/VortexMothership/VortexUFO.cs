@@ -83,6 +83,11 @@ namespace Paracosm.Content.Bosses.VortexMothership
             return false;
         }
 
+        public override void ApplyDifficultyAndPlayerScaling(int numPlayers, float balance, float bossAdjustment)
+        {
+            NPC.damage = (int)(NPC.damage * balance);
+        }
+
         public override void AI()
         {
             NPC bodyNPC = Main.npc[ParentIndex];
@@ -120,7 +125,7 @@ namespace Paracosm.Content.Bosses.VortexMothership
                 {
                     if (Main.netMode != NetmodeID.MultiplayerClient)
                     {
-                        Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, shootDirection * 30, ModContent.ProjectileType<TeslaShot>(), body.damage, 1);
+                        Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, shootDirection * 30, ModContent.ProjectileType<TeslaShot>(), NPC.damage, 1);
                     }
                     AttackTimer2 = 20;
                 }

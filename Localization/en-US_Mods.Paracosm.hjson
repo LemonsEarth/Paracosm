@@ -600,6 +600,7 @@ NPCs: {
 
 	VortexMothership: {
 		DisplayName: Vortex Mothership
+		BossChecklistCompatibility.SpawnInfo: Use a [i:Paracosm/StarSpanCommunicator]
 		Bestiary: The vortex legion has ruled the majority of the galaxy for millennia. The wrath of this faction has been witnessed first hand by almost every living being, and they won't take kindly to your destruction of their vessel.
 	}
 

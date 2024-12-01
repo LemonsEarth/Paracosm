@@ -10,12 +10,14 @@ namespace Paracosm.Common.Systems
         public static bool downedDivineSeeker = false;
         public static bool downedInfectedRevenant = false;
         public static bool downedSolarChampion = false;
+        public static bool downedVortexMothership = false;
 
         public override void ClearWorld()
         {
             downedDivineSeeker = false;
             downedInfectedRevenant = false;
             downedSolarChampion = false;
+            downedVortexMothership = false;
         }
 
 
@@ -33,6 +35,10 @@ namespace Paracosm.Common.Systems
             {
                 tag["downedSolarChampion"] = true;
             }
+            if (downedVortexMothership)
+            {
+                tag["downedVortexMothership"] = true;
+            }
         }
 
         public override void LoadWorldData(TagCompound tag)
@@ -40,14 +46,16 @@ namespace Paracosm.Common.Systems
             downedDivineSeeker = tag.ContainsKey("downedDivineSeeker");
             downedInfectedRevenant = tag.ContainsKey("downedInfectedRevenant");
             downedSolarChampion = tag.ContainsKey("downedSolarChampion");
+            downedVortexMothership = tag.ContainsKey("downedVortexMothership");
         }
 
         public override void NetSend(BinaryWriter writer)
         {
-            var flags = new BitsByte();
+            BitsByte flags = new BitsByte();
             flags[0] = downedDivineSeeker;
             flags[1] = downedInfectedRevenant;
             flags[2] = downedSolarChampion;
+            flags[3] = downedVortexMothership;
             writer.Write(flags);
         }
 
@@ -57,6 +65,7 @@ namespace Paracosm.Common.Systems
             downedDivineSeeker = flags[0];
             downedInfectedRevenant = flags[1];
             downedSolarChampion = flags[2];
+            downedVortexMothership = flags[3];
         }
     }
 }
