@@ -70,6 +70,7 @@ namespace Paracosm.Content.Items.Consumables
                     SubworldSystem.Enter<VoidSubworld>();
                 }
                 doAnimation = false;
+                animationTimer = 0;
             }
             animationTimer++;
         }

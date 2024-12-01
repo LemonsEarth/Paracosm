@@ -100,7 +100,7 @@ namespace Paracosm.Content.Projectiles.HeldProjectiles
             Texture2D Texture = TextureAssets.Projectile[Type].Value;
             Vector2 drawOrigin = new Vector2(Texture.Width / 2, Texture.Height / 2);
 
-            for (int i = 0; i < Projectile.oldPos.Length; i += 2)
+            for (int i = Projectile.oldPos.Length - 1; i > 0; i--)
             {
                 Vector2 drawPos = Projectile.oldPos[i] - Main.screenPosition + drawOrigin + new Vector2(0, Projectile.gfxOffY);
                 Color color = Projectile.GetAlpha(lightColor) * ((Projectile.oldPos.Length - i) / (float)Projectile.oldPos.Length);

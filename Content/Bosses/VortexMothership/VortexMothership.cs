@@ -457,20 +457,5 @@ namespace Paracosm.Content.Bosses.VortexMothership
                 Gore gore = Gore.NewGoreDirect(NPC.GetSource_FromThis(), NPC.position + new Vector2(Main.rand.Next(0, NPC.width), Main.rand.Next(0, NPC.height)), new Vector2(Main.rand.NextFloat(-5, 5)), Main.rand.Next(61, 64), Main.rand.NextFloat(2f, 5f));
             }
         }
-
-        public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
-        {
-            /*Texture2D texture = TextureAssets.Npc[Type].Value;
-            //Rectangle drawRect = texture.Frame(1, Main.npcFrameCount[Type], 0, 0);
-
-            Vector2 drawOrigin = new Vector2(texture.Width * 0.5f, NPC.height * 0.5f);
-            for (int k = 0; k < NPC.oldPos.Length; k++)
-            {
-                Vector2 drawPos = NPC.oldPos[k] - Main.screenPosition + drawOrigin + new Vector2(0f, NPC.gfxOffY);
-                Color color = NPC.GetAlpha(drawColor) * ((NPC.oldPos.Length - k) / (float)NPC.oldPos.Length);
-                Main.EntitySpriteDraw(texture, drawPos, null, color, NPC.rotation, drawOrigin, NPC.scale, SpriteEffects.None, 0);
-            }*/
-            return true;
-        }
     }
 }
