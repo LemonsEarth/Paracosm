@@ -8,7 +8,7 @@ using Terraria.ModLoader;
 
 namespace Paracosm.Content.Biomes.Void
 {
-    public class VoidSky : ModBiome
+    public class VoidHigh : ModBiome
     {
         public override int Music => 0;
         public override string BestiaryIcon => base.BestiaryIcon;
@@ -17,11 +17,12 @@ namespace Paracosm.Content.Biomes.Void
         public override string MapBackground => BackgroundPath;
         public override SceneEffectPriority Priority => SceneEffectPriority.BiomeHigh;
 
-        public override ModSurfaceBackgroundStyle SurfaceBackgroundStyle => ModContent.GetInstance<VoidSkyBackgroundStyle>();
+        public override ModSurfaceBackgroundStyle SurfaceBackgroundStyle => ModContent.GetInstance<VoidHighBackgroundStyle>();
+        public override ModUndergroundBackgroundStyle UndergroundBackgroundStyle => ModContent.GetInstance<VoidMidBackgroundStyle>();
 
         public override bool IsBiomeActive(Player player)
         {
-            return SubworldSystem.Current is VoidSubworld;
+            return SubworldSystem.Current is VoidSubworld && !player.ZoneDirtLayerHeight && !player.ZoneRockLayerHeight;
         }
 
         public override void SpecialVisuals(Player player, bool isActive)
@@ -34,29 +35,6 @@ namespace Paracosm.Content.Biomes.Void
             {
                 SkyManager.Instance.Deactivate("Paracosm:VoidSky");
             }
-        }
-    }
-
-    public class VoidSkyBackgroundStyle : ModSurfaceBackgroundStyle
-    {
-        public override void ModifyFarFades(float[] fades, float transitionSpeed)
-        {
-            
-        }
-
-        public override int ChooseFarTexture()
-        {
-            return BackgroundTextureLoader.GetBackgroundSlot(Mod, "Content/Textures/Backgrounds/VoidSky_Background");
-        }
-
-        public override int ChooseMiddleTexture()
-        {
-            return BackgroundTextureLoader.GetBackgroundSlot(Mod, "Content/Textures/Backgrounds/VoidSky_Background");
-        }
-
-        public override int ChooseCloseTexture(ref float scale, ref double parallax, ref float a, ref float b)
-        {
-            return BackgroundTextureLoader.GetBackgroundSlot(Mod, "Content/Textures/Backgrounds/VoidSky_Background");
         }
     }
 }

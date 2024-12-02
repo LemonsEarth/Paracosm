@@ -686,6 +686,16 @@ Biomes: {
 		TownNPCDialogueName: the Void Sky
 		DisplayName: Void Sky
 	}
+
+	VoidHigh: {
+		DisplayName: Void High
+		TownNPCDialogueName: the Void High
+	}
+
+	VoidMid: {
+		DisplayName: Void Mid
+		TownNPCDialogueName: the Void Mid
+	}
 }
 
 Keybinds: {

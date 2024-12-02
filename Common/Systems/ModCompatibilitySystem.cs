@@ -70,7 +70,7 @@ namespace Paracosm.Common.Systems
             };
             Action<SpriteBatch, Rectangle, Color> portraitIR = (SpriteBatch spriteBatch, Rectangle rect, Color color) =>
             {
-                Texture2D texture = ModContent.Request<Texture2D>("Paracosm/Content/Textures/BossChecklist/InfectedRevenantBossChecklistPortrait").Value;
+                Texture2D texture = ModContent.Request<Texture2D>("Paracosm/Assets/Textures/BossChecklist/InfectedRevenantBossChecklistPortrait").Value;
                 Vector2 centered = new Vector2((int)(rect.X + (rect.Width / 2) - (texture.Width / 2)), (int)(rect.Y + (rect.Height / 2) - (texture.Height / 2)));
                 spriteBatch.Draw(texture, centered, color);
             };

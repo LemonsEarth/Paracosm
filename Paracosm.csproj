@@ -8,8 +8,10 @@
 		
 	</PropertyGroup>
 	<ItemGroup>
+	  <None Remove="Content\Biomes\Void\VoidHigh_Background.png" />
+	  <None Remove="Content\Biomes\Void\VoidHigh_Icon.png" />
 	  <None Remove="Content\Shaders\DarknessShader.fx" />
-	  <None Remove="Content\Textures\Backgrounds\VoidSky_Background.png" />
+	  <None Remove="Assets\Textures\Backgrounds\VoidSky_Background.png" />
 	</ItemGroup>
 	<ItemGroup>
 	  <Folder Include="lib\" />

@@ -36,7 +36,7 @@ namespace Paracosm.Content.NPCs.Hostile.Void
             NPC.value = 3000;
             NPC.aiStyle = -1;
             NPC.npcSlots = 3;
-            SpawnModBiomes = new int[1] { ModContent.GetInstance<VoidSky>().Type };
+            SpawnModBiomes = new int[1] { ModContent.GetInstance<VoidMid>().Type };
             NPC.noTileCollide = true;
             NPC.knockBackResist = 1f;
             NPC.noGravity = true;
@@ -46,7 +46,7 @@ namespace Paracosm.Content.NPCs.Hostile.Void
         {
             bestiaryEntry.Info.AddRange(new List<IBestiaryInfoElement>()
                 {
-                    new BestiaryPortraitBackgroundProviderPreferenceInfoElement(ModContent.GetInstance<VoidSky>().ModBiomeBestiaryInfoElement),
+                    new BestiaryPortraitBackgroundProviderPreferenceInfoElement(ModContent.GetInstance<VoidMid>().ModBiomeBestiaryInfoElement),
                 });
         }
 
@@ -135,7 +135,7 @@ namespace Paracosm.Content.NPCs.Hostile.Void
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
-            return spawnInfo.Player.InModBiome<VoidSky>() ? 1f : 0;
+            return spawnInfo.Player.InModBiome<VoidMid>() ? 0.05f : 0;
         }
 
         public override void FindFrame(int frameHeight)
@@ -147,7 +147,7 @@ namespace Paracosm.Content.NPCs.Hostile.Void
             {
                 NPC.frame.Y += frameHeight;
                 NPC.frameCounter = 0;
-                if (NPC.frame.Y > 1 * frameHeight)
+                if (NPC.frame.Y > 3 * frameHeight)
                 {
                     NPC.frame.Y = 0;
                 }

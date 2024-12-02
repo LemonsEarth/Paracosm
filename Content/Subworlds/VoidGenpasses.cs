@@ -10,6 +10,7 @@ using Terraria.ID;
 using Terraria.IO;
 using Terraria.ModLoader;
 using Terraria.WorldBuilding;
+using Microsoft.Xna.Framework;
 
 namespace Paracosm.Content.Subworlds
 {
@@ -20,46 +21,66 @@ namespace Paracosm.Content.Subworlds
         protected override void ApplyPass(GenerationProgress progress, GameConfiguration configuration)
         {
             progress.Message = "The Void";
-            Main.worldSurface = Main.maxTilesY - 42;
-            Main.rockLayer = Main.maxTilesY;
+            Main.worldSurface = Main.maxTilesY - 2000;
+            Main.rockLayer = Main.maxTilesY - 1000;
         }
     }
 
-    public class VoidStructureGenPass : GenPass
+    public class VoidTerrainGenPass : GenPass
     {
-        public VoidStructureGenPass() : base("VoidStructures", 1f) { }
+        public VoidTerrainGenPass() : base("Terrain", 1f) { }
 
         protected override void ApplyPass(GenerationProgress progress, GameConfiguration configuration)
         {
-            progress.Message = "???";
-            GenerateAbandonedArmory(progress, configuration);
-        }
+            progress.Message = "The Void Terrain";
 
-        private void GenerateAbandonedArmory(GenerationProgress progress, GameConfiguration config)
-        {
-            for (int i = 0; i < 4; i++)
+            //Amount of "Terrain"
+            for (int splotches = 0; splotches < 30; splotches++)
             {
-                for (int index = 0; index < 5; index++)
+                int tiles = WorldGen.genRand.Next(100, 500);
+                int x = WorldGen.genRand.Next(0, 1000);
+                int y = WorldGen.genRand.Next(1000, 2000);
+                double strength = WorldGen.genRand.Next(5, 8);
+                int steps = WorldGen.genRand.Next(60, 80);
+                int dirX = WorldGen.genRand.Next(-1, 2);
+                int dirY = WorldGen.genRand.Next(-1, 2);
+
+                for (int i = 0; i < tiles; i++)
                 {
-                    bool successfulGen = false;
-                    Point16 point = Point16.Zero;
-                    while (!successfulGen)
+                    if (i % 25 == 0)
                     {
-                        Point16 dims = Point16.Zero;
-                        Generator.GetMultistructureDimensions("Content/Structures/AbandonedArmory", ModLoader.GetMod("Paracosm"), index, ref dims);
-                        int x = WorldGen.genRand.Next(dims.X, 800 - dims.X);
-                        int y = WorldGen.genRand.Next((Main.maxTilesY - 200) / 3, 3000 - 200);
-
-                        point = new Point16(x, y);
-                        if (!WorldGenSystem.CheckForTiles(x, y, dims.X, dims.Y, TileID.Stone))
-                        {
-                            successfulGen = true;
-                        }
+                        dirX = WorldGen.genRand.Next(-1, 2);
+                        dirY = WorldGen.genRand.Next(-1, 2);
                     }
-
-                    if (successfulGen && point != Point16.Zero)
+                    int truePosX = x + i * dirX;
+                    int truePosY = y + i * dirY;
+                    if ((truePosX > 450 && truePosX < 550) && (truePosY > 1450 && truePosY < 1550))
                     {
-                        Generator.GenerateMultistructureSpecific("Content/Structures/AbandonedArmory", point, ModLoader.GetMod("Paracosm"), index);
+                        continue;
+                    }
+                    WorldGen.TileRunner(truePosX, truePosY, strength, steps, TileID.ShimmerBrick, true);
+                }
+                progress.Set(splotches / 50f);
+            }
+        }
+    }
+
+    public class VoidPaintBlackGenPass : GenPass
+    {
+        public VoidPaintBlackGenPass() : base("Terrain", 1f) { }
+
+        protected override void ApplyPass(GenerationProgress progress, GameConfiguration configuration)
+        {
+            progress.Message = "The Void Terrain";
+
+            for (int i = 0; i < Main.maxTilesX; i++)
+            {
+                for (int j = 0; j < Main.maxTilesY; j++)
+                {
+                    if (Main.tile[i, j].HasTile)
+                    {
+                        Tile tile = Main.tile[i, j];
+                        tile.TileColor = PaintID.ShadowPaint;
                     }
                 }
             }

@@ -75,7 +75,7 @@ namespace Paracosm.Content.Bosses.InfectedRevenant
             NPCID.Sets.BossBestiaryPriority.Add(Type);
             NPCID.Sets.NPCBestiaryDrawModifiers drawModifiers = new NPCID.Sets.NPCBestiaryDrawModifiers()
             {
-                CustomTexturePath = "Paracosm/Content/Textures/Bestiary/InfectedRevenantBestiary",
+                CustomTexturePath = "Paracosm/Assets/Textures/Bestiary/InfectedRevenantBestiary",
                 PortraitScale = 0.7f, // Portrait refers to the full picture when clicking on the icon in the bestiary
                 PortraitPositionYOverride = 0f,
             };

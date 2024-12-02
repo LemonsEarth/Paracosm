@@ -2,6 +2,7 @@
 using Paracosm.Content.Items.Materials;
 using Paracosm.Content.Subworlds;
 using SubworldLibrary;
+using System;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
@@ -50,6 +51,11 @@ namespace Paracosm.Content.Items.Consumables
             return true;
         }
 
+        public override void UseStyle(Player player, Rectangle heldItemFrame)
+        {
+            player.itemLocation = player.Center + new Vector2(-34 * player.direction, -34 * (float)Math.Sin(MathHelper.ToRadians(animationTimer)));
+        }
+
         public override void UpdateInventory(Player player)
         {
             if (!doAnimation)
@@ -58,8 +64,8 @@ namespace Paracosm.Content.Items.Consumables
             }
             for (int i = 0; i < (animationTimer % 20); i++)
             {
-                Dust dust = Dust.NewDustDirect(player.Center, 1, 1, DustID.Granite, newColor: Color.Black, Scale: Main.rand.NextFloat(1.2f, 2.4f));
-                dust.velocity = new Vector2(0, Main.rand.Next(1, 20)).RotatedByRandom(MathHelper.Pi * 2);
+                Dust dust = Dust.NewDustDirect(player.Center + new Vector2(0, -68 * (float)Math.Sin(MathHelper.ToRadians(animationTimer))), 1, 1, DustID.Granite, newColor: Color.Black, Scale: Main.rand.NextFloat(1.2f, 5.6f));
+                dust.velocity = new Vector2(0, Main.rand.Next(4, 60)).RotatedByRandom(MathHelper.Pi * 2);
                 dust.noGravity = true;
             }
             if (animationTimer > 120)

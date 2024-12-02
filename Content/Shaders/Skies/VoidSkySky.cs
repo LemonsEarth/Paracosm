@@ -17,7 +17,7 @@ namespace Paracosm.Content.Shaders.Skies
 
         public override void Draw(SpriteBatch spriteBatch, float minDepth, float maxDepth)
         {
-            Texture2D sky = ModContent.Request<Texture2D>("Paracosm/Content/Textures/Backgrounds/VoidSkySky").Value;
+            Texture2D sky = ModContent.Request<Texture2D>("Paracosm/Assets/Textures/Backgrounds/Void/VoidSkySky").Value;
             spriteBatch.Draw(sky, new Rectangle(0, 0, Main.screenWidth, Main.screenHeight), Color.White);
         }
 

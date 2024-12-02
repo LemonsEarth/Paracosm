@@ -72,11 +72,10 @@ namespace Paracosm.Common.Globals
                 pool.Add(ModContent.NPCType<ParastoneRoller>(), 0.1f);
             }
 
-            if (spawnInfo.Player.InModBiome<VoidSky>())
+            if (spawnInfo.Player.InModBiome<VoidMid>())
             {
                 pool.Clear();
-                pool.Add(ModContent.NPCType<ShadowSeeker>(), 10f);
-                pool.Add(ModContent.NPCType<ParastoneRoller>(), 0.1f);
+                pool.Add(ModContent.NPCType<ShadowSeeker>(), 0.05f);
             }
         }
 
