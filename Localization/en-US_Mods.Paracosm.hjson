@@ -513,6 +513,11 @@ Items: {
 		DisplayName: Dark Magic Mirror
 		Tooltip: ""
 	}
+
+	RisingStar: {
+		DisplayName: Rising Star
+		Tooltip: ""
+	}
 }
 
 Projectiles: {
@@ -571,6 +576,7 @@ Projectiles: {
 	VortexLaser.DisplayName: Vortex Laser
 	TeslaShotFriendly.DisplayName: Tesla Shot Friendly
 	TeslaGunMinion.DisplayName: Tesla Gun Minion
+	Starshot.DisplayName: Starshot
 }
 
 NPCs: {

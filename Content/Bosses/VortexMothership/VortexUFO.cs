@@ -62,7 +62,7 @@ namespace Paracosm.Content.Bosses.VortexMothership
             NPC.lifeMax = 10000;
             NPC.defense = 50;
             NPC.value = 0;
-            NPC.damage = 0;
+            NPC.damage = 20;
             NPC.noTileCollide = true;
             NPC.knockBackResist = 0;
             NPC.noGravity = true;
@@ -85,7 +85,7 @@ namespace Paracosm.Content.Bosses.VortexMothership
 
         public override void ApplyDifficultyAndPlayerScaling(int numPlayers, float balance, float bossAdjustment)
         {
-            NPC.damage = (int)(NPC.damage * balance);
+            NPC.damage = (int)(NPC.damage * balance * 0.5f);
         }
 
         public override void AI()
