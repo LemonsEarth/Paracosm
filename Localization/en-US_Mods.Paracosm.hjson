@@ -696,6 +696,11 @@ Biomes: {
 		DisplayName: Void Mid
 		TownNPCDialogueName: the Void Mid
 	}
+
+	VoidLow: {
+		DisplayName: Void Low
+		TownNPCDialogueName: the Void Low
+	}
 }
 
 Keybinds: {

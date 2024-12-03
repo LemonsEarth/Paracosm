@@ -16,6 +16,8 @@ namespace Paracosm.Content.Subworlds
         {
             new VoidGenPass(),
             new VoidTerrainGenPass(),
+            new VoidStructuresGenPass(),
+            new VoidChestGenPass(),
             new VoidPaintBlackGenPass()
         };
 

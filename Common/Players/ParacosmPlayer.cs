@@ -198,14 +198,25 @@ namespace Paracosm.Common.Players
 
         public override void PostUpdate()
         {
-            if (Player.InModBiome<VoidMid>() || Player.InModBiome<VoidHigh>())
+            if (Player.InModBiome<VoidMid>() || Player.InModBiome<VoidHigh>() || Player.InModBiome<VoidLow>())
             {
                 Player.moonLordMonolithShader = true;
 
                 if (!Terraria.Graphics.Effects.Filters.Scene["DarknessShader"].IsActive() && Main.netMode != NetmodeID.Server)
                 {
                     ScreenShaderData shader = Terraria.Graphics.Effects.Filters.Scene.Activate("DarknessShader").GetShader();
-                    shader.Shader.Parameters["distance"].SetValue(0.10f);
+                    if (Player.InModBiome<VoidHigh>())
+                    {
+                        shader.Shader.Parameters["distance"].SetValue(0.20f);
+                    }
+                    else if (Player.InModBiome<VoidMid>())
+                    {
+                        shader.Shader.Parameters["distance"].SetValue(0.10f);
+                    }
+                    else
+                    {
+                        shader.Shader.Parameters["distance"].SetValue(0.5f);
+                    }
                     shader.Shader.Parameters["maxGlow"].SetValue(10);
                 }
             }

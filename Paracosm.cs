@@ -10,8 +10,11 @@ namespace Paracosm
     // Please read https://github.com/tModLoader/tModLoader/wiki/Basic-tModLoader-Modding-Guide#mod-skeleton-contents for more information about the various files in a mod.
     public class Paracosm : Mod
     {
+        public static Paracosm Instance { get; private set; }
         public override void Load()
         {
+            Instance = this;
+
             Asset<Effect> filterShader = Assets.Request<Effect>("Content/Shaders/ScreenTintShader");
             Filters.Scene["ScreenTintShader"] = new Filter(new ScreenShaderData(filterShader, "ScreenTint"), EffectPriority.Medium);
 

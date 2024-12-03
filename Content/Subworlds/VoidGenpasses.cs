@@ -11,6 +11,7 @@ using Terraria.IO;
 using Terraria.ModLoader;
 using Terraria.WorldBuilding;
 using Microsoft.Xna.Framework;
+using Paracosm.Common.Utils;
 
 namespace Paracosm.Content.Subworlds
 {
@@ -65,13 +66,54 @@ namespace Paracosm.Content.Subworlds
         }
     }
 
-    public class VoidPaintBlackGenPass : GenPass
+    public class VoidStructuresGenPass : GenPass
     {
-        public VoidPaintBlackGenPass() : base("Terrain", 1f) { }
+        public VoidStructuresGenPass() : base("Structures", 1f) { }
 
         protected override void ApplyPass(GenerationProgress progress, GameConfiguration configuration)
         {
-            progress.Message = "The Void Terrain";
+            progress.Message = "The Void Structures";
+            for (int i = 0; i < 20; i++)
+            {
+                int x = (int)MathHelper.Clamp(i * (Main.maxTilesX / 8), 100, 2900);
+                int y = (Main.maxTilesY - 1000) + WorldGen.genRand.Next(0, 800);
+
+                Generator.GenerateMultistructureRandom("Content/Structures/VoidStructures", new Point16(x, y), Paracosm.Instance);
+            }
+        }
+    }
+
+    public class VoidChestGenPass : GenPass
+    {
+        public VoidChestGenPass() : base("Chests", 1f) { }
+
+        protected override void ApplyPass(GenerationProgress progress, GameConfiguration configuration)
+        {
+            progress.Message = "The Void Chests";
+            for (int chestIndex = 0; chestIndex < Main.maxChests; chestIndex++)
+            {
+                int items = WorldGen.genRand.Next(8, 16);
+                Chest chest = Main.chest[chestIndex];
+                if (chest == null)
+                {
+                    continue;
+                }
+
+                for (int inventoryIndex = 0; inventoryIndex < items; inventoryIndex++)
+                {
+                    chest.item[inventoryIndex].SetDefaults(LemonUtils.GetRandomNoStackItemID());
+                }
+            }
+        }
+    }
+
+    public class VoidPaintBlackGenPass : GenPass
+    {
+        public VoidPaintBlackGenPass() : base("Paint", 1f) { }
+
+        protected override void ApplyPass(GenerationProgress progress, GameConfiguration configuration)
+        {
+            progress.Message = "The Void Paint";
 
             for (int i = 0; i < Main.maxTilesX; i++)
             {
@@ -80,7 +122,14 @@ namespace Paracosm.Content.Subworlds
                     if (Main.tile[i, j].HasTile)
                     {
                         Tile tile = Main.tile[i, j];
-                        tile.TileColor = PaintID.ShadowPaint;
+                        if (tile.TileType == TileID.ShimmerBrick)
+                        {
+                            tile.TileColor = PaintID.ShadowPaint;
+                        }
+                        else
+                        {
+                            tile.TileColor = PaintID.BlackPaint;
+                        }
                     }
                 }
             }

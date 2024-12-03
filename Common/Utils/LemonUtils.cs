@@ -1,5 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.ID;
+using Terraria.ModLoader;
 
 namespace Paracosm.Common.Utils
 {
@@ -51,9 +53,20 @@ namespace Paracosm.Common.Utils
             return closestEnemy;
         }
 
-        public static Vector2 ApproxPos(Vector2 pos, float errorX, float errorY)
+        public static int GetRandomNoStackItemID()
         {
-            return pos + new Vector2(Main.rand.NextFloat(-errorX, errorX), Main.rand.NextFloat(-errorX, errorX));
+            bool found = false;
+            while (!found)
+            {
+                int randItemID = Main.rand.Next(0, ItemLoader.ItemCount);
+                Item randItem = ContentSamples.ItemsByType[randItemID];
+                if (randItem.maxStack == 1)
+                {
+                    found = true;
+                    return randItemID;
+                }
+            }
+            return 0;
         }
     }
 }
