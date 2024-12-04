@@ -12,6 +12,7 @@
 	  <None Remove="Content\Biomes\Void\VoidHigh_Icon.png" />
 	  <None Remove="Content\Biomes\Void\VoidLow_Background.png" />
 	  <None Remove="Content\Biomes\Void\VoidLow_Icon.png" />
+	  <None Remove="Content\Bosses\NebulaMaster\NebulaMaster_Head_Boss.png" />
 	  <None Remove="Content\Shaders\DarknessShader.fx" />
 	  <None Remove="Assets\Textures\Backgrounds\VoidSky_Background.png" />
 	</ItemGroup>

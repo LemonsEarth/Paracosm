@@ -518,6 +518,11 @@ Items: {
 		DisplayName: Rising Star
 		Tooltip: ""
 	}
+
+	StarStormbow: {
+		DisplayName: Star Stormbow
+		Tooltip: ""
+	}
 }
 
 Projectiles: {

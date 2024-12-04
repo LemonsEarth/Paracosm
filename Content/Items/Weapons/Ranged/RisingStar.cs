@@ -12,7 +12,7 @@ namespace Paracosm.Content.Items.Weapons.Ranged
     {
         public override void SetDefaults()
         {
-            Item.damage = 6;
+            Item.damage = 12;
             Item.knockBack = 2f;
             Item.crit = 2;
             Item.DamageType = DamageClass.Ranged;
@@ -26,7 +26,7 @@ namespace Paracosm.Content.Items.Weapons.Ranged
             Item.UseSound = SoundID.Item9;
             Item.autoReuse = true;
             Item.shoot = ModContent.ProjectileType<Starshot>();
-            Item.shootSpeed = 15;
+            Item.shootSpeed = 30;
             Item.noMelee = true;
         }
 
@@ -37,7 +37,7 @@ namespace Paracosm.Content.Items.Weapons.Ranged
 
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
-            Projectile.NewProjectile(source, position, velocity, type, damage, knockback, ai0: 30, ai1: 0);
+            Projectile.NewProjectile(source, position, velocity, type, damage, knockback, ai0: 30);
             return true;
         }
 

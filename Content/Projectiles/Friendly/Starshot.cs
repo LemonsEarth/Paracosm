@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Paracosm.Common.Utils;
 using Terraria;
 using Terraria.Audio;
+using Terraria.DataStructures;
 using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -29,11 +30,18 @@ namespace Paracosm.Content.Projectiles.Friendly
             Projectile.arrow = true;
             Projectile.friendly = true;
             Projectile.DamageType = DamageClass.Ranged;
-            Projectile.timeLeft = 180;
+            Projectile.timeLeft = 120;
             Projectile.penetrate = 2;
             Projectile.alpha = 255;
             Projectile.usesLocalNPCImmunity = true;
             Projectile.localNPCHitCooldown = 30;
+            Projectile.light = 1f;
+        }
+
+        public override void OnSpawn(IEntitySource source)
+        {
+            LemonUtils.DustCircle(Projectile.Center, 16, 2, DustID.BlueTorch, 1.2f);
+            LemonUtils.DustCircle(Projectile.Center, 16, 2, DustID.YellowTorch);
         }
 
         public override void AI()
@@ -45,7 +53,10 @@ namespace Paracosm.Content.Projectiles.Friendly
             }
             if (AITimer <= 0)
             {
-                speed += 0.1f;
+                if (speed < 5)
+                {
+                    speed += 0.05f;
+                }
                 closestNPC = LemonUtils.GetClosestNPC(Projectile);
                 if (closestNPC != null)
                 {
