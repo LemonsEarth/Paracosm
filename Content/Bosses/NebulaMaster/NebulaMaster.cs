@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Paracosm.Common.Systems;
 using Paracosm.Content.Buffs;
 using Paracosm.Content.Items.BossBags;
@@ -9,14 +10,16 @@ using Paracosm.Content.Projectiles.Hostile;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using Terraria;
+using Terraria.GameContent;
 using Terraria.GameContent.Bestiary;
 using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 using Terraria.ModLoader;
 
 
-namespace Paracosm.Content.Bosses.VortexMothership
+namespace Paracosm.Content.Bosses.NebulaMaster
 {
     [AutoloadBossHead]
     public class NebulaMaster : ModNPC
@@ -27,8 +30,7 @@ namespace Paracosm.Content.Bosses.VortexMothership
             get { return NPC.ai[1]; }
             private set
             {
-                int maxVal = phase == 2 ? 2 : 3;
-                if (value > maxVal || value < 0)
+                if (value > 0 || value < 0)
                 {
                     NPC.ai[1] = 0;
                 }
@@ -48,8 +50,8 @@ namespace Paracosm.Content.Bosses.VortexMothership
         public int phase { get; private set; } = 1;
 
         float attackDuration = 0;
-        int[] attackDurations = { 300, 180, 900, 1260 };
-        int[] attackDurations2 = { 900, 900, 1200};
+        int[] attackDurations = { 2400, 180, 900, 1260 };
+        int[] attackDurations2 = { 900, 900, 1200 };
         public Player player { get; private set; }
         public Vector2 playerDirection { get; private set; }
         Vector2 targetPosition = Vector2.Zero;
@@ -58,11 +60,12 @@ namespace Paracosm.Content.Bosses.VortexMothership
         List<Projectile> Spheres = new List<Projectile>();
         Dictionary<string, int> Proj = new Dictionary<string, int>
         {
-            {"Sphere", ModContent.ProjectileType<BorderSphere>()}
+            {"Sphere", ModContent.ProjectileType<BorderSphere>()},
+            {"SpeedFlames",  ModContent.ProjectileType<SpeedyNebulousFlames>()}
         };
         public enum Attacks
         {
-
+            SpeedingFlames,
         }
 
         public enum Attacks2
@@ -169,10 +172,16 @@ namespace Paracosm.Content.Bosses.VortexMothership
                 NPC.Opacity = 0;
             }
 
+            Lighting.AddLight(NPC.Center, 100, 100, 100);
+
             if (!Terraria.Graphics.Effects.Filters.Scene["ScreenTintShader"].IsActive() && Main.netMode != NetmodeID.Server)
             {
                 Terraria.Graphics.Effects.Filters.Scene.Activate("ScreenTintShader").GetShader().UseColor(new Color(225, 56, 255));
             }
+
+            NPC.spriteDirection = -Math.Sign(playerDirection.X);
+            float rotmul = NPC.spriteDirection == 1 ? MathHelper.Pi : 0;
+            NPC.rotation = playerDirection.ToRotation() + rotmul;
 
             foreach (var p in Main.player)
             {
@@ -181,11 +190,11 @@ namespace Paracosm.Content.Bosses.VortexMothership
 
             Arena();
 
-            if (AITimer < 60)
+            if (AITimer < 120)
             {
                 NPC.dontTakeDamage = true;
-                NPC.velocity = new Vector2(0, 2);
-                NPC.Opacity += 1f / 60f;
+                NPC.velocity = NPC.Center.DirectionTo(player.Center + new Vector2(500, 0)) * (NPC.Center.Distance(player.Center + new Vector2(500, 0)) / 12);
+                NPC.Opacity += 1f / 20f;
                 AITimer++;
                 Attack = 0;
                 attackDuration = attackDurations[(int)Attack];
@@ -202,11 +211,19 @@ namespace Paracosm.Content.Bosses.VortexMothership
                 NPC.netUpdate = true;
             }
 
-            NPC.velocity = Vector2.Zero;
-
             if (attackDuration <= 0)
             {
                 SwitchAttacks();
+            }
+
+            if (phase == 1)
+            {
+                switch (Attack)
+                {
+                    case (int)Attacks.SpeedingFlames:
+                        SpeedingFlames();
+                        break;
+                }
             }
 
             attackDuration--;
@@ -228,7 +245,55 @@ namespace Paracosm.Content.Bosses.VortexMothership
             }
             NPC.netUpdate = true;
         }
-        const float BaseArenaDistance = 1500;
+
+        const int RANDOM_POS_TIME = 60;
+        const int MOVE_TIME = 30;
+        const int ATTACK_RATE = 15;
+        void SpeedingFlames()
+        {
+            switch (AttackTimer)
+            {
+                case RANDOM_POS_TIME:
+                    if (Main.netMode != NetmodeID.MultiplayerClient)
+                    {
+                        targetPosition = NPC.Center + new Vector2(Main.rand.NextFloat(-300, 300), Main.rand.NextFloat(-300, 300));
+                        NPC.netUpdate = true;
+                    }
+                    break;
+                case > MOVE_TIME:
+                    MoveToPos(targetPosition, 1, 1, 2f, 2f);
+                    break;
+                case > 0:
+                    if (AttackTimer % ATTACK_RATE == 0)
+                    {
+                        if (Main.netMode != NetmodeID.MultiplayerClient)
+                        {
+                            for (int i = -2; i <= 2; i++)
+                            {
+                                Vector2 direction = playerDirection.SafeNormalize(Vector2.Zero).RotatedBy(MathHelper.ToRadians(i * 15));
+                                Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, direction * 2, Proj["SpeedFlames"], NPC.damage, 1, ai0: 30, ai1: 25, ai2: 1);
+                            }
+                        }
+                    }
+                    break;
+                case 0:
+                    AttackTimer = RANDOM_POS_TIME + 1;
+                    break;
+            }
+
+            AttackTimer--;
+        }
+
+
+        void MoveToPos(Vector2 pos, float xAccel = 1f, float yAccel = 1f, float xSpeed = 1f, float ySpeed = 1f)
+        {
+            Vector2 direction = NPC.Center.DirectionTo(pos);
+            float XaccelMod = Math.Sign(direction.X) - Math.Sign(NPC.velocity.X);
+            float YaccelMod = Math.Sign(direction.Y) - Math.Sign(NPC.velocity.Y);
+            NPC.velocity += new Vector2(XaccelMod * xAccel + xSpeed * Math.Sign(direction.X), YaccelMod * yAccel + ySpeed * Math.Sign(direction.Y));
+        }
+
+        const float BaseArenaDistance = 2000;
         public void Arena()
         {
             if (Main.netMode != NetmodeID.MultiplayerClient)
@@ -295,6 +360,21 @@ namespace Paracosm.Content.Bosses.VortexMothership
             return true;
         }
 
+        public override void FindFrame(int frameHeight)
+        {
+            int frameDur = 6;
+            NPC.frameCounter += 1;
+            if (NPC.frameCounter > frameDur)
+            {
+                NPC.frame.Y += frameHeight;
+                NPC.frameCounter = 0;
+                if (NPC.frame.Y > 2 * frameHeight)
+                {
+                    NPC.frame.Y = 0;
+                }
+            }
+        }
+
         public override void ModifyNPCLoot(NPCLoot npcLoot)
         {
             LeadingConditionRule classicRule = new LeadingConditionRule(new Conditions.NotExpert());
@@ -325,6 +405,26 @@ namespace Paracosm.Content.Bosses.VortexMothership
             {
                 Gore gore = Gore.NewGoreDirect(NPC.GetSource_FromThis(), NPC.position + new Vector2(Main.rand.Next(0, NPC.width), Main.rand.Next(0, NPC.height)), new Vector2(Main.rand.NextFloat(-5, 5)), Main.rand.Next(61, 64), Main.rand.NextFloat(2f, 5f));
             }
+        }
+
+        public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
+        {
+            Texture2D texture = TextureAssets.Npc[Type].Value;
+            Rectangle drawRect = texture.Frame(1, Main.npcFrameCount[Type], 0, 0);
+
+            Vector2 drawOrigin = new Vector2(texture.Width * 0.5f, NPC.height * 0.5f);
+            SpriteEffects spriteEffects = SpriteEffects.None;
+            if (NPC.spriteDirection == 1)
+            {
+                spriteEffects = SpriteEffects.FlipHorizontally;
+            }
+            for (int k = NPC.oldPos.Length - 1; k > 0; k--)
+            {
+                Vector2 drawPos = NPC.oldPos[k] - Main.screenPosition + drawOrigin;
+                Color color = NPC.GetAlpha(drawColor) * ((NPC.oldPos.Length - k) / (float)NPC.oldPos.Length);
+                Main.EntitySpriteDraw(texture, drawPos, drawRect, color, NPC.rotation, drawOrigin, NPC.scale, spriteEffects, 0);
+            }
+            return true;
         }
     }
 }

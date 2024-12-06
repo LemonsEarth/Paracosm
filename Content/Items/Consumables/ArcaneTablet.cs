@@ -1,4 +1,4 @@
-﻿using Paracosm.Content.Bosses.VortexMothership;
+﻿using Paracosm.Content.Bosses.NebulaMaster;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
@@ -6,7 +6,7 @@ using Terraria.ModLoader;
 
 namespace Paracosm.Content.Items.Consumables
 {
-    public class StarSpanCommunicator : ModItem
+    public class ArcaneTablet : ModItem
     {
         public override void SetStaticDefaults()
         {
@@ -16,10 +16,10 @@ namespace Paracosm.Content.Items.Consumables
 
         public override void SetDefaults()
         {
-            Item.width = 30;
-            Item.height = 30;
+            Item.width = 36;
+            Item.height = 36;
             Item.maxStack = 1;
-            Item.rare = ItemRarityID.Blue;
+            Item.rare = ItemRarityID.Pink;
             Item.useAnimation = 30;
             Item.useTime = 30;
             Item.useStyle = ItemUseStyleID.HoldUp;
@@ -33,7 +33,7 @@ namespace Paracosm.Content.Items.Consumables
 
         public override bool CanUseItem(Player player)
         {
-            return !NPC.AnyNPCs(ModContent.NPCType<VortexMothership>());
+            return !NPC.AnyNPCs(ModContent.NPCType<NebulaMaster>());
         }
 
         public override bool? UseItem(Player player)
@@ -41,7 +41,7 @@ namespace Paracosm.Content.Items.Consumables
             SoundEngine.PlaySound(SoundID.Roar, player.position);
             if (Main.netMode != NetmodeID.MultiplayerClient)
             {
-                NPC.SpawnBoss((int)player.MountedCenter.X, (int)player.MountedCenter.Y - 100, ModContent.NPCType<VortexMothership>(), player.whoAmI);
+                NPC.SpawnBoss((int)player.MountedCenter.X + 500, (int)player.MountedCenter.Y - 1000, ModContent.NPCType<NebulaMaster>(), player.whoAmI);
             }
             else
             {
@@ -54,8 +54,8 @@ namespace Paracosm.Content.Items.Consumables
         {
             Recipe recipe = CreateRecipe();
             recipe.AddIngredient(ItemID.LunarBar, 5);
-            recipe.AddIngredient(ItemID.FragmentVortex, 20);
-            recipe.AddIngredient(ItemID.MartianConduitPlating, 25);
+            recipe.AddIngredient(ItemID.FragmentNebula, 20);
+            recipe.AddIngredient(ItemID.SolarTablet);
             recipe.AddTile(TileID.LunarCraftingStation);
             recipe.Register();
         }

@@ -30,7 +30,6 @@ namespace Paracosm.Content.Projectiles.Hostile
 
         public override void ReceiveExtraAI(BinaryReader reader)
         {
-
             speed = reader.ReadSingle();
             AITimer = reader.ReadInt32();
         }

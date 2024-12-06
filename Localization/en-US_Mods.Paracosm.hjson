@@ -523,6 +523,11 @@ Items: {
 		DisplayName: Star Stormbow
 		Tooltip: ""
 	}
+
+	ArcaneTablet: {
+		DisplayName: Arcane Tablet
+		Tooltip: ""
+	}
 }
 
 Projectiles: {
@@ -582,6 +587,8 @@ Projectiles: {
 	TeslaShotFriendly.DisplayName: Tesla Shot Friendly
 	TeslaGunMinion.DisplayName: Tesla Gun Minion
 	Starshot.DisplayName: Starshot
+	NebulousFlames.DisplayName: Nebulous Flames
+	SpeedyNebulousFlames.DisplayName: Speedy Nebulous Flames
 }
 
 NPCs: {
@@ -618,6 +625,7 @@ NPCs: {
 	VortexTeslaGun.DisplayName: " "
 	VortexUFO.DisplayName: Vortex U F O
 	ShadowSeeker.DisplayName: Shadow Seeker
+	NebulaMaster.DisplayName: Nebula Master
 }
 
 Buffs: {

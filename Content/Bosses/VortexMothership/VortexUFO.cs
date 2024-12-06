@@ -108,6 +108,7 @@ namespace Paracosm.Content.Bosses.VortexMothership
                 if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
                     RandNum = Main.rand.Next(0, 8);
+                    NPC.netUpdate = true;
                 }
                 AttackTimer = 0;
                 AttackTimer2 = 0;
