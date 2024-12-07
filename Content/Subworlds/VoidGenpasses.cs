@@ -1,17 +1,11 @@
-﻿using SubworldLibrary;
+﻿using Microsoft.Xna.Framework;
+using Paracosm.Common.Utils;
 using StructureHelper;
-using Paracosm.Content.Tiles;
-using Paracosm.Common.Systems;
-using System.Collections.Generic;
 using Terraria;
 using Terraria.DataStructures;
-using Terraria.GameContent.Generation;
 using Terraria.ID;
 using Terraria.IO;
-using Terraria.ModLoader;
 using Terraria.WorldBuilding;
-using Microsoft.Xna.Framework;
-using Paracosm.Common.Utils;
 
 namespace Paracosm.Content.Subworlds
 {

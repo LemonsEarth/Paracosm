@@ -1,9 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Paracosm.Common.Utils;
 using Terraria;
 using Terraria.Audio;
-using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -59,7 +56,7 @@ namespace Paracosm.Content.Projectiles.Hostile
 
             if (Projectile.timeLeft > 60)
             {
-                Projectile.Opacity += 2f/10f;
+                Projectile.Opacity += 2f / 10f;
             }
             else if (Projectile.timeLeft < 30)
             {

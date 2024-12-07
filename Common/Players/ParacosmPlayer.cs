@@ -1,5 +1,4 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Paracosm.Common.Systems;
 using Paracosm.Common.Utils;
 using Paracosm.Content.Biomes.Overworld;
@@ -7,7 +6,6 @@ using Paracosm.Content.Biomes.Void;
 using Paracosm.Content.Buffs;
 using Paracosm.Content.Buffs.Cooldowns;
 using Paracosm.Content.Projectiles.Friendly;
-using ReLogic.Content;
 using Terraria;
 using Terraria.Graphics.Shaders;
 using Terraria.ID;
@@ -33,6 +31,7 @@ namespace Paracosm.Common.Players
 
         public bool paracosmicHelmetBuff = false;
         public bool paracosmicGogglesBuff = false;
+        public bool nebulousPower = false;
 
         public bool infected = false;
         public bool paracosmicBurn = false;
@@ -56,6 +55,7 @@ namespace Paracosm.Common.Players
 
             paracosmicHelmetBuff = false;
             paracosmicGogglesBuff = false;
+            nebulousPower = false;
 
             infected = false;
             paracosmicBurn = false;
@@ -144,6 +144,19 @@ namespace Paracosm.Common.Players
                         }
                     }
                     LemonUtils.DustCircle(Player.Center, 16, 5, DustID.SolarFlare, Main.rand.NextFloat(0.8f, 1.2f));
+                }
+            }
+
+            if (nebulousPower)
+            {
+                Player.moveSpeed *= 2f;
+                if (!Player.controlJump)
+                {
+                    Player.gravity = Player.defaultGravity * 2f;
+                }
+                if ((Player.controlLeft && Player.velocity.X > 0) || (Player.controlRight && Player.velocity.X < 0))
+                {
+                    Player.runSlowdown = 10f;
                 }
             }
 

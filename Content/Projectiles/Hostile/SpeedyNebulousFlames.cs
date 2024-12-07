@@ -1,9 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Paracosm.Content.Buffs;
 using Terraria;
 using Terraria.Audio;
-using Terraria.DataStructures;
 using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -39,6 +37,8 @@ namespace Paracosm.Content.Projectiles.Hostile
             Projectile.ignoreWater = true;
             Projectile.tileCollide = false;
             Projectile.timeLeft = 240;
+            Projectile.penetrate = -1;
+            DrawOffsetX = -14;
         }
 
         public override void AI()

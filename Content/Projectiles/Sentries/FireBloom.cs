@@ -46,7 +46,7 @@ namespace Paracosm.Content.Projectiles.Sentries
                 {
                     Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, DustID.Lava);
                 }
-                Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, new Vector2(0, -1).RotatedBy(MathHelper.ToRadians(Main.rand.Next(-60, 60))) * 6, ProjectileID.BallofFire, Projectile.damage, 2f);
+                Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, -Vector2.UnitY.RotatedBy(MathHelper.ToRadians(Main.rand.Next(-60, 60))) * 6, ProjectileID.BallofFire, Projectile.damage, 2f);
                 AITimer = 0;
                 Projectile.netUpdate = true;
             }

@@ -4,8 +4,6 @@ using Paracosm.Common.Systems;
 using Paracosm.Content.Buffs;
 using Paracosm.Content.Items.BossBags;
 using Paracosm.Content.Items.Materials;
-using Paracosm.Content.Items.Weapons.Magic;
-using Paracosm.Content.Items.Weapons.Melee;
 using Paracosm.Content.Projectiles.Hostile;
 using System;
 using System.Collections.Generic;
@@ -18,7 +16,6 @@ using Terraria.GameContent.Bestiary;
 using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Terraria.UI;
 
 
 namespace Paracosm.Content.Bosses.SolarChampion
@@ -244,15 +241,10 @@ namespace Paracosm.Content.Bosses.SolarChampion
 
             Arena();
 
-            if (AITimer < 60)
+            if (AITimer < INTRO_DURATION)
             {
-                NPC.dontTakeDamage = true;
-                NPC.velocity = new Vector2(0, -2);
-                NPC.Opacity += 1f / 60f;
+                Intro();
                 AITimer++;
-                Attack = 0;
-                attackDuration = attackDurations[(int)Attack];
-                Terraria.Graphics.Effects.Filters.Scene["ScreenTintShader"].GetShader().UseProgress(AITimer / 60);
                 return;
             }
             NPC.dontTakeDamage = false;
@@ -309,6 +301,17 @@ namespace Paracosm.Content.Bosses.SolarChampion
 
             attackDuration--;
             AITimer++;
+        }
+
+        const int INTRO_DURATION = 60;
+        void Intro()
+        {
+            NPC.dontTakeDamage = true;
+            NPC.velocity = new Vector2(0, -2);
+            NPC.Opacity += 1f / 60f;
+            Attack = 0;
+            attackDuration = attackDurations[(int)Attack];
+            Terraria.Graphics.Effects.Filters.Scene["ScreenTintShader"].GetShader().UseProgress(AITimer / 60);
         }
 
         void SwitchAttacks()
@@ -490,7 +493,7 @@ namespace Paracosm.Content.Bosses.SolarChampion
             {
                 if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
-                    Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, new Vector2(0, 1), Proj["Hammer"], NPC.damage, 0, ai0: 60, ai1: player.Center.X, ai2: player.Center.Y);
+                    Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, Vector2.UnitY, Proj["Hammer"], NPC.damage, 0, ai0: 60, ai1: player.Center.X, ai2: player.Center.Y);
                 }
             }
 
@@ -501,7 +504,7 @@ namespace Paracosm.Content.Bosses.SolarChampion
                     for (int i = -1; i < 2; i += 2)
                     {
                         Vector2 indicatorDistancePos = NPC.Center + new Vector2(0, i * arenaDistance);
-                        Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, i * new Vector2(0, 1) / 10, ModContent.ProjectileType<IndicatorLaser>(), 10, 0, ai1: indicatorDistancePos.X, ai2: indicatorDistancePos.Y);
+                        Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, i * Vector2.UnitY / 10, ModContent.ProjectileType<IndicatorLaser>(), 10, 0, ai1: indicatorDistancePos.X, ai2: indicatorDistancePos.Y);
                     }
                 }
             }
@@ -516,7 +519,7 @@ namespace Paracosm.Content.Bosses.SolarChampion
                 {
                     for (int i = 0; i < 11; i++)
                     {
-                        var axe = Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center, new Vector2(0, -1), Proj["Axe"], NPC.damage, 0, ai1: NPC.whoAmI);
+                        var axe = Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center, -Vector2.UnitY, Proj["Axe"], NPC.damage, 0, ai1: NPC.whoAmI);
                         axe.timeLeft = 1200;
                         Axes.Add(axe);
                     }
@@ -568,7 +571,7 @@ namespace Paracosm.Content.Bosses.SolarChampion
                     targetPosition = NPC.Center + new Vector2(Main.rand.NextFloat(-arenaDistance, arenaDistance), Main.rand.NextFloat(-arenaDistance - 150, -arenaDistance + 150));
                     randomNum = Main.rand.NextFloat(arenaDistance - 1000, arenaDistance + 200);
                     NPC.netUpdate = true;
-                    Projectile.NewProjectile(NPC.GetSource_FromAI(), targetPosition, new Vector2(0, 1), Proj["Hammer"], NPC.damage, 1, ai0: 60, ai1: targetPosition.X, ai2: targetPosition.Y + randomNum);
+                    Projectile.NewProjectile(NPC.GetSource_FromAI(), targetPosition, Vector2.UnitY, Proj["Hammer"], NPC.damage, 1, ai0: 60, ai1: targetPosition.X, ai2: targetPosition.Y + randomNum);
                 }
                 AttackTimer = 15;
             }
@@ -733,8 +736,8 @@ namespace Paracosm.Content.Bosses.SolarChampion
             {
                 if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
-                    Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, new Vector2(0, 1), Proj["Hammer"], NPC.damage, 0, ai0: 60, ai1: player.Center.X, ai2: player.Center.Y);
-                    Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, new Vector2(0, 1), Proj["Hammer"], NPC.damage, 0, ai0: 30, ai1: player.Center.X, ai2: player.Center.Y);
+                    Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, Vector2.UnitY, Proj["Hammer"], NPC.damage, 0, ai0: 60, ai1: player.Center.X, ai2: player.Center.Y);
+                    Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, Vector2.UnitY, Proj["Hammer"], NPC.damage, 0, ai0: 30, ai1: player.Center.X, ai2: player.Center.Y);
                 }
             }
             if (attackDuration == 30)
@@ -744,7 +747,7 @@ namespace Paracosm.Content.Bosses.SolarChampion
                     for (int i = -1; i < 2; i += 2)
                     {
                         Vector2 indicatorDistancePos = NPC.Center + new Vector2(0, i * arenaDistance);
-                        Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, i * new Vector2(0, 1) / 10, ModContent.ProjectileType<IndicatorLaser>(), 10, 0, ai1: indicatorDistancePos.X, ai2: indicatorDistancePos.Y);
+                        Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, i * Vector2.UnitY / 10, ModContent.ProjectileType<IndicatorLaser>(), 10, 0, ai1: indicatorDistancePos.X, ai2: indicatorDistancePos.Y);
                     }
                 }
             }
@@ -759,7 +762,7 @@ namespace Paracosm.Content.Bosses.SolarChampion
                 {
                     for (int i = 0; i < 11; i++)
                     {
-                        var axe = Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center, new Vector2(0, -1), Proj["Axe"], NPC.damage, 0, ai1: NPC.whoAmI);
+                        var axe = Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center, -Vector2.UnitY, Proj["Axe"], NPC.damage, 0, ai1: NPC.whoAmI);
                         axe.timeLeft = 1200;
                         Axes.Add(axe);
                     }
@@ -769,7 +772,7 @@ namespace Paracosm.Content.Bosses.SolarChampion
                 {
                     for (int i = 0; i < 11; i++)
                     {
-                        var axe = Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center, new Vector2(0, 1), Proj["Axe"], NPC.damage, 0, ai1: NPC.whoAmI);
+                        var axe = Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center, Vector2.UnitY, Proj["Axe"], NPC.damage, 0, ai1: NPC.whoAmI);
                         axe.timeLeft = 1200;
                         Axes.Add(axe);
                     }
@@ -848,7 +851,7 @@ namespace Paracosm.Content.Bosses.SolarChampion
             {
                 if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
-                    Vector2 direction = new Vector2(0, 1).RotatedBy(AttackCount * MathHelper.PiOver4).RotatedBy(AttackCount2 * (Math.PI / 10));
+                    Vector2 direction = Vector2.UnitY.RotatedBy(AttackCount * MathHelper.PiOver4).RotatedBy(AttackCount2 * (Math.PI / 10));
                     Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, direction, Proj["Hammer"], NPC.damage, 1, ai0: 45, ai1: NPC.Center.X + direction.X * 500, ai2: NPC.Center.Y + direction.Y * 500);
                 }
                 if (AttackCount < 8)
@@ -894,12 +897,12 @@ namespace Paracosm.Content.Bosses.SolarChampion
             }
             if (arenaDistance < BaseArenaDistance)
             {
-                arenaDistance += BaseArenaDistance / 60f;
+                arenaDistance += BaseArenaDistance / INTRO_DURATION;
             }
 
             foreach (var player in Main.ActivePlayers)
             {
-                if (NPC.Center.Distance(player.MountedCenter) > arenaDistance + 50 && AITimer > 120)
+                if (NPC.Center.Distance(player.MountedCenter) > arenaDistance + 50 && AITimer > INTRO_DURATION * 2)
                 {
                     player.AddBuff(ModContent.BuffType<Infected>(), 2);
                 }

@@ -6,7 +6,6 @@ using Paracosm.Content.Items.Materials;
 using Paracosm.Content.Items.Weapons.Magic;
 using Paracosm.Content.Items.Weapons.Melee;
 using Paracosm.Content.Projectiles.Hostile;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using Terraria;
@@ -52,7 +51,7 @@ namespace Paracosm.Content.Bosses.VortexMothership
 
         float attackDuration = 0;
         int[] attackDurations = { 300, 180, 900, 1260 };
-        int[] attackDurations2 = { 900, 900, 1200};
+        int[] attackDurations2 = { 900, 900, 1200 };
         public Player player { get; private set; }
         public Vector2 playerDirection { get; private set; }
         Vector2 targetPosition = Vector2.Zero;
@@ -208,15 +207,10 @@ namespace Paracosm.Content.Bosses.VortexMothership
             Arena();
             SpawnWeapons();
 
-            if (AITimer < 60)
+            if (AITimer < INTRO_DURATION)
             {
-                NPC.dontTakeDamage = true;
-                NPC.velocity = new Vector2(0, 2);
-                NPC.Opacity += 1f / 60f;
+                Intro();
                 AITimer++;
-                Attack = 0;
-                attackDuration = attackDurations[(int)Attack];
-                Terraria.Graphics.Effects.Filters.Scene["ScreenTintShader"].GetShader().UseProgress(AITimer / 60);
                 return;
             }
             NPC.dontTakeDamage = false;
@@ -255,6 +249,17 @@ namespace Paracosm.Content.Bosses.VortexMothership
 
             attackDuration--;
             AITimer++;
+        }
+
+        const int INTRO_DURATION = 60;
+        void Intro()
+        {
+            NPC.dontTakeDamage = true;
+            NPC.velocity = new Vector2(0, 2);
+            NPC.Opacity += 1f / 60f;
+            Attack = 0;
+            attackDuration = attackDurations[(int)Attack];
+            Terraria.Graphics.Effects.Filters.Scene["ScreenTintShader"].GetShader().UseProgress(AITimer / 60);
         }
 
         void SwitchAttacks()
@@ -383,12 +388,12 @@ namespace Paracosm.Content.Bosses.VortexMothership
             }
             if (arenaDistance < BaseArenaDistance)
             {
-                arenaDistance += BaseArenaDistance / 60f;
+                arenaDistance += BaseArenaDistance / INTRO_DURATION;
             }
 
             foreach (var player in Main.ActivePlayers)
             {
-                if (NPC.Center.Distance(player.MountedCenter) > arenaDistance + 50 && AITimer > 120)
+                if (NPC.Center.Distance(player.MountedCenter) > arenaDistance + 50 && AITimer > INTRO_DURATION * 2)
                 {
                     player.AddBuff(ModContent.BuffType<Infected>(), 2);
                 }

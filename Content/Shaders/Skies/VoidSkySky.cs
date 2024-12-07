@@ -1,8 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Terraria;
 using Terraria.Graphics.Effects;
 using Terraria.ModLoader;
-using Terraria;
 
 namespace Paracosm.Content.Shaders.Skies
 {
@@ -12,7 +12,7 @@ namespace Paracosm.Content.Shaders.Skies
 
         public override void Update(GameTime gameTime)
         {
-            
+
         }
 
         public override void Draw(SpriteBatch spriteBatch, float minDepth, float maxDepth)

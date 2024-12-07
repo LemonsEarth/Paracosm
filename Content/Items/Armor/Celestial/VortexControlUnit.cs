@@ -1,5 +1,4 @@
 ﻿using Paracosm.Common.Players;
-using Paracosm.Content.Items.Materials;
 using Terraria;
 using Terraria.ID;
 using Terraria.Localization;

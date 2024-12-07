@@ -301,7 +301,7 @@ namespace Paracosm.Content.Bosses.InfectedRevenant
                 {
                     for (int i = 0; i < 4; i++)
                     {
-                        Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, new Vector2(0, -1).RotatedBy(i * MathHelper.PiOver2) * 20, ProjectileID.CursedFlameHostile, (int)(NPC.damage * 0.8f), 10);
+                        Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, -Vector2.UnitY.RotatedBy(i * MathHelper.PiOver2) * 20, ProjectileID.CursedFlameHostile, (int)(NPC.damage * 0.8f), 10);
                     }
                     AttackTimer = CursedCrossCD;
 
@@ -322,7 +322,7 @@ namespace Paracosm.Content.Bosses.InfectedRevenant
                 {
                     for (int i = 0; i < 12; i++)
                     {
-                        var proj = Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center, new Vector2(0, -1).RotatedBy(i * (MathHelper.PiOver2 / 3)) * 4, ModContent.ProjectileType<CursedSpiritFlame>(), (int)(NPC.damage * 0.8f), 1, ai0: 30, ai1: body.player.MountedCenter.X - NPC.Center.X, ai2: body.player.MountedCenter.Y - NPC.Center.Y);
+                        var proj = Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center, -Vector2.UnitY.RotatedBy(i * (MathHelper.PiOver2 / 3)) * 4, ModContent.ProjectileType<CursedSpiritFlame>(), (int)(NPC.damage * 0.8f), 1, ai0: 30, ai1: body.player.MountedCenter.X - NPC.Center.X, ai2: body.player.MountedCenter.Y - NPC.Center.Y);
                         CursedSpiritFlame CursedSpiritFlame = (CursedSpiritFlame)proj.ModProjectile;
                         CursedSpiritFlame.speed = 10;
                     }
@@ -398,7 +398,7 @@ namespace Paracosm.Content.Bosses.InfectedRevenant
                 {
                     for (int i = 0; i < 8; i++)
                     {
-                        Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, new Vector2(0, -1).RotatedBy(i * MathHelper.PiOver4) * 20, ProjectileID.CursedFlameHostile, (int)(NPC.damage * 0.8f), 10);
+                        Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, -Vector2.UnitY.RotatedBy(i * MathHelper.PiOver4) * 20, ProjectileID.CursedFlameHostile, (int)(NPC.damage * 0.8f), 10);
                     }
                 }
             }
@@ -514,7 +514,7 @@ namespace Paracosm.Content.Bosses.InfectedRevenant
                         {
                             for (int i = -1; i < 2; i++)
                             {
-                                Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, new Vector2(0, 1).RotatedBy(i * 0.6f * (MathHelper.PiOver4 / 4)).RotatedBy(MathHelper.PiOver4) * 160f, ModContent.ProjectileType<CursedFlamethrower>(), (int)(NPC.damage * 0.8f), 1);
+                                Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, Vector2.UnitY.RotatedBy(i * 0.6f * (MathHelper.PiOver4 / 4)).RotatedBy(MathHelper.PiOver4) * 160f, ModContent.ProjectileType<CursedFlamethrower>(), (int)(NPC.damage * 0.8f), 1);
                             }
                         }
                         AttackTimer = FlameChaseCD;
@@ -535,7 +535,7 @@ namespace Paracosm.Content.Bosses.InfectedRevenant
                         {
                             for (int i = -1; i < 2; i++)
                             {
-                                Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, new Vector2(0, 1).RotatedBy(i * 0.6f * (MathHelper.PiOver4 / 4)).RotatedBy(MathHelper.ToRadians(AttackCount)) * 160f, ModContent.ProjectileType<CursedFlamethrower>(), (int)(NPC.damage * 0.8f), 1);
+                                Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, Vector2.UnitY.RotatedBy(i * 0.6f * (MathHelper.PiOver4 / 4)).RotatedBy(MathHelper.ToRadians(AttackCount)) * 160f, ModContent.ProjectileType<CursedFlamethrower>(), (int)(NPC.damage * 0.8f), 1);
                             }
                         }
                         AttackCount += 9;
@@ -556,7 +556,7 @@ namespace Paracosm.Content.Bosses.InfectedRevenant
                         {
                             for (int i = -1; i < 2; i++)
                             {
-                                Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, new Vector2(-1, 0).RotatedBy(i * 0.6f * (MathHelper.PiOver4 / 4)) * 160f, ModContent.ProjectileType<CursedFlamethrower>(), (int)(NPC.damage * 0.8f), 1);
+                                Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, -Vector2.UnitX.RotatedBy(i * 0.6f * (MathHelper.PiOver4 / 4)) * 160f, ModContent.ProjectileType<CursedFlamethrower>(), (int)(NPC.damage * 0.8f), 1);
                             }
                         }
                         AttackTimer = FlameChaseCD;
@@ -576,7 +576,7 @@ namespace Paracosm.Content.Bosses.InfectedRevenant
                         {
                             for (int i = -1; i < 2; i++)
                             {
-                                Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, new Vector2(-1, 0).RotatedBy(i * 0.6f * (MathHelper.PiOver4 / 4)) * 160f, ModContent.ProjectileType<CursedFlamethrower>(), (int)(NPC.damage * 0.8f), 1);
+                                Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, -Vector2.UnitX.RotatedBy(i * 0.6f * (MathHelper.PiOver4 / 4)) * 160f, ModContent.ProjectileType<CursedFlamethrower>(), (int)(NPC.damage * 0.8f), 1);
                             }
                         }
                         AttackTimer = FlameChaseCD;

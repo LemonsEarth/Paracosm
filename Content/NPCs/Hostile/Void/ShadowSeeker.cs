@@ -1,13 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
-using Paracosm.Content.Biomes.Overworld;
 using Paracosm.Content.Biomes.Void;
-using Paracosm.Content.Items.Materials;
-using Paracosm.Content.Items.Placeable;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.Audio;
 using Terraria.GameContent.Bestiary;
-using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 using Terraria.ModLoader;
 

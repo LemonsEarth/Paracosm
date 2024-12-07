@@ -15,6 +15,12 @@
 	  <None Remove="Content\Bosses\NebulaMaster\NebulaMaster_Head_Boss.png" />
 	  <None Remove="Content\Shaders\DarknessShader.fx" />
 	  <None Remove="Assets\Textures\Backgrounds\VoidSky_Background.png" />
+	  <None Remove="Localization\en-US\Mods.Paracosm.Biomes.hjson" />
+	  <None Remove="Localization\en-US\Mods.Paracosm.Buffs.hjson" />
+	  <None Remove="Localization\en-US\Mods.Paracosm.Items.hjson" />
+	  <None Remove="Localization\en-US\Mods.Paracosm.Keybinds.hjson" />
+	  <None Remove="Localization\en-US\Mods.Paracosm.NPCs.hjson" />
+	  <None Remove="Localization\en-US\Mods.Paracosm.Subworlds.hjson" />
 	</ItemGroup>
 	<ItemGroup>
 	  <Folder Include="lib\" />

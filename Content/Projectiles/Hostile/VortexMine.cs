@@ -1,9 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Paracosm.Common.Utils;
 using Terraria;
 using Terraria.Audio;
-using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -54,7 +52,7 @@ namespace Paracosm.Content.Projectiles.Hostile
             }
             if (AITimer == 0)
             {
-                SoundEngine.PlaySound(SoundID.Zombie67 with { Volume = 0.5f});
+                SoundEngine.PlaySound(SoundID.Zombie67 with { Volume = 0.5f });
             }
             Projectile.velocity = Vector2.Lerp(Projectile.velocity, Vector2.Zero, AITimer / 180);
             Projectile.rotation = MathHelper.ToRadians(AITimer * Projectile.velocity.Length());

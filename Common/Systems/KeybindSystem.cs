@@ -1,5 +1,4 @@
-﻿using Paracosm.Content.Items.Armor.Celestial;
-using Terraria.ModLoader;
+﻿using Terraria.ModLoader;
 
 namespace Paracosm.Common.Systems
 {

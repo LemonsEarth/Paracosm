@@ -1,7 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
-using Paracosm.Common.Utils;
 using Terraria;
-using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 

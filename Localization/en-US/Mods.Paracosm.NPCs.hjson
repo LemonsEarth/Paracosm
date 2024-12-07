@@ -1,0 +1,47 @@
+# This file will automatically update with entries for new content after a build and reload.
+
+DivineSeeker: {
+	DisplayName: Divine Seeker
+	BossChecklistCompatibility.SpawnInfo: Use a [i:Paracosm/CosmicDust] at night
+	Bestiary: A monster who arrived from a different world. Though feral in nature, it possesses high intelligence, suggesting its arrival was not without purpose.
+}
+
+InfectedRevenantBody: {
+	DisplayName: Infected Revenant
+	BossChecklistCompatibility.SpawnInfo: Use a [i:Paracosm/AncientCallingHorn] at night in the Corruption or Crimson
+	Bestiary: The infected remains of an ancient dragon, who cast aside his flesh to traverse a different realm.
+}
+
+SolarChampion: {
+	DisplayName: Solar Champion
+	BossChecklistCompatibility.SpawnInfo: Use a [i:Paracosm/ChallengersSeal]
+	Bestiary: The Legend of the Celestial Colosseum, this fallen warrior fought hundreds of foes thoughout his life and lost only once, now twice.
+}
+
+Wanderer.DisplayName: Wanderer
+ParastoneRoller.DisplayName: Parastone Roller
+InfectedRevenantCorruptHead.DisplayName: Infected Revenant
+InfectedRevenantCrimsonHead.DisplayName: Infected Revenant
+InfectedRevenantWings.DisplayName: ""
+
+VortexMothership: {
+	DisplayName: Vortex Mothership
+	BossChecklistCompatibility.SpawnInfo: Use a [i:Paracosm/StarSpanCommunicator]
+	Bestiary: The vortex legion has ruled the majority of the galaxy for millennia. The wrath of this faction has been witnessed first hand by almost every living being, and they won't take kindly to your destruction of their vessel.
+}
+
+VortexTeslaGun.DisplayName: " "
+VortexUFO.DisplayName: Vortex U F O
+ShadowSeeker.DisplayName: Shadow Seeker
+
+NebulaMaster: {
+	DisplayName: Nebula Master
+
+	Dialogue: {
+		Intro0: Let's get things started.
+		intro1: Domain Expansion: Infinite Backshots
+		Intro2: YOSHAA!
+		Intro3: Hello monkeys!
+		Intro4: We Nebulans have no limits!
+	}
+}

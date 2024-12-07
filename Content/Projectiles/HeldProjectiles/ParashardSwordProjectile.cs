@@ -83,7 +83,7 @@ namespace Paracosm.Content.Projectiles.HeldProjectiles
                 player.SetDummyItemTime(2);
                 Projectile.timeLeft = 120 + (int)(player.GetAttackSpeed(DamageClass.Melee) * 100 / 2);
                 Vector2 playerCenter = player.RotatedRelativePoint(player.MountedCenter);
-                Projectile.rotation = new Vector2(1, 0).RotatedBy(AITimer / 10 * attackSpeed * direction * player.GetAttackSpeed(DamageClass.Melee)).ToRotation();
+                Projectile.rotation = Vector2.UnitX.RotatedBy(AITimer / 10 * attackSpeed * direction * player.GetAttackSpeed(DamageClass.Melee)).ToRotation();
                 Projectile.Center = playerCenter + new Vector2(55, -55).RotatedBy(AITimer / 10 * attackSpeed * direction * player.GetAttackSpeed(DamageClass.Melee));
                 if (AITimer % 10 == 0)
                 {
@@ -122,7 +122,7 @@ namespace Paracosm.Content.Projectiles.HeldProjectiles
                         }
                     }
                 }
-                Projectile.rotation = new Vector2(1, 0).RotatedBy(AITimer / 10 * attackSpeed * direction * player.GetAttackSpeed(DamageClass.Melee)).ToRotation();
+                Projectile.rotation = Vector2.UnitX.RotatedBy(AITimer / 10 * attackSpeed * direction * player.GetAttackSpeed(DamageClass.Melee)).ToRotation();
             }
 
             if (AITimer % 10 == 0)

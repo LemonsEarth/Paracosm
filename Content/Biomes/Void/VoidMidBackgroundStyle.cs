@@ -1,10 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using Paracosm.Common.Systems;
-using Paracosm.Content.Subworlds;
-using SubworldLibrary;
-using Terraria;
-using Terraria.Graphics.Effects;
-using Terraria.ModLoader;
+﻿using Terraria.ModLoader;
 
 namespace Paracosm.Content.Biomes.Void
 {

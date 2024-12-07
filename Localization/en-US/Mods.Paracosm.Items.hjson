@@ -1,0 +1,532 @@
+# This file will automatically update with entries for new content after a build and reload.
+Parashard: {
+	DisplayName: Parashard
+	Tooltip:
+		'''
+		A shard from another world
+		Its potential is yet to be unleashed
+		'''
+}
+
+ParashardSword: {
+	DisplayName: Parashard Sword
+	Tooltip:
+		'''
+		Holding the attack button swings the sword around you
+		Releasing the attack button throws the sword to your mouse cursor
+		'''
+}
+
+DivineSeekerBossBag: {
+	DisplayName: Treasure Bag (Divine Seeker)
+	Tooltip: "{$CommonItemTooltip.RightClickToOpen}"
+}
+
+GravityBarrage: {
+	DisplayName: Gravity Barrage
+	Tooltip: Lifts rocks from below you and hurls them at enemies
+}
+
+ParacosmicFurnace: {
+	DisplayName: Paracosmic Furnace
+	Tooltip:
+		'''
+		A powerful flamethrower which inflicts Paracosmic Burn
+		Occasionally fires homing fireballs
+		'''
+}
+
+ParashardSigil: {
+	DisplayName: Parashard Sigil
+	Tooltip:
+		'''
+		{$CommonItemTooltip.PercentIncreasedDamage}
+		{$CommonItemTooltip.PercentIncreasedCritChance@1}
+		Increases life regeneration by {3}
+		Taking damage creates vengeful flames whose damage scales based on damage taken
+		'''
+}
+
+ParacosmicEyeStaff: {
+	DisplayName: Paracosmic Eye Staff
+	Tooltip: Summons a paracosmic eye to fight for you
+}
+
+Uragan: {
+	DisplayName: Uragan
+	Tooltip:
+		'''
+		Creates wind slashes around you
+		Releasing the attack button launches all wind slashes towards your mouse cursor
+		Holding the attack button again resets their behaviour
+		'''
+}
+
+WindWarriorBreastplate: {
+	DisplayName: Wind Warrior Breastplate
+	Tooltip:
+		'''
+		{$CommonItemTooltip.PercentIncreasedDamage}
+		{$CommonItemTooltip.PercentReducedManaCost@1}
+		Increases flight time by 50%
+		"Armor piece of a mighty soldier, who once served a higher being"
+		'''
+}
+
+WindWarriorLeggings: {
+	DisplayName: Wind Warrior Leggings
+	Tooltip:
+		'''
+		{$CommonItemTooltip.PercentIncreasedCritChance}
+		{$CommonItemTooltip.PercentIncreasedMovementSpeed@1}
+		Increases jump speed
+		"Armor piece of a mighty soldier, who once served a higher being"
+		'''
+}
+
+WindWarriorHeadgear: {
+	DisplayName: Wind Warrior Headgear
+	Tooltip:
+		'''
+		{$CommonItemTooltip.PercentIncreasedDamage}
+		{$CommonItemTooltip.IncreasesMaxMinionsBy@1}
+		"Armor piece of a mighty soldier, who once served a higher being"
+		'''
+	SetBonus:
+		'''
+		Increases damage by {0}%
+		Increases critical strike chance by {1}%
+		Further increases damage based on vertical velocity
+		'''
+}
+
+ParacosmicChestplate: {
+	DisplayName: Paracosmic Chestplate
+	Tooltip:
+		'''
+		{$CommonItemTooltip.PercentIncreasedDamage}
+		{$CommonItemTooltip.PercentIncreasedCritChance@1}
+		{$CommonItemTooltip.ReducesDamageTakenByPercent@2}
+		'''
+}
+
+ParacosmicHelmet: {
+	DisplayName: Paracosmic Helmet
+	Tooltip:
+		'''
+		{$CommonItemTooltip.PercentIncreasedMeleeDamageCritChance}
+		{$CommonItemTooltip.PercentIncreasedRangedDamageCritChance}
+		'''
+	SetBonus:
+		'''
+		{$CommonItemTooltip.PercentIncreasedMeleeDamage}
+		{$CommonItemTooltip.PercentIncreasedRangedDamage}
+		{$CommonItemTooltip.PercentIncreasedRangedCritChance@1}
+		{$CommonItemTooltip.PercentIncreasedMeleeSpeed@2}
+		Getting below 50% health grants you {3} defense and {4}% damage reduction
+		'''
+}
+
+ParacosmicLeggings: {
+	DisplayName: Paracosmic Leggings
+	Tooltip:
+		'''
+		{$CommonItemTooltip.PercentIncreasedCritChance}
+		{$CommonItemTooltip.PercentIncreasedMovementSpeed@1}
+		'''
+}
+
+ParacosmicGoggles: {
+	DisplayName: Paracosmic Goggles
+	Tooltip:
+		'''
+		{$CommonItemTooltip.PercentIncreasedMagicDamage}
+		{$CommonItemTooltip.PercentIncreasedSummonDamage}
+		{$CommonItemTooltip.IncreasesMaxMinionsBy@1}
+		'''
+	SetBonus:
+		'''
+		{$CommonItemTooltip.PercentIncreasedMagicDamage}
+		{$CommonItemTooltip.PercentIncreasedSummonDamage}
+		{$CommonItemTooltip.PercentIncreasedMagicCritChance@1}
+		{$CommonItemTooltip.IncreasesMaxManaBy@2}
+		{$CommonItemTooltip.IncreasesMaxMinionsBy@3}
+		{$CommonItemTooltip.IncreasesMaxSentriesBy@4}
+		Increases damage by {5}% and reduces mana cost by {6}% when below 50% health
+		'''
+}
+
+CosmicDust: {
+	DisplayName: Cosmic Dust
+	Tooltip:
+		'''
+		Not Consumable
+		Attracts an otherworldly creature
+		'''
+}
+
+BadWeather: {
+	DisplayName: Bad Weather
+	Tooltip: Rains down projectiles at your cursor
+}
+
+CharmOfLife: {
+	DisplayName: Charm Of Life
+	Tooltip:
+		'''
+		{$CommonItemTooltip.IncreasesMaxLifeBy}
+		Increases life regeneration by {1}
+		Reduces duration of potion sickness
+		'''
+}
+
+ForestCrest: {
+	DisplayName: Forest Crest
+	Tooltip:
+		'''
+		{$CommonItemTooltip.IncreasesMaxSentriesBy}
+		{$CommonItemTooltip.PercentIncreasedMovementSpeed@1}
+		"Mark of a forgotten legion"
+		'''
+}
+
+RoundShield: {
+	DisplayName: Round Shield
+	Tooltip: Grants immunity to knockback
+}
+
+CorruptStaff: {
+	DisplayName: Corrupt Staff
+	Tooltip: Fires a 3 round burst of corrupt bolts
+}
+
+ChainsawGun: {
+	DisplayName: Chainsaw Gun
+	Tooltip: Fires saws!
+}
+
+Parastone: {
+	DisplayName: Parastone
+	Tooltip: Stone, influenced by the interdimensional tear
+}
+
+ParastoneWallItem: {
+	DisplayName: Parastone Wall
+	Tooltip: ""
+}
+
+ParastoneWallUnsafeItem: {
+	DisplayName: Parastone Wall (Unsafe)
+	Tooltip: ""
+}
+
+DemonCoin: {
+	DisplayName: Demon Coin
+	Tooltip: ""
+}
+
+Nightslash: {
+	DisplayName: Nightslash
+	Tooltip: '''"They never knew what hit them"'''
+}
+
+SunCoin: {
+	DisplayName: Sun Coin
+	Tooltip: Grants the player the "Happy!" buff
+}
+
+CosmicFlames: {
+	DisplayName: Cosmic Flames
+	Tooltip: Everlasting flames, fueled by space itself
+}
+
+PoisonBloomStaff: {
+	DisplayName: Poison Bloom Staff
+	Tooltip: Summons a stationary flower that fires poisonous seeds at enemies
+}
+
+FireBloomStaff: {
+	DisplayName: Fire Bloom Staff
+	Tooltip:
+		'''
+		Summons a stationary flower that lobs fireballs around itself
+		Attack speed increases the closer enemies are to the flower
+		'''
+}
+
+MoonBurstStaff: {
+	DisplayName: Moon Burst Staff
+	Tooltip:
+		'''
+		Summons a stationary flower that shoots a moonlight spark at enemies
+		The moonlight spark bursts into more moonlight sparks upon hitting an enemy
+		'''
+}
+
+AshenForestCrest: {
+	DisplayName: Ashen Forest Crest
+	Tooltip:
+		'''
+		{$CommonItemTooltip.IncreasesMaxSentriesBy}
+		{$CommonItemTooltip.PercentIncreasedSummonDamage@1}
+		{$CommonItemTooltip.PercentIncreasedMovementSpeed@2}
+		"Remains of a mark of a forgotten legion"
+		'''
+}
+
+TheGuardDuty: {
+	DisplayName: The Guard Duty
+	Tooltip: Rapidly fires stingers (and sometimes bees)
+}
+
+FocusBow: {
+	DisplayName: Focus Bow
+	Tooltip: Has a high base critical strike chance... after a while
+}
+
+ArchmageStaff: {
+	DisplayName: Archmage Staff
+	Tooltip: '''"The staff of the ultimate sorcerer..."'''
+}
+
+AncientCallingHorn: {
+	DisplayName: Ancient Calling Horn
+	Tooltip:
+		'''
+		Not Consumable
+		Summons the remains of an ancient deity when used in an Evil Biome at Night
+		'''
+}
+
+CorruptedDragonHeart: {
+	DisplayName: Corrupted Dragon Heart
+	Tooltip:
+		'''
+		{$CommonItemTooltip.IncreasesMaxLifeByPercent}
+		Grants immunity to Cursed Inferno and Ichor
+		All attacks inflict Cursed Inferno and Ichor
+		'''
+}
+
+InfectedRevenantBossBag: {
+	DisplayName: Treasure Bag (Infected Revenant)
+	Tooltip: "{$CommonItemTooltip.RightClickToOpen}"
+}
+
+DivineFlesh: {
+	DisplayName: Divine Flesh
+	Tooltip: Flesh carved off the remains of a deity
+}
+
+NightmareScale: {
+	DisplayName: Nightmare Scale
+	Tooltip: Scales peeled off the remains of a deity
+}
+
+LightsEnd: {
+	DisplayName: Light's End
+	Tooltip: Fires projectiles that create Shadow Slashes on hit
+}
+
+DivineTendonBow: {
+	DisplayName: Divine Tendon Bow
+	Tooltip: Every third shot fires 8 homing blood arrows
+}
+
+DivineSeekerRelic: {
+	DisplayName: Divine Seeker Relic
+	Tooltip: ""
+}
+
+ShadowBomber: {
+	DisplayName: Shadow Bomber
+	Tooltip:
+		'''
+		Fires a shadow orb that explodes into rockets
+		Fires homing rockets when used with Rocket IV's
+		'''
+}
+
+DefiledGlaive: {
+	DisplayName: Defiled Glaive
+	Tooltip: Spin the glaive every few strikes, giving it increased damage
+}
+
+ScarletRod: {
+	DisplayName: Scarlet Rod
+	Tooltip: ""
+}
+
+OccultFlames: {
+	DisplayName: Occult Flames
+	Tooltip: ""
+}
+
+CrimsonDragonStaff: {
+	DisplayName: Crimson Dragon Staff
+	Tooltip: Summons a baby Crimson Dragon to fight for you
+}
+
+CorruptDragonStaff: {
+	DisplayName: Corrupt Dragon Staff
+	Tooltip:
+		'''
+		Summons a baby Corrupt Dragon to fight for you
+		Requires 2 minion slots to use
+		'''
+}
+
+Sunblade: {
+	DisplayName: Sunblade
+	Tooltip: Shoots stars
+}
+
+PetalStaff: {
+	DisplayName: Petal Staff
+	Tooltip: ""
+}
+
+InfectedRevenantRelic: {
+	DisplayName: Infected Revenant Relic
+	Tooltip: ""
+}
+
+Solace: {
+	DisplayName: Solace
+	Tooltip: ""
+}
+
+LemonHead: {
+	Tooltip: Lemon Lemon
+	DisplayName: Lemon Head
+}
+
+CatHat: {
+	Tooltip: Cat hat for the Roy Boy
+	DisplayName: Cat Hat
+}
+
+HorizonSplitter: {
+	DisplayName: Horizon Splitter
+	Tooltip: ""
+}
+
+ChallengersSeal: {
+	DisplayName: Challenger's Seal
+	Tooltip:
+		'''
+		Not Consumable
+		Initiate a challenge towards the late Champion of the Celestial Colosseum
+		'''
+}
+
+ChampionsCrown: {
+	SetBonus:
+		'''
+		Press the "Champion's Crown" key to melt everything:
+			- Enemies around you explode
+			- You and all enemies are inflicted with Melted and Solar Burn
+			- Melted reduces defense to zero for its duration
+		This effect has a 90 second cooldown
+		'''
+	DisplayName: Champion's Crown
+	Tooltip:
+		'''
+		{$CommonItemTooltip.PercentIncreasedMeleeDamage}
+		{$CommonItemTooltip.PercentIncreasedMeleeCritChance@1}
+		{$CommonItemTooltip.PercentIncreasedMeleeSpeed@2}
+		Increases life regeneration by 2
+		'''
+}
+
+SolarChampionBossBag: {
+	DisplayName: Treasure Bag (Solar Champion)
+	Tooltip: "{$CommonItemTooltip.RightClickToOpen}"
+}
+
+TheCrucible: {
+	DisplayName: The Crucible
+	Tooltip:
+		'''
+		Hold LMB to charge explosions
+		Release to cast explosions at your cursor
+		"Don't hold it in for too long!"
+		'''
+}
+
+StarSpanCommunicator: {
+	DisplayName: Star-Span Communicator
+	Tooltip:
+		'''
+		Not Consumable
+		Attracts the wrath of a cosmic empire
+		'''
+}
+
+VortexMothershipBossBag: {
+	DisplayName: Treasure Bag (Vortex Mothership)
+	Tooltip: "{$CommonItemTooltip.RightClickToOpen}"
+}
+
+Hyperion: {
+	DisplayName: Hyperion
+	Tooltip: Fish!
+}
+
+SolarCore: {
+	DisplayName: Solar Core
+	Tooltip: The compressed core of a fallen star...
+}
+
+VortexianPlating: {
+	DisplayName: Vortexian Plating
+	Tooltip: The culmination of alien engineering...
+}
+
+VortexControlUnit: {
+	SetBonus:
+		'''
+		Press the "Vortex Control" key to force all your projectiles to home in on the cursor
+		This effect has an 80 second cooldown
+		'''
+	DisplayName: Vortex Control Unit
+	Tooltip:
+		'''
+		{$CommonItemTooltip.PercentIncreasedRangedDamage}
+		{$CommonItemTooltip.PercentIncreasedRangedCritChance@1}
+		{$CommonItemTooltip.PercentIncreasedMovementSpeed@2}
+		'''
+}
+
+RogueDefender: {
+	DisplayName: Rogue Defender
+	Tooltip:
+		'''
+		Summons Tesla Guns to defend you
+		Tesla Guns attack slower the faster you're moving, but get increased damage
+		'''
+}
+
+DarkMagicMirror: {
+	DisplayName: Dark Magic Mirror
+	Tooltip: Teleports you... somewhere else
+}
+
+RisingStar: {
+	DisplayName: Rising Star
+	Tooltip: ""
+}
+
+StarStormbow: {
+	DisplayName: Star Stormbow
+	Tooltip: ""
+}
+
+ArcaneTablet: {
+	DisplayName: Arcane Tablet
+	Tooltip:
+		'''
+		Not Consumable
+		Initiate a fight against a master martial artist
+		'''
+}

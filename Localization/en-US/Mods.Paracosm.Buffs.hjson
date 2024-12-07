@@ -1,0 +1,71 @@
+# This file will automatically update with entries for new content after a build and reload.
+
+ParacosmicEyeBuff: {
+	DisplayName: Paracosmic Eye Buff
+	Description: An otherworldly creature protects you...
+}
+
+ParacosmicBurn: {
+	DisplayName: Paracosmic Burn
+	Description: Your skin is burning into a different place...
+}
+
+ParacosmicHelmetBuff: {
+	DisplayName: Paracosmic Protection
+	Description: Increased defense and damage reduction
+}
+
+ParacosmicGogglesBuff: {
+	DisplayName: Paracosmic Assault
+	Description: Increased damage and decreased mana cost
+}
+
+Infected: {
+	DisplayName: Infected
+	Description: The infection is taking over your body
+}
+
+CrimsonDragonBuff: {
+	DisplayName: Crimson Dragon Buff
+	Description: The baby Crimson Dragon stays by your side
+}
+
+CorruptDragonBuff: {
+	DisplayName: Corrupt Dragon Buff
+	Description: The baby Corrupt Dragon stays by your side
+}
+
+SolarBurn: {
+	DisplayName: Solar Burn
+	Description: You feel like you are touching the sun...
+}
+
+MeltingDebuff: {
+	DisplayName: Melting
+	Description: Your armor is melting...
+}
+
+ChampionsCrownCooldown: {
+	DisplayName: Champions Crown Cooldown
+	Description: You can not use the Champion's Crown effect
+}
+
+VortexForceCooldown: {
+	DisplayName: Vortex Force Cooldown
+	Description: You're not in control
+}
+
+VortexForce: {
+	DisplayName: Vortex Force
+	Description: You're in control
+}
+
+TeslaGunMinionBuff: {
+	DisplayName: Tesla Guns
+	Description: Why use minion when gun do trick?
+}
+
+NebulousPower: {
+	DisplayName: Nebulous Power
+	Description: Cosmic powers course through you
+}

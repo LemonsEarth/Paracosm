@@ -79,7 +79,7 @@ namespace Paracosm.Content.Items.Consumables
                 else
                 {
                     SubworldSystem.Exit();
-                } 
+                }
             }
             animationTimer++;
         }

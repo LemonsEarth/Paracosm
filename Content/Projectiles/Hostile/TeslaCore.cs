@@ -46,7 +46,7 @@ namespace Paracosm.Content.Projectiles.Hostile
             {
                 for (int i = 0; i < 16; i++)
                 {
-                    Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, new Vector2(0, 1).RotatedBy(MathHelper.ToRadians(i * 22.5f + gunMod * 20)) * 3.5f, ModContent.ProjectileType<TeslaShot>(), Projectile.damage, Projectile.knockBack, ai1: 3f, ai2: 1);
+                    Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Vector2.UnitY.RotatedBy(MathHelper.ToRadians(i * 22.5f + gunMod * 20)) * 3.5f, ModContent.ProjectileType<TeslaShot>(), Projectile.damage, Projectile.knockBack, ai1: 3f, ai2: 1);
                 }
                 Projectile.netUpdate = true;
             }

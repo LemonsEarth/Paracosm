@@ -10,9 +10,9 @@ namespace Paracosm.Content.Items.Materials
         public override void SetStaticDefaults()
         {
             Item.ResearchUnlockCount = 100;
-            Main.RegisterItemAnimation(Item.type, new DrawAnimationVertical(6, 4));   
-			ItemID.Sets.ItemIconPulse[Item.type] = true;
-			ItemID.Sets.ItemNoGravity[Item.type] = true;
+            Main.RegisterItemAnimation(Item.type, new DrawAnimationVertical(6, 4));
+            ItemID.Sets.ItemIconPulse[Item.type] = true;
+            ItemID.Sets.ItemNoGravity[Item.type] = true;
         }
 
         public override void SetDefaults()

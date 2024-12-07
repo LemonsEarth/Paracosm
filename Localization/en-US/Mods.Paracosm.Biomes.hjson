@@ -1,0 +1,26 @@
+# This file will automatically update with entries for new content after a build and reload.
+
+ParacosmicDistortion: {
+	DisplayName: Paracosmic Distortion
+	TownNPCDialogueName: the Paracosmic Distortion
+}
+
+VoidSky: {
+	TownNPCDialogueName: the Void Sky
+	DisplayName: Void Sky
+}
+
+VoidHigh: {
+	DisplayName: Void High
+	TownNPCDialogueName: the Void High
+}
+
+VoidMid: {
+	DisplayName: Void Mid
+	TownNPCDialogueName: the Void Mid
+}
+
+VoidLow: {
+	DisplayName: Void Low
+	TownNPCDialogueName: the Void Low
+}
