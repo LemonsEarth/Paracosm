@@ -44,6 +44,11 @@ namespace Paracosm.Content.Projectiles.Hostile
                 SoundEngine.PlaySound(SoundID.Item20 with { MaxInstances = 2 });
             }
 
+            if (Main.npc[(int)NPCtoFollow] == null || !Main.npc[(int)NPCtoFollow].active)
+            {
+                Projectile.Kill();
+            }
+
             Projectile.velocity = Vector2.Zero;
             Projectile.Center = Main.npc[(int)NPCtoFollow].Center;
 
