@@ -10,6 +10,7 @@ using Paracosm.Content.Projectiles.Hostile;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.GameContent.Bestiary;
@@ -30,7 +31,7 @@ namespace Paracosm.Content.Bosses.NebulaMaster
             get { return NPC.ai[1]; }
             private set
             {
-                if (value > 1 || value < 0)
+                if (value > 2 || value < 0)
                 {
                     NPC.ai[1] = 0;
                 }
@@ -56,6 +57,8 @@ namespace Paracosm.Content.Bosses.NebulaMaster
         public Vector2 playerDirection { get; private set; }
         Vector2 targetPosition = Vector2.Zero;
         float arenaDistance = 0;
+        Vector2 arenaCenter = Vector2.Zero;
+        bool arenaFollow = true;
         bool spawnedAura = false;
 
         List<Projectile> Spheres = new List<Projectile>();
@@ -63,13 +66,15 @@ namespace Paracosm.Content.Bosses.NebulaMaster
         {
             {"Sphere", ModContent.ProjectileType<BorderSphere>()},
             {"SpeedFlames",  ModContent.ProjectileType<SpeedyNebulousFlames>()},
-            {"Aura", ModContent.ProjectileType<NebulousAuraHostile>()}
+            {"Aura", ModContent.ProjectileType<NebulousAuraHostile>()},
+            {"Beam", ModContent.ProjectileType<NebulaBeam>()}
         };
 
         public enum Attacks
         {
             SpeedingFlames,
-            RapidDashes
+            RapidDashes,
+            FlameBeamCombo
         }
 
         public enum Attacks2
@@ -144,6 +149,9 @@ namespace Paracosm.Content.Bosses.NebulaMaster
             writer.Write(phase2FirstTime);
             writer.Write(AttackTimer2);
             writer.Write(AttackCount2);
+            writer.Write(arenaCenter.X);
+            writer.Write(arenaCenter.Y);
+            writer.Write(arenaFollow);
             writer.Write(spawnedAura);
         }
 
@@ -156,7 +164,10 @@ namespace Paracosm.Content.Bosses.NebulaMaster
             phase2FirstTime = reader.ReadBoolean();
             AttackTimer2 = reader.ReadInt32();
             AttackCount2 = reader.ReadInt32();
+            arenaFollow = reader.ReadBoolean();
             spawnedAura = reader.ReadBoolean();
+            arenaCenter.X = reader.ReadSingle();
+            arenaCenter.Y = reader.ReadSingle();
         }
 
         public override void AI()
@@ -179,11 +190,6 @@ namespace Paracosm.Content.Bosses.NebulaMaster
             }
 
             Lighting.AddLight(NPC.Center, 100, 100, 100);
-
-            if (!Terraria.Graphics.Effects.Filters.Scene["ScreenTintShader"].IsActive() && Main.netMode != NetmodeID.Server)
-            {
-                Terraria.Graphics.Effects.Filters.Scene.Activate("ScreenTintShader").GetShader().UseColor(new Color(255, 230, 255));
-            }
 
             NPC.spriteDirection = -Math.Sign(playerDirection.X);
 
@@ -230,6 +236,9 @@ namespace Paracosm.Content.Bosses.NebulaMaster
                     case (int)Attacks.RapidDashes:
                         RapidDashes();
                         break;
+                    case (int)Attacks.FlameBeamCombo:
+                        FlameBeamCombo();
+                        break;
                 }
             }
 
@@ -257,7 +266,6 @@ namespace Paracosm.Content.Bosses.NebulaMaster
             NPC.Opacity += 1f / 20f;
             Attack = 0;
             attackDuration = attackDurations[(int)Attack];
-            Terraria.Graphics.Effects.Filters.Scene["ScreenTintShader"].GetShader().UseProgress(AITimer / 60);
         }
 
         void SwitchAttacks()
@@ -357,6 +365,63 @@ namespace Paracosm.Content.Bosses.NebulaMaster
             AttackTimer--;
         }
 
+        const int FB_COMBO_POS_COOLDOWN = 180;
+        const int FB_COMBO_START_TIME = 120;
+        const int FB_COMBO_FLAME_COOLDOWN = 5;
+        const int FB_COMBO_MAX_FLAME_COUNT = 8;
+        const int FB_COMBO_LASER_POS_TIME = 60;
+        const int FB_COMBO_LASER_TIME = 30;
+        void FlameBeamCombo()
+        {
+            for (int i = 0; i < 64; i++)
+            {
+                Vector2 dustPos = arenaCenter + (Vector2.UnitY * FB_COMBO_ARENA_DISTANCE * 0.75f).RotatedBy(MathHelper.ToRadians(i * 360f/64f));
+                Dust dust = Dust.NewDustDirect(dustPos, 1, 1, DustID.GemDiamond);
+                dust.noGravity = true;
+            }
+            switch (AttackTimer)
+            {
+                case FB_COMBO_POS_COOLDOWN:
+                    if (Main.netMode != NetmodeID.MultiplayerClient)
+                    {
+                        targetPosition = arenaCenter + new Vector2(Main.rand.NextFloat(-FB_COMBO_ARENA_DISTANCE * 0.75f, FB_COMBO_ARENA_DISTANCE * 0.75f), Main.rand.NextFloat(-FB_COMBO_ARENA_DISTANCE * 0.75f, FB_COMBO_ARENA_DISTANCE * 0.75f));
+                        NPC.netUpdate = true;
+                    }
+                    break;
+                case > FB_COMBO_START_TIME:
+                    MoveToPos(targetPosition, 1.2f, 1.2f, 2, 2);
+                    break;
+                case 0:
+                    AttackTimer = FB_COMBO_POS_COOLDOWN + 1;
+                    AttackCount = 0;
+                    break;
+                case <= FB_COMBO_START_TIME:
+                    NPC.velocity = Vector2.Zero;
+                    if (AttackTimer % FB_COMBO_FLAME_COOLDOWN == 0 && AttackCount < FB_COMBO_MAX_FLAME_COUNT)
+                    {
+                        if (Main.netMode != NetmodeID.MultiplayerClient)
+                        {
+                            Vector2 direction = playerDirection.RotatedBy(-MathHelper.PiOver2).SafeNormalize(Vector2.Zero).RotatedBy(MathHelper.ToRadians(AttackCount * 15));
+                            Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, direction * 2, Proj["SpeedFlames"], NPC.damage / 2, 1, ai0: 30, ai1: 25, ai2: 1);
+                        }
+                        AttackCount++;
+                    }
+                    if (AttackTimer == FB_COMBO_LASER_POS_TIME)
+                    {
+                        targetPosition = playerDirection;
+                    }
+                    if (AttackTimer == FB_COMBO_LASER_TIME)
+                    {
+                        if (Main.netMode != NetmodeID.MultiplayerClient)
+                        {
+                            Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, targetPosition.SafeNormalize(Vector2.Zero), Proj["Beam"], NPC.damage * 2, 1, ai0: 100, ai1: 0);
+                        }
+                    }
+                    break;
+            }
+            AttackTimer--;
+        }
+
         void MoveToPos(Vector2 pos, float xAccel = 1f, float yAccel = 1f, float xSpeed = 1f, float ySpeed = 1f)
         {
             Vector2 direction = NPC.Center.DirectionTo(pos);
@@ -365,9 +430,19 @@ namespace Paracosm.Content.Bosses.NebulaMaster
             NPC.velocity += new Vector2(XaccelMod * xAccel + xSpeed * Math.Sign(direction.X), YaccelMod * yAccel + ySpeed * Math.Sign(direction.Y));
         }
 
-        const float BaseArenaDistance = 3500;
+        const float BASE_ARENA_DISTANCE = 3000;
+        const float FB_COMBO_ARENA_DISTANCE = 1000;
         public void Arena()
         {
+            float targetArenaDistance = BASE_ARENA_DISTANCE;
+            arenaFollow = true;
+            switch (Attack)
+            {
+                case (int)Attacks.FlameBeamCombo:
+                    targetArenaDistance = FB_COMBO_ARENA_DISTANCE;
+                    arenaFollow = false;
+                    break;
+            }
             if (Main.netMode != NetmodeID.MultiplayerClient)
             {
                 if (Spheres.Count < 40)
@@ -382,9 +457,14 @@ namespace Paracosm.Content.Bosses.NebulaMaster
                 }
             }
 
+            if (arenaFollow)
+            {
+                arenaCenter = NPC.Center;
+            }
+
             for (int i = 0; i < Spheres.Count; i++)
             {
-                Vector2 pos = NPC.Center + new Vector2(0, -arenaDistance).RotatedBy(i * MathHelper.ToRadians(9)).RotatedBy(MathHelper.ToRadians(AITimer));
+                Vector2 pos = arenaCenter + new Vector2(0, -arenaDistance).RotatedBy(i * MathHelper.ToRadians(9)).RotatedBy(MathHelper.ToRadians(AITimer));
                 if (Spheres[i].type != Proj["Sphere"])
                 {
                     continue;
@@ -392,19 +472,17 @@ namespace Paracosm.Content.Bosses.NebulaMaster
                 Spheres[i].velocity = (pos - Spheres[i].position).SafeNormalize(Vector2.Zero) * (Spheres[i].position.Distance(pos) / 50);
                 Spheres[i].timeLeft = 180;
             }
-            if (arenaDistance < BaseArenaDistance)
-            {
-                arenaDistance += BaseArenaDistance / (INTRO_DURATION / 3);
-            }
+
+            arenaDistance += ((targetArenaDistance - arenaDistance) / 60);
 
             foreach (var player in Main.ActivePlayers)
             {
-                if (NPC.Center.Distance(player.MountedCenter) > arenaDistance + 50 && AITimer > INTRO_DURATION + 30)
+                if (arenaCenter.Distance(player.MountedCenter) > arenaDistance + 50 && AITimer > INTRO_DURATION + 30)
                 {
                     player.AddBuff(ModContent.BuffType<Infected>(), 2);
                 }
 
-                if (NPC.Center.Distance(player.MountedCenter) < arenaDistance + 50 && AITimer > INTRO_DURATION - 60)
+                if (arenaCenter.Distance(player.MountedCenter) < arenaDistance + 50 && AITimer > INTRO_DURATION - 60)
                 {
                     player.AddBuff(ModContent.BuffType<NebulousPower>(), 2);
                 }
@@ -425,12 +503,6 @@ namespace Paracosm.Content.Bosses.NebulaMaster
         public override bool CheckActive()
         {
             return false;
-        }
-
-        public override bool CheckDead()
-        {
-            Terraria.Graphics.Effects.Filters.Scene.Deactivate("ScreenTintShader");
-            return true;
         }
 
         public override bool? CanFallThroughPlatforms()

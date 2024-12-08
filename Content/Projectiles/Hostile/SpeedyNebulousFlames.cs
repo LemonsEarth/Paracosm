@@ -54,8 +54,7 @@ namespace Paracosm.Content.Projectiles.Hostile
                 {
                     if (Main.netMode != NetmodeID.MultiplayerClient)
                     {
-                        Vector2 indicatorDistancePos = Projectile.Center + Projectile.velocity.SafeNormalize(Vector2.Zero) * 64 * 50;
-                        Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Projectile.velocity.SafeNormalize(Vector2.Zero) / 10, ModContent.ProjectileType<IndicatorLaser>(), 10, 0, ai1: indicatorDistancePos.X, ai2: indicatorDistancePos.Y);
+                        Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Projectile.velocity.SafeNormalize(Vector2.Zero), ModContent.ProjectileType<IndicatorLaser>(), 0, 1, ai0: 50);
                     }
                 }
             }

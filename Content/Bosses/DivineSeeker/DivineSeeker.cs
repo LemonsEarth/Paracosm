@@ -237,10 +237,6 @@ namespace Paracosm.Content.Bosses.DivineSeeker
                     {
                         Attack = 4;
                     }
-                    else if (AITimerA >= 1920 && AITimerA < 2280)
-                    {
-                        Attack = 5;
-                    }
                     else
                     {
                         Attack = 0;
@@ -497,7 +493,7 @@ namespace Paracosm.Content.Bosses.DivineSeeker
                         indicatorTimer++;
                     }
 
-                    if (AITimerA > 2280)
+                    if (AITimerA > 1890)
                     {
 
                         AITimerA = 0;
@@ -915,42 +911,24 @@ namespace Paracosm.Content.Bosses.DivineSeeker
                         if (indicatorTimer == 1 && Main.netMode != NetmodeID.MultiplayerClient)
                         {
                             tempPlayerCenter = player.MountedCenter;
-                            for (int i = 0; i < 16; i++)
-                            {
-                                Projectile.NewProjectile(NPC.GetSource_FromAI(), tempPlayerCenter + new Vector2(-1200, i * 150), Vector2.UnitX / 10, ModContent.ProjectileType<IndicatorLaser>(), 0, 0, ai1: tempPlayerCenter.X + 1200, ai2: tempPlayerCenter.Y + i * 150);
-                            }
-                            for (int i = 1; i < 16; i++)
-                            {
-                                Projectile.NewProjectile(NPC.GetSource_FromAI(), tempPlayerCenter + new Vector2(-1200, -i * 150), Vector2.UnitX / 10, ModContent.ProjectileType<IndicatorLaser>(), 0, 0, ai1: tempPlayerCenter.X + 1200, ai2: tempPlayerCenter.Y + -i * 150);
-                            }
-                            for (int i = 0; i < 20; i++)
-                            {
-                                Projectile.NewProjectile(NPC.GetSource_FromAI(), tempPlayerCenter + new Vector2(i * 150, -1000), Vector2.UnitY / 10, ModContent.ProjectileType<IndicatorLaser>(), 0, 0, ai2: tempPlayerCenter.Y + 1000, ai1: tempPlayerCenter.X + i * 150);
-                            }
-                            for (int i = 0; i < 20; i++)
-                            {
-                                Projectile.NewProjectile(NPC.GetSource_FromAI(), tempPlayerCenter + new Vector2(-i * 150, -1000), Vector2.UnitY / 10, ModContent.ProjectileType<IndicatorLaser>(), 0, 0, ai2: tempPlayerCenter.Y + 1000, ai1: tempPlayerCenter.X + -i * 150);
-
-                            }
-                            NPC.netUpdate = true;
                         }
                         if (indicatorTimer == 45 && Main.netMode != NetmodeID.MultiplayerClient)
                         {
                             for (int i = 0; i < 16; i++)
                             {
-                                Projectile.NewProjectile(NPC.GetSource_FromAI(), tempPlayerCenter + new Vector2(-1200, i * 150), new Vector2(40, 0), ModContent.ProjectileType<BlueLaser>(), damage / 2, 3);
+                                Projectile.NewProjectile(NPC.GetSource_FromAI(), tempPlayerCenter + new Vector2(-1200, i * 150), new Vector2(10, 0), ModContent.ProjectileType<BlueLaser>(), damage / 2, 3);
                             }
                             for (int i = 1; i < 16; i++)
                             {
-                                Projectile.NewProjectile(NPC.GetSource_FromAI(), tempPlayerCenter + new Vector2(-1200, -i * 150), new Vector2(40, 0), ModContent.ProjectileType<BlueLaser>(), damage / 2, 3);
+                                Projectile.NewProjectile(NPC.GetSource_FromAI(), tempPlayerCenter + new Vector2(-1200, -i * 150), new Vector2(10, 0), ModContent.ProjectileType<BlueLaser>(), damage / 2, 3);
                             }
                             for (int i = 0; i < 20; i++)
                             {
-                                Projectile.NewProjectile(NPC.GetSource_FromAI(), tempPlayerCenter + new Vector2(i * 150, -1000), new Vector2(0, 40), ModContent.ProjectileType<BlueLaser>(), damage / 2, 3);
+                                Projectile.NewProjectile(NPC.GetSource_FromAI(), tempPlayerCenter + new Vector2(i * 150, -1000), new Vector2(0, 10), ModContent.ProjectileType<BlueLaser>(), damage / 2, 3);
                             }
                             for (int i = 0; i < 20; i++)
                             {
-                                Projectile.NewProjectile(NPC.GetSource_FromAI(), tempPlayerCenter + new Vector2(-i * 150, -1000), new Vector2(0, 40), ModContent.ProjectileType<BlueLaser>(), damage / 2, 3);
+                                Projectile.NewProjectile(NPC.GetSource_FromAI(), tempPlayerCenter + new Vector2(-i * 150, -1000), new Vector2(0, 10), ModContent.ProjectileType<BlueLaser>(), damage / 2, 3);
                             }
                             NPC.netUpdate = true;
                         }

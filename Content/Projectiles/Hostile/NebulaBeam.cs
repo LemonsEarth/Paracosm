@@ -6,7 +6,7 @@ using Terraria.ModLoader;
 
 namespace Paracosm.Content.Projectiles.Hostile
 {
-    public class VortexLaser : ModProjectile
+    public class NebulaBeam : ModProjectile
     {
         float AITimer = 0;
         ref float SegmentCount => ref Projectile.ai[0];
@@ -20,8 +20,8 @@ namespace Paracosm.Content.Projectiles.Hostile
 
         public override void SetDefaults()
         {
-            Projectile.width = 50;
-            Projectile.height = 50;
+            Projectile.width = 42;
+            Projectile.height = 42;
             Projectile.hostile = true;
             Projectile.friendly = false;
             Projectile.ignoreWater = true;
@@ -35,7 +35,7 @@ namespace Paracosm.Content.Projectiles.Hostile
             if (AITimer == 0)
             {
                 Projectile.Opacity = 0;
-                SoundEngine.PlaySound(SoundID.Zombie104 with { MaxInstances = 1, SoundLimitBehavior = SoundLimitBehavior.ReplaceOldest });
+                SoundEngine.PlaySound(SoundID.Zombie104 with { MaxInstances = 1, SoundLimitBehavior = SoundLimitBehavior.ReplaceOldest});
                 Projectile.rotation = Projectile.velocity.ToRotation();
                 direction = Projectile.velocity.SafeNormalize(Vector2.Zero);
                 Projectile.frame = (int)SegmentFrame;
@@ -74,11 +74,6 @@ namespace Paracosm.Content.Projectiles.Hostile
             Projectile.velocity = Vector2.Zero;
 
             AITimer++;
-        }
-
-        public override void OnHitPlayer(Player target, Player.HurtInfo info)
-        {
-            target.AddBuff(BuffID.VortexDebuff, 120);
         }
     }
 }

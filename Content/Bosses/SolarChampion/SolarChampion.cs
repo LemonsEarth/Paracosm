@@ -503,8 +503,7 @@ namespace Paracosm.Content.Bosses.SolarChampion
                 {
                     for (int i = -1; i < 2; i += 2)
                     {
-                        Vector2 indicatorDistancePos = NPC.Center + new Vector2(0, i * arenaDistance);
-                        Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, i * Vector2.UnitY / 10, ModContent.ProjectileType<IndicatorLaser>(), 10, 0, ai1: indicatorDistancePos.X, ai2: indicatorDistancePos.Y);
+                        Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, Vector2.UnitY * i, ModContent.ProjectileType<IndicatorLaser>(), 0, 1, ai0: 50);
                     }
                 }
             }
@@ -747,7 +746,7 @@ namespace Paracosm.Content.Bosses.SolarChampion
                     for (int i = -1; i < 2; i += 2)
                     {
                         Vector2 indicatorDistancePos = NPC.Center + new Vector2(0, i * arenaDistance);
-                        Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, i * Vector2.UnitY / 10, ModContent.ProjectileType<IndicatorLaser>(), 10, 0, ai1: indicatorDistancePos.X, ai2: indicatorDistancePos.Y);
+                        Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, Vector2.UnitY * i, ModContent.ProjectileType<IndicatorLaser>(), 0, 1, ai0: 50);
                     }
                 }
             }
