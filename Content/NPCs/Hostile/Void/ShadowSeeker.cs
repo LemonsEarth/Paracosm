@@ -56,6 +56,7 @@ namespace Paracosm.Content.NPCs.Hostile.Void
 
             if (AITimer == 0)
             {
+                SoundEngine.PlaySound(SoundID.DD2_EtherianPortalSpawnEnemy, NPC.Center);
                 if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
                     DoDeath = Main.rand.Next(0, 2);

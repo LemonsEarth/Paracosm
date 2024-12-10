@@ -26,7 +26,7 @@ namespace Paracosm.Content.Bosses.VortexMothership
             get { return NPC.ai[1]; }
             private set
             {
-                int maxVal = phase == 2 ? 2 : 3;
+                int maxVal = phase == 1 ? 3 : 2;
                 if (value > maxVal || value < 0)
                 {
                     NPC.ai[1] = 0;

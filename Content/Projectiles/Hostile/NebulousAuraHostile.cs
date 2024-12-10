@@ -41,16 +41,18 @@ namespace Paracosm.Content.Projectiles.Hostile
             }
             if (AITimer == 0)
             {
-                SoundEngine.PlaySound(SoundID.Item20 with { MaxInstances = 2 });
+                SoundEngine.PlaySound(SoundID.Item84 with { MaxInstances = 2, PitchRange = (-0.5f, 0f)});
             }
 
-            if (Main.npc[(int)NPCtoFollow] == null || !Main.npc[(int)NPCtoFollow].active)
+            if (NPCtoFollow != -1)
             {
-                Projectile.Kill();
+                if (Main.npc[(int)NPCtoFollow] == null || !Main.npc[(int)NPCtoFollow].active)
+                {
+                    Projectile.Kill();
+                }
+                Projectile.velocity = Vector2.Zero;
+                Projectile.Center = Main.npc[(int)NPCtoFollow].Center;
             }
-
-            Projectile.velocity = Vector2.Zero;
-            Projectile.Center = Main.npc[(int)NPCtoFollow].Center;
 
             Lighting.AddLight(Projectile.Center, 100, 80, 100);
             Projectile.rotation = AITimer;

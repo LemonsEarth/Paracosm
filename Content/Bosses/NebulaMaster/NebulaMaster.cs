@@ -1,17 +1,20 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Paracosm.Common.Systems;
+using Paracosm.Common.Utils;
 using Paracosm.Content.Buffs;
 using Paracosm.Content.Items.BossBags;
 using Paracosm.Content.Items.Materials;
 using Paracosm.Content.Items.Weapons.Magic;
 using Paracosm.Content.Items.Weapons.Melee;
 using Paracosm.Content.Projectiles.Hostile;
+using ReLogic.Content;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Terraria;
+using Terraria.Audio;
 using Terraria.GameContent;
 using Terraria.GameContent.Bestiary;
 using Terraria.GameContent.ItemDropRules;
@@ -31,7 +34,8 @@ namespace Paracosm.Content.Bosses.NebulaMaster
             get { return NPC.ai[1]; }
             private set
             {
-                if (value > 2 || value < 0)
+                int maxVal = phase == 1 ? 2 : 1;
+                if (value > maxVal || value < 0)
                 {
                     NPC.ai[1] = 0;
                 }
@@ -48,11 +52,12 @@ namespace Paracosm.Content.Bosses.NebulaMaster
         int AttackCount2 = 0;
 
         bool phase2FirstTime = false;
-        public int phase { get; private set; } = 1;
+        int phase { get; set; } = 1;
+        bool phaseTransition = false;
 
         float attackDuration = 0;
-        int[] attackDurations = { 480, 450, 900, 1260 };
-        int[] attackDurations2 = { 900, 900, 1200 };
+        int[] attackDurations = { 480, 450, 900 };
+        int[] attackDurations2 = { 600, 900, 1200 };
         public Player player { get; private set; }
         public Vector2 playerDirection { get; private set; }
         Vector2 targetPosition = Vector2.Zero;
@@ -79,7 +84,8 @@ namespace Paracosm.Content.Bosses.NebulaMaster
 
         public enum Attacks2
         {
-
+            BoxingRing,
+            DashAuraSpam
         }
 
         public override void SetStaticDefaults()
@@ -115,7 +121,7 @@ namespace Paracosm.Content.Bosses.NebulaMaster
             NPC.width = 86;
             NPC.height = 154;
             NPC.Opacity = 1;
-            NPC.lifeMax = 600000;
+            NPC.lifeMax = 300000;
             NPC.defense = 40;
             NPC.damage = 40;
             NPC.HitSound = SoundID.NPCHit30;
@@ -153,6 +159,7 @@ namespace Paracosm.Content.Bosses.NebulaMaster
             writer.Write(arenaCenter.Y);
             writer.Write(arenaFollow);
             writer.Write(spawnedAura);
+            writer.Write(phaseTransition);
         }
 
         public override void ReceiveExtraAI(BinaryReader reader)
@@ -168,6 +175,7 @@ namespace Paracosm.Content.Bosses.NebulaMaster
             spawnedAura = reader.ReadBoolean();
             arenaCenter.X = reader.ReadSingle();
             arenaCenter.Y = reader.ReadSingle();
+            phaseTransition = reader.ReadBoolean();
         }
 
         public override void AI()
@@ -209,16 +217,25 @@ namespace Paracosm.Content.Bosses.NebulaMaster
                 AITimer++;
                 return;
             }
-            NPC.dontTakeDamage = false;
+            if (!phaseTransition)
+            {
+                NPC.dontTakeDamage = false;
+            }
             float rotmul = NPC.spriteDirection == 1 ? MathHelper.Pi : 0;
             NPC.rotation = playerDirection.ToRotation() + rotmul;
 
-            if (NPC.life <= (NPC.lifeMax * 0.6f) && !phase2FirstTime)
+            if (NPC.life <= (NPC.lifeMax * 0.5f) && !phase2FirstTime)
             {
-                phase2FirstTime = true;
-                phase = 2;
                 SwitchAttacks();
-                NPC.netUpdate = true;
+                AttackTimer = PHASE_TRANSITION_DURATION;
+                phaseTransition = true;
+            }
+
+            if (phaseTransition)
+            {
+                PhaseTransition();
+                AITimer++;
+                return;
             }
 
             if (attackDuration <= 0)
@@ -241,6 +258,23 @@ namespace Paracosm.Content.Bosses.NebulaMaster
                         break;
                 }
             }
+            else
+            {
+                for (int i = 0; i < 2; i++)
+                {
+                    Dust.NewDust(NPC.position, NPC.width, NPC.height, DustID.GemDiamond);
+                    Dust.NewDust(NPC.position, NPC.width, NPC.height, DustID.GemAmethyst);
+                }
+                switch (Attack)
+                {
+                    case (int)Attacks2.BoxingRing:
+                        BoxingRing();
+                        break;
+                    case (int)Attacks2.DashAuraSpam:
+                        DashAuraSpam();
+                        break;
+                }
+            }
 
             attackDuration--;
             AITimer++;
@@ -251,21 +285,75 @@ namespace Paracosm.Content.Bosses.NebulaMaster
         {
             if (AITimer == INTRO_DURATION - 90)
             {
-                AdvancedPopupRequest message = new AdvancedPopupRequest();
-                message.Color = Color.White;
-                message.DurationInFrames = 60;
-                message.Velocity = 5 * -Vector2.UnitY;
-                int rand = Main.rand.Next(0, 5);
-                string msgKey = "Intro" + rand;
-                message.Text = Language.GetTextValue($"Mods.Paracosm.NPCs.NebulaMaster.Dialogue.{msgKey}");
-
-                PopupText.NewText(message, NPC.Center + -Vector2.UnitY * NPC.height / 2);
+                DialogueMessage("Intro", 5);
             }
             NPC.dontTakeDamage = true;
             NPC.velocity = NPC.Center.DirectionTo(player.Center + new Vector2(500, 0)) * (NPC.Center.Distance(player.Center + new Vector2(500, 0)) / 12);
             NPC.Opacity += 1f / 20f;
             Attack = 0;
             attackDuration = attackDurations[(int)Attack];
+        }
+
+        const int PHASE_TRANSITION_DURATION = 480;
+        void PhaseTransition()
+        {
+            switch (AttackTimer)
+            {
+                case PHASE_TRANSITION_DURATION:
+                    if (Main.netMode != NetmodeID.MultiplayerClient)
+                    {
+                        phase2FirstTime = true;
+                        phase = 2;
+                    }
+                    NPC.velocity = Vector2.Zero;
+                    NPC.netUpdate = true;
+                    NPC.dontTakeDamage = true;
+                    break;
+
+                case PHASE_TRANSITION_DURATION - 90:
+                    DialogueMessage("PhaseTransitionStart", 5, 90);
+                    break;
+
+                case PHASE_TRANSITION_DURATION - 180:
+                    SoundEngine.PlaySound(SoundID.DD2_EtherianPortalDryadTouch);
+                    SoundEngine.PlaySound(SoundID.DD2_EtherianPortalOpen);
+                    SoundEngine.PlaySound(SoundID.Zombie105);
+                    break;
+
+                case < PHASE_TRANSITION_DURATION - 180 and > PHASE_TRANSITION_DURATION - 360:
+                    LemonUtils.DustCircle(NPC.Center, 16, Main.rand.NextFloat(15, 20), DustID.GemDiamond, Main.rand.NextFloat(1.2f, 1.8f), true);
+                    LemonUtils.DustCircle(NPC.Center, 16, Main.rand.NextFloat(15, 20), DustID.GemAmethyst, Main.rand.NextFloat(1.2f, 1.8f), true);
+                    if (NPC.life < NPC.lifeMax)
+                    {
+                        int lifeHealed = 5000;
+                        if (NPC.life + lifeHealed > NPC.lifeMax)
+                        {
+                            lifeHealed = NPC.lifeMax - NPC.life;
+                        }
+                        NPC.life += lifeHealed;
+                        if (Main.netMode != NetmodeID.MultiplayerClient)
+                        {
+                            NPC.HealEffect(lifeHealed, true);
+                            NPC.netUpdate = true;
+                        }
+                    }
+
+                    break;
+
+                case PHASE_TRANSITION_DURATION - 360:
+                    DialogueMessage("PhaseTransitionEnd", 5, 90);
+                    break;
+
+                case 0:
+                    if (Main.netMode != NetmodeID.MultiplayerClient)
+                    {
+                        phaseTransition = false;
+                    }
+                    SwitchAttacks();
+                    NPC.netUpdate = true;
+                    return;
+            }
+            AttackTimer--;
         }
 
         void SwitchAttacks()
@@ -284,6 +372,17 @@ namespace Paracosm.Content.Bosses.NebulaMaster
                 if (Attack == (int)Attacks.RapidDashes)
                 {
                     AttackTimer = DASH_START_COOLDOWN;
+                }
+                if (phase == 2)
+                {
+                    if (Attack == (int)Attacks2.BoxingRing)
+                    {
+                        AttackTimer = BOXING_RING_START_TIME;
+                    }
+                    else if (Attack == (int)Attacks2.DashAuraSpam)
+                    {
+                        AttackTimer = DASH2_COOLDOWN;
+                    }
                 }
                 foreach (var proj in Proj)
                 {
@@ -325,8 +424,8 @@ namespace Paracosm.Content.Bosses.NebulaMaster
                     }
                     break;
                 case 0:
-                    AttackTimer = RANDOM_POS_TIME + 1;
-                    break;
+                    AttackTimer = RANDOM_POS_TIME;
+                    return;
             }
 
             AttackTimer--;
@@ -359,8 +458,8 @@ namespace Paracosm.Content.Bosses.NebulaMaster
                     NPC.velocity = targetPosition.SafeNormalize(Vector2.Zero) * DASH_SPEED;
                     break;
                 case <= 0:
-                    AttackTimer = DASH_COOLDOWN + 1;
-                    break;
+                    AttackTimer = DASH_COOLDOWN;
+                    return;
             }
             AttackTimer--;
         }
@@ -375,7 +474,7 @@ namespace Paracosm.Content.Bosses.NebulaMaster
         {
             for (int i = 0; i < 64; i++)
             {
-                Vector2 dustPos = arenaCenter + (Vector2.UnitY * FB_COMBO_ARENA_DISTANCE * 0.75f).RotatedBy(MathHelper.ToRadians(i * 360f/64f));
+                Vector2 dustPos = arenaCenter + (Vector2.UnitY * FB_COMBO_ARENA_DISTANCE * 0.75f).RotatedBy(MathHelper.ToRadians(i * 360f / 64f));
                 Dust dust = Dust.NewDustDirect(dustPos, 1, 1, DustID.GemDiamond);
                 dust.noGravity = true;
             }
@@ -392,9 +491,9 @@ namespace Paracosm.Content.Bosses.NebulaMaster
                     MoveToPos(targetPosition, 1.2f, 1.2f, 2, 2);
                     break;
                 case 0:
-                    AttackTimer = FB_COMBO_POS_COOLDOWN + 1;
+                    AttackTimer = FB_COMBO_POS_COOLDOWN;
                     AttackCount = 0;
-                    break;
+                    return;
                 case <= FB_COMBO_START_TIME:
                     NPC.velocity = Vector2.Zero;
                     if (AttackTimer % FB_COMBO_FLAME_COOLDOWN == 0 && AttackCount < FB_COMBO_MAX_FLAME_COUNT)
@@ -422,6 +521,123 @@ namespace Paracosm.Content.Bosses.NebulaMaster
             AttackTimer--;
         }
 
+        const int BOXING_RING_START_TIME = 180;
+        const int BOXING_RING_ATTACK_COOLDOWN = 60; // 180 - 120
+        void BoxingRing()
+        {
+            for (int i = 0; i < 64; i++)
+            {
+                Vector2 dustPos = arenaCenter + (Vector2.UnitY * BOXING_RING_ARENA_DISTANCE * 0.75f).RotatedBy(MathHelper.ToRadians(i * 360f / 64f));
+                Dust dust = Dust.NewDustDirect(dustPos, 1, 1, DustID.GemDiamond);
+                dust.noGravity = true;
+            }
+            switch (AttackTimer)
+            {
+                case BOXING_RING_START_TIME:
+                    targetPosition = player.Center;
+                    break;
+                case > BOXING_RING_START_TIME - 60:
+                    arenaCenter = targetPosition;
+                    NPC.velocity = NPC.Center.DirectionTo(targetPosition + Vector2.UnitX * BOXING_RING_ARENA_DISTANCE) * NPC.Center.Distance(targetPosition + Vector2.UnitX * BOXING_RING_ARENA_DISTANCE) / 12;
+                    break;
+                case > BOXING_RING_START_TIME - 120:
+                    NPC.velocity = Vector2.Zero;
+                    break;
+                case BOXING_RING_ATTACK_COOLDOWN:
+                    if (Main.netMode != NetmodeID.MultiplayerClient)
+                    {
+                        AttackCount = Main.rand.Next(-1, 2);
+                    }
+                    NPC.netUpdate = true;
+                    break;
+                case > BOXING_RING_ATTACK_COOLDOWN - 30:
+                    targetPosition = player.Center + new Vector2(BOXING_RING_ARENA_DISTANCE, AttackCount * (BOXING_RING_ARENA_DISTANCE / 2));
+                    NPC.velocity = NPC.Center.DirectionTo(targetPosition) * NPC.Center.Distance(targetPosition) / 12;
+                    break;
+                case > 0:
+                    NPC.velocity = Vector2.Zero;
+                    if (AttackTimer % 5 == 0)
+                    {
+                        if (Main.netMode != NetmodeID.MultiplayerClient)
+                        {
+                            AttackCount2 = Main.rand.Next(-15, 15);
+                            Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, -Vector2.UnitX.RotatedBy(MathHelper.ToRadians(AttackCount2)), Proj["SpeedFlames"], NPC.damage / 2, 1, ai0: 0, ai1: 10, ai2: 0);
+                        }
+                        NPC.netUpdate = true;
+                    }
+                    break;
+                case 0:
+                    AttackTimer = BOXING_RING_ATTACK_COOLDOWN;
+                    return;
+            }
+
+            AttackTimer--;
+        }
+
+        const int DASH2_COOLDOWN = 180;
+        const int DASH2_START_TIME = 30;
+        const int DASH2_SPEED = 50;
+        void DashAuraSpam()
+        {
+            switch (AttackTimer)
+            {
+                case > DASH2_START_TIME and < DASH2_COOLDOWN:
+                    if (!spawnedAura)
+                    {
+                        if (Main.netMode != NetmodeID.MultiplayerClient)
+                        {
+                            Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, Vector2.Zero, Proj["Aura"], NPC.damage, 1, ai1: NPC.whoAmI);
+                        }
+                        spawnedAura = true;
+                    }
+                    for (int i = 0; i < 3; i++)
+                    {
+                        Dust dust = Dust.NewDustDirect(NPC.Center, 1, 1, DustID.GemAmethyst);
+                        dust.noGravity = true;
+                        dust.velocity = new Vector2(Main.rand.Next(-10, 10), Main.rand.Next(-10, 10));
+                    }
+                    break;
+                case DASH2_START_TIME:
+                    targetPosition = playerDirection;
+                    break;
+                case > 0 and < DASH2_START_TIME:
+                    NPC.velocity = targetPosition.SafeNormalize(Vector2.Zero) * DASH2_SPEED;
+                    break;
+                case <= 0:
+                    AttackCount++;
+                    if ((AttackCount + 1) % 5 == 0)
+                    {
+                        if (Main.netMode != NetmodeID.MultiplayerClient)
+                        {
+                            for (int i = 0; i < 4; i++)
+                            {
+                                Vector2 offset = (Vector2.One * 800).RotatedBy(i * MathHelper.PiOver2 + (AttackCount + 1) * MathHelper.PiOver4);
+                                Projectile.NewProjectile(NPC.GetSource_FromAI(), player.Center + offset, (player.Center + offset).DirectionTo(player.Center), ModContent.ProjectileType<IndicatorLaser>(), 0, 1, ai0: 50);
+                            }
+                        }
+                    }
+                    if (AttackCount % 5 == 0)
+                    {
+                        if (Main.netMode != NetmodeID.MultiplayerClient)
+                        {
+                            for (int i = 0; i < 4; i++)
+                            {
+                                Vector2 offset = (Vector2.One * 800).RotatedBy(i * MathHelper.PiOver2 + AttackCount * MathHelper.PiOver4);
+                                Projectile.NewProjectile(NPC.GetSource_FromAI(), player.Center + offset, (player.Center + offset).DirectionTo(player.Center) * (DASH2_SPEED / 2), Proj["Aura"], NPC.damage, 1, ai1: -1);
+                            }
+                        }
+                        AttackTimer = DASH_COOLDOWN + 60;
+                        NPC.velocity = Vector2.Zero;
+                    }
+                    else
+                    {
+                        AttackTimer = DASH_COOLDOWN;
+                    }
+                    return;
+            }
+            AttackTimer--;
+        }
+
         void MoveToPos(Vector2 pos, float xAccel = 1f, float yAccel = 1f, float xSpeed = 1f, float ySpeed = 1f)
         {
             Vector2 direction = NPC.Center.DirectionTo(pos);
@@ -432,17 +648,32 @@ namespace Paracosm.Content.Bosses.NebulaMaster
 
         const float BASE_ARENA_DISTANCE = 3000;
         const float FB_COMBO_ARENA_DISTANCE = 1000;
+        const float BOXING_RING_ARENA_DISTANCE = 300;
         public void Arena()
         {
             float targetArenaDistance = BASE_ARENA_DISTANCE;
             arenaFollow = true;
-            switch (Attack)
+            if (phase == 1)
             {
-                case (int)Attacks.FlameBeamCombo:
-                    targetArenaDistance = FB_COMBO_ARENA_DISTANCE;
-                    arenaFollow = false;
-                    break;
+                switch (Attack)
+                {
+                    case (int)Attacks.FlameBeamCombo:
+                        targetArenaDistance = FB_COMBO_ARENA_DISTANCE;
+                        arenaFollow = false;
+                        break;
+                }
             }
+            else
+            {
+                switch (Attack)
+                {
+                    case (int)Attacks2.BoxingRing:
+                        targetArenaDistance = BOXING_RING_ARENA_DISTANCE;
+                        arenaFollow = false;
+                        break;
+                }
+            }
+
             if (Main.netMode != NetmodeID.MultiplayerClient)
             {
                 if (Spheres.Count < 40)
@@ -469,7 +700,7 @@ namespace Paracosm.Content.Bosses.NebulaMaster
                 {
                     continue;
                 }
-                Spheres[i].velocity = (pos - Spheres[i].position).SafeNormalize(Vector2.Zero) * (Spheres[i].position.Distance(pos) / 50);
+                Spheres[i].velocity = (pos - Spheres[i].Center).SafeNormalize(Vector2.Zero) * (Spheres[i].Center.Distance(pos) / 50);
                 Spheres[i].timeLeft = 180;
             }
 
@@ -498,6 +729,20 @@ namespace Paracosm.Content.Bosses.NebulaMaster
                     proj.Kill();
                 }
             }
+        }
+
+        void DialogueMessage(string key, int maxRand, int duration = 60)
+        {
+            AdvancedPopupRequest message = new AdvancedPopupRequest();
+            message.Color = Color.White;
+            message.DurationInFrames = duration;
+            message.Velocity = 10 * -Vector2.UnitY;
+            int rand = Main.rand.Next(0, maxRand);
+            string msgKey = key + rand;
+            message.Text = Language.GetTextValue($"Mods.Paracosm.NPCs.NebulaMaster.Dialogue.{msgKey}");
+
+            int index = PopupText.NewText(message, NPC.Center + -Vector2.UnitY * NPC.height / 2);
+            Main.popupText[index].scale = 2f;
         }
 
         public override bool CheckActive()
@@ -559,8 +804,13 @@ namespace Paracosm.Content.Bosses.NebulaMaster
 
         public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
         {
-            Texture2D texture = TextureAssets.Npc[Type].Value;
-            Rectangle drawRect = texture.Frame(1, Main.npcFrameCount[Type], 0, 0);
+            if (phase == 1)
+            {
+                return true;
+            }
+
+            Asset<Texture2D> textureAsset = ModContent.Request<Texture2D>("Paracosm/Assets/Textures/Boss/NebulaMasterTrail");
+            Texture2D texture = textureAsset.Value;
 
             Vector2 drawOrigin = new Vector2(texture.Width * 0.5f, NPC.height * 0.5f);
             SpriteEffects spriteEffects = SpriteEffects.None;
@@ -572,7 +822,12 @@ namespace Paracosm.Content.Bosses.NebulaMaster
             {
                 Vector2 drawPos = NPC.oldPos[k] - Main.screenPosition + drawOrigin;
                 Color color = NPC.GetAlpha(drawColor) * ((NPC.oldPos.Length - k) / (float)NPC.oldPos.Length);
-                Main.EntitySpriteDraw(texture, drawPos, drawRect, color, NPC.rotation, drawOrigin, NPC.scale, spriteEffects, 0);
+                float scale = 1f;
+                if (NPC.oldPos.Length - k > 0)
+                {
+                    scale = 1f + (1f / (NPC.oldPos.Length - k));
+                }
+                Main.EntitySpriteDraw(texture, drawPos, null, color, NPC.rotation, drawOrigin, scale, spriteEffects, 0);
             }
             return true;
         }

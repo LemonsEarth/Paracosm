@@ -43,5 +43,15 @@ NebulaMaster: {
 		Intro2: YOSHAA!
 		Intro3: Hello monkeys!
 		Intro4: We Nebulans have no limits!
+		PhaseTransitionStart0: You're not half bad...
+		PhaseTransitionStart1: And this... is Super Nebula Master!
+		PhaseTransitionStart2: Maybe this will serve as a pretty good warm-up
+		PhaseTransitionStart3: Perhaps I underestimated you...
+		PhaseTransitionStart4: Let's get serious
+		PhaseTransitionEnd0: I'm ending this.
+		PhaseTransitionEnd1: This is my ultimate technique!
+		PhaseTransitionEnd2: Try to keep up.
+		PhaseTransitionEnd3: Bear witness!
+		PhaseTransitionEnd4: Foul Terrarian!
 	}
 }

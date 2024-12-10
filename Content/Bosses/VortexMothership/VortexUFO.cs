@@ -123,9 +123,9 @@ namespace Paracosm.Content.Bosses.VortexMothership
                 {
                     if (Main.netMode != NetmodeID.MultiplayerClient)
                     {
-                        Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, shootDirection * 30, ModContent.ProjectileType<TeslaShot>(), NPC.damage, 1);
+                        Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, shootDirection * 20, ModContent.ProjectileType<TeslaShot>(), NPC.damage, 1);
                     }
-                    AttackTimer2 = 20;
+                    AttackTimer2 = 30;
                 }
                 AttackTimer2--;
             }

@@ -24,7 +24,7 @@ namespace Paracosm.Common.Utils
             for (int i = 0; i < amount; i++)
             {
                 var dust = Dust.NewDustDirect(position, 1, 1, dustID, Scale: scale);
-                dust.velocity = new Vector2(0, -speed).RotatedBy(MathHelper.ToRadians(i * (360 / amount)));
+                dust.velocity = new Vector2(0, -speed).RotatedBy(MathHelper.ToRadians(i * (360 / amount))).RotatedByRandom(MathHelper.Pi);
                 if (noGrav)
                 {
                     dust.noGravity = true;
@@ -58,7 +58,7 @@ namespace Paracosm.Common.Utils
             bool found = false;
             while (!found)
             {
-                int randItemID = Main.rand.Next(0, ItemLoader.ItemCount);
+                int randItemID = Main.rand.Next(0, 5455);
                 Item randItem = ContentSamples.ItemsByType[randItemID];
                 if (randItem.maxStack == 1)
                 {
