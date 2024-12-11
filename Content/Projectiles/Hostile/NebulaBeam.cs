@@ -26,7 +26,7 @@ namespace Paracosm.Content.Projectiles.Hostile
             Projectile.friendly = false;
             Projectile.ignoreWater = true;
             Projectile.tileCollide = false;
-            Projectile.timeLeft = 120;
+            Projectile.timeLeft = 90;
             Projectile.penetrate = -1;
         }
 
@@ -35,7 +35,7 @@ namespace Paracosm.Content.Projectiles.Hostile
             if (AITimer == 0)
             {
                 Projectile.Opacity = 0;
-                SoundEngine.PlaySound(SoundID.Zombie104 with { MaxInstances = 1, SoundLimitBehavior = SoundLimitBehavior.ReplaceOldest});
+                SoundEngine.PlaySound(SoundID.Zombie104 with { MaxInstances = 1, SoundLimitBehavior = SoundLimitBehavior.ReplaceOldest });
                 Projectile.rotation = Projectile.velocity.ToRotation();
                 direction = Projectile.velocity.SafeNormalize(Vector2.Zero);
                 Projectile.frame = (int)SegmentFrame;
@@ -52,7 +52,10 @@ namespace Paracosm.Content.Projectiles.Hostile
                 }
             }
 
-            Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, DustID.HallowSpray);
+            if (AITimer % 2 == 0)
+            {
+                Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, DustID.HallowSpray);
+            }
 
             if (Projectile.timeLeft > 60)
             {

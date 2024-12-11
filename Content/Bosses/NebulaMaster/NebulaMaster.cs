@@ -34,7 +34,7 @@ namespace Paracosm.Content.Bosses.NebulaMaster
             get { return NPC.ai[1]; }
             private set
             {
-                int maxVal = phase == 1 ? 2 : 2;
+                int maxVal = phase == 1 ? 2 : 3;
                 if (value > maxVal || value < 0)
                 {
                     NPC.ai[1] = 0;
@@ -57,7 +57,7 @@ namespace Paracosm.Content.Bosses.NebulaMaster
 
         float attackDuration = 0;
         int[] attackDurations = { 480, 450, 900 };
-        int[] attackDurations2 = { 600, 900, 900 };
+        int[] attackDurations2 = { 600, 900, 720, 900 };
         public Player player { get; private set; }
         public Vector2 playerDirection { get; private set; }
         Vector2 targetPosition = Vector2.Zero;
@@ -86,7 +86,8 @@ namespace Paracosm.Content.Bosses.NebulaMaster
         {
             BoxingRing,
             DashAuraSpam,
-            LaserSpam
+            LaserSpam,
+            DashBlaster
         }
 
         public override void SetStaticDefaults()
@@ -199,7 +200,10 @@ namespace Paracosm.Content.Bosses.NebulaMaster
 
             Lighting.AddLight(NPC.Center, 100, 100, 100);
 
-            NPC.spriteDirection = -Math.Sign(playerDirection.X);
+            if (playerDirection.X != 0 && !playerDirection.HasNaNs())
+            {
+                NPC.spriteDirection = -Math.Sign(playerDirection.X);
+            }
 
             foreach (var p in Main.player)
             {
@@ -276,6 +280,9 @@ namespace Paracosm.Content.Bosses.NebulaMaster
                     case (int)Attacks2.LaserSpam:
                         LaserSpam();
                         break;
+                    case (int)Attacks2.DashBlaster:
+                        DashBlaster();
+                        break;
                 }
             }
 
@@ -341,7 +348,6 @@ namespace Paracosm.Content.Bosses.NebulaMaster
                             NPC.netUpdate = true;
                         }
                     }
-
                     break;
 
                 case PHASE_TRANSITION_DURATION - 360:
@@ -389,6 +395,10 @@ namespace Paracosm.Content.Bosses.NebulaMaster
                     {
                         AttackTimer = DASH2_COOLDOWN;
                         NPC.Opacity = 0f;
+                    }
+                    else if (Attack == (int)Attacks2.DashBlaster)
+                    {
+                        AttackTimer = DASH_BLASTER_START_TIME;
                     }
                 }
                 foreach (var proj in Proj)
@@ -677,7 +687,7 @@ namespace Paracosm.Content.Bosses.NebulaMaster
                     {
                         if (Main.netMode != NetmodeID.MultiplayerClient)
                         {
-                             Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, targetPosition.SafeNormalize(Vector2.Zero), Proj["Beam"], NPC.damage, 1f, ai0: 30);
+                            Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, targetPosition.SafeNormalize(Vector2.Zero), Proj["Beam"], NPC.damage, 1f, ai0: 30);
                         }
                         AttackCount++;
                         if (AttackCount < 6)
@@ -693,7 +703,7 @@ namespace Paracosm.Content.Bosses.NebulaMaster
                                 {
                                     Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, playerDirection.SafeNormalize(Vector2.Zero).RotatedBy(i * MathHelper.PiOver4), Proj["SpeedFlames"], NPC.damage, 1f, ai0: 30, ai1: 30, ai2: 1);
                                 }
-                            }     
+                            }
                             AttackTimer = LASER_SPAM_MOVE_START;
                             AttackCount = 0;
                             return;
@@ -703,6 +713,55 @@ namespace Paracosm.Content.Bosses.NebulaMaster
                 case 0:
                     AttackTimer = LASER_SPAM_MOVE_START;
                     return;
+            }
+            AttackTimer--;
+        }
+
+        const int DASH_BLASTER_START_TIME = 240;
+        const int DASH_BLASTER_MOVE_TIME = 180;
+        const int DASH_BLASTER_DASH_SPEED = 20;
+        void DashBlaster()
+        {
+            switch (AttackTimer)
+            {
+                case DASH_BLASTER_START_TIME:
+                    if (!spawnedAura)
+                    {
+                        if (Main.netMode != NetmodeID.MultiplayerClient)
+                        {
+                            Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, Vector2.Zero, Proj["Aura"], NPC.damage, 1, ai1: NPC.whoAmI);
+                        }
+                        spawnedAura = true;
+                        targetPosition = NPC.Center - Vector2.UnitX * 300;
+                    }
+                    break;
+                case > DASH_BLASTER_MOVE_TIME:
+                    NPC.velocity = NPC.Center.DirectionTo(arenaCenter + Vector2.UnitX * DASH_BLASTER_ARENA_DISTANCE) * NPC.Center.Distance(player.Center + Vector2.UnitX * 700) / 12;
+                    break;
+                case > 0:
+                    if (AttackTimer % 9 == 0)
+                    {
+                        SoundEngine.PlaySound(SoundID.Item84 with { PitchRange = (-0.2f, 0.2f)});
+                        if (Main.netMode != NetmodeID.MultiplayerClient)
+                        {
+                            targetPosition = new Vector2(NPC.Center.X, arenaCenter.Y) + new Vector2(-400, Main.rand.NextFloat(-DASH_BLASTER_ARENA_DISTANCE * 0.75f, DASH_BLASTER_ARENA_DISTANCE * 0.75f));
+                            for (int i = 0; i < 16; i++)
+                            {
+                                Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, playerDirection.SafeNormalize(Vector2.Zero).RotatedBy(i * MathHelper.Pi / 8), Proj["SpeedFlames"], NPC.damage, 1f, ai0: 20, ai1: 35, ai2: 1);
+                            }
+                        }
+                        NPC.netUpdate = true;
+                    }
+                    NPC.velocity = NPC.Center.DirectionTo(targetPosition) * DASH_BLASTER_DASH_SPEED;
+                    break;
+                case 0:
+                    AttackTimer = DASH_BLASTER_START_TIME;
+                    LemonUtils.DustCircle(NPC.Center, 16, 10, DustID.GemAmethyst, 1f, true);
+                    NPC.Center = arenaCenter + Vector2.UnitX * DASH_BLASTER_ARENA_DISTANCE;
+                    NPC.netUpdate = true;
+                    LemonUtils.DustCircle(NPC.Center, 16, 10, DustID.GemAmethyst, 1.5f, true);
+                    return;
+
             }
             AttackTimer--;
         }
@@ -719,6 +778,7 @@ namespace Paracosm.Content.Bosses.NebulaMaster
         const float FB_COMBO_ARENA_DISTANCE = 1000;
         const float BOXING_RING_ARENA_DISTANCE = 300;
         const float LASER_SPAM_ARENA_DISTANCE = 1000;
+        const float DASH_BLASTER_ARENA_DISTANCE = 1600;
         public void Arena()
         {
             float targetArenaDistance = BASE_ARENA_DISTANCE;
@@ -743,6 +803,10 @@ namespace Paracosm.Content.Bosses.NebulaMaster
                         break;
                     case (int)Attacks2.LaserSpam:
                         targetArenaDistance = LASER_SPAM_ARENA_DISTANCE;
+                        arenaFollow = false;
+                        break;
+                    case (int)Attacks2.DashBlaster:
+                        targetArenaDistance = DASH_BLASTER_ARENA_DISTANCE;
                         arenaFollow = false;
                         break;
                 }
