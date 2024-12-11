@@ -8,6 +8,7 @@ using Paracosm.Content.Items.Weapons.Melee;
 using Paracosm.Content.Projectiles.Hostile;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Terraria;
 using Terraria.GameContent.Bestiary;
 using Terraria.GameContent.ItemDropRules;
@@ -280,6 +281,11 @@ namespace Paracosm.Content.Bosses.VortexMothership
                 AttackTimer2 = 0;
             }
             NPC.netUpdate = true;
+
+            if (Spheres.Any(p => p.active == false))
+            {
+                Spheres.Clear();
+            }
         }
 
         void SpawnWeapons()

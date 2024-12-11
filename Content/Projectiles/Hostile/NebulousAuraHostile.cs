@@ -15,15 +15,15 @@ namespace Paracosm.Content.Projectiles.Hostile
 
         public override void SetStaticDefaults()
         {
-            Main.projFrames[Projectile.type] = 3;
+            Main.projFrames[Projectile.type] = 5;
             ProjectileID.Sets.TrailCacheLength[Projectile.type] = 12;
             ProjectileID.Sets.TrailingMode[Projectile.type] = 0;
         }
 
         public override void SetDefaults()
         {
-            Projectile.width = 190;
-            Projectile.height = 190;
+            Projectile.width = 140;
+            Projectile.height = 140;
             Projectile.hostile = true;
             Projectile.friendly = false;
             Projectile.ignoreWater = true;
@@ -62,7 +62,7 @@ namespace Paracosm.Content.Projectiles.Hostile
             {
                 Projectile.frame++;
                 Projectile.frameCounter = 0;
-                if (Projectile.frame >= 3)
+                if (Projectile.frame >= 5)
                 {
                     Projectile.frame = 0;
                 }
@@ -81,10 +81,10 @@ namespace Paracosm.Content.Projectiles.Hostile
 
                 Vector2 drawPos = (Projectile.oldPos[k] - Main.screenPosition) + drawOrigin + new Vector2(0f, Projectile.gfxOffY);
                 Color color = Projectile.GetAlpha(lightColor);
-                Main.EntitySpriteDraw(texture, drawPos, drawRectangle, color, Projectile.rotation, drawOrigin, Projectile.scale, SpriteEffects.None, 0);
+                Main.EntitySpriteDraw(texture, drawPos, drawRectangle, color, Projectile.rotation, drawOrigin, 1.5f, SpriteEffects.None, 0);
             }
 
-            return true;
+            return false;
         }
     }
 }

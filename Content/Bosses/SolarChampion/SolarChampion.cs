@@ -337,6 +337,11 @@ namespace Paracosm.Content.Bosses.SolarChampion
                 }
             }
             NPC.netUpdate = true;
+
+            if (Spheres.Any(p => p.active == false))
+            {
+                Spheres.Clear();
+            }
         }
 
         public void DashingSword(Player player)

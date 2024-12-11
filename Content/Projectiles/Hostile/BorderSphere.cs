@@ -31,6 +31,7 @@ namespace Paracosm.Content.Projectiles.Hostile
             Projectile.timeLeft = 3600;
             Projectile.alpha = 255;
             Projectile.penetrate = -1;
+            Projectile.netImportant = true;
         }
 
         public override void AI()
