@@ -120,7 +120,7 @@ namespace Paracosm.Content.Bosses.SolarChampion
             NPC.width = 106;
             NPC.height = 106;
             NPC.Opacity = 1;
-            NPC.lifeMax = 400000;
+            NPC.lifeMax = 600000;
             NPC.defense = 30;
             NPC.damage = 20;
             NPC.HitSound = SoundID.NPCHit57;

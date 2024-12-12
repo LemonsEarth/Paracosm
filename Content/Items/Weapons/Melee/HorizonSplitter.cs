@@ -34,10 +34,6 @@ namespace Paracosm.Content.Items.Weapons.Melee
             Item.channel = true;
         }
 
-        public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
-        {
-        }
-
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
             float mousePosRel = Main.MouseWorld.X > player.Center.X ? 1 : -1;

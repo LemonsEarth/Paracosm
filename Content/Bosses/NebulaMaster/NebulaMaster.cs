@@ -123,7 +123,7 @@ namespace Paracosm.Content.Bosses.NebulaMaster
             NPC.width = 86;
             NPC.height = 154;
             NPC.Opacity = 1;
-            NPC.lifeMax = 400000;
+            NPC.lifeMax = 480000;
             NPC.defense = 40;
             NPC.damage = 40;
             NPC.HitSound = SoundID.NPCHit30;
@@ -264,6 +264,7 @@ namespace Paracosm.Content.Bosses.NebulaMaster
             }
             else
             {
+                NPC.defense = NPC.defDefense + 60;
                 for (int i = 0; i < 2; i++)
                 {
                     Dust.NewDust(NPC.position, NPC.width, NPC.height, DustID.GemDiamond);
@@ -739,7 +740,7 @@ namespace Paracosm.Content.Bosses.NebulaMaster
                     NPC.velocity = NPC.Center.DirectionTo(arenaCenter + Vector2.UnitX * DASH_BLASTER_ARENA_DISTANCE) * NPC.Center.Distance(player.Center + Vector2.UnitX * 700) / 12;
                     break;
                 case > 0:
-                    if (AttackTimer % 9 == 0)
+                    if (AttackTimer % 14 == 0)
                     {
                         SoundEngine.PlaySound(SoundID.Item84 with { PitchRange = (-0.2f, 0.2f)});
                         if (Main.netMode != NetmodeID.MultiplayerClient)
@@ -756,10 +757,12 @@ namespace Paracosm.Content.Bosses.NebulaMaster
                     break;
                 case 0:
                     AttackTimer = DASH_BLASTER_START_TIME;
+                    LemonUtils.DustCircle(NPC.Center, 16, 20, DustID.GemAmethyst, 1f, true);
+                    LemonUtils.DustCircle(NPC.Center, 16, 15, DustID.GemDiamond, 1f, true);
                     LemonUtils.DustCircle(NPC.Center, 16, 10, DustID.GemAmethyst, 1f, true);
                     NPC.Center = arenaCenter + Vector2.UnitX * DASH_BLASTER_ARENA_DISTANCE;
                     NPC.netUpdate = true;
-                    LemonUtils.DustCircle(NPC.Center, 16, 10, DustID.GemAmethyst, 1.5f, true);
+                    LemonUtils.DustCircle(NPC.Center, 16, 20, DustID.GemAmethyst, 1.5f, true);
                     return;
 
             }
@@ -950,12 +953,11 @@ namespace Paracosm.Content.Bosses.NebulaMaster
         public override void ModifyNPCLoot(NPCLoot npcLoot)
         {
             LeadingConditionRule classicRule = new LeadingConditionRule(new Conditions.NotExpert());
-            classicRule.OnSuccess(ItemDropRule.Common(ModContent.ItemType<VortexianPlating>(), 1, 4, 8));
-            classicRule.OnSuccess(ItemDropRule.Common(ItemID.FragmentVortex, 1, 10, 20));
+            classicRule.OnSuccess(ItemDropRule.Common(ModContent.ItemType<UnstableNebulousFlame>(), 1, 4, 8));
+            classicRule.OnSuccess(ItemDropRule.Common(ItemID.FragmentNebula, 1, 10, 20));
             classicRule.OnSuccess(ItemDropRule.Common(ItemID.LunarBar, 1, 5, 12));
-            classicRule.OnSuccess(ItemDropRule.OneFromOptions(1, ModContent.ItemType<HorizonSplitter>(), ModContent.ItemType<TheCrucible>()));
             npcLoot.Add(classicRule);
-            npcLoot.Add(ItemDropRule.BossBag(ModContent.ItemType<VortexMothershipBossBag>()));
+            npcLoot.Add(ItemDropRule.BossBag(ModContent.ItemType<NebulaMasterBossBag>()));
         }
 
         public override void BossLoot(ref string name, ref int potionType)
@@ -972,7 +974,7 @@ namespace Paracosm.Content.Bosses.NebulaMaster
         public override void OnKill()
         {
             DeleteProjectiles(Proj["Sphere"]);
-            NPC.SetEventFlagCleared(ref DownedBossSystem.downedVortexMothership, -1);
+            NPC.SetEventFlagCleared(ref DownedBossSystem.downedNebulaMaster, -1);
             for (int i = 0; i < 16; i++)
             {
                 Gore gore = Gore.NewGoreDirect(NPC.GetSource_FromThis(), NPC.position + new Vector2(Main.rand.Next(0, NPC.width), Main.rand.Next(0, NPC.height)), new Vector2(Main.rand.NextFloat(-5, 5)), Main.rand.Next(61, 64), Main.rand.NextFloat(2f, 5f));
@@ -1002,7 +1004,8 @@ namespace Paracosm.Content.Bosses.NebulaMaster
                 float scale = 1f;
                 if (NPC.oldPos.Length - k > 0)
                 {
-                    scale = 1f + (1f / (NPC.oldPos.Length - k));
+                    float posMod = 1f / (NPC.oldPos.Length - k);
+                    scale = ((float)Math.Sin(MathHelper.ToRadians(AITimer)) + 1) * 0.5f + posMod;
                 }
                 Main.EntitySpriteDraw(texture, drawPos, null, color, NPC.rotation, drawOrigin, scale, spriteEffects, 0);
             }

@@ -1,5 +1,6 @@
 ﻿using Paracosm.Common.Players;
 using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Paracosm.Common.Globals
@@ -24,6 +25,17 @@ namespace Paracosm.Common.Globals
             {
                 speed = 15f;
                 acceleration = 1f;
+            }
+        }
+
+        public override void GrabRange(Item item, Player player, ref int grabRange)
+        {
+            if (player.GetModPlayer<ParacosmPlayer>().nebulousPower)
+            {
+                if (item.type == ItemID.NebulaPickup1 || item.type == ItemID.NebulaPickup2 || item.type == ItemID.NebulaPickup3)
+                {
+                    grabRange += 800;
+                }
             }
         }
     }

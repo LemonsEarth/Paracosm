@@ -56,10 +56,13 @@ namespace Paracosm.Common.Globals
                     damage = 300;
                 }
             }
+        }
 
+        public override void ModifyIncomingHit(NPC npc, ref NPC.HitModifiers modifiers)
+        {
             if (melting)
             {
-                npc.defense = 0;
+                modifiers.Defense.Base *= 0;
                 Dust.NewDust(npc.position, npc.width, npc.height, DustID.SolarFlare);
             }
         }

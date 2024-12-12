@@ -55,7 +55,6 @@ namespace Paracosm.Content.Projectiles.Friendly
             {
                 if (Projectile.owner == Main.myPlayer)
                 {
-
                     for (int i = 0; i < 3; i++)
                     {
                         if (LemonUtils.GetClosestNPC(Projectile) == null)

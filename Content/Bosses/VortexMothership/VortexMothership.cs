@@ -129,7 +129,7 @@ namespace Paracosm.Content.Bosses.VortexMothership
             NPC.width = 1124;
             NPC.height = 368;
             NPC.Opacity = 1;
-            NPC.lifeMax = 700000;
+            NPC.lifeMax = 800000;
             NPC.defense = 100;
             NPC.damage = 40;
             NPC.HitSound = SoundID.NPCHit4;
@@ -439,7 +439,6 @@ namespace Paracosm.Content.Bosses.VortexMothership
             classicRule.OnSuccess(ItemDropRule.Common(ModContent.ItemType<VortexianPlating>(), 1, 4, 8));
             classicRule.OnSuccess(ItemDropRule.Common(ItemID.FragmentVortex, 1, 10, 20));
             classicRule.OnSuccess(ItemDropRule.Common(ItemID.LunarBar, 1, 5, 12));
-            classicRule.OnSuccess(ItemDropRule.OneFromOptions(1, ModContent.ItemType<HorizonSplitter>(), ModContent.ItemType<TheCrucible>()));
             npcLoot.Add(classicRule);
             npcLoot.Add(ItemDropRule.BossBag(ModContent.ItemType<VortexMothershipBossBag>()));
         }

@@ -13,6 +13,7 @@
 	  <None Remove="Content\Biomes\Void\VoidLow_Background.png" />
 	  <None Remove="Content\Biomes\Void\VoidLow_Icon.png" />
 	  <None Remove="Content\Bosses\NebulaMaster\NebulaMaster_Head_Boss.png" />
+	  <None Remove="Content\Projectiles\Friendly\NebulaBeamFriendly.png" />
 	  <None Remove="Content\Shaders\DarknessShader.fx" />
 	  <None Remove="Assets\Textures\Backgrounds\VoidSky_Background.png" />
 	  <None Remove="Localization\en-US\Mods.Paracosm.Biomes.hjson" />

@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Paracosm.Content.Bosses.DivineSeeker;
 using Paracosm.Content.Bosses.InfectedRevenant;
+using Paracosm.Content.Bosses.NebulaMaster;
 using Paracosm.Content.Bosses.SolarChampion;
 using Paracosm.Content.Bosses.VortexMothership;
 using Paracosm.Content.Items.Consumables;
@@ -133,6 +134,28 @@ namespace Paracosm.Common.Systems
                 () => DownedBossSystem.downedVortexMothership,
                 ModContent.NPCType<VortexMothership>(),
                 additionalVM
+                );
+
+
+
+
+            //Log Nebula Master
+            int spawnItemTypeNM = ModContent.ItemType<ArcaneTablet>();
+            LocalizedText spawnInfoNM = Language.GetText("Mods.Paracosm.NPCs.NebulaMaster.BossChecklistCompatibility.SpawnInfo");
+
+            Dictionary<string, object> additionalNM = new Dictionary<string, object>()
+            {
+                ["spawnItems"] = spawnItemTypeNM,
+                ["spawnInfo"] = spawnInfoNM
+            };
+
+            LogBoss(
+                BossChecklist,
+                "NebulaMaster",
+                18.3f,
+                () => DownedBossSystem.downedNebulaMaster,
+                ModContent.NPCType<NebulaMaster>(),
+                additionalNM
                 );
         }
 

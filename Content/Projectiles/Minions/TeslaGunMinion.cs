@@ -81,7 +81,7 @@ namespace Paracosm.Content.Projectiles.Minions
                     if (target != null && target.active && target.CanBeChasedBy())
                     {
                         Projectile.rotation = Projectile.Center.DirectionTo(target.Center).ToRotation();
-                        Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Projectile.Center.DirectionTo(target.Center) * 15 * (1 + NotAttackTimer / 60f), ModContent.ProjectileType<TeslaShotFriendly>(), Projectile.damage * (int)(1 + NotAttackTimer / 60f), 0.8f);
+                        Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Projectile.Center.DirectionTo(target.Center) * 15 * (1 + NotAttackTimer / 60f), ModContent.ProjectileType<TeslaShotFriendly>(), (int)(Projectile.damage * (1 + NotAttackTimer / 60f)), 0.8f);
                         NotAttackTimer = 0;
                         AttackTimer = BASE_ATTACK_CD;
                     }

@@ -5,12 +5,12 @@ using Terraria.ModLoader;
 
 namespace Paracosm.Content.Items.Materials
 {
-    public class SolarCore : ModItem
+    public class UnstableNebulousFlame : ModItem
     {
         public override void SetStaticDefaults()
         {
             Item.ResearchUnlockCount = 100;
-            Main.RegisterItemAnimation(Item.type, new DrawAnimationVertical(6, 4));
+            Main.RegisterItemAnimation(Item.type, new DrawAnimationVertical(6, 7));
             ItemID.Sets.AnimatesAsSoul[Type] = true;
             ItemID.Sets.ItemIconPulse[Item.type] = true;
             ItemID.Sets.ItemNoGravity[Item.type] = true;

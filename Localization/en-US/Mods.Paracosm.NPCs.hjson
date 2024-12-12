@@ -36,6 +36,8 @@ ShadowSeeker.DisplayName: Shadow Seeker
 
 NebulaMaster: {
 	DisplayName: Nebula Master
+	BossChecklistCompatibility.SpawnInfo: Use a [i:Paracosm/ArcaneTablet]
+	Bestiary: A might warrior who allegedly appeared out of nowhere. His strength far exceeds regular Nebulans, so much that it started consuming him.
 
 	Dialogue: {
 		Intro0: Let's get things started.

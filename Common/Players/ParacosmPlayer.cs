@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Paracosm.Common.Systems;
 using Paracosm.Common.Utils;
 using Paracosm.Content.Biomes.Overworld;
@@ -7,6 +8,8 @@ using Paracosm.Content.Buffs;
 using Paracosm.Content.Buffs.Cooldowns;
 using Paracosm.Content.Projectiles.Friendly;
 using Terraria;
+using Terraria.DataStructures;
+using Terraria.GameContent;
 using Terraria.Graphics.Shaders;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -157,6 +160,16 @@ namespace Paracosm.Common.Players
                 if ((Player.controlLeft && Player.velocity.X > 0) || (Player.controlRight && Player.velocity.X < 0))
                 {
                     Player.runSlowdown = 10f;
+                }     
+                
+                for (int i = 0; i < 2; i++)
+                {
+                    Dust dust = Dust.NewDustDirect(Player.position, Player.width, Player.height, DustID.GemAmethyst);
+                    dust.velocity = (-Vector2.UnitY * Main.rand.NextFloat(2f, 7f)).RotatedBy(MathHelper.ToRadians(Main.rand.Next(-15, 15)));
+                    dust.noGravity = true;
+                    Dust dust2 = Dust.NewDustDirect(Player.position, Player.width, Player.height, DustID.GemDiamond);
+                    dust2.velocity = (-Vector2.UnitY * Main.rand.NextFloat(2f, 7f)).RotatedBy(MathHelper.ToRadians(Main.rand.Next(-15, 15)));
+                    dust2.noGravity = true;
                 }
             }
 
@@ -315,7 +328,6 @@ namespace Paracosm.Common.Players
                 {
                     Player.lifeRegen -= 50;
                 }
-
             }
         }
     }

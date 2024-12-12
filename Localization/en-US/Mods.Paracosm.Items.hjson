@@ -530,3 +530,33 @@ ArcaneTablet: {
 		Initiate a fight against a master martial artist
 		'''
 }
+
+ComboBreaker: {
+	DisplayName: Combo Breaker
+	Tooltip:
+		'''
+		Attacking charges a powerful beam
+		Right Click to fire the beam
+		'''
+}
+
+UnstableNebulousFlame: {
+	DisplayName: Unstable Nebulous Flame
+	Tooltip: It looks like it's about to burst...
+}
+
+NebulaMasterBossBag: {
+	DisplayName: Treasure Bag (Nebula Master)
+	Tooltip: "{$CommonItemTooltip.RightClickToOpen}"
+}
+
+NebulousEnergy: {
+	DisplayName: Nebulous Energy
+	Tooltip:
+		'''
+		{$CommonItemTooltip.PercentIncreasedMagicDamage}
+		{$CommonItemTooltip.PercentIncreasedMagicCritChance@1}
+		Grants you Nebulous Power
+		Increases pickup range for Nebula Boosters
+		'''
+}
