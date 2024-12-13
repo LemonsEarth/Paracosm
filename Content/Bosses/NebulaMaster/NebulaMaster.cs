@@ -137,7 +137,7 @@ namespace Paracosm.Content.Bosses.NebulaMaster
 
             if (!Main.dedServ)
             {
-                Music = MusicLoader.GetMusicSlot(Mod, "Content/Audio/Music/SunBornCyclone");
+                Music = MusicLoader.GetMusicSlot(Mod, "Content/Audio/Music/CelestialShowdown");
             }
         }
 
@@ -746,9 +746,9 @@ namespace Paracosm.Content.Bosses.NebulaMaster
                         if (Main.netMode != NetmodeID.MultiplayerClient)
                         {
                             targetPosition = new Vector2(NPC.Center.X, arenaCenter.Y) + new Vector2(-400, Main.rand.NextFloat(-DASH_BLASTER_ARENA_DISTANCE * 0.75f, DASH_BLASTER_ARENA_DISTANCE * 0.75f));
-                            for (int i = 0; i < 16; i++)
+                            for (int i = 0; i < 8; i++)
                             {
-                                Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, playerDirection.SafeNormalize(Vector2.Zero).RotatedBy(i * MathHelper.Pi / 8), Proj["SpeedFlames"], NPC.damage, 1f, ai0: 20, ai1: 35, ai2: 1);
+                                Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, playerDirection.SafeNormalize(Vector2.Zero).RotatedBy(i * MathHelper.Pi / 4), Proj["SpeedFlames"], NPC.damage, 1f, ai0: 20, ai1: 35, ai2: 1);
                             }
                         }
                         NPC.netUpdate = true;

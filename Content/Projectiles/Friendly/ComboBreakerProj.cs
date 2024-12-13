@@ -25,7 +25,7 @@ namespace Paracosm.Content.Projectiles.Friendly
             Projectile.ignoreWater = true;
             Projectile.timeLeft = 30;
             Projectile.tileCollide = false;
-            Projectile.penetrate = -1;
+            Projectile.penetrate = 5;
             Projectile.usesLocalNPCImmunity = true;
             Projectile.localNPCHitCooldown = 30;
             Projectile.DamageType = DamageClass.Melee;

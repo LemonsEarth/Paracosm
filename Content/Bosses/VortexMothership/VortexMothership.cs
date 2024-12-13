@@ -129,7 +129,7 @@ namespace Paracosm.Content.Bosses.VortexMothership
             NPC.width = 1124;
             NPC.height = 368;
             NPC.Opacity = 1;
-            NPC.lifeMax = 800000;
+            NPC.lifeMax = 750000;
             NPC.defense = 100;
             NPC.damage = 40;
             NPC.HitSound = SoundID.NPCHit4;
@@ -143,7 +143,24 @@ namespace Paracosm.Content.Bosses.VortexMothership
 
             if (!Main.dedServ)
             {
-                Music = MusicLoader.GetMusicSlot(Mod, "Content/Audio/Music/SunBornCyclone");
+                Music = MusicLoader.GetMusicSlot(Mod, "Content/Audio/Music/CelestialShowdown");
+            }
+        }
+
+        public override void ModifyIncomingHit(ref NPC.HitModifiers modifiers)
+        {
+            if (phase == 1)
+            {
+                modifiers.FinalDamage *= 0.8f;
+            }
+        }
+
+        // Reduce damage taken from piercing projectiles
+        public override void ModifyHitByProjectile(Projectile projectile, ref NPC.HitModifiers modifiers)
+        {
+            if (projectile.penetrate == -1 || projectile.penetrate > 4)
+            {
+                modifiers.FinalDamage /= 3;
             }
         }
 
@@ -151,7 +168,6 @@ namespace Paracosm.Content.Bosses.VortexMothership
         {
             NPC.lifeMax = (int)(NPC.lifeMax * balance * bossAdjustment * 0.6f);
             NPC.damage = (int)(NPC.damage * balance);
-            NPC.defense = 100;
         }
 
         public override void SendExtraAI(BinaryWriter writer)
@@ -226,7 +242,7 @@ namespace Paracosm.Content.Bosses.VortexMothership
 
             if (phase == 2)
             {
-                NPC.defDefense = 200;
+                NPC.defDefense = 120;
                 int spawnSpeedDiv = (NPC.life < (NPC.lifeMax / 4)) ? 2 : 1;
                 if (AttackTimer % (900 / spawnSpeedDiv) == 0)
                 {
@@ -238,6 +254,14 @@ namespace Paracosm.Content.Bosses.VortexMothership
                     SpawnUFOs();
                     spawnedUFOs = false;
                 }
+                if (AITimer % 60 == 0)
+                {
+                    for (int i = 0; i < 6; i++)
+                    {
+                        Gore gore = Gore.NewGoreDirect(NPC.GetSource_FromThis(), NPC.position + new Vector2(Main.rand.Next(0, NPC.width), Main.rand.Next(0, NPC.height)), new Vector2(Main.rand.NextFloat(-3, 3)), Main.rand.Next(61, 64), Main.rand.NextFloat(1f, 5f));
+                    }
+                }
+                
                 AttackTimer++;
             }
 
@@ -325,7 +349,8 @@ namespace Paracosm.Content.Bosses.VortexMothership
             {
                 return;
             }
-            int count = NPC.life < (NPC.lifeMax / 4) ? 5 : 3;
+            int countNPCs = Main.npc.Count(npc => npc.active && npc.type == Summonables["UFO"]);
+            int count = NPC.life < (NPC.lifeMax / 4) ? 5 - countNPCs : 3 - countNPCs;
             for (int i = 0; i < count; i++)
             {
                 NPC ufoNPC = NPC.NewNPCDirect(NPC.GetSource_FromAI(), NPC.Center, Summonables["UFO"], NPC.whoAmI, NPC.whoAmI);

@@ -30,8 +30,8 @@ namespace Paracosm.Content.Items.Armor.Celestial
             Item.height = 32;
             Item.defense = 18;
             Item.lifeRegen = lifeRegenBoost;
-
-            Item.rare = ItemRarityID.Red;
+            Item.expert = true;
+            Item.rare = ItemRarityID.Expert;
             Item.value = Item.sellPrice(0, 15, 0, 0);
         }
 

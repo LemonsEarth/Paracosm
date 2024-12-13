@@ -26,7 +26,8 @@ namespace Paracosm.Content.Items.Armor.Celestial
             Item.width = 24;
             Item.height = 24;
             Item.defense = 8;
-            Item.rare = ItemRarityID.Red;
+            Item.expert = true;
+            Item.rare = ItemRarityID.Expert;
             Item.value = Item.sellPrice(0, 15, 0, 0);
         }
 

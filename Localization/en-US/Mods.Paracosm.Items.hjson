@@ -560,3 +560,8 @@ NebulousEnergy: {
 		Increases pickup range for Nebula Boosters
 		'''
 }
+
+EventHorizon: {
+	DisplayName: Event Horizon
+	Tooltip: ""
+}

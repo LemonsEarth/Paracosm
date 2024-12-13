@@ -134,7 +134,7 @@ namespace Paracosm.Content.Bosses.SolarChampion
 
             if (!Main.dedServ)
             {
-                Music = MusicLoader.GetMusicSlot(Mod, "Content/Audio/Music/SunBornCyclone");
+                Music = MusicLoader.GetMusicSlot(Mod, "Content/Audio/Music/CelestialShowdown");
             }
         }
 

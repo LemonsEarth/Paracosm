@@ -32,6 +32,8 @@ namespace Paracosm.Common.Utils
 
             }
         }
+
+
         public static NPC GetClosestNPC(Projectile projectile)
         {
             NPC closestEnemy = null;

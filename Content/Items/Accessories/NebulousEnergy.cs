@@ -9,8 +9,8 @@ namespace Paracosm.Content.Items.Accessories
 {
     public class NebulousEnergy : ModItem
     {
-        static readonly float damageBoost = 10;
-        static readonly float critBoost = 10;
+        static readonly float damageBoost = 5;
+        static readonly float critBoost = 5;
         static readonly float defenseBoost = 5;
 
         public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(damageBoost, critBoost);

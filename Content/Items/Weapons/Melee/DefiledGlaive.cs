@@ -40,12 +40,6 @@ namespace Paracosm.Content.Items.Weapons.Melee
             Item.shoot = ModContent.ProjectileType<DefiledGlaiveProjectile>();
         }
 
-        public override bool CanUseItem(Player player)
-        {
-            // Ensures no more than one spear can be thrown out, use this when using autoReuse
-            return player.ownedProjectileCounts[Item.shoot] < 1;
-        }
-
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
             if (Main.myPlayer == player.whoAmI)

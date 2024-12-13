@@ -32,7 +32,7 @@ namespace Paracosm.Content.Items.Weapons.Melee
             Item.useTime = 6;
             Item.UseSound = SoundID.Item1;
             Item.autoReuse = true;
-            Item.damage = 240;
+            Item.damage = 220;
             Item.knockBack = 6;
             Item.noUseGraphic = true;
             Item.noMelee = true;
@@ -67,7 +67,7 @@ namespace Paracosm.Content.Items.Weapons.Melee
             }
             if (player.altFunctionUse == 2 && useCounter >= 100)
             {
-                Projectile.NewProjectile(Item.GetSource_FromThis(), player.Center, (Main.MouseWorld - player.Center).SafeNormalize(Vector2.Zero), ModContent.ProjectileType<NebulaBeamFriendly>(), Item.damage * 6, 1f, ai0: 30);   
+                Projectile.NewProjectile(Item.GetSource_FromThis(), player.Center, (Main.MouseWorld - player.Center).SafeNormalize(Vector2.Zero), ModContent.ProjectileType<NebulaBeamFriendly>(), Item.damage * 10, 1f, ai0: 30);   
                 useCounter = 0;
             }
             return true;
