@@ -64,6 +64,8 @@ namespace Paracosm.Content.Projectiles.Friendly
                 Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, DustID.HallowSpray);
             }
 
+            Lighting.AddLight(Projectile.Center, 100, 20, 100);
+
             if (Projectile.timeLeft > 60)
             {
                 Projectile.Opacity += 2f / 10f;

@@ -172,10 +172,10 @@ namespace Paracosm.Content.Bosses.NebulaMaster
             phase2FirstTime = reader.ReadBoolean();
             AttackTimer2 = reader.ReadInt32();
             AttackCount2 = reader.ReadInt32();
-            arenaFollow = reader.ReadBoolean();
-            spawnedAura = reader.ReadBoolean();
             arenaCenter.X = reader.ReadSingle();
             arenaCenter.Y = reader.ReadSingle();
+            arenaFollow = reader.ReadBoolean();
+            spawnedAura = reader.ReadBoolean();
             phaseTransition = reader.ReadBoolean();
         }
 

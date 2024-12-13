@@ -176,6 +176,9 @@ namespace Paracosm.Content.Bosses.DivineSeeker
             {
                 NPC.active = false;
             }
+
+            Lighting.AddLight(NPC.Center, 100, 0, 100);
+
             AITimer++;
             Vector2 playerDirection = (player.MountedCenter - NPC.Center).SafeNormalize(Vector2.Zero);
             shootOffset = playerDirection.SafeNormalize(Vector2.Zero) * new Vector2(NPC.width / 2, NPC.height / 2).Length();
