@@ -5,8 +5,6 @@ using Paracosm.Common.Utils;
 using Paracosm.Content.Buffs;
 using Paracosm.Content.Items.BossBags;
 using Paracosm.Content.Items.Materials;
-using Paracosm.Content.Items.Weapons.Magic;
-using Paracosm.Content.Items.Weapons.Melee;
 using Paracosm.Content.Projectiles.Hostile;
 using ReLogic.Content;
 using System;
@@ -15,7 +13,6 @@ using System.IO;
 using System.Linq;
 using Terraria;
 using Terraria.Audio;
-using Terraria.GameContent;
 using Terraria.GameContent.Bestiary;
 using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
@@ -742,7 +739,7 @@ namespace Paracosm.Content.Bosses.NebulaMaster
                 case > 0:
                     if (AttackTimer % 14 == 0)
                     {
-                        SoundEngine.PlaySound(SoundID.Item84 with { PitchRange = (-0.2f, 0.2f)});
+                        SoundEngine.PlaySound(SoundID.Item84 with { PitchRange = (-0.2f, 0.2f) });
                         if (Main.netMode != NetmodeID.MultiplayerClient)
                         {
                             targetPosition = new Vector2(NPC.Center.X, arenaCenter.Y) + new Vector2(-400, Main.rand.NextFloat(-DASH_BLASTER_ARENA_DISTANCE * 0.75f, DASH_BLASTER_ARENA_DISTANCE * 0.75f));

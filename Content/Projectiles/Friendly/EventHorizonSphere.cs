@@ -81,7 +81,7 @@ namespace Paracosm.Content.Projectiles.Friendly
                             {
                                 Vector2 direction = Projectile.Center.DirectionTo(closestNPC.Center);
                                 Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, direction * 15, ModContent.ProjectileType<EventHorizonProj>(), Projectile.damage / 2, 0.5f);
-                            }             
+                            }
                         }
                     }
                 }
@@ -99,7 +99,7 @@ namespace Paracosm.Content.Projectiles.Friendly
                     }
                 }
             }
-            
+
             Lighting.AddLight(Projectile.Center, 100, 20, 100);
             Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, DustID.GemAmethyst);
             dust.noGravity = true;

@@ -1,5 +1,4 @@
-﻿using Paracosm.Common.Players;
-using Paracosm.Content.Buffs;
+﻿using Paracosm.Content.Buffs;
 using Terraria;
 using Terraria.ID;
 using Terraria.Localization;

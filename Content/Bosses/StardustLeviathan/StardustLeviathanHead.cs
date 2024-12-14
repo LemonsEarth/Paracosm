@@ -1,25 +1,17 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Paracosm.Common.Systems;
-using Paracosm.Common.Utils;
 using Paracosm.Content.Buffs;
 using Paracosm.Content.Items.BossBags;
 using Paracosm.Content.Items.Materials;
-using Paracosm.Content.Items.Weapons.Magic;
-using Paracosm.Content.Items.Weapons.Melee;
 using Paracosm.Content.Projectiles.Hostile;
-using ReLogic.Content;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Terraria;
-using Terraria.Audio;
-using Terraria.GameContent;
 using Terraria.GameContent.Bestiary;
 using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
-using Terraria.Localization;
 using Terraria.ModLoader;
 
 namespace Paracosm.Content.Bosses.StardustLeviathan
@@ -27,13 +19,19 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
     [AutoloadBossHead]
     public class StardustLeviathanHead : ModNPC
     {
+        int BodyType => ModContent.NPCType<StardustLeviathanBody>();
+        int TailType => ModContent.NPCType<StardustLeviathanTail>();
+        const int MAX_SEGMENT_COUNT = 20;
+        int SegmentCount = 0;
+
         ref float AITimer => ref NPC.ai[0];
         public float Attack
         {
             get { return NPC.ai[1]; }
             private set
             {
-                if (value > 0 || value < 0)
+                int maxVal = 0;
+                if (value > maxVal || value < 0)
                 {
                     NPC.ai[1] = 0;
                 }
@@ -71,12 +69,12 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
 
         public enum Attacks
         {
-            
+            Dashing
         }
 
         public enum Attacks2
         {
-            
+
         }
 
         public override void SetStaticDefaults()
@@ -109,8 +107,8 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
         {
             NPC.boss = true;
             NPC.aiStyle = -1;
-            NPC.width = 300;
-            NPC.height = 156;
+            NPC.width = 174;
+            NPC.height = 300;
             NPC.Opacity = 1;
             NPC.lifeMax = 900000;
             NPC.defense = 40;
@@ -182,8 +180,17 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
             //Visuals
             if (AITimer == 0)
             {
+                SpawnSegments();
                 NPC.Opacity = 0;
             }
+
+            if (NPC.velocity.X != 0 && !playerDirection.HasNaNs())
+            {
+                NPC.spriteDirection = -Math.Sign(NPC.velocity.X);
+            }
+
+            float rotmul = NPC.spriteDirection == 1 ? -MathHelper.PiOver2 : MathHelper.PiOver2;
+            NPC.rotation = NPC.velocity.ToRotation() + MathHelper.PiOver2;
 
             if (!Terraria.Graphics.Effects.Filters.Scene["ScreenTintShader"].IsActive() && Main.netMode != NetmodeID.Server)
             {
@@ -192,10 +199,6 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
 
             Lighting.AddLight(NPC.Center, 100, 100, 100);
 
-            if (playerDirection.X != 0 && !playerDirection.HasNaNs())
-            {
-                NPC.spriteDirection = Math.Sign(playerDirection.X);
-            }
 
             foreach (var p in Main.player)
             {
@@ -217,8 +220,6 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
             {
                 NPC.dontTakeDamage = false;
             }
-            float rotmul = NPC.spriteDirection == 1 ? 0 : -MathHelper.Pi;
-            NPC.rotation = playerDirection.ToRotation() + rotmul;
 
             if (attackDuration <= 0)
             {
@@ -229,7 +230,9 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
             {
                 switch (Attack)
                 {
-
+                    case (int)Attacks.Dashing:
+                        Dashing();
+                        break;
                 }
             }
             else
@@ -241,11 +244,33 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
             AITimer++;
         }
 
+        void SpawnSegments()
+        {
+            int latestNPC = NPC.whoAmI;
+            while (SegmentCount < MAX_SEGMENT_COUNT - 2) // Body segments, excluding head and tail
+            {
+                latestNPC = SpawnSegment(BodyType, latestNPC);
+                SegmentCount++;
+            }
+
+            SpawnSegment(TailType, latestNPC);
+        }
+
+        int SpawnSegment(int type, int latestNPC)
+        {
+            int oldestNPC = latestNPC;
+            latestNPC = NPC.NewNPC(NPC.GetSource_FromAI(), (int)NPC.Center.X, (int)NPC.Center.Y, type, NPC.whoAmI, 0, latestNPC);
+
+            Main.npc[oldestNPC].ai[0] = latestNPC;
+            Main.npc[latestNPC].realLife = NPC.whoAmI;
+            return latestNPC;
+        }
+
         const int INTRO_DURATION = 60;
         void Intro()
         {
             NPC.dontTakeDamage = true;
-            NPC.velocity = NPC.Center.DirectionTo(player.Center + new Vector2(500, 0)) * (NPC.Center.Distance(player.Center + new Vector2(500, 0)) / 12);
+            NPC.velocity = -Vector2.UnitX * 20f;
             NPC.Opacity += 1f / 20f;
             Attack = 0;
             attackDuration = attackDurations[(int)Attack];
@@ -279,6 +304,36 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
             }
         }
 
+        const int DASHING_POS_TIME = 60;
+        const int DASHING_TIME = 30;
+        void Dashing()
+        {
+            switch (AttackTimer)
+            {
+                case DASHING_POS_TIME:
+                    targetPosition = playerDirection.SafeNormalize(Vector2.Zero);
+                    break;
+                case DASHING_TIME:
+                    NPC.velocity = targetPosition * 60;
+                    break;
+                case > 0:
+                    if (Main.netMode != NetmodeID.MultiplayerClient)
+                    {
+                        if (AttackTimer % 5 == 0)
+                        {
+                            Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, playerDirection * 10, ProjectileID.BulletDeadeye, NPC.damage, 1);
+                        }
+                    }
+                    NPC.velocity /= 1.02f;
+                    break;
+                case 0:
+                    AttackTimer = DASHING_POS_TIME;
+                    return;
+            }
+
+            AttackTimer--;
+        }
+
         void MoveToPos(Vector2 pos, float xAccel = 1f, float yAccel = 1f, float xSpeed = 1f, float ySpeed = 1f)
         {
             Vector2 direction = NPC.Center.DirectionTo(pos);
@@ -292,6 +347,16 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
         {
             float targetArenaDistance = BASE_ARENA_DISTANCE;
             arenaFollow = true;
+
+            if (phase == 1)
+            {
+                switch(Attack)
+                {
+                    case (int)Attacks.Dashing:
+                        arenaFollow = false;
+                        break;
+                }
+            }
 
             if (Main.netMode != NetmodeID.MultiplayerClient)
             {

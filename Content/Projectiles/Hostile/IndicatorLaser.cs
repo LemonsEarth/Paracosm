@@ -45,7 +45,7 @@ namespace Paracosm.Content.Projectiles.Hostile
                     }
                 }
             }
-        
+
             if (Projectile.timeLeft > 10)
             {
                 Projectile.alpha = (int)MathHelper.Lerp(Projectile.alpha, 0, AITimer / 20f);

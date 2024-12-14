@@ -3,8 +3,6 @@ using Paracosm.Common.Systems;
 using Paracosm.Content.Buffs;
 using Paracosm.Content.Items.BossBags;
 using Paracosm.Content.Items.Materials;
-using Paracosm.Content.Items.Weapons.Magic;
-using Paracosm.Content.Items.Weapons.Melee;
 using Paracosm.Content.Projectiles.Hostile;
 using System.Collections.Generic;
 using System.IO;
@@ -261,7 +259,7 @@ namespace Paracosm.Content.Bosses.VortexMothership
                         Gore gore = Gore.NewGoreDirect(NPC.GetSource_FromThis(), NPC.position + new Vector2(Main.rand.Next(0, NPC.width), Main.rand.Next(0, NPC.height)), new Vector2(Main.rand.NextFloat(-3, 3)), Main.rand.Next(61, 64), Main.rand.NextFloat(1f, 5f));
                     }
                 }
-                
+
                 AttackTimer++;
             }
 

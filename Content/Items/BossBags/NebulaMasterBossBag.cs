@@ -1,5 +1,4 @@
 ﻿using Paracosm.Content.Items.Accessories;
-using Paracosm.Content.Items.Armor.Celestial;
 using Paracosm.Content.Items.Materials;
 using Terraria;
 using Terraria.GameContent.ItemDropRules;

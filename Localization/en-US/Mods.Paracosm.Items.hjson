@@ -565,3 +565,8 @@ EventHorizon: {
 	DisplayName: Event Horizon
 	Tooltip: ""
 }
+
+DragonFood: {
+	DisplayName: Dragon Food
+	Tooltip: ""
+}

@@ -2,8 +2,6 @@
 using Paracosm.Common.Utils;
 using Paracosm.Content.Items.Materials;
 using Paracosm.Content.Projectiles.Friendly;
-using Paracosm.Content.Projectiles.HeldProjectiles;
-using Paracosm.Content.Projectiles.Hostile;
 using Terraria;
 using Terraria.Audio;
 using Terraria.DataStructures;
@@ -67,7 +65,7 @@ namespace Paracosm.Content.Items.Weapons.Melee
             }
             if (player.altFunctionUse == 2 && useCounter >= 100)
             {
-                Projectile.NewProjectile(Item.GetSource_FromThis(), player.Center, (Main.MouseWorld - player.Center).SafeNormalize(Vector2.Zero), ModContent.ProjectileType<NebulaBeamFriendly>(), Item.damage * 10, 1f, ai0: 30);   
+                Projectile.NewProjectile(Item.GetSource_FromThis(), player.Center, (Main.MouseWorld - player.Center).SafeNormalize(Vector2.Zero), ModContent.ProjectileType<NebulaBeamFriendly>(), Item.damage * 10, 1f, ai0: 30);
                 useCounter = 0;
             }
             return true;

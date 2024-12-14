@@ -6,18 +6,13 @@ using Terraria.ModLoader;
 
 namespace Paracosm.Content.Bosses.StardustLeviathan
 {
-    public class StardustLeviathanBody : ModNPC
+    public class StardustLeviathanTail : ModNPC
     {
         float AITimer = 0;
 
         int FollowingNPC
         {
             get { return (int)NPC.ai[1]; }
-        }
-
-        int FollowerNPC
-        {
-            get { return (int)NPC.ai[0]; }
         }
 
         public override void SetStaticDefaults()
@@ -101,6 +96,7 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
             NPC.velocity = Vector2.Zero;
             NPC.position += pos;
         }
+
 
         public void DeleteProjectiles(int projID)
         {
