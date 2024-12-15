@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using System;
 using System.IO;
 using Terraria;
 using Terraria.ID;
@@ -20,6 +21,24 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
             get { return (int)NPC.ai[0]; }
         }
 
+        int HeadNPC
+        {
+            get { return (int)NPC.ai[2]; }
+        }
+
+        int SegmentNum
+        {
+            get { return (int)NPC.ai[3]; }
+        }
+
+        int AttackTimer = 0;
+        int AttackCount = 0;
+        float RandNum = 0;
+
+        StardustLeviathanHead head;
+
+        Vector2 bodyPlayerDir => head.player.Center - NPC.Center;
+
         public override void SetStaticDefaults()
         {
             NPCID.Sets.SpecificDebuffImmunity[Type][BuffID.Confused] = true;
@@ -35,8 +54,8 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
             NPC.width = 128;
             NPC.height = 64;
             NPC.Opacity = 1;
-            NPC.lifeMax = 900000;
-            NPC.defense = 40;
+            NPC.lifeMax = 1500000;
+            NPC.defense = 160;
             NPC.damage = 40;
             NPC.HitSound = SoundID.NPCHit56;
             NPC.DeathSound = SoundID.NPCDeath60;
@@ -77,16 +96,41 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
         public override void AI()
         {
             NPC followingNPC = Main.npc[FollowingNPC];
+            NPC headNPC = Main.npc[HeadNPC];
 
             if (followingNPC is null || !followingNPC.active || followingNPC.friendly || followingNPC.townNPC || followingNPC.lifeMax <= 5)
             {
                 NPC.life = 0;
                 NPC.active = false;
             }
+            head = (StardustLeviathanHead)headNPC.ModNPC;
 
             FollowNextSegment(followingNPC);
 
             NPC.spriteDirection = followingNPC.spriteDirection;
+
+            if (AITimer < StardustLeviathanHead.INTRO_DURATION)
+            {
+                AITimer++;
+                return;
+            }
+
+            if (head.phase == 1)
+            {
+                switch (head.Attack)
+                {
+                    case (int)StardustLeviathanHead.Attacks.DashingStarSpam:
+                        DashingStarSpam();
+                        break;
+                    case (int)StardustLeviathanHead.Attacks.Circling:
+                        Circling();
+                        break;
+                }
+            }
+            else
+            {
+
+            }
 
             AITimer++;
         }
@@ -100,6 +144,64 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
             Vector2 pos = toFollowing * distance;
             NPC.velocity = Vector2.Zero;
             NPC.position += pos;
+        }
+
+        public void SwitchAttacks(int attack)
+        {
+            if (Main.netMode != NetmodeID.MultiplayerClient)
+            {
+                AttackTimer = 0;
+                AttackCount = 0;
+                RandNum = 0;
+            }
+            NPC.netUpdate = true;
+        }
+
+        const int DASHING_ATTACK_RATE = 90;
+        void DashingStarSpam()
+        {
+            switch (AttackTimer)
+            {
+                case 0:
+                    if (SegmentNum % 4 != 0)
+                    {
+                        return;
+                    }
+                    if (Main.netMode != NetmodeID.MultiplayerClient)
+                    {
+                        Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, bodyPlayerDir.SafeNormalize(Vector2.Zero) * 20, head.Proj["Starshot"], NPC.damage, 1);
+                    }
+                    AttackTimer = DASHING_ATTACK_RATE;
+                    return;
+            }
+
+            AttackTimer--;
+        }
+
+        const int CIRCLING_ATTACK_RATE = 80;
+        void Circling()
+        {
+            switch (AttackTimer)
+            {
+                case 0:
+                    if (Main.netMode != NetmodeID.MultiplayerClient)
+                    {
+                        RandNum = Main.rand.Next(-100, 100);
+                        NPC.netUpdate = true;
+                        Vector2 pos = head.player.Center + new Vector2(RandNum, -800);
+                        Vector2 posToPlayer = pos.DirectionTo(head.player.Center);
+                        Projectile.NewProjectile(NPC.GetSource_FromAI(), pos, posToPlayer * 25, head.Proj["Starshot"], NPC.damage, 1, ai1: 1);
+                    }
+                    AttackTimer = CIRCLING_ATTACK_RATE + SegmentNum % 8;
+                    return;
+            }
+
+            AttackTimer--;
+        }
+
+        public override void OnHitByProjectile(Projectile projectile, NPC.HitInfo hit, int damageDone)
+        {
+            projectile.damage /= 2;
         }
 
         public void DeleteProjectiles(int projID)

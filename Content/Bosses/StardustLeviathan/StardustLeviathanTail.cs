@@ -15,6 +15,13 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
             get { return (int)NPC.ai[1]; }
         }
 
+        int HeadNPC
+        {
+            get { return (int)NPC.ai[2]; }
+        }
+
+        StardustLeviathanHead head;
+
         public override void SetStaticDefaults()
         {
             NPCID.Sets.SpecificDebuffImmunity[Type][BuffID.Confused] = true;
@@ -30,8 +37,8 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
             NPC.width = 128;
             NPC.height = 64;
             NPC.Opacity = 1;
-            NPC.lifeMax = 900000;
-            NPC.defense = 40;
+            NPC.lifeMax = 1500000;
+            NPC.defense = 60;
             NPC.damage = 40;
             NPC.HitSound = SoundID.NPCHit56;
             NPC.DeathSound = SoundID.NPCDeath60;
@@ -72,12 +79,14 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
         public override void AI()
         {
             NPC followingNPC = Main.npc[FollowingNPC];
+            NPC headNPC = Main.npc[HeadNPC];
 
             if (followingNPC is null || !followingNPC.active || followingNPC.friendly || followingNPC.townNPC || followingNPC.lifeMax <= 5)
             {
                 NPC.life = 0;
                 NPC.active = false;
             }
+            head = (StardustLeviathanHead)headNPC.ModNPC;
 
             FollowNextSegment(followingNPC);
 

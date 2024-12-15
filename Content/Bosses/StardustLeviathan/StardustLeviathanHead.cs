@@ -21,7 +21,7 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
     {
         int BodyType => ModContent.NPCType<StardustLeviathanBody>();
         int TailType => ModContent.NPCType<StardustLeviathanTail>();
-        const int MAX_SEGMENT_COUNT = 20;
+        const int MAX_SEGMENT_COUNT = 40;
         int SegmentCount = 0;
 
         ref float AITimer => ref NPC.ai[0];
@@ -30,7 +30,7 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
             get { return NPC.ai[1]; }
             private set
             {
-                int maxVal = 0;
+                int maxVal = 1;
                 if (value > maxVal || value < 0)
                 {
                     NPC.ai[1] = 0;
@@ -48,11 +48,11 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
         int AttackCount2 = 0;
 
         bool phase2FirstTime = false;
-        int phase { get; set; } = 1;
+        public int phase { get; private set; } = 1;
         bool phaseTransition = false;
 
         float attackDuration = 0;
-        int[] attackDurations = { 480, 450, 900 };
+        int[] attackDurations = { 480, 480, 900 };
         int[] attackDurations2 = { 600, 900, 720, 900 };
         public Player player { get; private set; }
         public Vector2 playerDirection { get; private set; }
@@ -62,14 +62,17 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
         bool arenaFollow = true;
 
         List<Projectile> Spheres = new List<Projectile>();
-        Dictionary<string, int> Proj = new Dictionary<string, int>
+        List<StardustLeviathanBody> Segments = new List<StardustLeviathanBody>();
+        public Dictionary<string, int> Proj { get; } = new Dictionary<string, int>
         {
             {"Sphere", ModContent.ProjectileType<BorderSphere>()},
+            {"Starshot", ModContent.ProjectileType<StarshotHostile>()},
         };
 
         public enum Attacks
         {
-            Dashing
+            DashingStarSpam,
+            Circling,
         }
 
         public enum Attacks2
@@ -110,8 +113,8 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
             NPC.width = 174;
             NPC.height = 300;
             NPC.Opacity = 1;
-            NPC.lifeMax = 900000;
-            NPC.defense = 40;
+            NPC.lifeMax = 1500000;
+            NPC.defense = 80;
             NPC.damage = 40;
             NPC.HitSound = SoundID.NPCHit56;
             NPC.DeathSound = SoundID.NPCDeath60;
@@ -180,6 +183,7 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
             //Visuals
             if (AITimer == 0)
             {
+                arenaCenter = NPC.Center;
                 SpawnSegments();
                 NPC.Opacity = 0;
             }
@@ -192,10 +196,10 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
             float rotmul = NPC.spriteDirection == 1 ? -MathHelper.PiOver2 : MathHelper.PiOver2;
             NPC.rotation = NPC.velocity.ToRotation() + MathHelper.PiOver2;
 
-            if (!Terraria.Graphics.Effects.Filters.Scene["ScreenTintShader"].IsActive() && Main.netMode != NetmodeID.Server)
+            /*if (!Terraria.Graphics.Effects.Filters.Scene["ScreenTintShader"].IsActive() && Main.netMode != NetmodeID.Server)
             {
                 Terraria.Graphics.Effects.Filters.Scene.Activate("ScreenTintShader").GetShader().UseColor(new Color(190, 255, 255));
-            }
+            }*/
 
             Lighting.AddLight(NPC.Center, 100, 100, 100);
 
@@ -205,7 +209,7 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
                 p.stardustMonolithShader = true;
             }
 
-            if (AITimer > INTRO_DURATION - 60)
+            if (AITimer > INTRO_DURATION)
             {
                 Arena();
             }
@@ -230,8 +234,11 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
             {
                 switch (Attack)
                 {
-                    case (int)Attacks.Dashing:
-                        Dashing();
+                    case (int)Attacks.DashingStarSpam:
+                        DashingStarSpam();
+                        break;
+                    case (int)Attacks.Circling:
+                        Circling();
                         break;
                 }
             }
@@ -250,6 +257,8 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
             while (SegmentCount < MAX_SEGMENT_COUNT - 2) // Body segments, excluding head and tail
             {
                 latestNPC = SpawnSegment(BodyType, latestNPC);
+                StardustLeviathanBody bodySegment = (StardustLeviathanBody)Main.npc[latestNPC].ModNPC;
+                Segments.Add(bodySegment);
                 SegmentCount++;
             }
 
@@ -259,14 +268,14 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
         int SpawnSegment(int type, int latestNPC)
         {
             int oldestNPC = latestNPC;
-            latestNPC = NPC.NewNPC(NPC.GetSource_FromAI(), (int)NPC.Center.X, (int)NPC.Center.Y, type, NPC.whoAmI, 0, latestNPC);
+            latestNPC = NPC.NewNPC(NPC.GetSource_FromAI(), (int)NPC.Center.X, (int)NPC.Center.Y, type, NPC.whoAmI, 0, latestNPC, NPC.whoAmI, SegmentCount);
 
             Main.npc[oldestNPC].ai[0] = latestNPC;
             Main.npc[latestNPC].realLife = NPC.whoAmI;
             return latestNPC;
         }
 
-        const int INTRO_DURATION = 60;
+        public const int INTRO_DURATION = 90;
         void Intro()
         {
             NPC.dontTakeDamage = true;
@@ -284,6 +293,11 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
                 Attack++;
                 if (phase == 1) attackDuration = attackDurations[(int)Attack];
                 else attackDuration = attackDurations2[(int)Attack];
+
+                foreach (StardustLeviathanBody bodySegment in Segments)
+                {
+                    bodySegment.SwitchAttacks((int)Attack);
+                }
 
                 AttackCount = 0;
                 AttackCount2 = 0;
@@ -304,30 +318,46 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
             }
         }
 
-        const int DASHING_POS_TIME = 60;
-        const int DASHING_TIME = 30;
-        void Dashing()
+        const int DASHING_COOLDOWN = 90;
+        const int DASHING_TIME = 60;
+        void DashingStarSpam()
         {
             switch (AttackTimer)
             {
-                case DASHING_POS_TIME:
+                case > DASHING_TIME:
                     targetPosition = playerDirection.SafeNormalize(Vector2.Zero);
+                    NPC.velocity = playerDirection.SafeNormalize(Vector2.Zero) * 10;
                     break;
-                case DASHING_TIME:
-                    NPC.velocity = targetPosition * 60;
-                    break;
-                case > 0:
-                    if (Main.netMode != NetmodeID.MultiplayerClient)
-                    {
-                        if (AttackTimer % 5 == 0)
-                        {
-                            Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, playerDirection * 10, ProjectileID.BulletDeadeye, NPC.damage, 1);
-                        }
-                    }
-                    NPC.velocity /= 1.02f;
+                case > 0 and < DASHING_TIME:
+                    NPC.velocity = targetPosition.SafeNormalize(Vector2.Zero) * 40;
                     break;
                 case 0:
-                    AttackTimer = DASHING_POS_TIME;
+                    AttackTimer = DASHING_COOLDOWN;
+                    return;
+            }
+
+            AttackTimer--;
+        }
+
+        const int CIRCLING_START_TIME = 480;
+        const int CIRCLING_POS_TIME = 420;
+        void Circling()
+        {
+            switch (AttackTimer)
+            {
+                case > CIRCLING_POS_TIME:
+                    AttackCount = CIRCLING_ARENA_DISTANCE;
+                    targetPosition = arenaCenter + (Vector2.UnitY * CIRCLING_ARENA_DISTANCE);
+                    NPC.velocity = NPC.Center.DirectionTo(targetPosition) * (NPC.Center.Distance(targetPosition) / 12);
+                    break;
+                case > 0:
+                    targetPosition = (-Vector2.UnitY * AttackCount);
+                    NPC.velocity = NPC.Center.DirectionTo(arenaCenter + targetPosition);
+                    NPC.Center = arenaCenter + targetPosition.RotatedBy(MathHelper.ToRadians(-AttackTimer * 3));
+                    AttackCount -= 3;
+                    break;
+                case 0:
+                    AttackTimer = CIRCLING_START_TIME;
                     return;
             }
 
@@ -342,7 +372,8 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
             NPC.velocity += new Vector2(XaccelMod * xAccel + xSpeed * Math.Sign(direction.X), YaccelMod * yAccel + ySpeed * Math.Sign(direction.Y));
         }
 
-        const int BASE_ARENA_DISTANCE = 1500;
+        const int BASE_ARENA_DISTANCE = 3000;
+        const int CIRCLING_ARENA_DISTANCE = 2000;
         public void Arena()
         {
             float targetArenaDistance = BASE_ARENA_DISTANCE;
@@ -350,10 +381,14 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
 
             if (phase == 1)
             {
-                switch(Attack)
+                switch (Attack)
                 {
-                    case (int)Attacks.Dashing:
+                    case (int)Attacks.DashingStarSpam:
                         arenaFollow = false;
+                        break;
+                    case (int)Attacks.Circling:
+                        arenaFollow = false;
+                        targetArenaDistance = CIRCLING_ARENA_DISTANCE;
                         break;
                 }
             }
@@ -396,11 +431,6 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
                 if (arenaCenter.Distance(player.MountedCenter) > arenaDistance + 50 && AITimer > INTRO_DURATION + 30)
                 {
                     player.AddBuff(ModContent.BuffType<Infected>(), 2);
-                }
-
-                if (arenaCenter.Distance(player.MountedCenter) < arenaDistance + 50 && AITimer > INTRO_DURATION - 60)
-                {
-                    player.AddBuff(ModContent.BuffType<NebulousPower>(), 2);
                 }
             }
         }

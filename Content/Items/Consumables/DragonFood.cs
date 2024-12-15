@@ -17,10 +17,10 @@ namespace Paracosm.Content.Items.Consumables
 
         public override void SetDefaults()
         {
-            Item.width = 36;
-            Item.height = 36;
+            Item.width = 38;
+            Item.height = 34;
             Item.maxStack = 1;
-            Item.rare = ItemRarityID.Pink;
+            Item.rare = ItemRarityID.Yellow;
             Item.useAnimation = 30;
             Item.useTime = 30;
             Item.useStyle = ItemUseStyleID.HoldUp;

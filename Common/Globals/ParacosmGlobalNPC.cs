@@ -2,6 +2,7 @@
 using Paracosm.Content.Biomes.Void;
 using Paracosm.Content.Bosses.InfectedRevenant;
 using Paracosm.Content.Bosses.NebulaMaster;
+using Paracosm.Content.Bosses.StardustLeviathan;
 using Paracosm.Content.Bosses.VortexMothership;
 using Paracosm.Content.NPCs.Hostile.Paracosmic;
 using Paracosm.Content.NPCs.Hostile.Void;
@@ -85,7 +86,7 @@ namespace Paracosm.Common.Globals
 
         public override bool CanHitPlayer(NPC npc, Player target, ref int cooldownSlot)
         {
-            if (npc.type == ModContent.NPCType<VortexMothership>() || npc.type == ModContent.NPCType<VortexTeslaGun>() || npc.type == ModContent.NPCType<InfectedRevenantCorruptHead>() || npc.type == ModContent.NPCType<InfectedRevenantCrimsonHead>() || npc.type == ModContent.NPCType<NebulaMaster>())
+            if (npc.type == ModContent.NPCType<VortexMothership>() || npc.type == ModContent.NPCType<VortexTeslaGun>() || npc.type == ModContent.NPCType<InfectedRevenantCorruptHead>() || npc.type == ModContent.NPCType<InfectedRevenantCrimsonHead>() || npc.type == ModContent.NPCType<NebulaMaster>() || npc.type == ModContent.NPCType<StardustLeviathanHead>())
             {
                 return false;
             }
