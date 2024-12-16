@@ -9,10 +9,14 @@ float4 Darkness(float4 sampleColor : COLOR0, float2 coords : TEXCOORD0) : COLOR0
     float2 coords2 = coords * 2.0 - 1.0;
     float length = sqrt(coords2.x * coords2.x + coords2.y * coords2.y);
     
-    float res = distance / length;
-    res = clamp(res, 0, maxGlow);
-    color.rgb = res;
-    return color * sampleColor;
+    if (length > 0)
+    {
+        float res = distance / length;
+        res = clamp(res, 0, maxGlow);
+        color.rgb = res;
+        return color * sampleColor;
+    }
+    return color;  
 }
 
 technique Tech1

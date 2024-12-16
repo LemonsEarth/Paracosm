@@ -68,7 +68,7 @@ namespace Paracosm.Content.Projectiles.Hostile
                     {
                         if (Main.netMode != NetmodeID.MultiplayerClient)
                         {
-                            Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, direction, ModContent.ProjectileType<IndicatorLaser>(), 0, 1, ai0: 50, ai1: 0);
+                            Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, direction, ModContent.ProjectileType<IndicatorLaser>(), 0, 1, ai0: 13);
                         }
                     }
                 }

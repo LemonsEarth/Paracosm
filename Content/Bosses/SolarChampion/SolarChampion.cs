@@ -30,7 +30,13 @@ namespace Paracosm.Content.Bosses.SolarChampion
             get { return NPC.ai[1]; }
             set
             {
-                if (value > 3 || value < 0)
+                int diffMod = -1; // One less attack if not in expert
+                if (Main.expertMode)
+                {
+                    diffMod = 0;
+                }
+                int maxVal = 3;
+                if (value > maxVal + diffMod || value < 0)
                 {
                     NPC.ai[1] = 0;
                 }
@@ -508,7 +514,7 @@ namespace Paracosm.Content.Bosses.SolarChampion
                 {
                     for (int i = -1; i < 2; i += 2)
                     {
-                        Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, Vector2.UnitY * i, ModContent.ProjectileType<IndicatorLaser>(), 0, 1, ai0: 50);
+                        Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, Vector2.UnitY * i, ModContent.ProjectileType<IndicatorLaser>(), 0, 1, ai0: 13);
                     }
                 }
             }
@@ -751,7 +757,7 @@ namespace Paracosm.Content.Bosses.SolarChampion
                     for (int i = -1; i < 2; i += 2)
                     {
                         Vector2 indicatorDistancePos = NPC.Center + new Vector2(0, i * arenaDistance);
-                        Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, Vector2.UnitY * i, ModContent.ProjectileType<IndicatorLaser>(), 0, 1, ai0: 50);
+                        Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, Vector2.UnitY * i, ModContent.ProjectileType<IndicatorLaser>(), 0, 1, ai0: 12);
                     }
                 }
             }

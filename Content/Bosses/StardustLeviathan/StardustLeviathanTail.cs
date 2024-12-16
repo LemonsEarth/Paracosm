@@ -3,6 +3,7 @@ using System.IO;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.Graphics.Effects;
 
 namespace Paracosm.Content.Bosses.StardustLeviathan
 {
@@ -125,7 +126,7 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
 
         public override bool CheckDead()
         {
-            Terraria.Graphics.Effects.Filters.Scene.Deactivate("ScreenTintShader");
+            Filters.Scene.Deactivate("ScreenTintShader");
             return true;
         }
 

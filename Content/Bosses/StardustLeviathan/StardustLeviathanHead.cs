@@ -30,8 +30,13 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
             get { return NPC.ai[1]; }
             private set
             {
-                int maxVal = 1;
-                if (value > maxVal || value < 0)
+                int diffMod = -1; // One less attack if not in expert
+                if (Main.expertMode)
+                {
+                    diffMod = 0;
+                }
+                int maxVal = 2;
+                if (value > maxVal + diffMod || value < 0)
                 {
                     NPC.ai[1] = 0;
                 }
@@ -52,7 +57,7 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
         bool phaseTransition = false;
 
         float attackDuration = 0;
-        int[] attackDurations = { 480, 480, 900 };
+        int[] attackDurations = { 480, 480, 960 };
         int[] attackDurations2 = { 600, 900, 720, 900 };
         public Player player { get; private set; }
         public Vector2 playerDirection { get; private set; }
@@ -73,6 +78,7 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
         {
             DashingStarSpam,
             Circling,
+            Chasing
         }
 
         public enum Attacks2
@@ -134,7 +140,7 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
         public override void ApplyDifficultyAndPlayerScaling(int numPlayers, float balance, float bossAdjustment)
         {
             NPC.lifeMax = (int)(NPC.lifeMax * balance * bossAdjustment * 0.6f);
-            NPC.damage = (int)(NPC.damage * balance * 0.5f);
+            NPC.damage = (int)(NPC.damage * balance * 0.4f);
         }
 
         public override void SendExtraAI(BinaryWriter writer)
@@ -239,6 +245,9 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
                         break;
                     case (int)Attacks.Circling:
                         Circling();
+                        break;
+                    case (int)Attacks.Chasing:
+                        Chasing();
                         break;
                 }
             }
@@ -364,6 +373,38 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
             AttackTimer--;
         }
 
+        const int CHASING_START_TIME = 240;
+        const int CHASING_ATTACK_COOLDOWN = 10;
+        const int CHASING_MAX_PROJ_COUNT = 12;
+        void Chasing()
+        {
+            switch(AttackTimer)
+            {
+                case > 0:
+                    NPC.velocity = playerDirection.SafeNormalize(Vector2.Zero) * 6;
+                    break;
+                case 0:
+                    if (AttackCount < CHASING_MAX_PROJ_COUNT)
+                    {
+                        if (Main.netMode != NetmodeID.MultiplayerClient)
+                        {
+                            AttackTimer2 = (int)MathHelper.ToRadians(Main.rand.Next(-15, 15));
+                            Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, playerDirection.SafeNormalize(Vector2.Zero).RotatedBy(AttackTimer2) * 20, Proj["Starshot"], NPC.damage, 1);
+                        }
+                        AttackTimer = CHASING_ATTACK_COOLDOWN;
+                        AttackCount++;
+                        NPC.netUpdate = true;
+                    }
+                    else
+                    {
+                        AttackTimer = CHASING_START_TIME;
+                        AttackCount = 0;
+                    }
+                    break;
+            }     
+            AttackTimer--;
+        }
+
         void MoveToPos(Vector2 pos, float xAccel = 1f, float yAccel = 1f, float xSpeed = 1f, float ySpeed = 1f)
         {
             Vector2 direction = NPC.Center.DirectionTo(pos);
@@ -374,6 +415,7 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
 
         const int BASE_ARENA_DISTANCE = 3000;
         const int CIRCLING_ARENA_DISTANCE = 2000;
+        const int CHASING_ARENA_DISTANCE = 1500;
         public void Arena()
         {
             float targetArenaDistance = BASE_ARENA_DISTANCE;
@@ -387,6 +429,10 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
                         arenaFollow = false;
                         break;
                     case (int)Attacks.Circling:
+                        arenaFollow = false;
+                        targetArenaDistance = CIRCLING_ARENA_DISTANCE;
+                        break;
+                    case (int)Attacks.Chasing:
                         arenaFollow = false;
                         targetArenaDistance = CIRCLING_ARENA_DISTANCE;
                         break;

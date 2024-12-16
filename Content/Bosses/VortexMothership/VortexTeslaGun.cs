@@ -303,7 +303,7 @@ namespace Paracosm.Content.Bosses.VortexMothership
                         {
                             shootDirection = playerDirection;
                             NPC.netUpdate = true;
-                            Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, shootDirection, ModContent.ProjectileType<IndicatorLaser>(), 0, 1, ai0: 50);
+                            Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, shootDirection, ModContent.ProjectileType<IndicatorLaser>(), 0, 1, ai0: 13);
                         }
                     }
                     if (AttackTimer <= 0)
@@ -371,7 +371,7 @@ namespace Paracosm.Content.Bosses.VortexMothership
                 {
                     shootDirection = playerDirection;
                     NPC.netUpdate = true;
-                    Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, shootDirection, ModContent.ProjectileType<IndicatorLaser>(), 0, 1, ai0: 50);
+                    Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, shootDirection, ModContent.ProjectileType<IndicatorLaser>(), 0, 1, ai0: 13);
                 }
             }
             if (AttackTimer <= 0 - AttackCount)

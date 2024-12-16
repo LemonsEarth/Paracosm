@@ -31,8 +31,13 @@ namespace Paracosm.Content.Bosses.NebulaMaster
             get { return NPC.ai[1]; }
             private set
             {
+                int diffMod = -1; // One less attack if not in expert
+                if (Main.expertMode)
+                {
+                    diffMod = 0;
+                }
                 int maxVal = phase == 1 ? 2 : 3;
-                if (value > maxVal || value < 0)
+                if (value > maxVal + diffMod || value < 0)
                 {
                     NPC.ai[1] = 0;
                 }
@@ -633,7 +638,7 @@ namespace Paracosm.Content.Bosses.NebulaMaster
                             for (int i = 0; i < 4; i++)
                             {
                                 Vector2 offset = (Vector2.One * 800).RotatedBy(i * MathHelper.PiOver2 + (AttackCount + 1) * MathHelper.PiOver4);
-                                Projectile.NewProjectile(NPC.GetSource_FromAI(), player.Center + offset, (player.Center + offset).DirectionTo(player.Center), ModContent.ProjectileType<IndicatorLaser>(), 0, 1, ai0: 50);
+                                Projectile.NewProjectile(NPC.GetSource_FromAI(), player.Center + offset, (player.Center + offset).DirectionTo(player.Center), ModContent.ProjectileType<IndicatorLaser>(), 0, 1, ai0: 12);
                             }
                         }
                     }

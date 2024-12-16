@@ -75,7 +75,7 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
         public override void ApplyDifficultyAndPlayerScaling(int numPlayers, float balance, float bossAdjustment)
         {
             NPC.lifeMax = (int)(NPC.lifeMax * balance * bossAdjustment * 0.6f);
-            NPC.damage = (int)(NPC.damage * balance * 0.5f);
+            NPC.damage = (int)(NPC.damage * balance * 0.4f);
         }
 
         public override void SendExtraAI(BinaryWriter writer)
@@ -124,6 +124,9 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
                         break;
                     case (int)StardustLeviathanHead.Attacks.Circling:
                         Circling();
+                        break;
+                    case (int)StardustLeviathanHead.Attacks.Chasing:
+                        Chasing();
                         break;
                 }
             }
@@ -193,6 +196,28 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
                         Projectile.NewProjectile(NPC.GetSource_FromAI(), pos, posToPlayer * 25, head.Proj["Starshot"], NPC.damage, 1, ai1: 1);
                     }
                     AttackTimer = CIRCLING_ATTACK_RATE + SegmentNum % 8;
+                    return;
+            }
+
+            AttackTimer--;
+        }
+
+        const int CHASING_ATTACK_RATE = 60;
+        void Chasing()
+        {
+            switch (AttackTimer)
+            {
+                case 0:
+                    if (Main.netMode != NetmodeID.MultiplayerClient && SegmentNum % 4 == 0)
+                    {
+                        for (int i = -1; i <= 1; i+=2)
+                        {
+                            Vector2 toFollowing = Main.npc[FollowingNPC].Center - NPC.Center;
+                            Vector2 perpendicular = toFollowing.SafeNormalize(Vector2.Zero).RotatedBy(i * MathHelper.PiOver2);
+                            Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, perpendicular * 10, head.Proj["Starshot"], NPC.damage, 1);
+                        }
+                    }
+                    AttackTimer = CHASING_ATTACK_RATE;
                     return;
             }
 

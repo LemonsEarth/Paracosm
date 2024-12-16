@@ -21,6 +21,9 @@ namespace Paracosm
             Asset<Effect> darknessShader = Assets.Request<Effect>("Content/Shaders/DarknessShader");
             Filters.Scene["DarknessShader"] = new Filter(new ScreenShaderData(darknessShader, "Darkness"), EffectPriority.Medium);
 
+            Asset<Effect> projLightShader = Assets.Request<Effect>("Content/Shaders/ProjectileLightShader");
+            GameShaders.Misc["ProjectileLightShader"] = new MiscShaderData(projLightShader, "ProjectileLight");
+
             SkyManager.Instance["Paracosm:VoidSky"] = new VoidSkySky();
         }
     }

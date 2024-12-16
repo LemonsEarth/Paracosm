@@ -5,6 +5,8 @@ using Terraria;
 using Terraria.Audio;
 using Terraria.DataStructures;
 using Terraria.GameContent;
+using Terraria.Graphics.Effects;
+using Terraria.Graphics.Shaders;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -44,8 +46,8 @@ namespace Paracosm.Content.Projectiles.Hostile
 
         public override void OnSpawn(IEntitySource source)
         {
-            LemonUtils.DustCircle(Projectile.Center, 16, 2, DustID.BlueTorch, 1.2f);
-            LemonUtils.DustCircle(Projectile.Center, 16, 2, DustID.YellowTorch);
+            /*LemonUtils.DustCircle(Projectile.Center, 16, 2, DustID.BlueTorch, 1.2f);
+            LemonUtils.DustCircle(Projectile.Center, 16, 2, DustID.YellowTorch);*/
         }
 
         public override void AI()
@@ -63,7 +65,7 @@ namespace Paracosm.Content.Projectiles.Hostile
                 {
                     if (Main.netMode != NetmodeID.MultiplayerClient)
                     {
-                        Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Projectile.velocity.SafeNormalize(Vector2.Zero), ModContent.ProjectileType<IndicatorLaser>(), 0, 1, ai0: 20);
+                        Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Projectile.velocity.SafeNormalize(Vector2.Zero), ModContent.ProjectileType<IndicatorLaser>(), 0, 1, ai0: 5);
                     }
                 }
             }
@@ -86,10 +88,10 @@ namespace Paracosm.Content.Projectiles.Hostile
             SoundEngine.PlaySound(SoundID.Dig, Projectile.position);
             for (int i = 0; i < 5; i++)
             {
-                Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, DustID.GemTopaz);
+                /*Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, DustID.GemTopaz);
                 dust.noGravity = true;
                 dust.velocity *= 1.5f;
-                dust.scale *= 0.9f;
+                dust.scale *= 0.9f;*/
             }
         }
 
@@ -104,9 +106,18 @@ namespace Paracosm.Content.Projectiles.Hostile
                 Vector2 drawPos = (Projectile.oldPos[k] - Main.screenPosition) + drawOrigin + new Vector2(0f, Projectile.gfxOffY);
                 Color color = Projectile.GetAlpha(lightColor) * ((Projectile.oldPos.Length - k) / (float)Projectile.oldPos.Length);
                 color.A /= 2;
+                var shaderdata = GameShaders.Misc["ProjectileLightShader"];
+                shaderdata.UseImage0(TextureAssets.Projectile[Type]);
+                shaderdata.Apply(new DrawData(texture, drawPos, drawRectangle, Color.White));
+                Main.pixelShader.CurrentTechnique.Passes[0].Apply();
                 Main.EntitySpriteDraw(texture, drawPos, drawRectangle, color, Projectile.rotation, drawOrigin, Projectile.scale, SpriteEffects.None, 0);
             }
             return true;
+        }
+
+        public override void PostDraw(Color lightColor)
+        {
+            Main.pixelShader.CurrentTechnique.Passes[0].Apply();
         }
     }
 }
