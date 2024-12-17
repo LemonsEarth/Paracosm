@@ -35,7 +35,7 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
                 {
                     diffMod = 0;
                 }
-                int maxVal = 2;
+                int maxVal = 3;
                 if (value > maxVal + diffMod || value < 0)
                 {
                     NPC.ai[1] = 0;
@@ -57,13 +57,13 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
         bool phaseTransition = false;
 
         float attackDuration = 0;
-        int[] attackDurations = { 480, 480, 960 };
+        int[] attackDurations = { 480, 480, 960, 720 };
         int[] attackDurations2 = { 600, 900, 720, 900 };
         public Player player { get; private set; }
         public Vector2 playerDirection { get; private set; }
         Vector2 targetPosition = Vector2.Zero;
         float arenaDistance = 0;
-        Vector2 arenaCenter = Vector2.Zero;
+        public Vector2 arenaCenter { get; private set; } = Vector2.Zero;
         bool arenaFollow = true;
 
         List<Projectile> Spheres = new List<Projectile>();
@@ -72,13 +72,15 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
         {
             {"Sphere", ModContent.ProjectileType<BorderSphere>()},
             {"Starshot", ModContent.ProjectileType<StarshotHostile>()},
+            {"Mine", ModContent.ProjectileType<StardustEnergyMine>()},
         };
 
         public enum Attacks
         {
             DashingStarSpam,
             Circling,
-            Chasing
+            Chasing,
+            Minefield
         }
 
         public enum Attacks2
@@ -167,8 +169,7 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
             phase2FirstTime = reader.ReadBoolean();
             AttackTimer2 = reader.ReadInt32();
             AttackCount2 = reader.ReadInt32();
-            arenaCenter.X = reader.ReadSingle();
-            arenaCenter.Y = reader.ReadSingle();
+            arenaCenter = new Vector2(reader.ReadSingle(), reader.ReadSingle());
             arenaFollow = reader.ReadBoolean();
             phaseTransition = reader.ReadBoolean();
         }
@@ -202,9 +203,9 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
             float rotmul = NPC.spriteDirection == 1 ? -MathHelper.PiOver2 : MathHelper.PiOver2;
             NPC.rotation = NPC.velocity.ToRotation() + MathHelper.PiOver2;
 
-            /*if (!Terraria.Graphics.Effects.Filters.Scene["ScreenTintShader"].IsActive() && Main.netMode != NetmodeID.Server)
+            /*if (!Terraria.Graphics.Effects.Filters.Scene["Paracosm:ScreenTintShader"].IsActive() && Main.netMode != NetmodeID.Server)
             {
-                Terraria.Graphics.Effects.Filters.Scene.Activate("ScreenTintShader").GetShader().UseColor(new Color(190, 255, 255));
+                Terraria.Graphics.Effects.Filters.Scene.Activate("Paracosm:ScreenTintShader").GetShader().UseColor(new Color(190, 255, 255));
             }*/
 
             Lighting.AddLight(NPC.Center, 100, 100, 100);
@@ -249,6 +250,9 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
                     case (int)Attacks.Chasing:
                         Chasing();
                         break;
+                    case (int)Attacks.Minefield:
+                        Minefield();
+                        break;
                 }
             }
             else
@@ -292,7 +296,7 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
             NPC.Opacity += 1f / 20f;
             Attack = 0;
             attackDuration = attackDurations[(int)Attack];
-            Terraria.Graphics.Effects.Filters.Scene["ScreenTintShader"].GetShader().UseProgress(AITimer / 60);
+            Terraria.Graphics.Effects.Filters.Scene["Paracosm:ScreenTintShader"].GetShader().UseProgress(AITimer / 60);
         }
 
         void SwitchAttacks()
@@ -306,6 +310,11 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
                 foreach (StardustLeviathanBody bodySegment in Segments)
                 {
                     bodySegment.SwitchAttacks((int)Attack);
+                }
+
+                if (phase == 1 && Attack == (int)Attacks.Minefield)
+                {
+                    NPC.Center = arenaCenter - Vector2.UnitX * MINEFIELD_ARENA_DISTANCE;
                 }
 
                 AttackCount = 0;
@@ -378,7 +387,7 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
         const int CHASING_MAX_PROJ_COUNT = 12;
         void Chasing()
         {
-            switch(AttackTimer)
+            switch (AttackTimer)
             {
                 case > 0:
                     NPC.velocity = playerDirection.SafeNormalize(Vector2.Zero) * 6;
@@ -400,10 +409,41 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
                         AttackTimer = CHASING_START_TIME;
                         AttackCount = 0;
                     }
-                    break;
-            }     
+                    return;
+            }
             AttackTimer--;
         }
+
+        const int MINEFIELD_TIME = 720;
+        const int MINEFIELD_ATTACK_RATE = 30;
+        void Minefield()
+        {
+            switch (AttackTimer)
+            {
+                case > 0:
+                    if (AttackTimer % MINEFIELD_ATTACK_RATE == 0)
+                    {
+                        if (Main.netMode != NetmodeID.MultiplayerClient)
+                        {
+                            for (int i = 0; i < 16; i++)
+                            {
+                                Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, playerDirection.SafeNormalize(Vector2.Zero).RotatedBy(i * (MathHelper.PiOver4 / 2)) * 10, Proj["Starshot"], NPC.damage, 1);
+                            }
+                        }
+                    }
+                    float yPos = (float)Math.Sin(MathHelper.ToRadians((AttackCount + MINEFIELD_ARENA_DISTANCE) / 4)) * (MINEFIELD_ARENA_DISTANCE / 4); // Sine to move up and down while going right
+                    Vector2 pos = arenaCenter + new Vector2(AttackCount, yPos);
+                    AttackCount += 8;
+                    NPC.velocity = NPC.Center.DirectionTo(pos) * NPC.Center.Distance(pos) / 12;
+                    break;
+                case 0:
+                    AttackTimer = MINEFIELD_TIME;
+                    AttackCount = -MINEFIELD_ARENA_DISTANCE;
+                    return;
+            }
+            AttackTimer--;
+        }
+
 
         void MoveToPos(Vector2 pos, float xAccel = 1f, float yAccel = 1f, float xSpeed = 1f, float ySpeed = 1f)
         {
@@ -416,6 +456,7 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
         const int BASE_ARENA_DISTANCE = 3000;
         const int CIRCLING_ARENA_DISTANCE = 2000;
         const int CHASING_ARENA_DISTANCE = 1500;
+        public const int MINEFIELD_ARENA_DISTANCE = 2500;
         public void Arena()
         {
             float targetArenaDistance = BASE_ARENA_DISTANCE;
@@ -436,6 +477,10 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
                         arenaFollow = false;
                         targetArenaDistance = CIRCLING_ARENA_DISTANCE;
                         break;
+                    case (int)Attacks.Minefield:
+                        arenaFollow = false;
+                        targetArenaDistance = MINEFIELD_ARENA_DISTANCE;
+                        break;
                 }
             }
 
@@ -445,7 +490,7 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
                 {
                     for (int i = 0; i < 40; i++)
                     {
-                        var sphere = Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center + new Vector2(0, -arenaDistance).RotatedBy(i * MathHelper.ToRadians(9)), Vector2.Zero, Proj["Sphere"], NPC.damage, 1, ai1: 60f);
+                        var sphere = Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center + new Vector2(0, -arenaDistance).RotatedBy(i * MathHelper.ToRadians(9)), Vector2.Zero, Proj["Sphere"], NPC.damage, 1, ai1: 120f);
 
                         Spheres.Add(sphere);
                     }
@@ -499,7 +544,7 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
 
         public override bool CheckDead()
         {
-            Terraria.Graphics.Effects.Filters.Scene.Deactivate("ScreenTintShader");
+            Terraria.Graphics.Effects.Filters.Scene.Deactivate("Paracosm:ScreenTintShader");
             return true;
         }
 

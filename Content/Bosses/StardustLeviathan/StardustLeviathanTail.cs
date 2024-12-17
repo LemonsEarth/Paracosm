@@ -126,7 +126,7 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
 
         public override bool CheckDead()
         {
-            Filters.Scene.Deactivate("ScreenTintShader");
+            Filters.Scene.Deactivate("Paracosm:ScreenTintShader");
             return true;
         }
 

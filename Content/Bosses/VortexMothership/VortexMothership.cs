@@ -214,9 +214,9 @@ namespace Paracosm.Content.Bosses.VortexMothership
                 NPC.Opacity = 0;
             }
 
-            if (!Terraria.Graphics.Effects.Filters.Scene["ScreenTintShader"].IsActive() && Main.netMode != NetmodeID.Server)
+            if (!Terraria.Graphics.Effects.Filters.Scene["Paracosm:ScreenTintShader"].IsActive() && Main.netMode != NetmodeID.Server)
             {
-                Terraria.Graphics.Effects.Filters.Scene.Activate("ScreenTintShader").GetShader().UseColor(new Color(89, 255, 225));
+                Terraria.Graphics.Effects.Filters.Scene.Activate("Paracosm:ScreenTintShader").GetShader().UseColor(new Color(89, 255, 225));
             }
 
             foreach (var p in Main.player)
@@ -287,7 +287,7 @@ namespace Paracosm.Content.Bosses.VortexMothership
             NPC.Opacity += 1f / 60f;
             Attack = 0;
             attackDuration = attackDurations[(int)Attack];
-            Terraria.Graphics.Effects.Filters.Scene["ScreenTintShader"].GetShader().UseProgress(AITimer / 60);
+            Terraria.Graphics.Effects.Filters.Scene["Paracosm:ScreenTintShader"].GetShader().UseProgress(AITimer / 60);
         }
 
         void SwitchAttacks()
@@ -452,7 +452,7 @@ namespace Paracosm.Content.Bosses.VortexMothership
 
         public override bool CheckDead()
         {
-            Terraria.Graphics.Effects.Filters.Scene.Deactivate("ScreenTintShader");
+            Terraria.Graphics.Effects.Filters.Scene.Deactivate("Paracosm:ScreenTintShader");
             return true;
         }
 

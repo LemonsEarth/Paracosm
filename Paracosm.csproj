@@ -8,25 +8,6 @@
 		
 	</PropertyGroup>
 	<ItemGroup>
-	  <None Remove="Content\Biomes\Void\VoidHigh_Background.png" />
-	  <None Remove="Content\Biomes\Void\VoidHigh_Icon.png" />
-	  <None Remove="Content\Biomes\Void\VoidLow_Background.png" />
-	  <None Remove="Content\Biomes\Void\VoidLow_Icon.png" />
-	  <None Remove="Content\Bosses\NebulaMaster\NebulaMaster_Head_Boss.png" />
-	  <None Remove="Content\Bosses\StardustLeviathan\StardustLeviathanHead_Head_Boss.png" />
-	  <None Remove="Content\Bosses\StardustLeviathan\StardustLeviathanTail.png" />
-	  <None Remove="Content\Projectiles\Friendly\NebulaBeamFriendly.png" />
-	  <None Remove="Assets\Textures\Backgrounds\VoidSky_Background.png" />
-	  <None Remove="Content\Shaders\DarknessShader.fx" />
-	  <None Remove="Content\Shaders\ProjectileLightShader.fx" />
-	  <None Remove="Localization\en-US\Mods.Paracosm.Biomes.hjson" />
-	  <None Remove="Localization\en-US\Mods.Paracosm.Buffs.hjson" />
-	  <None Remove="Localization\en-US\Mods.Paracosm.Items.hjson" />
-	  <None Remove="Localization\en-US\Mods.Paracosm.Keybinds.hjson" />
-	  <None Remove="Localization\en-US\Mods.Paracosm.NPCs.hjson" />
-	  <None Remove="Localization\en-US\Mods.Paracosm.Subworlds.hjson" />
-	</ItemGroup>
-	<ItemGroup>
 	  <Folder Include="lib\" />
 	</ItemGroup>
 	<ItemGroup>

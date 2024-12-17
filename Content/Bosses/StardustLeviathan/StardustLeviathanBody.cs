@@ -128,6 +128,9 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
                     case (int)StardustLeviathanHead.Attacks.Chasing:
                         Chasing();
                         break;
+                    case (int)StardustLeviathanHead.Attacks.Minefield:
+                        Minefield();
+                        break;
                 }
             }
             else
@@ -156,6 +159,10 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
                 AttackTimer = 0;
                 AttackCount = 0;
                 RandNum = 0;
+                if (head.phase == 1 && head.Attack == (int)StardustLeviathanHead.Attacks.Minefield)
+                {
+                    NPC.Center = head.arenaCenter - Vector2.UnitX * StardustLeviathanHead.MINEFIELD_ARENA_DISTANCE;
+                }
             }
             NPC.netUpdate = true;
         }
@@ -224,8 +231,35 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
             AttackTimer--;
         }
 
+        const int MINEFIELD_ATTACK_TIMER = 60;
+        const int MINEFIELD_POS_DISTANCE = 800;
+        void Minefield()
+        {
+            if (SegmentNum % 4 == 0)
+            {
+                return;
+            }
+            switch(AttackTimer)
+            {
+                case 0:
+                    if (Main.netMode != NetmodeID.MultiplayerClient)
+                    {
+                        AttackCount = Main.rand.Next(0, 16);
+                        RandNum = Main.rand.NextFloat(20f, 40f);
+
+                        Vector2 pos = head.player.Center + (Vector2.UnitY * MINEFIELD_POS_DISTANCE).RotatedBy(AttackCount * (MathHelper.PiOver4 / 2));
+                        Projectile.NewProjectile(NPC.GetSource_FromAI(), pos, pos.DirectionTo(head.player.Center) * RandNum, head.Proj["Mine"], NPC.damage, 1);
+                    }
+                    NPC.netUpdate = true;
+                    AttackTimer = MINEFIELD_ATTACK_TIMER + SegmentNum;
+                    return;
+            }
+            AttackTimer--;
+        }
+
         public override void OnHitByProjectile(Projectile projectile, NPC.HitInfo hit, int damageDone)
         {
+            if (projectile.minion) return;
             projectile.damage /= 2;
         }
 
@@ -247,7 +281,7 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
 
         public override bool CheckDead()
         {
-            Terraria.Graphics.Effects.Filters.Scene.Deactivate("ScreenTintShader");
+            Terraria.Graphics.Effects.Filters.Scene.Deactivate("Paracosm:ScreenTintShader");
             return true;
         }
 

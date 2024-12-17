@@ -225,9 +225,9 @@ namespace Paracosm.Common.Players
             {
                 Player.moonLordMonolithShader = true;
 
-                if (!Terraria.Graphics.Effects.Filters.Scene["DarknessShader"].IsActive() && Main.netMode != NetmodeID.Server)
+                if (!Terraria.Graphics.Effects.Filters.Scene["Paracosm:DarknessShader"].IsActive() && Main.netMode != NetmodeID.Server)
                 {
-                    ScreenShaderData shader = Terraria.Graphics.Effects.Filters.Scene.Activate("DarknessShader").GetShader();
+                    ScreenShaderData shader = Terraria.Graphics.Effects.Filters.Scene.Activate("Paracosm:DarknessShader").GetShader();
                     if (Player.InModBiome<VoidHigh>())
                     {
                         shader.Shader.Parameters["distance"].SetValue(0.20f);
@@ -245,34 +245,34 @@ namespace Paracosm.Common.Players
             }
             else
             {
-                if (Terraria.Graphics.Effects.Filters.Scene["DarknessShader"].IsActive())
+                if (Terraria.Graphics.Effects.Filters.Scene["Paracosm:DarknessShader"].IsActive())
                 {
-                    Terraria.Graphics.Effects.Filters.Scene.Deactivate("DarknessShader");
+                    Terraria.Graphics.Effects.Filters.Scene.Deactivate("Paracosm:DarknessShader");
                 }
             }
 
             if (Player.InModBiome<ParacosmicDistortion>())
             {
-                if (!Terraria.Graphics.Effects.Filters.Scene["ScreenTintShader"].IsActive() && Main.netMode != NetmodeID.Server)
+                if (!Terraria.Graphics.Effects.Filters.Scene["Paracosm:ScreenTintShader"].IsActive() && Main.netMode != NetmodeID.Server)
                 {
-                    Terraria.Graphics.Effects.Filters.Scene.Activate("ScreenTintShader").GetShader().UseColor(new Color(152, 152, 255));
-                    Terraria.Graphics.Effects.Filters.Scene["ScreenTintShader"].GetShader().UseProgress(1);
+                    Terraria.Graphics.Effects.Filters.Scene.Activate("Paracosm:ScreenTintShader").GetShader().UseColor(new Color(152, 152, 255));
+                    Terraria.Graphics.Effects.Filters.Scene["Paracosm:ScreenTintShader"].GetShader().UseProgress(1);
                 }
             }
             else
             {
-                if (Terraria.Graphics.Effects.Filters.Scene["ScreenTintShader"].IsActive())
+                if (Terraria.Graphics.Effects.Filters.Scene["Paracosm:ScreenTintShader"].IsActive())
                 {
-                    Terraria.Graphics.Effects.Filters.Scene.Deactivate("ScreenTintShader");
+                    Terraria.Graphics.Effects.Filters.Scene.Deactivate("Paracosm:ScreenTintShader");
                 }
             }
 
             if (melting)
             {
-                if (!Terraria.Graphics.Effects.Filters.Scene["ScreenTintShader"].IsActive() && Main.netMode != NetmodeID.Server)
+                if (!Terraria.Graphics.Effects.Filters.Scene["Paracosm:ScreenTintShader"].IsActive() && Main.netMode != NetmodeID.Server)
                 {
-                    Terraria.Graphics.Effects.Filters.Scene.Activate("ScreenTintShader").GetShader().UseColor(new Color(255, 192, 100));
-                    Terraria.Graphics.Effects.Filters.Scene["ScreenTintShader"].GetShader().UseProgress(1);
+                    Terraria.Graphics.Effects.Filters.Scene.Activate("Paracosm:ScreenTintShader").GetShader().UseColor(new Color(255, 192, 100));
+                    Terraria.Graphics.Effects.Filters.Scene["Paracosm:ScreenTintShader"].GetShader().UseProgress(1);
                 }
             }
         }

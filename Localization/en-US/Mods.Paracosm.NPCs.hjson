@@ -58,6 +58,6 @@ NebulaMaster: {
 	}
 }
 
-StardustLeviathanHead.DisplayName: Stardust Leviathan Head
-StardustLeviathanBody.DisplayName: Stardust Leviathan Body
-StardustLeviathanTail.DisplayName: Stardust Leviathan Tail
+StardustLeviathanHead.DisplayName: Stardust Leviathan
+StardustLeviathanBody.DisplayName: " "
+StardustLeviathanTail.DisplayName: " "

@@ -16,13 +16,13 @@ namespace Paracosm
             Instance = this;
 
             Asset<Effect> filterShader = Assets.Request<Effect>("Content/Shaders/ScreenTintShader");
-            Filters.Scene["ScreenTintShader"] = new Filter(new ScreenShaderData(filterShader, "ScreenTint"), EffectPriority.Medium);
+            Filters.Scene["Paracosm:ScreenTintShader"] = new Filter(new ScreenShaderData(filterShader, "ScreenTint"), EffectPriority.Medium);
 
             Asset<Effect> darknessShader = Assets.Request<Effect>("Content/Shaders/DarknessShader");
-            Filters.Scene["DarknessShader"] = new Filter(new ScreenShaderData(darknessShader, "Darkness"), EffectPriority.Medium);
+            Filters.Scene["Paracosm:DarknessShader"] = new Filter(new ScreenShaderData(darknessShader, "Darkness"), EffectPriority.Medium);
 
             Asset<Effect> projLightShader = Assets.Request<Effect>("Content/Shaders/ProjectileLightShader");
-            GameShaders.Misc["ProjectileLightShader"] = new MiscShaderData(projLightShader, "ProjectileLight");
+            GameShaders.Misc["Paracosm:ProjectileLightShader"] = new MiscShaderData(projLightShader, "ProjectileLight");
 
             SkyManager.Instance["Paracosm:VoidSky"] = new VoidSkySky();
         }

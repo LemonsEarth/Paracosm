@@ -28,7 +28,7 @@ namespace Paracosm.Content.Projectiles.Hostile
         {
             ProjectileID.Sets.TrailCacheLength[Projectile.type] = 8;
             ProjectileID.Sets.TrailingMode[Projectile.type] = 2;
-            Main.projFrames[Type] = 4;
+            Main.projFrames[Type] = 1;
         }
 
         public override void SetDefaults()
@@ -88,36 +88,26 @@ namespace Paracosm.Content.Projectiles.Hostile
             SoundEngine.PlaySound(SoundID.Dig, Projectile.position);
             for (int i = 0; i < 5; i++)
             {
-                /*Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, DustID.GemTopaz);
+                Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, DustID.GemTopaz);
                 dust.noGravity = true;
                 dust.velocity *= 1.5f;
-                dust.scale *= 0.9f;*/
+                dust.scale *= 0.9f;
             }
         }
 
         public override bool PreDraw(ref Color lightColor)
         {
             Texture2D texture = TextureAssets.Projectile[Type].Value;
-            Vector2 drawOrigin = new Vector2(texture.Width * 0.5f, Projectile.height * 0.5f);
-            for (int k = Projectile.oldPos.Length - 1; k > 0; k--)
-            {
-                Rectangle drawRectangle = texture.Frame(1, Main.projFrames[Type], 0, 0);
-
-                Vector2 drawPos = (Projectile.oldPos[k] - Main.screenPosition) + drawOrigin + new Vector2(0f, Projectile.gfxOffY);
-                Color color = Projectile.GetAlpha(lightColor) * ((Projectile.oldPos.Length - k) / (float)Projectile.oldPos.Length);
-                color.A /= 2;
-                var shaderdata = GameShaders.Misc["ProjectileLightShader"];
-                shaderdata.UseImage0(TextureAssets.Projectile[Type]);
-                shaderdata.Apply(new DrawData(texture, drawPos, drawRectangle, Color.White));
-                Main.pixelShader.CurrentTechnique.Passes[0].Apply();
-                Main.EntitySpriteDraw(texture, drawPos, drawRectangle, color, Projectile.rotation, drawOrigin, Projectile.scale, SpriteEffects.None, 0);
-            }
-            return true;
-        }
-
-        public override void PostDraw(Color lightColor)
-        {
-            Main.pixelShader.CurrentTechnique.Passes[0].Apply();
+            Vector2 drawOrigin = new Vector2(texture.Width * 0.5f, texture.Height * 0.5f);
+            var shader = GameShaders.Misc["Paracosm:ProjectileLightShader"];
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, shader.Shader, Main.GameViewMatrix.TransformationMatrix);
+            shader.Shader.Parameters["time"].SetValue(AITimer / 60f);
+            shader.Apply();
+            Main.EntitySpriteDraw(texture, Projectile.position - Main.screenPosition + new Vector2(Projectile.width, Projectile.height) / 2, null, Color.White, Projectile.rotation, drawOrigin, Projectile.scale, SpriteEffects.None, 0);
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, null, Main.GameViewMatrix.TransformationMatrix);
+            return false;
         }
     }
 }

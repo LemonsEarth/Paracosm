@@ -21,8 +21,8 @@ namespace Paracosm.Content.Projectiles.Hostile
 
         public override void SetDefaults()
         {
-            Projectile.width = 64;
-            Projectile.height = 64;
+            Projectile.width = 256;
+            Projectile.height = 256;
             Projectile.hostile = false;
             Projectile.friendly = false;
             Projectile.ignoreWater = true;

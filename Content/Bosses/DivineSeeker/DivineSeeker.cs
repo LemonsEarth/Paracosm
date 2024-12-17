@@ -134,7 +134,7 @@ namespace Paracosm.Content.Bosses.DivineSeeker
 
         public override bool CheckDead()
         {
-            Terraria.Graphics.Effects.Filters.Scene.Deactivate("ScreenTintShader");
+            Terraria.Graphics.Effects.Filters.Scene.Deactivate("Paracosm:ScreenTintShader");
             return true;
         }
 
@@ -196,13 +196,13 @@ namespace Paracosm.Content.Bosses.DivineSeeker
 
             Vector2 targetPosition = topLeft;
 
-            if (!Terraria.Graphics.Effects.Filters.Scene["ScreenTintShader"].IsActive() && Main.netMode != NetmodeID.Server)
+            if (!Terraria.Graphics.Effects.Filters.Scene["Paracosm:ScreenTintShader"].IsActive() && Main.netMode != NetmodeID.Server)
             {
-                Terraria.Graphics.Effects.Filters.Scene.Activate("ScreenTintShader").GetShader().UseColor(new Color(152, 152, 255));
+                Terraria.Graphics.Effects.Filters.Scene.Activate("Paracosm:ScreenTintShader").GetShader().UseColor(new Color(152, 152, 255));
             }
             if (AITimer <= 60)
             {
-                Terraria.Graphics.Effects.Filters.Scene["ScreenTintShader"].GetShader().UseProgress(60 / AITimer);
+                Terraria.Graphics.Effects.Filters.Scene["Paracosm:ScreenTintShader"].GetShader().UseProgress(60 / AITimer);
                 NPC.Opacity += 1f / 60f;
             }
 
