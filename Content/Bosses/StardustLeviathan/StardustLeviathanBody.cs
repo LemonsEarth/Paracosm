@@ -105,9 +105,15 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
             }
             head = (StardustLeviathanHead)headNPC.ModNPC;
 
+            NPC.Opacity = head.NPC.Opacity;
             FollowNextSegment(followingNPC);
 
             NPC.spriteDirection = followingNPC.spriteDirection;
+
+            if (AITimer % (SegmentNum % 4) == 0)
+            {
+                Dust.NewDust(NPC.position, NPC.width, NPC.height, DustID.GemTopaz, Scale: Main.rand.NextFloat(1f, 1.2f));
+            }
 
             if (AITimer < StardustLeviathanHead.INTRO_DURATION)
             {
@@ -231,7 +237,7 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
             AttackTimer--;
         }
 
-        const int MINEFIELD_ATTACK_TIMER = 60;
+        const int MINEFIELD_ATTACK_TIMER = 90;
         const int MINEFIELD_POS_DISTANCE = 800;
         void Minefield()
         {
@@ -255,12 +261,22 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
                     return;
             }
             AttackTimer--;
+        } 
+
+        public override void ModifyHitByProjectile(Projectile projectile, ref NPC.HitModifiers modifiers)
+        {
+            if (projectile.type == ProjectileID.LastPrismLaser)
+            {
+                modifiers.FinalDamage /= 2;
+            }
         }
 
-        public override void OnHitByProjectile(Projectile projectile, NPC.HitInfo hit, int damageDone)
+        public override void ModifyIncomingHit(ref NPC.HitModifiers modifiers)
         {
-            if (projectile.minion) return;
-            projectile.damage /= 2;
+            if (head.phase == 1)
+            {
+                modifiers.FinalDamage *= 0.9f;
+            }
         }
 
         public void DeleteProjectiles(int projID)

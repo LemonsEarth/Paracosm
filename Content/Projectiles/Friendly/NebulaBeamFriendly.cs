@@ -15,7 +15,7 @@ namespace Paracosm.Content.Projectiles.Friendly
 
         public override void SetStaticDefaults()
         {
-            Main.projFrames[Projectile.type] = 4;
+            Main.projFrames[Projectile.type] = 3;
         }
 
         public override void SetDefaults()
@@ -73,14 +73,6 @@ namespace Paracosm.Content.Projectiles.Friendly
             else if (Projectile.timeLeft < 30)
             {
                 Projectile.Opacity -= 1f / 30f;
-            }
-
-            if (SegmentFrame == 1 || SegmentFrame == 2)
-            {
-                if (AITimer % 5 == 0)
-                {
-                    Projectile.frame = Main.rand.Next(1, 3);
-                }
             }
 
             Projectile.velocity = Vector2.Zero;

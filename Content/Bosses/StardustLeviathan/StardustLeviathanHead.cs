@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Terraria;
+using Terraria.Audio;
 using Terraria.GameContent.Bestiary;
 using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
@@ -72,6 +73,7 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
         {
             {"Sphere", ModContent.ProjectileType<BorderSphere>()},
             {"Starshot", ModContent.ProjectileType<StarshotHostile>()},
+            {"StardustShot", ModContent.ProjectileType<StardustShot>()},
             {"Mine", ModContent.ProjectileType<StardustEnergyMine>()},
         };
 
@@ -322,6 +324,7 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
                 AttackTimer = 0;
                 AttackTimer2 = 0;
                 NPC.Opacity = 1f;
+                PlayRoar();
                 foreach (var proj in Proj)
                 {
                     if (proj.Key != "Sphere")
@@ -340,6 +343,13 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
         const int DASHING_TIME = 60;
         void DashingStarSpam()
         {
+            if (attackDuration == 120)
+            {
+                if (Main.netMode != NetmodeID.MultiplayerClient)
+                {
+                    Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, NPC.Center.DirectionTo(arenaCenter + (Vector2.UnitY * CIRCLING_ARENA_DISTANCE)), ModContent.ProjectileType<IndicatorLaser>(), 0, 1, ai0: 10);
+                }
+            }
             switch (AttackTimer)
             {
                 case > DASHING_TIME:
@@ -390,6 +400,10 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
             switch (AttackTimer)
             {
                 case > 0:
+                    if (attackDuration <= 60)
+                    {
+                        NPC.Opacity -= 1f / 60f;
+                    }
                     NPC.velocity = playerDirection.SafeNormalize(Vector2.Zero) * 6;
                     break;
                 case 0:
@@ -425,9 +439,11 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
                     {
                         if (Main.netMode != NetmodeID.MultiplayerClient)
                         {
-                            for (int i = 0; i < 16; i++)
+                            for (int i = 0; i < 8; i++)
                             {
-                                Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, playerDirection.SafeNormalize(Vector2.Zero).RotatedBy(i * (MathHelper.PiOver4 / 2)) * 10, Proj["Starshot"], NPC.damage, 1);
+                                Projectile proj = Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center, playerDirection.SafeNormalize(Vector2.Zero).RotatedBy(i * MathHelper.PiOver4) * 10, Proj["StardustShot"], NPC.damage, 1);
+                                StardustShot starshot = (StardustShot)proj.ModProjectile;
+                                starshot.glowColor = new Color(1f, 0.1f, 0.1f, 1f);
                             }
                         }
                     }
@@ -524,6 +540,12 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
                     player.AddBuff(ModContent.BuffType<Infected>(), 2);
                 }
             }
+        }
+
+        void PlayRoar()
+        {
+            SoundEngine.PlaySound(SoundID.DD2_BetsyDeath with { PitchRange = (0.2f, 0.6f) });
+            SoundEngine.PlaySound(SoundID.Roar with { PitchRange = (-1f, -0.5f)});
         }
 
         public void DeleteProjectiles(int projID)

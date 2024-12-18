@@ -12,7 +12,7 @@ using Terraria.ModLoader;
 
 namespace Paracosm.Content.Projectiles.Hostile
 {
-    public class StarshotHostile : ModProjectile
+    public class StardustShot : ModProjectile
     {
         ref float AITimer => ref Projectile.ai[0];
         bool DoIndicators
@@ -30,25 +30,23 @@ namespace Paracosm.Content.Projectiles.Hostile
         {
             ProjectileID.Sets.TrailCacheLength[Projectile.type] = 8;
             ProjectileID.Sets.TrailingMode[Projectile.type] = 2;
-            Main.projFrames[Type] = 1;
+            Main.projFrames[Type] = 3;
         }
 
         public override void SetDefaults()
         {
-            Projectile.width = 50;
-            Projectile.height = 50;
+            Projectile.width = 14;
+            Projectile.height = 14;
             Projectile.friendly = false;
             Projectile.hostile = true;
             Projectile.timeLeft = 360;
             Projectile.penetrate = 2;
             Projectile.alpha = 255;
             Projectile.light = 1f;
-            DrawOriginOffsetY = 10;
         }
 
         public override void OnSpawn(IEntitySource source)
         {
-            LemonUtils.DustCircle(Projectile.Center, 16, 2, DustID.BlueTorch, 1.2f);
             LemonUtils.DustCircle(Projectile.Center, 16, 2, DustID.YellowTorch);
         }
 
@@ -71,6 +69,18 @@ namespace Paracosm.Content.Projectiles.Hostile
                     }
                 }
             }
+
+            Projectile.frameCounter++;
+            if (Projectile.frameCounter == 4)
+            {
+                Projectile.frame++;
+                Projectile.frameCounter = 0;
+                if (Projectile.frame >= 3)
+                {
+                    Projectile.frame = 0;
+                }
+            }
+            AITimer++;
             AITimer++;
         }
 

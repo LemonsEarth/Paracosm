@@ -89,6 +89,7 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
             }
             head = (StardustLeviathanHead)headNPC.ModNPC;
 
+            NPC.Opacity = head.NPC.Opacity;
             FollowNextSegment(followingNPC);
 
             NPC.spriteDirection = followingNPC.spriteDirection;
