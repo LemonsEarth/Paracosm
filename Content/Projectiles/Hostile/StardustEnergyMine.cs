@@ -14,6 +14,7 @@ namespace Paracosm.Content.Projectiles.Hostile
     public class StardustEnergyMine : ModProjectile
     {
         float AITimer = 0;
+        ref float TimeToBlow => ref Projectile.ai[0];
 
         public override void SetStaticDefaults()
         {
@@ -57,6 +58,10 @@ namespace Paracosm.Content.Projectiles.Hostile
             if (AITimer == 0)
             {
                 SoundEngine.PlaySound(SoundID.Zombie67 with { Volume = 0.3f, PitchRange = (0.5f, 1f) });
+                if (TimeToBlow != 0)
+                {
+                    Projectile.timeLeft = (int)TimeToBlow;
+                }
             }
             Projectile.velocity = Vector2.Lerp(Projectile.velocity, Vector2.Zero, AITimer / 180);
             Projectile.rotation = MathHelper.ToRadians(AITimer * Projectile.velocity.Length());
@@ -71,13 +76,13 @@ namespace Paracosm.Content.Projectiles.Hostile
             Vector2 drawOrigin = new Vector2(texture.Width * 0.5f, texture.Height * 0.5f);
             var shader = GameShaders.Misc["Paracosm:ProjectileLightShader"];
             Main.spriteBatch.End();
-            Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, shader.Shader);
+            Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, shader.Shader, Main.GameViewMatrix.TransformationMatrix);
             shader.Shader.Parameters["time"].SetValue(AITimer / 60f);
             shader.Shader.Parameters["color"].SetValue(Color.White.ToVector4());
             shader.Apply();
             Main.EntitySpriteDraw(texture, Projectile.Center - Main.screenPosition, null, Color.White, Projectile.rotation, drawOrigin, Projectile.scale, SpriteEffects.None, 0);
             Main.spriteBatch.End();
-            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, null);
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, null, Main.GameViewMatrix.TransformationMatrix);
         }
     }
 }

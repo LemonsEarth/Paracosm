@@ -36,7 +36,7 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
                 {
                     diffMod = 0;
                 }
-                int maxVal = 3;
+                int maxVal = phase == 1 ? 3 : 2;
                 if (value > maxVal + diffMod || value < 0)
                 {
                     NPC.ai[1] = 0;
@@ -59,7 +59,7 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
 
         float attackDuration = 0;
         int[] attackDurations = { 480, 480, 960, 720 };
-        int[] attackDurations2 = { 600, 900, 720, 900 };
+        int[] attackDurations2 = { 660, 660, 690, 900 };
         public Player player { get; private set; }
         public Vector2 playerDirection { get; private set; }
         Vector2 targetPosition = Vector2.Zero;
@@ -87,7 +87,9 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
 
         public enum Attacks2
         {
-
+            DashingSpam,
+            CirclingBulletHell,
+            ChasingMineTrail
         }
 
         public override void SetStaticDefaults()
@@ -229,9 +231,16 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
                 AITimer++;
                 return;
             }
-            if (!phaseTransition)
+
+            NPC.dontTakeDamage = false;
+
+            if (NPC.life <= (NPC.lifeMax * 0.5f) && !phase2FirstTime)
             {
-                NPC.dontTakeDamage = false;
+                phase2FirstTime = true;
+                phase = 2;
+                PlayRoar();
+                SwitchAttacks();
+                NPC.netUpdate = true;
             }
 
             if (attackDuration <= 0)
@@ -259,7 +268,21 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
             }
             else
             {
-
+                switch (Attack)
+                {
+                    case (int)Attacks2.DashingSpam:
+                        DashingSpam();
+                        break;
+                    case (int)Attacks2.CirclingBulletHell:
+                        CirclingBulletHell();
+                        break;
+                    case (int)Attacks2.ChasingMineTrail:
+                        ChasingMineTrail();
+                        break;
+                    case (int)Attacks.Minefield:
+                        Minefield();
+                        break;
+                }
             }
 
             attackDuration--;
@@ -317,6 +340,10 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
                 if (phase == 1 && Attack == (int)Attacks.Minefield)
                 {
                     NPC.Center = arenaCenter - Vector2.UnitX * MINEFIELD_ARENA_DISTANCE;
+                }
+                else if (phase == 2 && Attack == (int)Attacks2.CirclingBulletHell)
+                {
+                    NPC.Center = arenaCenter;
                 }
 
                 AttackCount = 0;
@@ -380,7 +407,8 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
                     break;
                 case > 0:
                     targetPosition = (-Vector2.UnitY * AttackCount);
-                    NPC.velocity = NPC.Center.DirectionTo(arenaCenter + targetPosition);
+                    Vector2 point = arenaCenter + targetPosition.RotatedBy(MathHelper.ToRadians(-AttackTimer * 3)).RotatedBy(MathHelper.Pi / 8);
+                    NPC.velocity = NPC.Center.DirectionTo(point);
                     NPC.Center = arenaCenter + targetPosition.RotatedBy(MathHelper.ToRadians(-AttackTimer * 3));
                     AttackCount -= 3;
                     break;
@@ -461,6 +489,97 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
         }
 
 
+        const int DASHING_SPAM_DASH_TIME = 90;
+        const int DASHING_SPAM_SLOW_TIME = 30;
+        void DashingSpam()
+        {
+            if (attackDuration < 90)
+            {
+                for (int i = 0; i < 64; i++)
+                {
+                    Vector2 dustPos = arenaCenter + (Vector2.UnitY * CIRCLING_BH_DISTANCE).RotatedBy(MathHelper.ToRadians(i * 360f / 64f));
+                    Dust dust = Dust.NewDustDirect(dustPos, 1, 1, DustID.GemDiamond);
+                    dust.noGravity = true;
+                }
+            }
+            switch (AttackTimer)
+            {
+                case DASHING_SPAM_DASH_TIME:
+                    NPC.velocity = targetPosition.SafeNormalize(Vector2.Zero) * 40;
+                    AttackCount = 60;
+                    break;
+                case > 0 and < DASHING_SPAM_SLOW_TIME:
+                    NPC.velocity = playerDirection.SafeNormalize(Vector2.Zero) * AttackCount;
+                    AttackCount -= 2;
+                    break;
+                case 0:
+                    targetPosition = playerDirection;
+                    AttackTimer = DASHING_SPAM_DASH_TIME;
+                    if (Main.netMode != NetmodeID.MultiplayerClient)
+                    {
+                        for (int i = 0; i < 8; i++)
+                        {
+                            Vector2 direction = playerDirection.SafeNormalize(Vector2.Zero).RotatedBy(i * MathHelper.PiOver4);
+                            Projectile proj = Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center, direction * 20, Proj["StardustShot"], NPC.damage, 1);
+                            StardustShot starshot = (StardustShot)proj.ModProjectile;
+                            starshot.glowColor = new Color(1f, 1f, 0.1f, 1f);
+                        }
+
+                        for (int i = 0; i < 8; i++)
+                        {
+                            Vector2 direction = playerDirection.SafeNormalize(Vector2.Zero).RotatedBy(i * MathHelper.PiOver4 + MathHelper.PiOver4 / 2);
+                            Projectile proj = Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center, direction * 15, Proj["StardustShot"], NPC.damage, 1);
+                            StardustShot starshot = (StardustShot)proj.ModProjectile;
+                            starshot.glowColor = new Color(1f, 1f, 0.1f, 1f);
+                        }
+                    }
+                    return;
+            }
+            AttackTimer--;
+        }
+        const int CIRCLING_BH_START_TIME = 660;
+        const int CIRCLING_BH_DISTANCE = 300;
+        void CirclingBulletHell()
+        {
+            for (int i = 0; i < 64; i++)
+            {
+                Vector2 dustPos = arenaCenter + (Vector2.UnitY * CIRCLING_BH_DISTANCE).RotatedBy(MathHelper.ToRadians(i * 360f / 64f));
+                Dust dust = Dust.NewDustDirect(dustPos, 1, 1, DustID.GemDiamond);
+                dust.noGravity = true;
+            }
+            switch (AttackTimer)
+            {
+                case > 0:
+                    targetPosition = (-Vector2.UnitY * CIRCLING_BH_DISTANCE);
+                    Vector2 point = arenaCenter + targetPosition.RotatedBy(MathHelper.ToRadians(-AttackTimer * 3)).RotatedBy(MathHelper.Pi / 8);
+                    NPC.velocity = NPC.Center.DirectionTo(point);
+                    NPC.Center = arenaCenter + targetPosition.RotatedBy(MathHelper.ToRadians(-AttackTimer * 3));
+                    break;
+                case 0:
+                    AttackTimer = CIRCLING_BH_START_TIME;
+                    return;
+            }
+
+            AttackTimer--;
+        }
+
+        const int CHASING_MINE_TRAIL_TIME = 690;
+        void ChasingMineTrail()
+        {
+            switch(AttackTimer)
+            {
+                case > 90:
+                    NPC.velocity = playerDirection.SafeNormalize(Vector2.Zero) * 8;
+                    break;
+                case 0:
+                    AttackTimer = CHASING_MINE_TRAIL_TIME;
+                    return;
+            }
+
+            AttackTimer--;
+        }
+
+
         void MoveToPos(Vector2 pos, float xAccel = 1f, float yAccel = 1f, float xSpeed = 1f, float ySpeed = 1f)
         {
             Vector2 direction = NPC.Center.DirectionTo(pos);
@@ -473,6 +592,9 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
         const int CIRCLING_ARENA_DISTANCE = 2000;
         const int CHASING_ARENA_DISTANCE = 1500;
         public const int MINEFIELD_ARENA_DISTANCE = 2500;
+        const int CIRCLING_BH_ARENA_DISTANCE = 1500;
+        const int MINE_TRAIL_ARENA_DISTANCE = 1300;
+
         public void Arena()
         {
             float targetArenaDistance = BASE_ARENA_DISTANCE;
@@ -492,6 +614,27 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
                     case (int)Attacks.Chasing:
                         arenaFollow = false;
                         targetArenaDistance = CIRCLING_ARENA_DISTANCE;
+                        break;
+                    case (int)Attacks.Minefield:
+                        arenaFollow = false;
+                        targetArenaDistance = MINEFIELD_ARENA_DISTANCE;
+                        break;
+                }
+            }
+            else
+            {
+                switch (Attack)
+                {
+                    case (int)Attacks2.DashingSpam:
+                        arenaFollow = false;
+                        break;
+                    case (int)Attacks2.CirclingBulletHell:
+                        arenaFollow = false;
+                        targetArenaDistance = CIRCLING_BH_ARENA_DISTANCE;
+                        break;
+                    case (int)Attacks2.ChasingMineTrail:
+                        arenaFollow = false;
+                        targetArenaDistance = MINE_TRAIL_ARENA_DISTANCE;
                         break;
                     case (int)Attacks.Minefield:
                         arenaFollow = false;
@@ -545,7 +688,7 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
         void PlayRoar()
         {
             SoundEngine.PlaySound(SoundID.DD2_BetsyDeath with { PitchRange = (0.2f, 0.6f) });
-            SoundEngine.PlaySound(SoundID.Roar with { PitchRange = (-1f, -0.5f)});
+            SoundEngine.PlaySound(SoundID.Roar with { PitchRange = (-1f, -0.5f) });
         }
 
         public void DeleteProjectiles(int projID)

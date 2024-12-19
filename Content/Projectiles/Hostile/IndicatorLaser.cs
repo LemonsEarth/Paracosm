@@ -12,6 +12,7 @@ namespace Paracosm.Content.Projectiles.Hostile
     {
         int AITimer = 0;
         ref float SegmentCount => ref Projectile.ai[0];
+        ref float FirstSegment => ref Projectile.ai[1]; // 0 if first segment
         Vector2 direction = Vector2.Zero;
 
         public override void SetStaticDefaults()
@@ -37,11 +38,15 @@ namespace Paracosm.Content.Projectiles.Hostile
                 SoundEngine.PlaySound(SoundID.Item1 with { MaxInstances = 1 });
                 Projectile.rotation = Projectile.velocity.ToRotation();
                 direction = Projectile.velocity.SafeNormalize(Vector2.Zero);
+                if (FirstSegment == 0)
+                {
+                    Projectile.Center += direction * Projectile.width / 2;
+                }
                 if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
                     if (SegmentCount > 0)
                     {
-                        Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center + direction * Projectile.height, direction, Type, Projectile.damage, 1, ai0: SegmentCount - 1);
+                        Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center + direction * Projectile.height, direction, Type, Projectile.damage, 1, ai0: SegmentCount - 1, ai1: 1);
                     }
                 }
             }
