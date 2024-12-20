@@ -721,11 +721,11 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
         public override void ModifyNPCLoot(NPCLoot npcLoot)
         {
             LeadingConditionRule classicRule = new LeadingConditionRule(new Conditions.NotExpert());
-            classicRule.OnSuccess(ItemDropRule.Common(ModContent.ItemType<UnstableNebulousFlame>(), 1, 4, 8));
-            classicRule.OnSuccess(ItemDropRule.Common(ItemID.FragmentNebula, 1, 10, 20));
+            classicRule.OnSuccess(ItemDropRule.Common(ModContent.ItemType<PureStardust>(), 1, 4, 8));
+            classicRule.OnSuccess(ItemDropRule.Common(ItemID.FragmentStardust, 1, 10, 20));
             classicRule.OnSuccess(ItemDropRule.Common(ItemID.LunarBar, 1, 5, 12));
             npcLoot.Add(classicRule);
-            npcLoot.Add(ItemDropRule.BossBag(ModContent.ItemType<NebulaMasterBossBag>()));
+            npcLoot.Add(ItemDropRule.BossBag(ModContent.ItemType<StardustLeviathanBossBag>()));
         }
 
         public override void BossLoot(ref string name, ref int potionType)

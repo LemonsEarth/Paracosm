@@ -1,4 +1,5 @@
 ﻿using Paracosm.Content.Bosses.NebulaMaster;
+using Paracosm.Content.Items.Rarities;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
@@ -19,7 +20,7 @@ namespace Paracosm.Content.Items.Consumables
             Item.width = 36;
             Item.height = 36;
             Item.maxStack = 1;
-            Item.rare = ItemRarityID.Pink;
+            Item.rare = ParacosmRarity.PinkPurple;
             Item.useAnimation = 30;
             Item.useTime = 30;
             Item.useStyle = ItemUseStyleID.HoldUp;

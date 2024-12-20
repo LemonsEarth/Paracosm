@@ -22,12 +22,14 @@ namespace Paracosm.Common.Players
         public bool windWarriorBreastplate = false;
         public bool championsCrownSet = false;
         public bool vortexControlUnitSet = false;
+        public bool stardustTailSet = false;
 
         public bool sunCoin = false;
         public bool corruptedDragonHeart = false;
         public bool parashardSigil = false;
         float paraSigilHitTimer = 120;
         bool paraSigilActiveTimer = false;
+        public bool nebulousEnergy = false;
 
         public bool paracosmicHelmetBuff = false;
         public bool paracosmicGogglesBuff = false;
@@ -48,10 +50,12 @@ namespace Paracosm.Common.Players
             windWarriorBreastplate = false;
             championsCrownSet = false;
             vortexControlUnitSet = false;
+            stardustTailSet = false;
 
             sunCoin = false;
             corruptedDragonHeart = false;
             parashardSigil = false;
+            nebulousEnergy = false;
 
             paracosmicHelmetBuff = false;
             paracosmicGogglesBuff = false;
@@ -127,9 +131,18 @@ namespace Paracosm.Common.Players
             {
                 if (KeybindSystem.ChampionsCrown.JustPressed && !Player.HasBuff(ModContent.BuffType<ChampionsCrownCooldown>()))
                 {
-                    Player.AddBuff(ModContent.BuffType<MeltingDebuff>(), 1200);
-                    Player.AddBuff(ModContent.BuffType<ChampionsCrownCooldown>(), 5400);
-                    Player.AddBuff(ModContent.BuffType<SolarBurn>(), 240);
+                    if (nebulousEnergy)
+                    {
+                        Player.AddBuff(ModContent.BuffType<MeltingDebuff>(), 1000);
+                        Player.AddBuff(ModContent.BuffType<ChampionsCrownCooldown>(), 2700);
+                        Player.AddBuff(ModContent.BuffType<SolarBurn>(), 180);
+                    }
+                    else
+                    {
+                        Player.AddBuff(ModContent.BuffType<MeltingDebuff>(), 1200);
+                        Player.AddBuff(ModContent.BuffType<ChampionsCrownCooldown>(), 5400);
+                        Player.AddBuff(ModContent.BuffType<SolarBurn>(), 240);
+                    }
 
                     foreach (var enemy in Main.ActiveNPCs)
                     {
@@ -179,8 +192,16 @@ namespace Paracosm.Common.Players
             {
                 if (KeybindSystem.VortexControl.JustPressed && !Player.HasBuff(ModContent.BuffType<VortexForceCooldown>()))
                 {
-                    Player.AddBuff(ModContent.BuffType<VortexForce>(), 600);
-                    Player.AddBuff(ModContent.BuffType<VortexForceCooldown>(), 4800);
+                    if (nebulousEnergy)
+                    {
+                        Player.AddBuff(ModContent.BuffType<VortexForce>(), 800);
+                        Player.AddBuff(ModContent.BuffType<VortexForceCooldown>(), 2400);
+                    }
+                    else
+                    {
+                        Player.AddBuff(ModContent.BuffType<VortexForce>(), 600);
+                        Player.AddBuff(ModContent.BuffType<VortexForceCooldown>(), 4800);
+                    }
                 }
             }
 

@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Paracosm.Common.Utils;
 using Paracosm.Content.Items.Materials;
+using Paracosm.Content.Items.Rarities;
 using Paracosm.Content.Projectiles.Friendly;
 using Terraria;
 using Terraria.Audio;
@@ -23,7 +24,7 @@ namespace Paracosm.Content.Items.Weapons.Melee
         {
             Item.width = 44;
             Item.height = 46;
-            Item.rare = ItemRarityID.Red;
+            Item.rare = ParacosmRarity.PinkPurple;
             Item.value = Item.sellPrice(0, 50);
             Item.useStyle = ItemUseStyleID.Rapier;
             Item.useAnimation = 6;

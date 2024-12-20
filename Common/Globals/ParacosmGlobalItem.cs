@@ -2,6 +2,9 @@
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Microsoft.Xna.Framework;
+using Paracosm.Content.Projectiles.Friendly;
+using Paracosm.Content.Buffs.Cooldowns;
 
 namespace Paracosm.Common.Globals
 {
@@ -37,6 +40,32 @@ namespace Paracosm.Common.Globals
                     grabRange += 800;
                 }
             }
+        }
+
+        public override bool? UseItem(Item item, Player player)
+        {
+            if (!player.HasBuff(ModContent.BuffType<StardustTailCD>()) && player.GetModPlayer<ParacosmPlayer>().stardustTailSet)
+            {
+                if (item.damage > 0)
+                {
+                    if (Main.myPlayer == player.whoAmI)
+                    {
+                        Vector2 mouseDir = player.Center.DirectionTo(Main.MouseWorld);
+                        int damage = (int)player.GetTotalDamage(DamageClass.Summon).ApplyTo(200);
+                        Projectile.NewProjectile(player.GetSource_FromAI(), player.Center, mouseDir.SafeNormalize(Vector2.Zero) * 8, ModContent.ProjectileType<StardustTailProj>(), damage, 1);
+                        if (player.GetModPlayer<ParacosmPlayer>().nebulousEnergy)
+                        {
+                            player.AddBuff(ModContent.BuffType<StardustTailCD>(), 30);
+                        }
+                        else
+                        {
+                            player.AddBuff(ModContent.BuffType<StardustTailCD>(), 60);
+                        }
+                    }
+                }
+            }
+
+            return null;
         }
     }
 }

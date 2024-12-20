@@ -69,3 +69,13 @@ NebulousPower: {
 	DisplayName: Nebulous Power
 	Description: Cosmic powers course through you
 }
+
+StardustTailBuff: {
+	DisplayName: Stardust Tail Buff
+	Description: Mods.Paracosm.Buffs.StardustTailBuff.Description
+}
+
+StardustTailCD: {
+	DisplayName: Stardust Tail C D
+	Description: Mods.Paracosm.Buffs.StardustTailCD.Description
+}

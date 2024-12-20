@@ -5,23 +5,19 @@ using Terraria;
 using Terraria.Audio;
 using Terraria.DataStructures;
 using Terraria.GameContent;
+using Terraria.Graphics.Shaders;
 using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Paracosm.Content.Projectiles.Friendly
 {
-    public class Starshot : ModProjectile
+    public class PureStarshot : ModProjectile
     {
         ref float AITimer => ref Projectile.ai[0];
         ref float speed => ref Projectile.ai[1];
         NPC closestNPC;
-
-        public override void SetStaticDefaults()
-        {
-            ProjectileID.Sets.TrailCacheLength[Projectile.type] = 8;
-            ProjectileID.Sets.TrailingMode[Projectile.type] = 2;
-            Main.projFrames[Type] = 4;
-        }
+        Color[] glowColors = { new Color(1f, 1f, 0.1f), Color.White, new Color(1f, 0.2f, 1f), new Color(0.1f, 1f, 1f)};
+        Color glowColor = Color.White;
 
         public override void SetDefaults()
         {
@@ -36,12 +32,14 @@ namespace Paracosm.Content.Projectiles.Friendly
             Projectile.usesLocalNPCImmunity = true;
             Projectile.localNPCHitCooldown = 30;
             Projectile.light = 1f;
+            DrawOriginOffsetY = 10;
         }
 
         public override void OnSpawn(IEntitySource source)
         {
-            LemonUtils.DustCircle(Projectile.Center, 16, 2, DustID.BlueTorch, 1.2f);
-            LemonUtils.DustCircle(Projectile.Center, 16, 2, DustID.YellowTorch);
+            LemonUtils.DustCircle(Projectile.Center, 16, 8, DustID.BlueTorch, 2f);
+            LemonUtils.DustCircle(Projectile.Center, 16, 8, DustID.YellowTorch, 1.5f);
+            glowColor = glowColors[Main.rand.Next(0, glowColors.Length)];
         }
 
         public override void AI()
@@ -53,9 +51,9 @@ namespace Paracosm.Content.Projectiles.Friendly
             }
             if (AITimer <= 0)
             {
-                if (speed < 5)
+                if (speed < 7)
                 {
-                    speed += 0.05f;
+                    speed += 0.1f;
                 }
                 closestNPC = LemonUtils.GetClosestNPC(Projectile);
                 if (closestNPC != null)
@@ -90,18 +88,23 @@ namespace Paracosm.Content.Projectiles.Friendly
 
         public override bool PreDraw(ref Color lightColor)
         {
-            Texture2D texture = TextureAssets.Projectile[Type].Value;
-            Vector2 drawOrigin = new Vector2(texture.Width * 0.5f, Projectile.height * 0.5f);
-            for (int k = Projectile.oldPos.Length - 1; k > 0; k--)
-            {
-                Rectangle drawRectangle = texture.Frame(1, Main.projFrames[Type], 0, 0);
+            return false;
+        }
 
-                Vector2 drawPos = (Projectile.oldPos[k] - Main.screenPosition) + drawOrigin + new Vector2(0f, Projectile.gfxOffY);
-                Color color = Projectile.GetAlpha(lightColor) * ((Projectile.oldPos.Length - k) / (float)Projectile.oldPos.Length);
-                color.A /= 2;
-                Main.EntitySpriteDraw(texture, drawPos, drawRectangle, color, Projectile.rotation, drawOrigin, Projectile.scale, SpriteEffects.None, 0);
-            }
-            return true;
+        public override void PostDraw(Color lightColor)
+        {
+            Texture2D texture = ModContent.Request<Texture2D>("Paracosm/Assets/Textures/FX/Empty100Tex").Value;
+            Vector2 drawOrigin = new Vector2(texture.Width * 0.5f, texture.Height * 0.5f);
+            var shader = GameShaders.Misc["Paracosm:ProjectileLightShader"];
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, shader.Shader, Main.GameViewMatrix.TransformationMatrix);
+            shader.Shader.Parameters["time"].SetValue(AITimer / 60f);
+            shader.Shader.Parameters["color"].SetValue(glowColor.ToVector4());
+            shader.Shader.Parameters["shineRate"].SetValue(8);
+            shader.Apply();
+            Main.EntitySpriteDraw(texture, Projectile.Center - Main.screenPosition, null, Color.White, Projectile.rotation, drawOrigin, Projectile.scale, SpriteEffects.None, 0);
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, null, Main.GameViewMatrix.TransformationMatrix);
         }
     }
 }

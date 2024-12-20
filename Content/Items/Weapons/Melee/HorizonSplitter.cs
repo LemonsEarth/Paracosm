@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Paracosm.Content.Items.Materials;
+using Paracosm.Content.Items.Rarities;
 using Paracosm.Content.Projectiles.HeldProjectiles;
 using Terraria;
 using Terraria.DataStructures;
@@ -23,7 +24,7 @@ namespace Paracosm.Content.Items.Weapons.Melee
             Item.noMelee = true;
             Item.knockBack = 6;
             Item.value = Item.buyPrice(gold: 60);
-            Item.rare = ItemRarityID.Yellow;
+            Item.rare = ParacosmRarity.Orange;
             Item.UseSound = SoundID.Item1;
             Item.autoReuse = true;
             Item.useTurn = false;

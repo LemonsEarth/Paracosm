@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Paracosm.Content.Items.Materials;
+using Paracosm.Content.Items.Rarities;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
@@ -22,7 +23,7 @@ namespace Paracosm.Content.Items.Weapons.Ranged
             Item.useStyle = ItemUseStyleID.Shoot;
             Item.knockBack = 0.3f;
             Item.value = Item.sellPrice(0, 15);
-            Item.rare = ItemRarityID.Red;
+            Item.rare = ParacosmRarity.LightGreen;
             Item.UseSound = SoundID.Item38;
             Item.autoReuse = true;
             Item.shootSpeed = 10;

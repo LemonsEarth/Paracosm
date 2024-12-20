@@ -6,12 +6,12 @@ using Terraria.ModLoader;
 
 namespace Paracosm.Content.Items.Materials
 {
-    public class SolarCore : ModItem
+    public class PureStardust : ModItem
     {
         public override void SetStaticDefaults()
         {
             Item.ResearchUnlockCount = 100;
-            Main.RegisterItemAnimation(Item.type, new DrawAnimationVertical(6, 4));
+            Main.RegisterItemAnimation(Item.type, new DrawAnimationVertical(6, 3));
             ItemID.Sets.AnimatesAsSoul[Type] = true;
             ItemID.Sets.ItemIconPulse[Item.type] = true;
             ItemID.Sets.ItemNoGravity[Item.type] = true;
@@ -19,11 +19,11 @@ namespace Paracosm.Content.Items.Materials
 
         public override void SetDefaults()
         {
-            Item.width = 40;
-            Item.height = 40;
+            Item.width = 32;
+            Item.height = 32;
             Item.maxStack = Item.CommonMaxStack;
             Item.value = Item.sellPrice(0, 0, 50);
-            Item.rare = ParacosmRarity.Orange;
+            Item.rare = ParacosmRarity.LightBlue;
         }
     }
 }

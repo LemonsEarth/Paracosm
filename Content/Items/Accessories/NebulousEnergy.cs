@@ -1,4 +1,5 @@
-﻿using Paracosm.Content.Buffs;
+﻿using Paracosm.Common.Players;
+using Paracosm.Content.Buffs;
 using Terraria;
 using Terraria.ID;
 using Terraria.Localization;
@@ -30,6 +31,7 @@ namespace Paracosm.Content.Items.Accessories
             player.GetDamage(DamageClass.Magic) += damageBoost / 100;
             player.GetCritChance(DamageClass.Magic) += critBoost;
             player.AddBuff(ModContent.BuffType<NebulousPower>(), 2);
+            player.GetModPlayer<ParacosmPlayer>().nebulousEnergy = true;
         }
     }
 }

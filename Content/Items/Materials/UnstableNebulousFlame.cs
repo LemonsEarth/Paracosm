@@ -1,4 +1,5 @@
-﻿using Terraria;
+﻿using Paracosm.Content.Items.Rarities;
+using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -22,7 +23,7 @@ namespace Paracosm.Content.Items.Materials
             Item.height = 40;
             Item.maxStack = Item.CommonMaxStack;
             Item.value = Item.sellPrice(0, 0, 50);
-            Item.rare = ItemRarityID.Red;
+            Item.rare = ParacosmRarity.PinkPurple;
         }
     }
 }

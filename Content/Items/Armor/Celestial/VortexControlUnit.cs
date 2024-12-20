@@ -41,7 +41,8 @@ namespace Paracosm.Content.Items.Armor.Celestial
 
         public override bool IsArmorSet(Item head, Item body, Item legs)
         {
-            return head.type == ItemID.VortexHelmet && legs.type == ItemID.VortexLeggings;
+            return (head.type == ItemID.VortexHelmet && legs.type == ItemID.VortexLeggings) ||
+                (head.type == ModContent.ItemType<ChampionsCrown>() && legs.type == ModContent.ItemType<StardustDragonTail>());
         }
 
         public override void UpdateArmorSet(Player player)

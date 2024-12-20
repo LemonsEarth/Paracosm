@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Paracosm.Content.Items.Materials;
+using Paracosm.Content.Items.Rarities;
 using Paracosm.Content.Subworlds;
 using SubworldLibrary;
 using System;
@@ -26,7 +27,7 @@ namespace Paracosm.Content.Items.Consumables
             Item.width = 68;
             Item.height = 68;
             Item.maxStack = 1;
-            Item.rare = ItemRarityID.Red;
+            Item.rare = ParacosmRarity.Black;
             Item.useAnimation = 121;
             Item.useTime = 121;
             Item.useStyle = ItemUseStyleID.HoldUp;
@@ -92,8 +93,6 @@ namespace Paracosm.Content.Items.Consumables
             recipe.AddIngredient(ItemID.FragmentVortex, 5);
             recipe.AddIngredient(ItemID.FragmentNebula, 5);
             recipe.AddIngredient(ItemID.FragmentStardust, 5);
-            recipe.AddIngredient(ModContent.ItemType<SolarCore>(), 7);
-            recipe.AddIngredient(ModContent.ItemType<VortexianPlating>(), 7);
             recipe.AddTile(TileID.LunarCraftingStation);
             recipe.Register();
         }

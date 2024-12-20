@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Paracosm.Content.Items.Materials;
+using Paracosm.Content.Items.Rarities;
 using Paracosm.Content.Projectiles.Minions;
 using Terraria;
 using Terraria.DataStructures;
@@ -29,7 +30,7 @@ namespace Paracosm.Content.Items.Weapons.Summon
             Item.UseSound = SoundID.Zombie67;
             Item.buffType = ModContent.BuffType<TeslaGunMinionBuff>();
             Item.shoot = ModContent.ProjectileType<TeslaGunMinion>();
-            Item.rare = ItemRarityID.Red;
+            Item.rare = ParacosmRarity.LightGreen;
             Item.value = Item.sellPrice(gold: 40);
         }
 

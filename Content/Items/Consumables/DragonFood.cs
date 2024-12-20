@@ -1,5 +1,6 @@
 ﻿using Paracosm.Content.Bosses.NebulaMaster;
 using Paracosm.Content.Bosses.StardustLeviathan;
+using Paracosm.Content.Items.Rarities;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
@@ -20,7 +21,7 @@ namespace Paracosm.Content.Items.Consumables
             Item.width = 38;
             Item.height = 34;
             Item.maxStack = 1;
-            Item.rare = ItemRarityID.Yellow;
+            Item.rare = ParacosmRarity.LightBlue;
             Item.useAnimation = 30;
             Item.useTime = 30;
             Item.useStyle = ItemUseStyleID.HoldUp;
@@ -55,8 +56,8 @@ namespace Paracosm.Content.Items.Consumables
         {
             Recipe recipe = CreateRecipe();
             recipe.AddIngredient(ItemID.LunarBar, 5);
-            recipe.AddIngredient(ItemID.FragmentNebula, 20);
-            recipe.AddIngredient(ItemID.SolarTablet);
+            recipe.AddIngredient(ItemID.FragmentStardust, 20);
+            recipe.AddIngredient(ItemID.Burger);
             recipe.AddTile(TileID.LunarCraftingStation);
             recipe.Register();
         }

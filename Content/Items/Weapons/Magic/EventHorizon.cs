@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Paracosm.Content.Items.Materials;
+using Paracosm.Content.Items.Rarities;
 using Paracosm.Content.Projectiles.Friendly;
 using Terraria;
 using Terraria.DataStructures;
@@ -27,7 +28,7 @@ namespace Paracosm.Content.Items.Weapons.Magic
             Item.useStyle = ItemUseStyleID.Shoot;
             Item.knockBack = 3;
             Item.value = Item.buyPrice(gold: 50);
-            Item.rare = ItemRarityID.Red;
+            Item.rare = ParacosmRarity.PinkPurple;
             Item.UseSound = SoundID.Item8;
             Item.autoReuse = true;
             Item.mana = 12;

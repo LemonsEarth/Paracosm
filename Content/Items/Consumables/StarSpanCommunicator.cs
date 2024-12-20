@@ -1,4 +1,5 @@
 ﻿using Paracosm.Content.Bosses.VortexMothership;
+using Paracosm.Content.Items.Rarities;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
@@ -19,7 +20,7 @@ namespace Paracosm.Content.Items.Consumables
             Item.width = 30;
             Item.height = 30;
             Item.maxStack = 1;
-            Item.rare = ItemRarityID.Blue;
+            Item.rare = ParacosmRarity.LightGreen;
             Item.useAnimation = 30;
             Item.useTime = 30;
             Item.useStyle = ItemUseStyleID.HoldUp;

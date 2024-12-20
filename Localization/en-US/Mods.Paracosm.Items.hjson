@@ -432,6 +432,8 @@ ChampionsCrown: {
 	DisplayName: Champion's Crown
 	Tooltip:
 		'''
+		Celestial Armor
+		Set bonus activates when worn with Solar or Celestial armor
 		{$CommonItemTooltip.PercentIncreasedMeleeDamage}
 		{$CommonItemTooltip.PercentIncreasedMeleeCritChance@1}
 		{$CommonItemTooltip.PercentIncreasedMeleeSpeed@2}
@@ -492,6 +494,8 @@ VortexControlUnit: {
 	DisplayName: Vortex Control Unit
 	Tooltip:
 		'''
+		Celestial Armor
+		Set bonus activates when worn with Vortex or Celestial armor
 		{$CommonItemTooltip.PercentIncreasedRangedDamage}
 		{$CommonItemTooltip.PercentIncreasedRangedCritChance@1}
 		{$CommonItemTooltip.PercentIncreasedMovementSpeed@2}
@@ -558,15 +562,61 @@ NebulousEnergy: {
 		{$CommonItemTooltip.PercentIncreasedMagicCritChance@1}
 		Grants you Nebulous Power
 		Increases pickup range for Nebula Boosters
+		Improves the abilities of Celestial Armor Sets
 		'''
 }
 
 EventHorizon: {
 	DisplayName: Event Horizon
-	Tooltip: ""
+	Tooltip: None who enter shall return...
 }
 
 DragonFood: {
 	DisplayName: Dragon Food
-	Tooltip: ""
+	Tooltip:
+		'''
+		Not consumable (by you)
+		A burger coated with mysterious sprinkles attracts mysterious creatures...
+		'''
+}
+
+PureStardust: {
+	DisplayName: Pure Stardust
+	Tooltip: Scraped directly off a star...
+}
+
+StardustLeviathanBossBag: {
+	DisplayName: Treasure Bag (Stardust Leviathan)
+	Tooltip: "{$CommonItemTooltip.RightClickToOpen}"
+}
+
+StardustDragonTail: {
+	DisplayName: Stardust Dragon Tail
+	Tooltip:
+		'''
+		Celestial Armor
+		Set bonus activates when worn with Stardust or Celestial armor
+		{$CommonItemTooltip.PercentIncreasedMovementSpeed}
+		{$CommonItemTooltip.PercentIncreasedSummonDamage@1}
+		{$CommonItemTooltip.IncreasesWhipRangeByPercent@2}
+		{$CommonItemTooltip.IncreasesMaxMinionsBy@3}
+		{$CommonItemTooltip.IncreasesMaxSentriesBy@4}
+		'''
+	SetBonus:
+		'''
+		Attacks are accompanied by a whip strike
+		{$CommonItemTooltip.IncreasesMaxMinionsBy}
+		{$CommonItemTooltip.IncreasesMaxSentriesBy@1}
+		'''
+	SetBonus2:
+		'''
+		Effects of all Celestial Armor sets
+		{$CommonItemTooltip.PercentIncreasedDamage}
+		{$CommonItemTooltip.PercentIncreasedCritChance@1}
+		'''
+}
+
+SkiesOfRuin: {
+	DisplayName: Skies Of Ruin
+	Tooltip: Stars rain upon thee!
 }
