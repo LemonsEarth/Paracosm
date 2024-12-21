@@ -164,8 +164,8 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
                     case (int)StardustLeviathanHead.Attacks2.ChasingMineTrail:
                         ChasingMineTrail();
                         break;
-                    case (int)StardustLeviathanHead.Attacks.Minefield:
-                        Minefield();
+                    case (int)StardustLeviathanHead.Attacks2.Chasing2:
+                        Chasing2();
                         break;
                 }
             }
@@ -322,6 +322,7 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
             switch (AttackTimer)
             {
                 case 0:
+                    int finalStage = head.NPC.life < head.NPC.lifeMax / 4 ? 1 : 2;
                     if (Main.netMode != NetmodeID.MultiplayerClient && SegmentNum % 4 == 0)
                     {
                         for (int i = -1; i <= 1; i += 2)
@@ -331,7 +332,7 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
                             Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, perpendicular * 5, head.Proj["Starshot"], head.NPC.damage, 1);
                         }
                     }
-                    AttackTimer = CIRCLING_BH_ATTACK_RATE;
+                    AttackTimer = CIRCLING_BH_ATTACK_RATE * finalStage;
                     return;
             }
 
@@ -348,6 +349,7 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
             switch (AttackTimer)
             {
                 case 0:
+                    int finalStage = head.NPC.life < head.NPC.lifeMax / 4 ? 1 : 2;
                     if (Main.netMode != NetmodeID.MultiplayerClient)
                     {
                         AttackCount = Main.rand.Next(0, 360);
@@ -356,9 +358,36 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
                         Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, direction, head.Proj["Mine"], head.NPC.damage, 1, ai1: 360);
                     }
                     NPC.netUpdate = true;
-                    AttackTimer = MINE_TRAIL_ATTACK_TIMER;
+                    AttackTimer = MINE_TRAIL_ATTACK_TIMER * finalStage;
                     return;
             }
+            AttackTimer--;
+        }
+
+        const int CHASING2_ATTACK_RATE = 60;
+        void Chasing2()
+        {
+            if (SegmentNum != 1)
+            {
+                return;
+            }
+            switch (AttackTimer)
+            {
+                case 0:
+                    if (Main.netMode != NetmodeID.MultiplayerClient)
+                    {
+                        for (int i = 0; i < 5; i++)
+                        {
+                            Vector2 pos = head.player.Center + new Vector2(0, -800).RotatedBy(MathHelper.ToRadians(i * 72));
+                            Vector2 posToPlayer = pos.DirectionTo(head.player.Center);
+                            Projectile.NewProjectile(NPC.GetSource_FromAI(), pos, posToPlayer * 20, head.Proj["Starshot"], head.NPC.damage, 1, ai1: 1);
+                        }              
+                    }
+                    NPC.netUpdate = true;
+                    AttackTimer = CHASING2_ATTACK_RATE;
+                    return;
+            }
+
             AttackTimer--;
         }
 

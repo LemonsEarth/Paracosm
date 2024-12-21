@@ -36,7 +36,7 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
                 {
                     diffMod = 0;
                 }
-                int maxVal = phase == 1 ? 3 : 2;
+                int maxVal = phase == 1 ? 3 : 3;
                 if (value > maxVal + diffMod || value < 0)
                 {
                     NPC.ai[1] = 0;
@@ -59,7 +59,7 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
 
         float attackDuration = 0;
         int[] attackDurations = { 480, 480, 960, 720 };
-        int[] attackDurations2 = { 660, 660, 690, 900 };
+        int[] attackDurations2 = { 660, 660, 690, 690 };
         public Player player { get; private set; }
         public Vector2 playerDirection { get; private set; }
         Vector2 targetPosition = Vector2.Zero;
@@ -89,7 +89,8 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
         {
             DashingSpam,
             CirclingBulletHell,
-            ChasingMineTrail
+            ChasingMineTrail,
+            Chasing2
         }
 
         public override void SetStaticDefaults()
@@ -125,7 +126,7 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
             NPC.width = 174;
             NPC.height = 300;
             NPC.Opacity = 1;
-            NPC.lifeMax = 1500000;
+            NPC.lifeMax = 1450000;
             NPC.defense = 80;
             NPC.damage = 40;
             NPC.HitSound = SoundID.NPCHit56;
@@ -299,8 +300,8 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
                     case (int)Attacks2.ChasingMineTrail:
                         ChasingMineTrail();
                         break;
-                    case (int)Attacks.Minefield:
-                        Minefield();
+                    case (int)Attacks2.Chasing2:
+                        Chasing2();
                         break;
                 }
             }
@@ -542,9 +543,10 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
                     AttackTimer = DASHING_SPAM_DASH_TIME;
                     if (Main.netMode != NetmodeID.MultiplayerClient)
                     {
-                        for (int i = 0; i < 8; i++)
+                        int finalStage = NPC.life < NPC.lifeMax / 4 ? 2 : 1;
+                        for (int i = 0; i < 8 * finalStage; i++)
                         {
-                            Vector2 direction = playerDirection.SafeNormalize(Vector2.Zero).RotatedBy(i * MathHelper.PiOver4);
+                            Vector2 direction = playerDirection.SafeNormalize(Vector2.Zero).RotatedBy(i * (MathHelper.PiOver4 / finalStage));
                             Projectile proj = Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center, direction * 20, Proj["StardustShot"], NPC.damage, 1);
                             StardustShot starshot = (StardustShot)proj.ModProjectile;
                             starshot.glowColor = new Color(1f, 1f, 0.1f, 1f);
@@ -554,7 +556,7 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
                         for (int i = 0; i < 8; i++)
                         {
                             Vector2 direction = playerDirection.SafeNormalize(Vector2.Zero).RotatedBy(i * MathHelper.PiOver4 + MathHelper.PiOver4 / 2);
-                            Projectile proj = Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center, direction * 15, Proj["StardustShot"], NPC.damage, 1);
+                            Projectile proj = Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center, direction * (15 / finalStage), Proj["StardustShot"], NPC.damage, 1);
                             StardustShot starshot = (StardustShot)proj.ModProjectile;
                             starshot.glowColor = new Color(1f, 1f, 0.1f, 1f);
                             NetMessage.SendData(MessageID.SyncProjectile, number: proj.whoAmI);
@@ -593,7 +595,7 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
         const int CHASING_MINE_TRAIL_TIME = 690;
         void ChasingMineTrail()
         {
-            switch(AttackTimer)
+            switch (AttackTimer)
             {
                 case > 90:
                     NPC.velocity = playerDirection.SafeNormalize(Vector2.Zero) * 8;
@@ -603,6 +605,28 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
                     return;
             }
 
+            AttackTimer--;
+        }
+        const int CHASING2_SWITCH_TIME = 120;
+        void Chasing2()
+        {
+            switch (AttackTimer)
+            {
+                case > 0:
+                    if (AttackCount % 2 == 0)
+                    {
+                        NPC.velocity = playerDirection.SafeNormalize(Vector2.Zero) * 6;
+                    }
+                    else
+                    {
+                        NPC.velocity = playerDirection.SafeNormalize(Vector2.Zero) * 12;
+                    }
+                    break;
+                case 0:
+                    AttackTimer = CHASING2_SWITCH_TIME;
+                    AttackCount++;
+                    return;
+            }
             AttackTimer--;
         }
 
