@@ -73,13 +73,9 @@ namespace Paracosm.Content.Items.Consumables
             {
                 doAnimation = false;
                 animationTimer = 0;
-                if (!SubworldSystem.IsActive("VoidSubworld"))
+                if (!SubworldSystem.IsActive("VoidSubworld") && Main.myPlayer == player.whoAmI)
                 {
                     SubworldSystem.Enter<VoidSubworld>();
-                }
-                else
-                {
-                    SubworldSystem.Exit();
                 }
             }
             animationTimer++;

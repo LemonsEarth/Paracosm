@@ -1,9 +1,13 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Paracosm.Content.Biomes.Void;
+using Paracosm.Content.Items.Materials;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.Audio;
+using Terraria.GameContent;
 using Terraria.GameContent.Bestiary;
+using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -24,7 +28,7 @@ namespace Paracosm.Content.NPCs.Hostile.Void
         {
             NPC.width = 64;
             NPC.height = 64;
-            NPC.lifeMax = 5000;
+            NPC.lifeMax = 2000;
             NPC.defense = 10;
             NPC.damage = 50;
             NPC.HitSound = SoundID.NPCHit8;
@@ -102,8 +106,7 @@ namespace Paracosm.Content.NPCs.Hostile.Void
                 return;
             }
 
-            int count = NPC.life < (NPC.lifeMax / 4) ? 4 : 2;
-            for (int i = 0; i < 6; i++)
+            for (int i = 0; i < 2; i++)
             {
                 NPC npc = NPC.NewNPCDirect(NPC.GetSource_FromAI(), NPC.Center + new Vector2(Main.rand.NextFloat(-32, 32)), Main.rand.NextFromList(405, 407, 418, 421, 427), NPC.whoAmI);
 
@@ -149,6 +152,26 @@ namespace Paracosm.Content.NPCs.Hostile.Void
                     NPC.frame.Y = 0;
                 }
             }
+        }
+
+        public override void ModifyNPCLoot(NPCLoot npcLoot)
+        {
+            npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<VoidEssence>(), minimumDropped: 2, maximumDropped: 6));
+        }
+
+        public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
+        {
+            Texture2D texture = TextureAssets.Npc[Type].Value;
+            Rectangle drawRect = texture.Frame(1, Main.npcFrameCount[Type], 0, 0);
+
+            Vector2 drawOrigin = new Vector2(texture.Width * 0.5f, NPC.height * 0.5f);
+            for (int k = NPC.oldPos.Length - 1; k > 0; k--)
+            {
+                Vector2 drawPos = NPC.oldPos[k] - Main.screenPosition + drawOrigin + new Vector2(0f, NPC.gfxOffY);
+                Color color = NPC.GetAlpha(drawColor) * ((NPC.oldPos.Length - k) / (float)NPC.oldPos.Length);
+                Main.EntitySpriteDraw(texture, drawPos, drawRect, color, NPC.rotation, drawOrigin, 1.2f, SpriteEffects.None, 0);
+            }
+            return true;
         }
 
         public override bool? CanFallThroughPlatforms()

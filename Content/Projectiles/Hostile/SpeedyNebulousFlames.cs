@@ -66,7 +66,10 @@ namespace Paracosm.Content.Projectiles.Hostile
 
             if (AITimer == SpawnTime)
             {
-                Projectile.velocity *= Speed;
+                if (Main.netMode != NetmodeID.MultiplayerClient)
+                {
+                    Projectile.velocity *= Speed;
+                }
                 Projectile.netUpdate = true;
             }
 

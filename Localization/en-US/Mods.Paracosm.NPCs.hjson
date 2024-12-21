@@ -58,6 +58,14 @@ NebulaMaster: {
 	}
 }
 
-StardustLeviathanHead.DisplayName: Stardust Leviathan
+StardustLeviathanHead: {
+	DisplayName: Stardust Leviathan
+	BossChecklistCompatibility.SpawnInfo: Use a [i:Paracosm/DragonFood]
+	Bestiary: A Stardust Dragon that consumed the soul of its wounded master. Its hunger knows no bounds.
+}
+
 StardustLeviathanBody.DisplayName: " "
 StardustLeviathanTail.DisplayName: " "
+VoidWormBody.DisplayName: " "
+VoidWormHead.DisplayName: Void Worm
+VoidWormTail.DisplayName: " "

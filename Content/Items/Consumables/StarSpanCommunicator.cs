@@ -1,4 +1,5 @@
 ﻿using Paracosm.Content.Bosses.VortexMothership;
+using Paracosm.Content.Items.Materials;
 using Paracosm.Content.Items.Rarities;
 using Terraria;
 using Terraria.Audio;
@@ -56,6 +57,7 @@ namespace Paracosm.Content.Items.Consumables
             Recipe recipe = CreateRecipe();
             recipe.AddIngredient(ItemID.LunarBar, 5);
             recipe.AddIngredient(ItemID.FragmentVortex, 20);
+            recipe.AddIngredient(ModContent.ItemType<VoidEssence>(), 15);
             recipe.AddIngredient(ItemID.MartianConduitPlating, 25);
             recipe.AddTile(TileID.LunarCraftingStation);
             recipe.Register();

@@ -207,15 +207,16 @@ namespace Paracosm.Common.Players
 
             if (vortexForce)
             {
-                foreach (var proj in Main.ActiveProjectiles)
-                {
-                    if (proj.friendly && !proj.IsMinionOrSentryRelated && proj.owner == Player.whoAmI)
-                    {
-                        proj.velocity += proj.Center.DirectionTo(Main.MouseWorld) * 1.5f;
-                    }
-                }
+                
                 if (Main.myPlayer == Player.whoAmI)
                 {
+                    foreach (var proj in Main.ActiveProjectiles)
+                    {
+                        if (proj.friendly && !proj.IsMinionOrSentryRelated && proj.owner == Player.whoAmI)
+                        {
+                            proj.velocity += proj.Center.DirectionTo(Main.MouseWorld) * 1.5f;
+                        }
+                    }
                     LemonUtils.DustCircle(Main.MouseWorld, 8, 2, DustID.HallowSpray, Main.rand.NextFloat(0.8f, 1.2f));
                 }
             }

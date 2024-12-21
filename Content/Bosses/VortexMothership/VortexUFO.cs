@@ -136,6 +136,10 @@ namespace Paracosm.Content.Bosses.VortexMothership
         void MoveToPos(Vector2 pos)
         {
             Vector2 direction = NPC.Center.DirectionTo(pos);
+            if (direction.HasNaNs())
+            {
+                return;
+            }
             float XaccelMod = Math.Sign(direction.X) - Math.Sign(NPC.velocity.X);
             float YaccelMod = Math.Sign(direction.Y) - Math.Sign(NPC.velocity.Y);
             NPC.velocity += new Vector2(XaccelMod * 2f + 1f * Math.Sign(direction.X), YaccelMod * 2f + 1f * Math.Sign(direction.Y));

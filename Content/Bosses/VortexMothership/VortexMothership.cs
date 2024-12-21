@@ -180,6 +180,7 @@ namespace Paracosm.Content.Bosses.VortexMothership
             writer.Write(attackDuration);
             writer.Write(phase);
             writer.Write(phase2FirstTime);
+            writer.Write(Spheres.Count);
             writer.Write(AttackTimer2);
             writer.Write(AttackCount2);
         }
@@ -191,6 +192,21 @@ namespace Paracosm.Content.Bosses.VortexMothership
             attackDuration = reader.ReadSingle();
             phase = reader.ReadInt32();
             phase2FirstTime = reader.ReadBoolean();
+            int count = reader.ReadInt32();
+            int sphereCounter = 0;
+            Spheres.Clear();
+            foreach (var proj in Main.ActiveProjectiles)
+            {
+                if (proj.type == Proj["Sphere"])
+                {
+                    Spheres.Add(proj);
+                    sphereCounter++;
+                    if (sphereCounter >= count)
+                    {
+                        break;
+                    }
+                }
+            }
             AttackTimer2 = reader.ReadInt32();
             AttackCount2 = reader.ReadInt32();
         }
@@ -206,6 +222,8 @@ namespace Paracosm.Content.Bosses.VortexMothership
             if (player.dead || !player.active || NPC.Center.Distance(player.MountedCenter) > 8000)
             {
                 NPC.active = false;
+                NPC.life = 0;
+                NetMessage.SendData(MessageID.SyncNPC, number: NPC.whoAmI);
             }
 
             //Visuals

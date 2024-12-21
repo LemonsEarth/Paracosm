@@ -156,7 +156,7 @@ namespace Paracosm.Content.Bosses.SolarChampion
             writer.Write(AttackCount2);
             writer.Write(rotSpeedMul);
             writer.Write(grow);
-
+            writer.Write(Spheres.Count);
             writer.Write(Swords.Count);
             writer.Write(Axes.Count);
         }
@@ -174,6 +174,22 @@ namespace Paracosm.Content.Bosses.SolarChampion
             rotSpeedMul = reader.ReadSingle();
             grow = reader.ReadBoolean();
 
+            int count = reader.ReadInt32();
+            int sphereCounter = 0;
+            Spheres.Clear();
+            foreach (var proj in Main.ActiveProjectiles)
+            {
+                if (proj.type == Proj["Sphere"])
+                {
+                    Spheres.Add(proj);
+                    sphereCounter++;
+                    if (sphereCounter >= count)
+                    {
+                        break;
+                    }
+                }
+            }
+
             int count1 = reader.ReadInt32();
             int swordCounter = 0;
             Swords.Clear();
@@ -189,6 +205,7 @@ namespace Paracosm.Content.Bosses.SolarChampion
                     }
                 }
             }
+
 
             int count2 = reader.ReadInt32();
             int axeCounter = 0;
@@ -218,6 +235,8 @@ namespace Paracosm.Content.Bosses.SolarChampion
             if (player.dead || !player.active || NPC.Center.Distance(player.MountedCenter) > 8000)
             {
                 NPC.active = false;
+                NPC.life = 0;
+                NetMessage.SendData(MessageID.SyncNPC, number: NPC.whoAmI);
             }
 
             //Visuals
@@ -902,8 +921,6 @@ namespace Paracosm.Content.Bosses.SolarChampion
 
                 Spheres[i].velocity = (pos - Spheres[i].position).SafeNormalize(Vector2.Zero) * (Spheres[i].position.Distance(pos) / 20);
                 Spheres[i].timeLeft = 180;
-
-
             }
             if (arenaDistance < BaseArenaDistance)
             {

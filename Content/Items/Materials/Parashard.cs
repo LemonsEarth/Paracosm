@@ -9,6 +9,7 @@ namespace Paracosm.Content.Items.Materials
         public override void SetStaticDefaults()
         {
             Item.ResearchUnlockCount = 100;
+            ItemID.Sets.ShimmerTransformToItem[Type] = ModContent.ItemType<VoidEssence>();
         }
 
         public override void SetDefaults()

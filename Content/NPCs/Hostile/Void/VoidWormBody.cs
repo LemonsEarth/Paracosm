@@ -1,13 +1,13 @@
 ﻿using Microsoft.Xna.Framework;
+using System;
 using System.IO;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Terraria.Graphics.Effects;
 
-namespace Paracosm.Content.Bosses.StardustLeviathan
+namespace Paracosm.Content.NPCs.Hostile.Void
 {
-    public class StardustLeviathanTail : ModNPC
+    public class VoidWormBody : ModNPC
     {
         float AITimer = 0;
 
@@ -16,18 +16,29 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
             get { return (int)NPC.ai[1]; }
         }
 
+        int FollowerNPC
+        {
+            get { return (int)NPC.ai[0]; }
+        }
+
         int HeadNPC
         {
             get { return (int)NPC.ai[2]; }
         }
 
-        StardustLeviathanHead head;
+        int SegmentNum
+        {
+            get { return (int)NPC.ai[3]; }
+        }
 
+        int AttackTimer = 0;
+        int AttackCount = 0;
+        float RandNum = 0;
         public override void SetStaticDefaults()
         {
             NPCID.Sets.SpecificDebuffImmunity[Type][BuffID.Confused] = true;
             NPCID.Sets.MPAllowedEnemies[Type] = true;
-            Main.npcFrameCount[NPC.type] = 1;
+            Main.npcFrameCount[NPC.type] = 2;
             NPCID.Sets.CantTakeLunchMoney[Type] = true;
             NPCID.Sets.DontDoHardmodeScaling[Type] = true;
         }
@@ -35,41 +46,19 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
         public override void SetDefaults()
         {
             NPC.aiStyle = -1;
-            NPC.width = 128;
-            NPC.height = 64;
+            NPC.width = 104;
+            NPC.height = 52;
             NPC.Opacity = 1;
-            NPC.lifeMax = 1500000;
-            NPC.defense = 60;
+            NPC.lifeMax = 100000;
+            NPC.defense = 80;
             NPC.damage = 40;
-            NPC.HitSound = SoundID.NPCHit56;
-            NPC.DeathSound = SoundID.NPCDeath60;
-            NPC.value = 5000000;
+            NPC.HitSound = SoundID.NPCHit18;
+            NPC.DeathSound = SoundID.DD2_BetsyDeath;
+            NPC.value = 50000;
             NPC.noTileCollide = true;
             NPC.knockBackResist = 0;
             NPC.noGravity = true;
-            NPC.npcSlots = 10;
-            NPC.SpawnWithHigherTime(30);
-
-            if (!Main.dedServ)
-            {
-                Music = MusicLoader.GetMusicSlot(Mod, "Content/Audio/Music/CelestialShowdown");
-            }
-        }
-
-        public override void ApplyDifficultyAndPlayerScaling(int numPlayers, float balance, float bossAdjustment)
-        {
-            NPC.lifeMax = (int)(NPC.lifeMax * balance * bossAdjustment * 0.6f);
-            NPC.damage = (int)(NPC.damage * balance * 0.5f);
-        }
-
-        public override void SendExtraAI(BinaryWriter writer)
-        {
-            writer.Write(NPC.Opacity);
-        }
-
-        public override void ReceiveExtraAI(BinaryReader reader)
-        {
-            NPC.Opacity = reader.ReadSingle();
+            NPC.npcSlots = 1;
         }
 
         public override bool? DrawHealthBar(byte hbPosition, ref float scale, ref Vector2 position)
@@ -80,7 +69,6 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
         public override void AI()
         {
             NPC followingNPC = Main.npc[FollowingNPC];
-            NPC headNPC = Main.npc[HeadNPC];
 
             if (followingNPC is null || !followingNPC.active || followingNPC.friendly || followingNPC.townNPC || followingNPC.lifeMax <= 5)
             {
@@ -88,13 +76,7 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
                 NPC.active = false;
                 NetMessage.SendData(MessageID.SyncNPC, number: NPC.whoAmI);
             }
-            head = (StardustLeviathanHead)headNPC.ModNPC;
 
-            NPC.Opacity = head.NPC.Opacity;
-            if (AITimer % 10 == 0)
-            {
-                NPC.netUpdate = true;
-            }
             FollowNextSegment(followingNPC);
 
             NPC.spriteDirection = followingNPC.spriteDirection;
@@ -113,27 +95,14 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
             NPC.position += pos;
         }
 
-
-        public void DeleteProjectiles(int projID)
+        public override void FindFrame(int frameHeight)
         {
-            foreach (var proj in Main.ActiveProjectiles)
+            NPC.frameCounter++;
+            if (NPC.frameCounter == 10)
             {
-                if (proj.type == projID)
-                {
-                    proj.Kill();
-                }
+                NPC.frame.Y = Main.rand.Next(0, 2) * frameHeight;
+                NPC.frameCounter = 0;
             }
-        }
-
-        public override bool CheckActive()
-        {
-            return false;
-        }
-
-        public override bool CheckDead()
-        {
-            Filters.Scene.Deactivate("Paracosm:ScreenTintShader");
-            return true;
         }
 
         public override bool? CanFallThroughPlatforms()

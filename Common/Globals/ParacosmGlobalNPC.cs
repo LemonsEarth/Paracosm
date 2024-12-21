@@ -81,6 +81,7 @@ namespace Paracosm.Common.Globals
             {
                 pool.Clear();
                 pool.Add(ModContent.NPCType<ShadowSeeker>(), 0.05f);
+                pool.Add(ModContent.NPCType<VoidWormHead>(), 0.01f);
             }
         }
 

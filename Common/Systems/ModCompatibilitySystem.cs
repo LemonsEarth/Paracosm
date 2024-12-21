@@ -4,6 +4,7 @@ using Paracosm.Content.Bosses.DivineSeeker;
 using Paracosm.Content.Bosses.InfectedRevenant;
 using Paracosm.Content.Bosses.NebulaMaster;
 using Paracosm.Content.Bosses.SolarChampion;
+using Paracosm.Content.Bosses.StardustLeviathan;
 using Paracosm.Content.Bosses.VortexMothership;
 using Paracosm.Content.Items.Consumables;
 using System;
@@ -156,6 +157,28 @@ namespace Paracosm.Common.Systems
                 () => DownedBossSystem.downedNebulaMaster,
                 ModContent.NPCType<NebulaMaster>(),
                 additionalNM
+                );
+
+
+
+
+            //Log Stardust Leviathan
+            int spawnItemTypeSL = ModContent.ItemType<DragonFood>();
+            LocalizedText spawnInfoSL = Language.GetText("Mods.Paracosm.NPCs.StardustLeviathanHead.BossChecklistCompatibility.SpawnInfo");
+
+            Dictionary<string, object> additionalSL = new Dictionary<string, object>()
+            {
+                ["spawnItems"] = spawnItemTypeSL,
+                ["spawnInfo"] = spawnInfoSL
+            };
+
+            LogBoss(
+                BossChecklist,
+                "StardustLeviathanHead",
+                18.4f,
+                () => DownedBossSystem.downedStardustLeviathan,
+                ModContent.NPCType<StardustLeviathanHead>(),
+                additionalSL
                 );
         }
 

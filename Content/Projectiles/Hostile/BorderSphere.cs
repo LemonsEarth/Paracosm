@@ -47,6 +47,11 @@ namespace Paracosm.Content.Projectiles.Hostile
                 Projectile.netUpdate = true;
             }
 
+            if (AITimer % 5 == 0)
+            {
+                Projectile.netUpdate = true;
+            }
+
             if (DamageNullTimer == 0)
             {
                 Projectile.damage = Projectile.originalDamage;

@@ -97,6 +97,7 @@ namespace Paracosm.Content.Projectiles.Friendly
                         Projectile.velocity = mouseDir.SafeNormalize(Vector2.Zero) * 50;
                         fired = true;
                     }
+                    Projectile.netUpdate = true;
                 }
             }
 

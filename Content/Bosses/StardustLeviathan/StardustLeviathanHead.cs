@@ -161,7 +161,9 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
             writer.Write(arenaCenter.X);
             writer.Write(arenaCenter.Y);
             writer.Write(arenaFollow);
+            writer.Write(Spheres.Count);
             writer.Write(phaseTransition);
+            writer.Write(NPC.Opacity);
         }
 
         public override void ReceiveExtraAI(BinaryReader reader)
@@ -175,7 +177,23 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
             AttackCount2 = reader.ReadInt32();
             arenaCenter = new Vector2(reader.ReadSingle(), reader.ReadSingle());
             arenaFollow = reader.ReadBoolean();
+            int count = reader.ReadInt32();
+            int sphereCounter = 0;
+            Spheres.Clear();
+            foreach (var proj in Main.ActiveProjectiles)
+            {
+                if (proj.type == Proj["Sphere"])
+                {
+                    Spheres.Add(proj);
+                    sphereCounter++;
+                    if (sphereCounter >= count)
+                    {
+                        break;
+                    }
+                }
+            }
             phaseTransition = reader.ReadBoolean();
+            NPC.Opacity = reader.ReadSingle();
         }
 
         public override void AI()
@@ -189,6 +207,8 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
             if (player.dead || !player.active || NPC.Center.Distance(player.MountedCenter) > 8000)
             {
                 NPC.active = false;
+                NPC.life = 0;
+                NetMessage.SendData(MessageID.SyncNPC, number: NPC.whoAmI);
             }
 
             //Visuals
@@ -433,6 +453,10 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
                         NPC.Opacity -= 1f / 60f;
                     }
                     NPC.velocity = playerDirection.SafeNormalize(Vector2.Zero) * 6;
+                    if (AttackTimer % 10 == 0)
+                    {
+                        NPC.netUpdate = true;
+                    }
                     break;
                 case 0:
                     if (AttackCount < CHASING_MAX_PROJ_COUNT)
@@ -472,6 +496,7 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
                                 Projectile proj = Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center, playerDirection.SafeNormalize(Vector2.Zero).RotatedBy(i * MathHelper.PiOver4) * 10, Proj["StardustShot"], NPC.damage, 1);
                                 StardustShot starshot = (StardustShot)proj.ModProjectile;
                                 starshot.glowColor = new Color(1f, 0.1f, 0.1f, 1f);
+                                NetMessage.SendData(MessageID.SyncProjectile, number: proj.whoAmI);
                             }
                         }
                     }
@@ -523,6 +548,7 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
                             Projectile proj = Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center, direction * 20, Proj["StardustShot"], NPC.damage, 1);
                             StardustShot starshot = (StardustShot)proj.ModProjectile;
                             starshot.glowColor = new Color(1f, 1f, 0.1f, 1f);
+                            NetMessage.SendData(MessageID.SyncProjectile, number: proj.whoAmI);
                         }
 
                         for (int i = 0; i < 8; i++)
@@ -531,6 +557,7 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
                             Projectile proj = Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center, direction * 15, Proj["StardustShot"], NPC.damage, 1);
                             StardustShot starshot = (StardustShot)proj.ModProjectile;
                             starshot.glowColor = new Color(1f, 1f, 0.1f, 1f);
+                            NetMessage.SendData(MessageID.SyncProjectile, number: proj.whoAmI);
                         }
                     }
                     return;
@@ -583,6 +610,10 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
         void MoveToPos(Vector2 pos, float xAccel = 1f, float yAccel = 1f, float xSpeed = 1f, float ySpeed = 1f)
         {
             Vector2 direction = NPC.Center.DirectionTo(pos);
+            if (direction.HasNaNs())
+            {
+                return;
+            }
             float XaccelMod = Math.Sign(direction.X) - Math.Sign(NPC.velocity.X);
             float YaccelMod = Math.Sign(direction.Y) - Math.Sign(NPC.velocity.Y);
             NPC.velocity += new Vector2(XaccelMod * xAccel + xSpeed * Math.Sign(direction.X), YaccelMod * yAccel + ySpeed * Math.Sign(direction.Y));
@@ -742,7 +773,7 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
         public override void OnKill()
         {
             DeleteProjectiles(Proj["Sphere"]);
-            NPC.SetEventFlagCleared(ref DownedBossSystem.downedNebulaMaster, -1);
+            NPC.SetEventFlagCleared(ref DownedBossSystem.downedStardustLeviathan, -1);
             for (int i = 0; i < 16; i++)
             {
                 Gore gore = Gore.NewGoreDirect(NPC.GetSource_FromThis(), NPC.position + new Vector2(Main.rand.Next(0, NPC.width), Main.rand.Next(0, NPC.height)), new Vector2(Main.rand.NextFloat(-5, 5)), Main.rand.Next(61, 64), Main.rand.NextFloat(2f, 5f));

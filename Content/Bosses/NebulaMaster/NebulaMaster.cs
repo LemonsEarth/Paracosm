@@ -13,6 +13,7 @@ using System.IO;
 using System.Linq;
 using Terraria;
 using Terraria.Audio;
+using Terraria.Chat;
 using Terraria.GameContent.Bestiary;
 using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
@@ -161,8 +162,10 @@ namespace Paracosm.Content.Bosses.NebulaMaster
             writer.Write(arenaCenter.X);
             writer.Write(arenaCenter.Y);
             writer.Write(arenaFollow);
+            writer.Write(Spheres.Count);
             writer.Write(spawnedAura);
             writer.Write(phaseTransition);
+            writer.Write(NPC.Opacity);
         }
 
         public override void ReceiveExtraAI(BinaryReader reader)
@@ -177,8 +180,24 @@ namespace Paracosm.Content.Bosses.NebulaMaster
             arenaCenter.X = reader.ReadSingle();
             arenaCenter.Y = reader.ReadSingle();
             arenaFollow = reader.ReadBoolean();
+            int count = reader.ReadInt32();
+            int sphereCounter = 0;
+            Spheres.Clear();
+            foreach (var proj in Main.ActiveProjectiles)
+            {
+                if (proj.type == Proj["Sphere"])
+                {
+                    Spheres.Add(proj);
+                    sphereCounter++;
+                    if (sphereCounter >= count)
+                    {
+                        break;
+                    }
+                }
+            }
             spawnedAura = reader.ReadBoolean();
             phaseTransition = reader.ReadBoolean();
+            NPC.Opacity = reader.ReadSingle();
         }
 
         public override void AI()
@@ -189,16 +208,18 @@ namespace Paracosm.Content.Bosses.NebulaMaster
             }
             player = Main.player[NPC.target];
             playerDirection = player.Center - NPC.Center;
-            if (player.dead || !player.active || NPC.Center.Distance(player.MountedCenter) > 8000)
+            if ((player.dead || !player.active || NPC.Center.Distance(player.MountedCenter) > 8000))
             {
                 NPC.active = false;
+                NPC.life = 0;
+                NetMessage.SendData(MessageID.SyncNPC, number: NPC.whoAmI);
             }
 
             //Visuals
             if (AITimer == 0)
             {
                 NPC.Opacity = 0;
-            }
+            } 
 
             Lighting.AddLight(NPC.Center, 100, 100, 100);
 
@@ -410,12 +431,12 @@ namespace Paracosm.Content.Bosses.NebulaMaster
                         DeleteProjectiles(proj.Value);
                 }
             }
-            NPC.netUpdate = true;
 
             if (Spheres.Any(p => p.active == false))
             {
                 Spheres.Clear();
             }
+            NPC.netUpdate = true;
         }
 
         const int RANDOM_POS_TIME = 60;
@@ -774,6 +795,10 @@ namespace Paracosm.Content.Bosses.NebulaMaster
         void MoveToPos(Vector2 pos, float xAccel = 1f, float yAccel = 1f, float xSpeed = 1f, float ySpeed = 1f)
         {
             Vector2 direction = NPC.Center.DirectionTo(pos);
+            if (direction.HasNaNs())
+            {
+                return;
+            }
             float XaccelMod = Math.Sign(direction.X) - Math.Sign(NPC.velocity.X);
             float YaccelMod = Math.Sign(direction.Y) - Math.Sign(NPC.velocity.Y);
             NPC.velocity += new Vector2(XaccelMod * xAccel + xSpeed * Math.Sign(direction.X), YaccelMod * yAccel + ySpeed * Math.Sign(direction.Y));
@@ -788,6 +813,7 @@ namespace Paracosm.Content.Bosses.NebulaMaster
         {
             float targetArenaDistance = BASE_ARENA_DISTANCE;
             arenaFollow = true;
+
             if (phase == 1)
             {
                 switch (Attack)
@@ -816,6 +842,10 @@ namespace Paracosm.Content.Bosses.NebulaMaster
                         break;
                 }
             }
+            if (AITimer % 5 == 0)
+            {
+                NPC.netUpdate = true;
+            }
 
             if (Main.netMode != NetmodeID.MultiplayerClient)
             {
@@ -827,9 +857,9 @@ namespace Paracosm.Content.Bosses.NebulaMaster
 
                         Spheres.Add(sphere);
                     }
-                    NPC.netUpdate = true;
                 }
             }
+            NPC.netUpdate = true;
 
             if (arenaFollow)
             {
@@ -877,16 +907,19 @@ namespace Paracosm.Content.Bosses.NebulaMaster
 
         void DialogueMessage(string key, int maxRand, int duration = 60)
         {
-            AdvancedPopupRequest message = new AdvancedPopupRequest();
-            message.Color = Color.White;
-            message.DurationInFrames = duration;
-            message.Velocity = 10 * -Vector2.UnitY;
-            int rand = Main.rand.Next(0, maxRand);
-            string msgKey = key + rand;
-            message.Text = Language.GetTextValue($"Mods.Paracosm.NPCs.NebulaMaster.Dialogue.{msgKey}");
+            if (Main.netMode != NetmodeID.Server)
+            {
+                AdvancedPopupRequest message = new AdvancedPopupRequest();
+                message.Color = Color.White;
+                message.DurationInFrames = duration;
+                message.Velocity = 10 * -Vector2.UnitY;
+                int rand = Main.rand.Next(0, maxRand);
+                string msgKey = key + rand;
+                message.Text = Language.GetTextValue($"Mods.Paracosm.NPCs.NebulaMaster.Dialogue.{msgKey}");
 
-            int index = PopupText.NewText(message, NPC.Center + -Vector2.UnitY * NPC.height / 2);
-            Main.popupText[index].scale = 2f;
+                int index = PopupText.NewText(message, NPC.Center + -Vector2.UnitY * NPC.height / 2);
+                Main.popupText[index].scale = 2f;
+            }     
         }
 
         public override bool CheckActive()

@@ -172,10 +172,10 @@ namespace Paracosm.Content.Bosses.VortexMothership
                 {
                     AttackCount = Main.rand.Next(-10, 2);
                     shootDirection = playerDirection;
-                    NPC.netUpdate = true;
                     Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, shootDirection * 10, ModContent.ProjectileType<TeslaShot>(), NPC.damage, 1, ai1: 2f);
                 }
                 AttackTimer = TESLA_SHOT_CD;
+                NPC.netUpdate = true;
             }
             AttackTimer--;
         }
@@ -204,7 +204,6 @@ namespace Paracosm.Content.Bosses.VortexMothership
                     if (Main.netMode != NetmodeID.MultiplayerClient)
                     {
                         shootDirection = playerDirection + body.player.velocity / 6;
-                        NPC.netUpdate = true;
                         Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, shootDirection.SafeNormalize(Vector2.Zero) * 20, ModContent.ProjectileType<TrackingTeslaShot>(), NPC.damage, 1, ai1: body.player.whoAmI);
                     }
                     if (AttackCount < 6)
@@ -217,6 +216,7 @@ namespace Paracosm.Content.Bosses.VortexMothership
                         AttackTimer = PREDICTIVE_SHOT_CD2 * (GunCount + 1);
                         AttackCount = 0;
                     }
+                    NPC.netUpdate = true;
                 }
             }
             else // 2 top guns
@@ -226,10 +226,10 @@ namespace Paracosm.Content.Bosses.VortexMothership
                     if (Main.netMode != NetmodeID.MultiplayerClient)
                     {
                         shootDirection = playerDirection;
-                        NPC.netUpdate = true;
                         Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, shootDirection * 12, ModContent.ProjectileType<TeslaShot>(), NPC.damage, 1);
                     }
                     AttackTimer = TESLA_SHOT_CD;
+                    NPC.netUpdate = true;
                 }
                 AttackTimer--;
             }
@@ -253,10 +253,10 @@ namespace Paracosm.Content.Bosses.VortexMothership
                         if (Main.netMode != NetmodeID.MultiplayerClient)
                         {
                             shootDirection = playerDirection;
-                            NPC.netUpdate = true;
                             Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, shootDirection, ModContent.ProjectileType<TeslaCore>(), NPC.damage, 1, ai0: NPC.Center.X + shootDirection.X * 20, ai1: NPC.Center.Y + shootDirection.Y * 20, ai2: GunCount);
                         }
                         AttackTimer = MIX_CENTER_BLAST_CD;
+                        NPC.netUpdate = true;
                     }
                     AttackTimer--;
                     break;
@@ -266,10 +266,10 @@ namespace Paracosm.Content.Bosses.VortexMothership
                         if (Main.netMode != NetmodeID.MultiplayerClient)
                         {
                             shootDirection = playerDirection;
-                            NPC.netUpdate = true;
                             Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, shootDirection * 10, ModContent.ProjectileType<TeslaShot>(), NPC.damage, 1);
                         }
                         AttackTimer = MIX_TESLA_SHOT_CD;
+                        NPC.netUpdate = true;
                     }
                     AttackTimer--;
                     break;
@@ -280,7 +280,6 @@ namespace Paracosm.Content.Bosses.VortexMothership
                         {
                             randNum = Main.rand.NextFloat(30, 60);
                             shootDirection = Vector2.UnitY.RotatedBy(22.5f * AttackCount);
-                            NPC.netUpdate = true;
                             Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, shootDirection.SafeNormalize(Vector2.Zero) * randNum, ModContent.ProjectileType<VortexMine>(), NPC.damage, 1);
                         }
                         if (AttackCount < 16)
@@ -293,6 +292,7 @@ namespace Paracosm.Content.Bosses.VortexMothership
                             AttackTimer = MIX_MINE_CD2;
                             AttackCount = 0;
                         }
+                        NPC.netUpdate = true;
                     }
                     AttackTimer--;
                     break;
@@ -302,9 +302,9 @@ namespace Paracosm.Content.Bosses.VortexMothership
                         if (Main.netMode != NetmodeID.MultiplayerClient)
                         {
                             shootDirection = playerDirection;
-                            NPC.netUpdate = true;
                             Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, shootDirection, ModContent.ProjectileType<IndicatorLaser>(), 0, 1, ai0: 13);
                         }
+                        NPC.netUpdate = true;
                     }
                     if (AttackTimer <= 0)
                     {
@@ -328,10 +328,10 @@ namespace Paracosm.Content.Bosses.VortexMothership
                 {
                     AttackCount = Main.rand.Next(-10, 2);
                     shootDirection = playerDirection;
-                    NPC.netUpdate = true;
                     Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, shootDirection * 10, ModContent.ProjectileType<TeslaShot>(), NPC.damage, 1, ai1: 2f);
                 }
                 AttackTimer = CHILL_TESLA_SHOT_CD;
+                NPC.netUpdate = true;
             }
             AttackTimer--;
         }
@@ -346,7 +346,6 @@ namespace Paracosm.Content.Bosses.VortexMothership
                 {
                     randNum = Main.rand.NextFloat(30, 60);
                     shootDirection = playerDirection;
-                    NPC.netUpdate = true;
                     Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, shootDirection.SafeNormalize(Vector2.Zero).RotatedBy(MathHelper.ToRadians(randNum * 3)) * randNum, ModContent.ProjectileType<VortexMine>(), NPC.damage / 2, 1);
                 }
                 if (AttackCount < 8)
@@ -359,6 +358,7 @@ namespace Paracosm.Content.Bosses.VortexMothership
                     AttackTimer = MINE_SPAM_CD2 * (GunCount + 1);
                     AttackCount = 0;
                 }
+                NPC.netUpdate = true;
             }
             AttackTimer--;
         }
@@ -370,19 +370,19 @@ namespace Paracosm.Content.Bosses.VortexMothership
                 if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
                     shootDirection = playerDirection;
-                    NPC.netUpdate = true;
                     Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, shootDirection, ModContent.ProjectileType<IndicatorLaser>(), 0, 1, ai0: 13);
                 }
+                NPC.netUpdate = true;
             }
             if (AttackTimer <= 0 - AttackCount)
             {
                 if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
                     AttackCount = Main.rand.Next(-10, 5);
-                    NPC.netUpdate = true;
                     Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, shootDirection, ModContent.ProjectileType<VortexLaser>(), NPC.damage * 2, 1, ai0: 50, ai1: 0);
                 }
                 AttackTimer = 300;
+                NPC.netUpdate = true;
             }
             AttackTimer--;
         }

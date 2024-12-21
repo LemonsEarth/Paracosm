@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Paracosm.Common.Utils;
+using System.IO;
 using Terraria;
 using Terraria.Audio;
 using Terraria.DataStructures;
@@ -40,6 +41,23 @@ namespace Paracosm.Content.Projectiles.Friendly
             LemonUtils.DustCircle(Projectile.Center, 16, 8, DustID.BlueTorch, 2f);
             LemonUtils.DustCircle(Projectile.Center, 16, 8, DustID.YellowTorch, 1.5f);
             glowColor = glowColors[Main.rand.Next(0, glowColors.Length)];
+            NetMessage.SendData(MessageID.SyncProjectile, number: Projectile.whoAmI);
+        }
+
+        public override void SendExtraAI(BinaryWriter writer)
+        {
+            writer.Write(glowColor.R);
+            writer.Write(glowColor.G);
+            writer.Write(glowColor.B);
+            writer.Write(glowColor.A);
+        }
+
+        public override void ReceiveExtraAI(BinaryReader reader)
+        {
+            glowColor.R = reader.ReadByte();
+            glowColor.G = reader.ReadByte();
+            glowColor.B = reader.ReadByte();
+            glowColor.A = reader.ReadByte();
         }
 
         public override void AI()

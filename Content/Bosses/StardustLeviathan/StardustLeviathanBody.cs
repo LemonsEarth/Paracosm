@@ -80,12 +80,18 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
 
         public override void SendExtraAI(BinaryWriter writer)
         {
-
+            writer.Write(NPC.Opacity);
+            writer.Write(RandNum);
+            writer.Write(AttackCount);
+            writer.Write(AttackTimer);
         }
 
         public override void ReceiveExtraAI(BinaryReader reader)
         {
-
+            NPC.Opacity = reader.ReadSingle();
+            RandNum = reader.ReadSingle();
+            AttackCount = reader.ReadInt32();
+            AttackTimer = reader.ReadInt32();
         }
 
         public override bool? DrawHealthBar(byte hbPosition, ref float scale, ref Vector2 position)
@@ -100,12 +106,17 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
 
             if (followingNPC is null || !followingNPC.active || followingNPC.friendly || followingNPC.townNPC || followingNPC.lifeMax <= 5)
             {
-                NPC.life = 0;
                 NPC.active = false;
+                NPC.life = 0;
+                NetMessage.SendData(MessageID.SyncNPC, number: NPC.whoAmI);
             }
             head = (StardustLeviathanHead)headNPC.ModNPC;
 
             NPC.Opacity = head.NPC.Opacity;
+            if (AITimer % 10 == 0)
+            {
+                NPC.netUpdate = true;
+            }
             FollowNextSegment(followingNPC);
 
             NPC.spriteDirection = followingNPC.spriteDirection;
