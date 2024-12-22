@@ -26,6 +26,8 @@ namespace Paracosm.Common.Players
 
         public bool sunCoin = false;
         public bool corruptedDragonHeart = false;
+        public bool corruptedLifeCrystal = false;
+        public bool voidHeart = false;
         public bool parashardSigil = false;
         float paraSigilHitTimer = 120;
         bool paraSigilActiveTimer = false;
@@ -54,8 +56,10 @@ namespace Paracosm.Common.Players
 
             sunCoin = false;
             corruptedDragonHeart = false;
+            corruptedLifeCrystal = false;
             parashardSigil = false;
             nebulousEnergy = false;
+            voidHeart = false;
 
             paracosmicHelmetBuff = false;
             paracosmicGogglesBuff = false;
@@ -66,6 +70,18 @@ namespace Paracosm.Common.Players
             solarBurn = false;
             melting = false;
             vortexForce = false;
+        }
+
+        public override void GetHealLife(Item item, bool quickHeal, ref int healValue)
+        {
+            if (corruptedLifeCrystal)
+            {
+                healValue += 20;
+            }
+            if (voidHeart)
+            {
+                healValue += 50;
+            }
         }
 
         public override void PostUpdateEquips()
@@ -207,7 +223,7 @@ namespace Paracosm.Common.Players
 
             if (vortexForce)
             {
-                
+
                 if (Main.myPlayer == Player.whoAmI)
                 {
                     foreach (var proj in Main.ActiveProjectiles)
@@ -323,8 +339,37 @@ namespace Paracosm.Common.Players
             }
         }
 
+        public override void UpdateLifeRegen()
+        {
+            if (corruptedLifeCrystal || voidHeart)
+            {
+                if (Player.lifeRegen > 0)
+                {
+                    Player.lifeRegen = 0;
+                }
+                Player.lifeRegenTime = 0;
+            }
+        }
+
+        public override void NaturalLifeRegen(ref float regen)
+        {
+            if (corruptedLifeCrystal || voidHeart)
+            {
+                regen *= 0;
+            }
+        }
+
         public override void UpdateBadLifeRegen()
         {
+            if (corruptedLifeCrystal || voidHeart)
+            {
+                if (Player.lifeRegen > 0)
+                {
+                    Player.lifeRegen = 0;
+                }
+                Player.lifeRegenTime = 0;
+            }
+
             if (infected || paracosmicBurn || solarBurn)
             {
                 if (Player.lifeRegen > 0)

@@ -1,4 +1,5 @@
 ﻿using Paracosm.Content.Items.Accessories;
+using Paracosm.Content.Items.Materials;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -114,6 +115,20 @@ namespace Paracosm.Common.Systems
                 .AddIngredient(ModContent.ItemType<DemonCoin>(), 8)
                 .AddTile(TileID.MythrilAnvil)
                 .Register();
+        }
+
+        public override void PostAddRecipes()
+        {
+            foreach (Recipe recipe in Main.recipe)
+            {
+                if (recipe.createItem.type == ItemID.Zenith)
+                {
+                    recipe.AddIngredient(ModContent.ItemType<SolarCore>(), 5);
+                    recipe.AddIngredient(ModContent.ItemType<VortexianPlating>(), 5);
+                    recipe.AddIngredient(ModContent.ItemType<UnstableNebulousFlame>(), 5);
+                    recipe.AddIngredient(ModContent.ItemType<PureStardust>(), 5);
+                }
+            }
         }
     }
 }

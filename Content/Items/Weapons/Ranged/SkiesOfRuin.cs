@@ -14,7 +14,7 @@ namespace Paracosm.Content.Items.Weapons.Ranged
         int useCounter = 0;
         public override void SetDefaults()
         {
-            Item.damage = 170;
+            Item.damage = 90;
             Item.knockBack = 2f;
             Item.crit = 4;
             Item.DamageType = DamageClass.Ranged;

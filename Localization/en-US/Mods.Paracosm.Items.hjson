@@ -171,7 +171,7 @@ BadWeather: {
 }
 
 CharmOfLife: {
-	DisplayName: Charm Of Life
+	DisplayName: Charm of Life
 	Tooltip:
 		'''
 		{$CommonItemTooltip.IncreasesMaxLifeBy}
@@ -629,4 +629,41 @@ StaffOfTheStarbearer: {
 VoidEssence: {
 	DisplayName: Void Essence
 	Tooltip: The essence of the world behind the Dark Magic Mirror
+}
+
+CorruptedLifeCrystal: {
+	DisplayName: Corrupted Life Crystal
+	Tooltip:
+		'''
+		Reduces life regeneration to zero
+		Increases health potion health restoration by 20
+		'''
+}
+
+VoidHeart: {
+	DisplayName: Void Heart
+	Tooltip:
+		'''
+		Increases maximum life by {0}
+		Increases healing potion health restoration by 50
+		Reduces duration of potion sickness
+		Disables life regeneration
+		'''
+}
+
+PlayerVoodooDoll: {
+	DisplayName: Player Voodoo Doll
+	Tooltip: Deals 20 damage
+}
+
+RageGauntlet: {
+	DisplayName: Rage Gauntlet
+	Tooltip:
+		'''
+		Panic Necklace effect
+		When life is below 20%:
+		-Increases damage by {0}%
+		-Increases critical strike chance by {1}%
+		-Increases movement speed by {2}%
+		'''
 }

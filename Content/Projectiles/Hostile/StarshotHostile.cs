@@ -41,6 +41,7 @@ namespace Paracosm.Content.Projectiles.Hostile
             Projectile.friendly = false;
             Projectile.hostile = true;
             Projectile.timeLeft = 360;
+            Projectile.tileCollide = false;
             Projectile.penetrate = 2;
             Projectile.alpha = 255;
             Projectile.light = 1f;
