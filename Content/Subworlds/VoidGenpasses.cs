@@ -57,6 +57,18 @@ namespace Paracosm.Content.Subworlds
                 }
                 progress.Set(splotches / 50f);
             }
+
+            // Ground
+            for (int j = 0; j < 5; j++)
+            {
+                for (int i = 0; i < 100; i++)
+                {
+                    int posX = i * 10;
+                    int posY = 2600 + j * 100;
+                    WorldGen.TileRunner(posX, posY, 10 + WorldGen.genRand.Next(-3, 5), 40 + WorldGen.genRand.Next(-10, 10), TileID.ShimmerBrick, true);
+                }
+            }
+
         }
     }
 
@@ -67,13 +79,22 @@ namespace Paracosm.Content.Subworlds
         protected override void ApplyPass(GenerationProgress progress, GameConfiguration configuration)
         {
             progress.Message = "The Void Structures";
-            for (int i = 0; i < 20; i++)
+            Point16 dims = default(Point16);
+            Generator.GetMultistructureDimensions("Content/Structures/VoidStructures", Paracosm.Instance, 0, ref dims);
+            int amountX = (Main.maxTilesX / dims.X) - 1;
+            for (int depthMul = 0; depthMul < 5; depthMul++)
             {
-                int x = (int)MathHelper.Clamp(i * (Main.maxTilesX / 8), 100, 2900);
-                int y = (Main.maxTilesY - 1000) + WorldGen.genRand.Next(0, 800);
-
-                Generator.GenerateMultistructureRandom("Content/Structures/VoidStructures", new Point16(x, y), Paracosm.Instance);
-            }
+                for (int i = 0; i < amountX; i++)
+                {
+                    int x = 20 + (dims.X * i) + Main.rand.Next(0, 60);
+                    int numBuildings = Main.rand.Next(1, 5);
+                    for (int j = 0; j < numBuildings; j++) //num of building stacked on top of each other
+                    {
+                        int y = 2600 + (depthMul * 100) + (j * dims.Y) - 1;
+                        Generator.GenerateMultistructureRandom("Content/Structures/VoidStructures", new Point16(x, y), Paracosm.Instance);
+                    }
+                }
+            }      
         }
     }
 
@@ -95,7 +116,11 @@ namespace Paracosm.Content.Subworlds
 
                 for (int inventoryIndex = 0; inventoryIndex < items; inventoryIndex++)
                 {
-                    chest.item[inventoryIndex].SetDefaults(LemonUtils.GetRandomNoStackItemID());
+                    chest.item[inventoryIndex].SetDefaults(LemonUtils.GetRandomItemID());
+                    if(chest.item[inventoryIndex].maxStack > 1)
+                    {
+                        chest.item[inventoryIndex].stack = Main.rand.Next(24, 87);
+                    }
                 }
             }
         }

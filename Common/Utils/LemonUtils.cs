@@ -69,5 +69,11 @@ namespace Paracosm.Common.Utils
             }
             return 0;
         }
+
+        public static int GetRandomItemID()
+        {
+            int randItemID = Main.rand.Next(0, 5455);
+            return randItemID;
+        }
     }
 }

@@ -25,5 +25,10 @@ namespace Paracosm.Content.Subworlds
         {
             SubworldSystem.hideUnderworld = true;
         }
+
+        public override void Update()
+        {
+            SubworldSystem.hideUnderworld = true;
+        }
     }
 }
