@@ -33,7 +33,7 @@ namespace Paracosm.Content.Projectiles.HeldProjectiles
             Projectile.penetrate = -1;
             Projectile.DamageType = DamageClass.Magic;
             Projectile.tileCollide = false;
-            Projectile.aiStyle = -1;
+            
             Projectile.timeLeft = 10000;
         }
 

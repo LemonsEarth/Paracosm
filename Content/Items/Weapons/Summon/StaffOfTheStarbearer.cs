@@ -19,7 +19,7 @@ namespace Paracosm.Content.Items.Weapons.Summon
             Item.height = 50;
             Item.mana = 10;
             Item.noMelee = true;
-            Item.damage = 240;
+            Item.damage = 10;
             Item.DamageType = DamageClass.Summon;
             Item.useStyle = ItemUseStyleID.HoldUp;
             Item.useTime = 60;
@@ -42,7 +42,7 @@ namespace Paracosm.Content.Items.Weapons.Summon
                 if (proj.minion || proj.sentry)
                 {
                     Vector2 direction = proj.velocity.SafeNormalize(Vector2.Zero);
-                    Projectile.NewProjectile(source, proj.Center, direction * Item.shootSpeed, type, damage, knockback, ai0: 30);
+                    Projectile.NewProjectile(source, proj.Center, direction * Item.shootSpeed, type, damage + proj.damage, knockback, ai0: 30);
                 }
             }
             return false;

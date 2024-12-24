@@ -79,3 +79,8 @@ StardustTailCD: {
 	DisplayName: Stardust Tail C D
 	Description: Mods.Paracosm.Buffs.StardustTailCD.Description
 }
+
+StardustTailDebuff: {
+	Description: Mods.Paracosm.Buffs.StardustTailDebuff.Description
+	DisplayName: Stardust Tail Debuff
+}

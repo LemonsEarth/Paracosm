@@ -667,3 +667,8 @@ RageGauntlet: {
 		-Increases movement speed by {2}%
 		'''
 }
+
+UnboundDark: {
+	Tooltip: ""
+	DisplayName: Unbound Dark
+}

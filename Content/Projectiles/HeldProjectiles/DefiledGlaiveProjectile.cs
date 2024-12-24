@@ -39,7 +39,6 @@ namespace Paracosm.Content.Projectiles.HeldProjectiles
             Projectile.friendly = true;
             Projectile.penetrate = -1;
             Projectile.tileCollide = false;
-            Projectile.aiStyle = -1;
             Projectile.scale = 1f;
             Projectile.DamageType = DamageClass.Melee;
             Projectile.timeLeft = 20;

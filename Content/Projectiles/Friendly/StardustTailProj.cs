@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Paracosm.Content.Buffs;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.ID;
@@ -20,6 +21,12 @@ namespace Paracosm.Content.Projectiles.Friendly
             Projectile.DefaultToWhip();
             Projectile.WhipSettings.RangeMultiplier = 1f;
             Projectile.WhipSettings.Segments = 30;
+        }
+
+        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
+        {
+            target.AddBuff(ModContent.BuffType<StardustTailDebuff>(), 120);
+            Main.player[Projectile.owner].MinionAttackTargetNPC = target.whoAmI;
         }
 
         public override void PostAI()

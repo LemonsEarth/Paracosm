@@ -23,7 +23,7 @@ namespace Paracosm.Content.Projectiles.Friendly
             Projectile.penetrate = 1;
             Projectile.DamageType = DamageClass.Ranged;
             Projectile.tileCollide = true;
-            Projectile.aiStyle = -1;
+            
             Projectile.friendly = true;
             Projectile.hostile = false;
             Projectile.timeLeft = 60;

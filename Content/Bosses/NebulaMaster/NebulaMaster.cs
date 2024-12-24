@@ -126,7 +126,7 @@ namespace Paracosm.Content.Bosses.NebulaMaster
             NPC.width = 86;
             NPC.height = 154;
             NPC.Opacity = 1;
-            NPC.lifeMax = 480000;
+            NPC.lifeMax = 400000;
             NPC.defense = 40;
             NPC.damage = 40;
             NPC.HitSound = SoundID.NPCHit30;

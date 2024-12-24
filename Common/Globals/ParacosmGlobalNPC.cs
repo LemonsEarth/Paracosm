@@ -4,6 +4,7 @@ using Paracosm.Content.Bosses.InfectedRevenant;
 using Paracosm.Content.Bosses.NebulaMaster;
 using Paracosm.Content.Bosses.StardustLeviathan;
 using Paracosm.Content.Bosses.VortexMothership;
+using Paracosm.Content.Buffs;
 using Paracosm.Content.NPCs.Hostile.Paracosmic;
 using Paracosm.Content.NPCs.Hostile.Void;
 using System.Collections.Generic;
@@ -65,6 +66,15 @@ namespace Paracosm.Common.Globals
             {
                 modifiers.Defense.Base *= 0;
                 Dust.NewDust(npc.position, npc.width, npc.height, DustID.SolarFlare);
+            }
+        }
+
+        public override void ModifyHitByProjectile(NPC npc, Projectile projectile, ref NPC.HitModifiers modifiers)
+        {
+            if (npc.HasBuff<StardustTailDebuff>())
+            {
+                float projTagMultiplier = ProjectileID.Sets.SummonTagDamageMultiplier[projectile.type];
+                modifiers.FlatBonusDamage += StardustTailDebuff.TagDamageBoost * projTagMultiplier;
             }
         }
 

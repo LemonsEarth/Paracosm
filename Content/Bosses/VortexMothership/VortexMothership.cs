@@ -128,12 +128,11 @@ namespace Paracosm.Content.Bosses.VortexMothership
         public override void SetDefaults()
         {
             NPC.boss = true;
-            NPC.aiStyle = -1;
             NPC.width = 1124;
             NPC.height = 368;
             NPC.Opacity = 1;
-            NPC.lifeMax = 750000;
-            NPC.defense = 100;
+            NPC.lifeMax = 700000;
+            NPC.defense = 80;
             NPC.damage = 40;
             NPC.HitSound = SoundID.NPCHit4;
             NPC.DeathSound = SoundID.NPCHit57;
@@ -163,7 +162,7 @@ namespace Paracosm.Content.Bosses.VortexMothership
         {
             if (projectile.penetrate == -1 || projectile.penetrate > 4)
             {
-                modifiers.FinalDamage /= 3;
+                modifiers.FinalDamage /= 2;
             }
         }
 
@@ -263,7 +262,7 @@ namespace Paracosm.Content.Bosses.VortexMothership
 
             if (phase == 2)
             {
-                NPC.defDefense = 120;
+                NPC.defDefense = 100;
                 int spawnSpeedDiv = (NPC.life < (NPC.lifeMax / 4)) ? 2 : 1;
                 if (AttackTimer % (900 / spawnSpeedDiv) == 0)
                 {

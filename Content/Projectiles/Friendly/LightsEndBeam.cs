@@ -21,7 +21,7 @@ namespace Paracosm.Content.Projectiles.Friendly
             Projectile.penetrate = 1;
             Projectile.DamageType = DamageClass.Melee;
             Projectile.tileCollide = false;
-            Projectile.aiStyle = -1;
+            
             Projectile.friendly = true;
             Projectile.timeLeft = 180;
             DrawOriginOffsetY = 16;
@@ -35,6 +35,17 @@ namespace Paracosm.Content.Projectiles.Friendly
             }
             AITimer++;
             Projectile.rotation = Projectile.velocity.ToRotation();
+
+            Projectile.frameCounter++;
+            if (Projectile.frameCounter == 3)
+            {
+                Projectile.frame++;
+                Projectile.frameCounter = 0;
+                if (Projectile.frame >= 23)
+                {
+                    Projectile.frame = 0;
+                }
+            }
             var dust = Dust.NewDustDirect(Projectile.Center, 2, 2, DustID.Shadowflame, Projectile.velocity.X, Projectile.velocity.Y);
         }
 

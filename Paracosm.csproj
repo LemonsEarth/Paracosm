@@ -8,6 +8,9 @@
 		
 	</PropertyGroup>
 	<ItemGroup>
+	  <None Remove="Content\Projectiles\HeldProjectiles\UnboundDarkProj.png" />
+	</ItemGroup>
+	<ItemGroup>
 	  <Folder Include="lib\" />
 	</ItemGroup>
 	<ItemGroup>

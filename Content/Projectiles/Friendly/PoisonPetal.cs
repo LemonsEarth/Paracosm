@@ -22,7 +22,7 @@ namespace Paracosm.Content.Projectiles.Friendly
             Projectile.DamageType = DamageClass.Magic;
             Projectile.timeLeft = 180;
             Projectile.tileCollide = true;
-            Projectile.aiStyle = -1;
+            
             Projectile.friendly = true;
         }
 
