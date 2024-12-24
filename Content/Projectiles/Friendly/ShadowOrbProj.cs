@@ -11,6 +11,7 @@ namespace Paracosm.Content.Projectiles.Friendly
         float AITimer = 60;
         ref float AmmoType => ref Projectile.ai[0];
         ref float RandomRot => ref Projectile.ai[1];
+        ref float Amount => ref Projectile.ai[2];
         public override void SetStaticDefaults()
         {
             Main.projFrames[Projectile.type] = 1;
@@ -21,7 +22,6 @@ namespace Paracosm.Content.Projectiles.Friendly
             Projectile.width = 26;
             Projectile.height = 26;
             Projectile.penetrate = 1;
-            Projectile.DamageType = DamageClass.Ranged;
             Projectile.tileCollide = true;
             
             Projectile.friendly = true;
@@ -34,7 +34,8 @@ namespace Paracosm.Content.Projectiles.Friendly
             SoundEngine.PlaySound(SoundID.Item62);
             if (Projectile.owner == Main.myPlayer)
             {
-                for (int i = 0; i < 6; i++)
+                if (Amount == 0) Amount = 6;
+                for (int i = 0; i < Amount; i++)
                 {
                     RandomRot = Main.rand.Next(-45, 45);
                     Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Projectile.velocity.SafeNormalize(Vector2.Zero).RotatedBy(MathHelper.ToRadians(RandomRot)) * 10, (int)AmmoType, Projectile.damage / 2, Projectile.knockBack);

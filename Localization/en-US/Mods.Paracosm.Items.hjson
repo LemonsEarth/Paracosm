@@ -672,3 +672,8 @@ UnboundDark: {
 	Tooltip: ""
 	DisplayName: Unbound Dark
 }
+
+VoidcoreStaff: {
+	Tooltip: ""
+	DisplayName: Voidcore Staff
+}
