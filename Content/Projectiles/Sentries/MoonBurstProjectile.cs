@@ -26,8 +26,8 @@ namespace Paracosm.Content.Projectiles.Sentries
             Projectile.tileCollide = false;
             
             Projectile.friendly = true;
-            Projectile.usesIDStaticNPCImmunity = true;
-            Projectile.idStaticNPCHitCooldown = 45;
+            Projectile.usesLocalNPCImmunity = true;
+            Projectile.localNPCHitCooldown = 30;
         }
 
         public override void AI()

@@ -7,13 +7,8 @@ using Terraria.ModLoader;
 
 namespace Paracosm.Content.Items.Weapons.Summon
 {
-    public class MoonBurstStaff : ModItem
+    public class BlinkrootBusterStaff : ModItem
     {
-        public override void SetStaticDefaults()
-        {
-
-        }
-
         public override void SetDefaults()
         {
             Item.width = 40;
@@ -26,9 +21,9 @@ namespace Paracosm.Content.Items.Weapons.Summon
             Item.useTime = 20;
             Item.useAnimation = 20;
             Item.UseSound = SoundID.Item44;
-            Item.shoot = ModContent.ProjectileType<MoonBurst>();
+            Item.shoot = ModContent.ProjectileType<BlinkrootBuster>();
             Item.rare = ItemRarityID.Blue;
-            Item.value = 20000;
+            Item.value = 2000;
         }
 
         public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
@@ -51,10 +46,9 @@ namespace Paracosm.Content.Items.Weapons.Summon
         public override void AddRecipes()
         {
             Recipe recipe = CreateRecipe();
-            recipe.AddIngredient(ItemID.RichMahogany, 20);
-            recipe.AddIngredient(ItemID.Moonglow, 3);
-            recipe.AddIngredient(ItemID.Vine, 3);
-            recipe.AddIngredient(ItemID.JungleSpores, 6);
+            recipe.AddIngredient(ItemID.StoneBlock, 20);
+            recipe.AddIngredient(ItemID.Blinkroot, 3);
+            recipe.AddIngredient(ItemID.Obsidian, 12);
             recipe.AddTile(TileID.Anvils);
             recipe.Register();
         }

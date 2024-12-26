@@ -674,6 +674,20 @@ UnboundDark: {
 }
 
 VoidcoreStaff: {
-	Tooltip: ""
+	Tooltip:
+		'''
+		Fires 4 Shadow Orbs around your cursor
+		Each orb fires a tiny eater, with a 25% chance to fire an Archmage projectile
+		'''
 	DisplayName: Voidcore Staff
+}
+
+AssassinsBackup: {
+	DisplayName: Assassins Backup
+	Tooltip: ""
+}
+
+BlinkrootBusterStaff: {
+	DisplayName: Blinkroot Buster Staff
+	Tooltip: ""
 }

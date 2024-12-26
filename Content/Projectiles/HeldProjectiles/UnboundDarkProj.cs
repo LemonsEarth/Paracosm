@@ -43,6 +43,7 @@ namespace Paracosm.Content.Projectiles.HeldProjectiles
         float rotMul = 1;
         float rot = 0f;
         Vector2 playerToMouse;
+        float timeMul = 0.1f;
         public override void AI()
         {
             Player player = Main.player[Projectile.owner];
@@ -51,10 +52,19 @@ namespace Paracosm.Content.Projectiles.HeldProjectiles
             Vector2 playerToProj = player.Center.DirectionTo(Projectile.Center);
             if (AITimer == 0)
             {
+                Projectile.Opacity = 0f;
                playerToMouse = player.Center.DirectionTo(new Vector2(MousePosX, MousePosY));
             }
             Vector2 offset = playerToMouse.RotatedBy(-rotDirection * MathHelper.PiOver2) * (122 / 2); // root(2 * 86^2)
-            float rot = rotDirection * AITimer * (9 * player.GetAttackSpeed(DamageClass.Melee) * rotMul);
+            float rot = rotDirection * AITimer * (9 * player.GetAttackSpeed(DamageClass.Melee) * rotMul) * timeMul;
+            if (Math.Abs(rot) < 30)
+            {
+                Projectile.Opacity = MathHelper.Lerp(Projectile.Opacity, 1f, rot / 30);
+            }
+            else if (Math.Abs(rot) > 150)
+            {
+                Projectile.Opacity = MathHelper.Lerp(Projectile.Opacity, 0f, (rot - 150) / 30);
+            }
             if (Math.Abs(rot) >= 180)
             {
                 Projectile.Kill();
@@ -73,7 +83,7 @@ namespace Paracosm.Content.Projectiles.HeldProjectiles
                 }
             }
             Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, DustID.Wraith, Scale: Main.rand.NextFloat(1f, 1.4f));
-
+            timeMul += 0.1f;
             AITimer++;
         }
 

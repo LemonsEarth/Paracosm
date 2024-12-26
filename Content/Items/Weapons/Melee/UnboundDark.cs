@@ -27,7 +27,7 @@ namespace Paracosm.Content.Items.Weapons.Melee
             Item.knockBack = 6;
             Item.value = Item.buyPrice(gold: 15);
             Item.rare = ParacosmRarity.Black;
-            Item.UseSound = SoundID.Item1;
+            Item.UseSound = SoundID.Item71;
             Item.autoReuse = true;
             Item.useTurn = false;
             Item.shoot = ModContent.ProjectileType<UnboundDarkProj>();

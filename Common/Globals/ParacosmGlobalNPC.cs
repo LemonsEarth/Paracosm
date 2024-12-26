@@ -21,12 +21,14 @@ namespace Paracosm.Common.Globals
         public bool paracosmicBurn = false;
         public bool solarBurn = false;
         public bool melting = false;
+        public bool darkBleed = false;
 
         public override void ResetEffects(NPC npc)
         {
             paracosmicBurn = false;
             solarBurn = false;
             melting = false;
+            darkBleed = false;
         }
 
         public override void UpdateLifeRegen(NPC npc, ref int damage)
@@ -45,6 +47,22 @@ namespace Paracosm.Common.Globals
                 }
             }
 
+
+            if (darkBleed)
+            {
+                if (npc.lifeRegen > 0)
+                {
+                    npc.lifeRegen = 0;
+                }
+
+                npc.lifeRegen -= 50;
+                if (damage < 50)
+                {
+                    damage = 50;
+                }
+            }
+
+
             if (solarBurn)
             {
                 if (npc.lifeRegen > 0)
@@ -57,6 +75,14 @@ namespace Paracosm.Common.Globals
                 {
                     damage = 300;
                 }
+            }
+        }
+
+        public override void OnHitPlayer(NPC npc, Player target, Player.HurtInfo hurtInfo)
+        {
+            if (darkBleed)
+            {
+                hurtInfo.Damage -= (hurtInfo.Damage / 20);
             }
         }
 

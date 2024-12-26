@@ -44,7 +44,7 @@ namespace Paracosm.Content.Items.Weapons.Magic
                 for (int i = 0; i < 4; i++)
                 {
                     int projID = ProjectileID.TinyEater;
-                    if (i == 3)
+                    if (i == Main.rand.Next(0, 4))
                     {
                         projID = ModContent.ProjectileType<ArchmageBolt>();
                     }

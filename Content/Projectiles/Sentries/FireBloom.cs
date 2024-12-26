@@ -70,6 +70,8 @@ namespace Paracosm.Content.Projectiles.Sentries
             {
                 AITimer = 0;
             }
+            Lighting.AddLight(Projectile.Center, 5, 3, 0);
+
         }
 
         public NPC GetClosestNPC(int distance)

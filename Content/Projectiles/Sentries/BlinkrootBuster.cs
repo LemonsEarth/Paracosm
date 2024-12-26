@@ -5,13 +5,14 @@ using Terraria.ModLoader;
 
 namespace Paracosm.Content.Projectiles.Sentries
 {
-    public class MoonBurst : ModProjectile
+    public class BlinkrootBuster : ModProjectile
     {
         ref float AITimer => ref Projectile.ai[0];
+        ref float AttackTimer => ref Projectile.ai[1];
         NPC closestEnemy;
         public override void SetStaticDefaults()
         {
-            Main.projFrames[Projectile.type] = 2;
+            Main.projFrames[Projectile.type] = 3;
         }
 
         public override void SetDefaults()
@@ -21,7 +22,6 @@ namespace Paracosm.Content.Projectiles.Sentries
             Projectile.penetrate = -1;
             Projectile.DamageType = DamageClass.Summon;
             Projectile.tileCollide = true;
-            
             Projectile.timeLeft = Projectile.SentryLifeTime;
             Projectile.friendly = false;
             Projectile.sentry = true;
@@ -29,17 +29,28 @@ namespace Paracosm.Content.Projectiles.Sentries
 
         public override void AI()
         {
-            closestEnemy = GetClosestNPC(800);
+            closestEnemy = GetClosestNPC(1000);
 
             Projectile.velocity.Y = 10f;
-            if (Main.myPlayer == Projectile.owner && closestEnemy != null && AITimer >= 90)
+            if (closestEnemy != null)
             {
-                Vector2 spawnPos = Projectile.Center - new Vector2(0, 24);
-
-                Dust.NewDust(spawnPos, 0, 0, DustID.IceTorch);
-                AITimer = 0;
-                Projectile.NewProjectile(Projectile.GetSource_FromAI(), spawnPos, (closestEnemy.Center - spawnPos).SafeNormalize(Vector2.Zero) * 8, ModContent.ProjectileType<MoonBurstProjectile>(), Projectile.damage, 2f, ai1: 2, ai2: 1);
-                Projectile.netUpdate = true;
+                if (AttackTimer == 120)
+                {
+                    if (Main.netMode != NetmodeID.MultiplayerClient)
+                    {
+                        for (int i = 0; i < 3; i++)
+                        {
+                            Vector2 offset = new Vector2(Main.rand.NextFloat(-20, 20), Main.rand.NextFloat(-20, 20));
+                            Projectile.NewProjectile(Projectile.GetSource_FromAI(), closestEnemy.Center + offset, Vector2.Zero, ModContent.ProjectileType<BlinkrootProj>(), Projectile.damage, 1f);
+                        }
+                    }       
+                    AttackTimer = 0;
+                }
+                AttackTimer++;
+            }
+            else
+            {
+                AttackTimer = 0;
             }
 
             int frameDur = 20;
@@ -48,20 +59,13 @@ namespace Paracosm.Content.Projectiles.Sentries
             {
                 Projectile.frameCounter = 0;
                 Projectile.frame++;
-                if (Projectile.frame == 2)
+                if (Projectile.frame == 3)
                 {
                     Projectile.frame = 0;
                 }
             }
-            if (closestEnemy != null)
-            {
-                AITimer++;
-            }
-            else
-            {
-                AITimer = 0;
-            }
-            Lighting.AddLight(Projectile.Center, 0, 5, 5);
+            Lighting.AddLight(Projectile.Center, 5, 5, 0);
+            AITimer++;
         }
 
         public NPC GetClosestNPC(int distance)

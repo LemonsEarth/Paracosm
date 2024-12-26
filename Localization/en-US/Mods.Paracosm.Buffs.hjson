@@ -84,3 +84,8 @@ StardustTailDebuff: {
 	Description: Mods.Paracosm.Buffs.StardustTailDebuff.Description
 	DisplayName: Stardust Tail Debuff
 }
+
+DarkBleed: {
+	DisplayName: Dark Bleed
+	Description: Mods.Paracosm.Buffs.DarkBleed.Description
+}
