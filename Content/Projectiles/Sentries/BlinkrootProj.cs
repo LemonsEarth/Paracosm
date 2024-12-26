@@ -55,7 +55,7 @@ namespace Paracosm.Content.Projectiles.Sentries
             }
             Projectile.velocity = Vector2.Zero;
             Projectile.scale = (float)Math.Sin(MathHelper.ToRadians(AITimer * 4)) / 5 + 1; // 1/5 * sin(4x) + 1 ranges from 0.8 to 1.2
-            Lighting.AddLight(Projectile.Center, 50, 50, 0);
+            Lighting.AddLight(Projectile.Center, 10, 10, 0);
             Projectile.frameCounter++;
             if (Projectile.frameCounter == 6)
             {

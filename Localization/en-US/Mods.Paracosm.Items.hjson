@@ -689,5 +689,20 @@ AssassinsBackup: {
 
 BlinkrootBusterStaff: {
 	DisplayName: Blinkroot Buster Staff
+	Tooltip: Summons a stationary flower spawns damaging light around enemies
+}
+
+WaterfallerStaff: {
+	DisplayName: Waterfaller Staff
+	Tooltip: Summons a stationary flower that drops bouncing raindrops from the sky on nearby enemies
+}
+
+DeathseederStaff: {
+	DisplayName: Deathseeder Staff
+	Tooltip: Summons a stationary flower that raises vilethorns on nearby enemies
+}
+
+GiantShiverthornStaff: {
+	DisplayName: Giant Shiverthorn Staff
 	Tooltip: ""
 }

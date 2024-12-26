@@ -24,7 +24,7 @@ namespace Paracosm.Content.Projectiles.Sentries
             Projectile.timeLeft = 180;
             Projectile.DamageType = DamageClass.Summon;
             Projectile.tileCollide = false;
-            
+            Projectile.ArmorPenetration = 8;
             Projectile.friendly = true;
             Projectile.usesLocalNPCImmunity = true;
             Projectile.localNPCHitCooldown = 30;
