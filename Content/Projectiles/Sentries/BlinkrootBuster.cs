@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -43,7 +44,8 @@ namespace Paracosm.Content.Projectiles.Sentries
                             Vector2 offset = new Vector2(Main.rand.NextFloat(-20, 20), Main.rand.NextFloat(-20, 20));
                             Projectile.NewProjectile(Projectile.GetSource_FromAI(), closestEnemy.Center + offset, Vector2.Zero, ModContent.ProjectileType<BlinkrootProj>(), Projectile.damage, 1f);
                         }
-                    }       
+                    }
+                    SoundEngine.PlaySound(SoundID.Item4 with { Volume = 0.5f, PitchRange = (-0.2f, 0.2f) });
                     AttackTimer = 0;
                 }
                 AttackTimer++;

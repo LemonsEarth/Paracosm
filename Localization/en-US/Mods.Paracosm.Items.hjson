@@ -424,9 +424,9 @@ ChampionsCrown: {
 	SetBonus:
 		'''
 		Press the "Champion's Crown" key to melt everything:
-			- Enemies around you explode
-			- You and all enemies are inflicted with Melted and Solar Burn
-			- Melted reduces defense to zero for its duration
+		- Enemies around you explode
+		- You and all enemies are inflicted with Melted and Solar Burn
+		- Melted reduces defense to zero for its duration
 		This effect has a 90 second cooldown
 		'''
 	DisplayName: Champion's Crown
@@ -704,5 +704,15 @@ DeathseederStaff: {
 
 GiantShiverthornStaff: {
 	DisplayName: Giant Shiverthorn Staff
-	Tooltip: ""
+	Tooltip: Summons a stationary flower that fires homing icicles towards enemies, which inflict Frostbite
+}
+
+ShadowflowerStaff: {
+	DisplayName: Shadowflower Staff
+	Tooltip: Summons a stationary flower that fires a spread of shadowballs at enemies
+}
+
+BranchOfLife: {
+	DisplayName: Branch Of Life
+	Tooltip: Summons a stationary flower that buffs nearby players and attacks all enemies in a radius
 }

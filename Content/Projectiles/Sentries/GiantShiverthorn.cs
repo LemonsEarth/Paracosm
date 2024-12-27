@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -40,6 +41,7 @@ namespace Paracosm.Content.Projectiles.Sentries
                     {
                         Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Projectile.Center.DirectionTo(closestEnemy.Center) * 10, ModContent.ProjectileType<IceProjectile>(), Projectile.damage, 1f);
                     }
+                    SoundEngine.PlaySound(SoundID.Item28 with { Volume = 0.5f, PitchRange = (-0.2f, 0.2f)});
                     AttackTimer = 0;
                 }
                 AttackTimer++;

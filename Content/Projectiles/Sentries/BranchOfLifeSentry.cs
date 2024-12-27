@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Paracosm.Content.Buffs;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
@@ -6,20 +7,21 @@ using Terraria.ModLoader;
 
 namespace Paracosm.Content.Projectiles.Sentries
 {
-    public class Deathseeder : ModProjectile
+    public class BranchOfLifeSentry : ModProjectile
     {
         ref float AITimer => ref Projectile.ai[0];
         ref float AttackTimer => ref Projectile.ai[1];
-        NPC closestEnemy;
+
+        const int BUFF_DISTANCE = 400;
         public override void SetStaticDefaults()
         {
-            Main.projFrames[Projectile.type] = 4;
+            Main.projFrames[Projectile.type] = 2;
         }
 
         public override void SetDefaults()
         {
-            Projectile.width = 50;
-            Projectile.height = 50;
+            Projectile.width = 116;
+            Projectile.height = 90;
             Projectile.penetrate = -1;
             Projectile.DamageType = DamageClass.Summon;
             Projectile.tileCollide = true;
@@ -30,40 +32,57 @@ namespace Paracosm.Content.Projectiles.Sentries
 
         public override void AI()
         {
-            closestEnemy = GetClosestNPC(1000);
+            for (int i = 0; i < 64; i++)
+            {
+                Vector2 dustPos = Projectile.Center + (Vector2.UnitY * BUFF_DISTANCE).RotatedBy(MathHelper.ToRadians(i * 360f / 64f));
+                Dust dust = Dust.NewDustDirect(dustPos, 1, 1, DustID.GemDiamond);
+                dust.noGravity = true;
+            }
+
+            if (AITimer % 30 == 0)
+            {
+                foreach (Player player in Main.player)
+                {
+                    if (Vector2.Distance(Projectile.Center, player.Center) < BUFF_DISTANCE)
+                    {
+                        player.AddBuff(ModContent.BuffType<BranchedOfLifedBuff>(), 60);
+                    }
+                }
+            }
 
             Projectile.velocity.Y = 10f;
-            if (closestEnemy != null)
+            if (AttackTimer % 120 == 0)
             {
-                if (AttackTimer == 30)
+                foreach (NPC npc in Main.ActiveNPCs)
                 {
-                    if (Main.netMode != NetmodeID.MultiplayerClient)
+                    if (npc.CanBeChasedBy() && Vector2.Distance(Projectile.Center, npc.Center) < BUFF_DISTANCE + 200)
                     {
-                        Vector2 offset = new Vector2(Main.rand.NextFloat(-20, 20), closestEnemy.height + 10);
-                        Projectile.NewProjectile(Projectile.GetSource_FromAI(), closestEnemy.Center + offset, -Vector2.UnitY * 30, ProjectileID.VilethornBase, Projectile.damage, 1f);
+                        if (Main.netMode != NetmodeID.MultiplayerClient)
+                        {
+                            for (int i = 0; i < 3; i++)
+                            {
+                                Vector2 offset = new Vector2(Main.rand.NextFloat(-20, 20), Main.rand.NextFloat(-20, 20));
+                                Projectile.NewProjectile(Projectile.GetSource_FromAI(), npc.Center + offset, Vector2.Zero, ModContent.ProjectileType<BranchOfLifeProj>(), Projectile.damage, 1f);
+                            }
+                        }
+                        SoundEngine.PlaySound(SoundID.Item4 with { Volume = 0.3f, PitchRange = (-0.2f, 0.2f) });
+                        AttackTimer = 0;
                     }
-                    SoundEngine.PlaySound(SoundID.Item43 with { Volume = 0.5f, PitchRange = (-0.2f, 0.2f) });
-
-                    AttackTimer = 0;
                 }
-                AttackTimer++;
             }
-            else
-            {
-                AttackTimer = 0;
-            }
+            AttackTimer++;
 
             Projectile.frameCounter++;
             if (Projectile.frameCounter == 20)
             {
                 Projectile.frameCounter = 0;
                 Projectile.frame++;
-                if (Projectile.frame >= 4)
+                if (Projectile.frame >= 2)
                 {
                     Projectile.frame = 0;
                 }
             }
-            Lighting.AddLight(Projectile.Center, 3, 0, 5);
+            Lighting.AddLight(Projectile.Center, 5, 2, 2);
             AITimer++;
         }
 

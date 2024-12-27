@@ -32,7 +32,7 @@ namespace Paracosm.Content.Projectiles.Sentries
             closestEnemy = GetClosestNPC(800);
 
             Projectile.velocity.Y = 10f;
-            if (Main.myPlayer == Projectile.owner && closestEnemy != null && AITimer >= 90)
+            if (Main.myPlayer == Projectile.owner && closestEnemy != null && AITimer >= 120)
             {
                 Vector2 spawnPos = Projectile.Center - new Vector2(0, 24);
 

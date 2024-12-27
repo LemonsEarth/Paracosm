@@ -11,9 +11,11 @@ using Terraria.ModLoader;
 
 namespace Paracosm.Content.Projectiles.Sentries
 {
-    public class BlinkrootProj : ModProjectile
+    public class BranchOfLifeProj : ModProjectile
     {
         float AITimer = 0;
+        Color drawColor = new Color(0f, 0f, 0f, 1f);
+        Color desiredColor = new Color(1f, 1f, 1f, 1f);
 
         public override void SetStaticDefaults()
         {
@@ -35,16 +37,18 @@ namespace Paracosm.Content.Projectiles.Sentries
             Projectile.localNPCHitCooldown = -1;
         }
 
-
         public override void OnKill(int timeLeft)
         {
-            SoundEngine.PlaySound(SoundID.Item29 with { PitchRange = (-0.3f, 0.3f) });
-            for (int i = 0; i < 2; i++)
-            {
-                Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, DustID.GemTopaz);
-                Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, DustID.GemDiamond);
-                Gore gore = Gore.NewGoreDirect(Projectile.GetSource_FromThis(), Projectile.Center, new Vector2(Main.rand.NextFloat(-5, 5)), Main.rand.Next(61, 64), Main.rand.NextFloat(0.5f, 1f));
-            }
+            SoundEngine.PlaySound(SoundID.Item29 with { PitchRange = (-0.3f, 0.3f), Volume = 0.5f });
+
+            Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, DustID.GemTopaz);
+            Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, DustID.GemDiamond);
+            Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, DustID.GemAmethyst);
+            Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, DustID.GemSapphire);
+            Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, DustID.GemRuby);
+            Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, DustID.GemEmerald);
+            Gore gore = Gore.NewGoreDirect(Projectile.GetSource_FromThis(), Projectile.Center, new Vector2(Main.rand.NextFloat(-5, 5)), Main.rand.Next(61, 64), Main.rand.NextFloat(0.5f, 1f));
+
         }
 
         public override void AI()
@@ -53,9 +57,14 @@ namespace Paracosm.Content.Projectiles.Sentries
             {
                 Projectile.alpha -= 8;
             }
+
+            if (AITimer == 0)
+            {
+                desiredColor = new Color(Main.rand.NextFloat(0f, 1f), Main.rand.NextFloat(0f, 1f), Main.rand.NextFloat(0f, 1f), 1f);
+            }
+
             Projectile.velocity = Vector2.Zero;
-            Projectile.scale = (float)Math.Sin(MathHelper.ToRadians(AITimer * 4)) / 5 + 1; // 1/5 * sin(4x) + 1 ranges from 0.8 to 1.2
-            Lighting.AddLight(Projectile.Center, 10, 10, 0);
+            Lighting.AddLight(Projectile.Center, drawColor.ToVector3());
             Projectile.frameCounter++;
             if (Projectile.frameCounter == 6)
             {
@@ -66,7 +75,15 @@ namespace Paracosm.Content.Projectiles.Sentries
                     Projectile.frame = 0;
                 }
             }
+
+            drawColor = Color.Lerp(drawColor, desiredColor, AITimer / 60);
+
             AITimer++;
+        }
+
+        public override bool PreDraw(ref Color lightColor)
+        {
+            return false;
         }
 
         public override void PostDraw(Color lightColor)
@@ -77,7 +94,7 @@ namespace Paracosm.Content.Projectiles.Sentries
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, shader.Shader, Main.GameViewMatrix.TransformationMatrix);
             shader.Shader.Parameters["time"].SetValue(AITimer / 60f);
-            shader.Shader.Parameters["color"].SetValue((Color.Yellow with { A = 10}).ToVector4());
+            shader.Shader.Parameters["color"].SetValue(drawColor.ToVector4());
             shader.Apply();
             Main.EntitySpriteDraw(texture, Projectile.Center - Main.screenPosition, null, Color.White, Projectile.rotation, drawOrigin, Projectile.scale, SpriteEffects.None, 0);
             Main.spriteBatch.End();

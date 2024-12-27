@@ -6,7 +6,7 @@ using Terraria.ModLoader;
 
 namespace Paracosm.Content.Projectiles.Sentries
 {
-    public class Deathseeder : ModProjectile
+    public class Shadowflower : ModProjectile
     {
         ref float AITimer => ref Projectile.ai[0];
         ref float AttackTimer => ref Projectile.ai[1];
@@ -19,7 +19,7 @@ namespace Paracosm.Content.Projectiles.Sentries
         public override void SetDefaults()
         {
             Projectile.width = 50;
-            Projectile.height = 50;
+            Projectile.height = 56;
             Projectile.penetrate = -1;
             Projectile.DamageType = DamageClass.Summon;
             Projectile.tileCollide = true;
@@ -35,15 +35,16 @@ namespace Paracosm.Content.Projectiles.Sentries
             Projectile.velocity.Y = 10f;
             if (closestEnemy != null)
             {
-                if (AttackTimer == 30)
+                if (AttackTimer == 90)
                 {
                     if (Main.netMode != NetmodeID.MultiplayerClient)
                     {
-                        Vector2 offset = new Vector2(Main.rand.NextFloat(-20, 20), closestEnemy.height + 10);
-                        Projectile.NewProjectile(Projectile.GetSource_FromAI(), closestEnemy.Center + offset, -Vector2.UnitY * 30, ProjectileID.VilethornBase, Projectile.damage, 1f);
+                        for (int i = -2; i < 3; i++)
+                        {
+                            Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Projectile.Center.DirectionTo(closestEnemy.Center).RotatedBy(MathHelper.ToRadians(9) * i) * 10, ModContent.ProjectileType<ShadowBolt>(), Projectile.damage, 1f);
+                        }
                     }
                     SoundEngine.PlaySound(SoundID.Item43 with { Volume = 0.5f, PitchRange = (-0.2f, 0.2f) });
-
                     AttackTimer = 0;
                 }
                 AttackTimer++;
@@ -54,7 +55,7 @@ namespace Paracosm.Content.Projectiles.Sentries
             }
 
             Projectile.frameCounter++;
-            if (Projectile.frameCounter == 20)
+            if (Projectile.frameCounter == 6)
             {
                 Projectile.frameCounter = 0;
                 Projectile.frame++;
@@ -63,7 +64,7 @@ namespace Paracosm.Content.Projectiles.Sentries
                     Projectile.frame = 0;
                 }
             }
-            Lighting.AddLight(Projectile.Center, 3, 0, 5);
+            Lighting.AddLight(Projectile.Center, 5, 0, 5);
             AITimer++;
         }
 

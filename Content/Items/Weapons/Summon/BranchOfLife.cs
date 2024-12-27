@@ -7,22 +7,22 @@ using Terraria.ModLoader;
 
 namespace Paracosm.Content.Items.Weapons.Summon
 {
-    public class DeathseederStaff : ModItem
+    public class BranchOfLife : ModItem
     {
         public override void SetDefaults()
         {
-            Item.width = 40;
-            Item.height = 40;
-            Item.mana = 10;
+            Item.width = 44;
+            Item.height = 44;
+            Item.mana = 20;
             Item.noMelee = true;
-            Item.damage = 15;
+            Item.damage = 77;
             Item.DamageType = DamageClass.Summon;
             Item.useStyle = ItemUseStyleID.Swing;
             Item.useTime = 20;
             Item.useAnimation = 20;
             Item.UseSound = SoundID.Item44;
-            Item.shoot = ModContent.ProjectileType<Deathseeder>();
-            Item.rare = ItemRarityID.Purple;
+            Item.shoot = ModContent.ProjectileType<BranchOfLifeSentry>();
+            Item.rare = ItemRarityID.Expert;
             Item.value = 2000;
         }
 
@@ -45,19 +45,19 @@ namespace Paracosm.Content.Items.Weapons.Summon
 
         public override void AddRecipes()
         {
-            Recipe recipe1 = CreateRecipe();
-            recipe1.AddIngredient(ItemID.Ebonwood, 20);
-            recipe1.AddIngredient(ItemID.Deathweed, 3);
-            recipe1.AddIngredient(ItemID.ShadowScale, 8);
-            recipe1.AddTile(TileID.Anvils);
-            recipe1.Register();
-
-            Recipe recipe2 = CreateRecipe();
-            recipe2.AddIngredient(ItemID.Shadewood, 20);
-            recipe2.AddIngredient(ItemID.Deathweed, 3);
-            recipe2.AddIngredient(ItemID.TissueSample, 8);
-            recipe2.AddTile(TileID.Anvils);
-            recipe2.Register();
+            Recipe recipe = CreateRecipe();
+            recipe.AddIngredient(ModContent.ItemType<PoisonBloomStaff>(), 1);
+            recipe.AddIngredient(ModContent.ItemType<BlinkrootBusterStaff>(), 1);
+            recipe.AddIngredient(ModContent.ItemType<WaterfallerStaff>(), 1);
+            recipe.AddIngredient(ModContent.ItemType<GiantShiverthornStaff>(), 1);
+            recipe.AddIngredient(ModContent.ItemType<MoonBurstStaff>(), 1);
+            recipe.AddIngredient(ModContent.ItemType<DeathseederStaff>(), 1);
+            recipe.AddIngredient(ModContent.ItemType<FireBloomStaff>(), 1);
+            recipe.AddIngredient(ModContent.ItemType<ShadowflowerStaff>(), 1);
+            recipe.AddIngredient(ItemID.ChlorophyteBar, 12);
+            recipe.AddIngredient(ItemID.Ectoplasm, 10);
+            recipe.AddTile(TileID.MythrilAnvil);
+            recipe.Register();
         }
     }
 }

@@ -36,6 +36,7 @@ namespace Paracosm.Common.Players
         public bool paracosmicHelmetBuff = false;
         public bool paracosmicGogglesBuff = false;
         public bool nebulousPower = false;
+        public bool branchedOfLifed = false;
 
         public bool infected = false;
         public bool paracosmicBurn = false;
@@ -64,6 +65,7 @@ namespace Paracosm.Common.Players
             paracosmicHelmetBuff = false;
             paracosmicGogglesBuff = false;
             nebulousPower = false;
+            branchedOfLifed = false;
 
             infected = false;
             paracosmicBurn = false;
@@ -223,7 +225,6 @@ namespace Paracosm.Common.Players
 
             if (vortexForce)
             {
-
                 if (Main.myPlayer == Player.whoAmI)
                 {
                     foreach (var proj in Main.ActiveProjectiles)
@@ -341,6 +342,11 @@ namespace Paracosm.Common.Players
 
         public override void UpdateLifeRegen()
         {
+            if (branchedOfLifed)
+            {
+                Player.lifeRegen += 3;
+            }
+
             if (corruptedLifeCrystal || voidHeart)
             {
                 if (Player.lifeRegen > 0)
@@ -348,6 +354,15 @@ namespace Paracosm.Common.Players
                     Player.lifeRegen = 0;
                 }
                 Player.lifeRegenTime = 0;
+            }
+        }
+
+        public override void PostUpdateBuffs()
+        {
+            if (branchedOfLifed)
+            {
+                Player.GetDamage(DamageClass.Generic) += 10f / 100f;
+                Player.GetCritChance(DamageClass.Generic) += 10f;
             }
         }
 

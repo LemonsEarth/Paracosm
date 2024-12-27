@@ -89,3 +89,8 @@ DarkBleed: {
 	DisplayName: Dark Bleed
 	Description: Mods.Paracosm.Buffs.DarkBleed.Description
 }
+
+BranchedOfLifedBuff: {
+	DisplayName: Power of the Jungle
+	Description: Increased damage, critical strike chance and life regeneration
+}

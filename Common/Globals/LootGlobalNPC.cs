@@ -1,4 +1,5 @@
 ﻿using Paracosm.Content.Items.Accessories;
+using Paracosm.Content.Items.Weapons.Summon;
 using Terraria;
 using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
@@ -12,6 +13,7 @@ namespace Paracosm.Common.Globals
         {
             switch (npc.type)
             {
+                // Demon Coins
                 case NPCID.VoodooDemon:
                     npcLoot.Add(ItemDropRule.NormalvsExpert(ModContent.ItemType<DemonCoin>(), 5, 4));
                     break;
@@ -30,8 +32,12 @@ namespace Paracosm.Common.Globals
                 case NPCID.RuneWizard:
                     npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<DemonCoin>(), 1, 3, 5));
                     break;
-                case NPCID.BigMimicCorruption or NPCID.BigMimicCrimson or NPCID.BigMimicHallow or NPCID.Moth or NPCID.SandElemental or NPCID.IceGolem or NPCID.BloodEelHead or NPCID.RainbowSlime or NPCID.GoblinSummoner or NPCID.PirateShip:
+                case NPCID.BigMimicCorruption or NPCID.BigMimicCrimson or NPCID.BigMimicHallow or NPCID.Moth or NPCID.SandElemental or NPCID.IceGolem or NPCID.BloodEelHead or NPCID.RainbowSlime or NPCID.PirateShip:
                     npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<DemonCoin>(), minimumDropped: 2, maximumDropped: 4));
+                    break;
+
+                case NPCID.GoblinSummoner:
+                    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<ShadowflowerStaff>(), 4));
                     break;
             }
         }
