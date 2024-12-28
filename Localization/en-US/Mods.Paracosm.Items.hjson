@@ -716,3 +716,52 @@ BranchOfLife: {
 	DisplayName: Branch Of Life
 	Tooltip: Summons a stationary flower that buffs nearby players and attacks all enemies in a radius
 }
+
+StarfallCoating: {
+	Tooltip:
+		'''
+		True melee hits cause stars to fall from the sky
+		The stars deal half of the weapon's damage, capped at {0}
+		'''
+	DisplayName: Starfall Coating
+}
+
+CraterCoating: {
+	Tooltip:
+		'''
+		True melee hits cause enemies to explode
+		The explosions deal the weapon's damage, capped at {0}
+		'''
+	DisplayName: Crater Coating
+}
+
+SpiritCoating: {
+	Tooltip:
+		'''
+		True melee hits summon spirits
+		The spirits home in on enemies
+		25% chance to spawn a spirit that heals you instead
+		'''
+	DisplayName: Spirit Coating
+}
+
+UniversalCoating: {
+	DisplayName: Universal Coating
+	Tooltip:
+		'''
+		True melee hits cause Meteors to fall from the sky
+		Effects of previous coatings
+		'''
+}
+
+CommandersWill: {
+	DisplayName: Commander's Will
+	Tooltip:
+		'''
+		{$CommonItemTooltip.IncreasesMaxSentriesBy}
+		{$CommonItemTooltip.PercentIncreasedSummonDamage@1}
+		{2}% decreased non-summon damage
+		{$CommonItemTooltip.PercentIncreasedMovementSpeed@3}
+		Your sentries will follow you, but get massively reduced lifetime
+		'''
+}

@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Paracosm.Content.Projectiles.HeldProjectiles;
 using System;
 using System.IO;
 using Terraria;
@@ -402,6 +403,10 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
             if (projectile.type == ProjectileID.LastPrismLaser)
             {
                 modifiers.FinalDamage /= 2;
+            }
+            else if (projectile.type == ModContent.ProjectileType<HorizonSplitterProj>())
+            {
+                modifiers.FinalDamage /= 8;
             }
         }
 

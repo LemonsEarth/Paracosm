@@ -8,6 +8,7 @@
 		
 	</PropertyGroup>
 	<ItemGroup>
+	  <None Remove="Content\Projectiles\Friendly\CraterExplosion.png" />
 	  <None Remove="Content\Projectiles\HeldProjectiles\UnboundDarkProj.png" />
 	  <None Remove="Content\Projectiles\Sentries\BranchOfLifeProj.png" />
 	</ItemGroup>

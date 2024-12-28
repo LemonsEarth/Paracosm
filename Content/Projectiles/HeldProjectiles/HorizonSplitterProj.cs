@@ -41,7 +41,7 @@ namespace Paracosm.Content.Projectiles.HeldProjectiles
             Projectile.penetrate = -1;
             Projectile.DamageType = DamageClass.Melee;
             Projectile.tileCollide = false;
-            
+
             Projectile.timeLeft = 10000;
             DrawOffsetX = 45;
         }
@@ -93,7 +93,10 @@ namespace Paracosm.Content.Projectiles.HeldProjectiles
             else
             {
                 Projectile.Center = player.Center + new Vector2(-MouseSide, -1).RotatedBy(MathHelper.ToRadians(rotated)) * DistanceIndex * distance;
-                Projectile.damage = savedDamage * (int)DistanceIndex;
+                if (DistanceIndex < 3)
+                {
+                    Projectile.damage = savedDamage * (int)DistanceIndex;
+                }
                 rotated += 6 * MouseSide * player.GetAttackSpeed(DamageClass.Melee);
             }
             if (Math.Abs(rotated) >= maxRotation)
@@ -112,6 +115,7 @@ namespace Paracosm.Content.Projectiles.HeldProjectiles
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
             target.AddBuff(ModContent.BuffType<SolarBurn>(), 60);
+            Projectile.damage /= 2;
         }
 
         public override void OnKill(int timeLeft)

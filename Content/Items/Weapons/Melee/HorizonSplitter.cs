@@ -14,7 +14,7 @@ namespace Paracosm.Content.Items.Weapons.Melee
         int useCounter = 0;
         public override void SetDefaults()
         {
-            Item.damage = 1111;
+            Item.damage = 1000;
             Item.DamageType = DamageClass.Melee;
             Item.width = 100;
             Item.height = 100;

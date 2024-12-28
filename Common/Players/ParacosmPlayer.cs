@@ -5,6 +5,7 @@ using Paracosm.Content.Biomes.Overworld;
 using Paracosm.Content.Biomes.Void;
 using Paracosm.Content.Buffs;
 using Paracosm.Content.Buffs.Cooldowns;
+using Paracosm.Content.Items.Accessories;
 using Paracosm.Content.Projectiles.Friendly;
 using Terraria;
 using Terraria.Graphics.Shaders;
@@ -32,6 +33,15 @@ namespace Paracosm.Common.Players
         float paraSigilHitTimer = 120;
         bool paraSigilActiveTimer = false;
         public bool nebulousEnergy = false;
+        public bool starfallCoating = false;
+        public bool craterCoating = false;
+        public bool spiritCoating = false;
+        public bool universalCoating = false;
+        public bool commandersWill = false;
+        public int sentryCount = 0;
+
+        int hitTimer = 0;
+        const int HIT_TIMER_CD = 10;
 
         public bool paracosmicHelmetBuff = false;
         public bool paracosmicGogglesBuff = false;
@@ -61,6 +71,12 @@ namespace Paracosm.Common.Players
             parashardSigil = false;
             nebulousEnergy = false;
             voidHeart = false;
+            starfallCoating = false;
+            craterCoating = false;
+            spiritCoating = false;
+            universalCoating = false;
+            commandersWill = false;
+            sentryCount = 0;
 
             paracosmicHelmetBuff = false;
             paracosmicGogglesBuff = false;
@@ -83,6 +99,138 @@ namespace Paracosm.Common.Players
             if (voidHeart)
             {
                 healValue += 50;
+            }
+        }
+
+        public override void OnHitNPCWithItem(Item item, NPC target, NPC.HitInfo hit, int damageDone)
+        {
+            if (hitTimer > 0)
+            {
+                return; //On hit effects proc on timer
+            }
+            if (starfallCoating)
+            {
+                if (Main.myPlayer == Player.whoAmI)
+                {
+                    Vector2 pos = target.Center - new Vector2(Main.rand.Next(-50, 50), 800 + Main.rand.Next(-50, 50));
+                    Vector2 velocity = pos.DirectionTo(target.Center) * (StarfallCoating.STAR_VELOCITY + Main.rand.NextFloat(-2f, 2f));
+                    int damage = item.damage / 2;
+                    if (damage > StarfallCoating.STAR_DAMAGE_CAP)
+                    {
+                        damage = StarfallCoating.STAR_DAMAGE_CAP;
+                    }
+                    Projectile.NewProjectile(Player.GetSource_OnHit(target), pos, velocity, ProjectileID.HallowStar, damage, 0f);
+                }
+            }
+
+            if (craterCoating)
+            {
+                if (Main.myPlayer == Player.whoAmI)
+                {
+                    Vector2 pos = target.Center + new Vector2(Main.rand.Next(-20, 20), Main.rand.Next(-20, 20));
+                    int damage = item.damage;
+                    if (damage > CraterCoating.EXPLOSION_DAMAGE_CAP)
+                    {
+                        damage = CraterCoating.EXPLOSION_DAMAGE_CAP;
+                    }
+                    Projectile.NewProjectile(Player.GetSource_OnHit(target), pos, Vector2.Zero, ModContent.ProjectileType<CraterExplosion>(), damage, 0f);
+                }
+            }
+
+            if (spiritCoating)
+            {
+                if (Main.myPlayer == Player.whoAmI)
+                {
+                    int damage = item.damage;
+                    if (damage > SpiritCoating.SPIRIT_DAMAGE_CAP)
+                    {
+                        damage = SpiritCoating.SPIRIT_DAMAGE_CAP;
+                    }
+                    int projID = ModContent.ProjectileType<SpiritProjDamage>();
+                    if (Main.rand.Next(0, 4) == 1)
+                    {
+                        projID = ModContent.ProjectileType<SpiritProjHeal>();
+                    }
+
+                    Projectile.NewProjectile(Player.GetSource_OnHit(target), target.Center, Vector2.UnitY.RotatedByRandom(2 * MathHelper.Pi) * SpiritCoating.SPIRIT_VELOCITY, projID, damage, 0f, ai0: 60);
+                }
+            }
+
+            if (universalCoating)
+            {
+                for (int i = 0; i < 3; i++)
+                {
+                    Vector2 pos = target.Center - new Vector2(Main.rand.NextFloat(-400, 400), 800 + Main.rand.Next(-100, 100));
+                    int damage = item.damage;
+                    Vector2 velocity = pos.DirectionTo(target.Center).RotatedBy(MathHelper.ToRadians(Main.rand.Next(-30, 30))) * (UniversalCoating.METEOR_VELOCITY + Main.rand.NextFloat(-4f, 4f));
+                    Projectile.NewProjectile(item.GetSource_OnHit(target), pos, velocity, ProjectileID.Meteor1, damage, 0f, ai1: 1f); // ai1 is scale
+                }             
+            }
+
+            hitTimer = HIT_TIMER_CD;
+        }
+
+        public override void OnHitNPCWithProj(Projectile proj, NPC target, NPC.HitInfo hit, int damageDone)
+        {
+            if (Main.myPlayer == Player.whoAmI && hit.DamageType.CountsAsClass(DamageClass.Melee) && proj.whoAmI == Player.heldProj && hitTimer == 0)
+            {
+                if (starfallCoating)
+                {
+                    Vector2 pos = target.Center - new Vector2(Main.rand.Next(-100, 100), 800 + Main.rand.Next(-100, 100));
+                    Vector2 velocity = pos.DirectionTo(target.Center) * (StarfallCoating.STAR_VELOCITY + Main.rand.NextFloat(-2f, 2f));
+                    int damage = proj.damage / 2;
+                    if (damage > StarfallCoating.STAR_DAMAGE_CAP)
+                    {
+                        damage = StarfallCoating.STAR_DAMAGE_CAP;
+                    }
+                    Projectile.NewProjectile(Player.GetSource_OnHit(target), pos, velocity, ProjectileID.HallowStar, damage, 0f);
+                }
+
+                if (craterCoating)
+                {
+                    if (Main.myPlayer == Player.whoAmI)
+                    {
+                        Vector2 pos = target.Center + new Vector2(Main.rand.Next(-20, 20), Main.rand.Next(-20, 20));
+                        int damage = proj.damage;
+                        if (damage > CraterCoating.EXPLOSION_DAMAGE_CAP)
+                        {
+                            damage = CraterCoating.EXPLOSION_DAMAGE_CAP;
+                        }
+                        Projectile.NewProjectile(Player.GetSource_OnHit(target), pos, Vector2.Zero, ModContent.ProjectileType<CraterExplosion>(), damage, 0f);
+                    }
+                }
+
+                if (spiritCoating)
+                {
+                    if (Main.myPlayer == Player.whoAmI)
+                    {
+                        int damage = proj.damage;
+                        if (damage > SpiritCoating.SPIRIT_DAMAGE_CAP)
+                        {
+                            damage = SpiritCoating.SPIRIT_DAMAGE_CAP;
+                        }
+                        int projID = ModContent.ProjectileType<SpiritProjDamage>();
+                        if (Main.rand.Next(0, 4) == 1)
+                        {
+                            projID = ModContent.ProjectileType<SpiritProjHeal>();
+                        }
+
+                        Projectile.NewProjectile(Player.GetSource_OnHit(target), target.Center, Vector2.UnitY.RotatedByRandom(2 * MathHelper.Pi) * SpiritCoating.SPIRIT_VELOCITY, projID, damage, 0f, ai0: 60);
+                    }
+                }
+
+                if (universalCoating)
+                {
+                    for (int i = 0; i < 3; i++)
+                    {
+                        Vector2 pos = target.Center - new Vector2(Main.rand.NextFloat(-400, 400), 800 + Main.rand.Next(-100, 100));
+                        int damage = proj.damage;
+                        Vector2 velocity = pos.DirectionTo(target.Center).RotatedBy(MathHelper.ToRadians(Main.rand.Next(-30, 30))) * (UniversalCoating.METEOR_VELOCITY + Main.rand.NextFloat(-4f, 4f));
+                        Projectile.NewProjectile(Player.GetSource_OnHit(target), pos, velocity, ProjectileID.Meteor1, damage, 0f, ai0: 1f, ai1: 1f, ai2: 10f);
+                    }
+                }
+
+                hitTimer = HIT_TIMER_CD;
             }
         }
 
@@ -255,6 +403,11 @@ namespace Paracosm.Common.Players
                     paraSigilHitTimer = 120;
                     paraSigilActiveTimer = false;
                 };
+            }
+
+            if ((craterCoating || spiritCoating || starfallCoating) && hitTimer > 0)
+            {
+                hitTimer--;
             }
         }
 

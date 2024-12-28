@@ -10,6 +10,7 @@ namespace Paracosm.Content.Items.Placeable
     {
         public override void SetStaticDefaults()
         {
+            ItemID.Sets.ShimmerTransformToItem[Type] = ItemID.StoneBlock;
             Item.ResearchUnlockCount = 100;
         }
 
