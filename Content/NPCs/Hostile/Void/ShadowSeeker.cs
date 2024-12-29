@@ -46,7 +46,7 @@ namespace Paracosm.Content.NPCs.Hostile.Void
         {
             bestiaryEntry.Info.AddRange(new List<IBestiaryInfoElement>()
                 {
-                    new BestiaryPortraitBackgroundProviderPreferenceInfoElement(ModContent.GetInstance<VoidMid>().ModBiomeBestiaryInfoElement),
+                    new MoonLordPortraitBackgroundProviderBestiaryInfoElement(),
                 });
         }
 
@@ -93,7 +93,7 @@ namespace Paracosm.Content.NPCs.Hostile.Void
                 DeadTimer++;
             }
 
-            Lighting.AddLight(NPC.Center, 100, 100, 100);
+            Lighting.AddLight(NPC.Center, 10, 10, 10);
             Dust dust = Dust.NewDustDirect(NPC.position, NPC.width, NPC.height, DustID.Granite, newColor: Color.Black, Scale: Main.rand.NextFloat(1.2f, 2.4f));
             dust.noGravity = true;
             AITimer++;

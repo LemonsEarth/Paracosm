@@ -80,8 +80,13 @@ namespace Paracosm.Content.NPCs.Hostile.Void
             FollowNextSegment(followingNPC);
 
             NPC.spriteDirection = followingNPC.spriteDirection;
-
+            NPC.Opacity = (float)Math.Clamp(Math.Sin(MathHelper.ToRadians(AITimer * 3)), 0f, 1f);
             AITimer++;
+        }
+
+        public override bool CheckActive()
+        {
+            return false;
         }
 
         void FollowNextSegment(NPC followingNPC)
@@ -93,16 +98,6 @@ namespace Paracosm.Content.NPCs.Hostile.Void
             Vector2 pos = toFollowing * distance;
             NPC.velocity = Vector2.Zero;
             NPC.position += pos;
-        }
-
-        public override void FindFrame(int frameHeight)
-        {
-            NPC.frameCounter++;
-            if (NPC.frameCounter == 10)
-            {
-                NPC.frame.Y = Main.rand.Next(0, 2) * frameHeight;
-                NPC.frameCounter = 0;
-            }
         }
 
         public override bool? CanFallThroughPlatforms()

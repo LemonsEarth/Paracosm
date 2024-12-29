@@ -70,6 +70,16 @@ namespace Paracosm.Content.Projectiles.Friendly
                 Projectile.netUpdate = true;
             }
 
+            if (AITimer % 30 == 0)
+            {
+                if (Main.netMode != NetmodeID.MultiplayerClient)
+                {
+                    player.CheckMana(30, true, true);
+                    Vector2 mouseDir = player.Center.DirectionTo(Main.MouseWorld);
+                    Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, mouseDir * 4, ModContent.ProjectileType<EquinoxMoonProj>(), Projectile.damage, 4f, ai0: 30f);
+                }                
+            }
+
             if (player.channel)
             {
                 float rotSpeedDeg = AITimer * 4;
@@ -84,6 +94,7 @@ namespace Paracosm.Content.Projectiles.Friendly
                 {
                     if (Projectile.Colliding(Projectile.Hitbox, Main.projectile[(int)SunID].Hitbox))
                     {
+                        player.CheckMana(80, true, true);
                         for (int i = 0; i < 8; i++)
                         {
                             Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, (Vector2.UnitY * 16).RotatedBy(MathHelper.PiOver4 * i), ModContent.ProjectileType<EquinoxMoonProj>(), Projectile.damage, 4f, ai0: 30f);
@@ -95,6 +106,7 @@ namespace Paracosm.Content.Projectiles.Friendly
                     }
                     else
                     {
+                        player.CheckMana(30, true, true);
                         Vector2 mouseDir = player.Center.DirectionTo(Main.MouseWorld);
                         Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, mouseDir * 12, ModContent.ProjectileType<EquinoxMoonProj>(), Projectile.damage, 4f, ai0: 30f);
                     }

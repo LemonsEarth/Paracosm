@@ -29,6 +29,7 @@ namespace Paracosm.Content.Projectiles.Friendly
             Projectile.friendly = true;
             Projectile.timeLeft = 180;
             Projectile.penetrate = 1;
+            Projectile.tileCollide = false;
         }
 
         public override void AI()

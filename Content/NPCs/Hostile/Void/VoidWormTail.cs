@@ -4,6 +4,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.Graphics.Effects;
+using System;
 
 namespace Paracosm.Content.NPCs.Hostile.Void
 {
@@ -37,7 +38,6 @@ namespace Paracosm.Content.NPCs.Hostile.Void
             NPC.aiStyle = -1;
             NPC.width = 104;
             NPC.height = 52;
-            NPC.Opacity = 1;
             NPC.lifeMax = 100000;
             NPC.defense = 80;
             NPC.damage = 40;
@@ -48,6 +48,7 @@ namespace Paracosm.Content.NPCs.Hostile.Void
             NPC.knockBackResist = 0;
             NPC.noGravity = true;
             NPC.npcSlots = 1;
+            NPC.Opacity = 1f;
         }
 
         public override bool? DrawHealthBar(byte hbPosition, ref float scale, ref Vector2 position)
@@ -73,6 +74,8 @@ namespace Paracosm.Content.NPCs.Hostile.Void
             FollowNextSegment(followingNPC);
 
             NPC.spriteDirection = followingNPC.spriteDirection;
+
+            NPC.Opacity = (float)Math.Clamp(Math.Sin(MathHelper.ToRadians(AITimer * 3)), 0f, 1f);
 
             AITimer++;
         }

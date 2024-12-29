@@ -6,6 +6,7 @@ using Paracosm.Content.Biomes.Void;
 using Paracosm.Content.Buffs;
 using Paracosm.Content.Buffs.Cooldowns;
 using Paracosm.Content.Items.Accessories;
+using Paracosm.Content.Items.Consumables;
 using Paracosm.Content.Projectiles.Friendly;
 using Terraria;
 using Terraria.Graphics.Shaders;
@@ -422,15 +423,15 @@ namespace Paracosm.Common.Players
                     ScreenShaderData shader = Terraria.Graphics.Effects.Filters.Scene.Activate("Paracosm:DarknessShader").GetShader();
                     if (Player.InModBiome<VoidHigh>())
                     {
-                        shader.Shader.Parameters["distance"].SetValue(0.20f);
+                        shader.Shader.Parameters["distance"].SetValue(0.4f);
                     }
                     else if (Player.InModBiome<VoidMid>())
                     {
-                        shader.Shader.Parameters["distance"].SetValue(0.10f);
+                        shader.Shader.Parameters["distance"].SetValue(0.4f);
                     }
                     else
                     {
-                        shader.Shader.Parameters["distance"].SetValue(0.5f);
+                        shader.Shader.Parameters["distance"].SetValue(0.8f);
                     }
                     shader.Shader.Parameters["maxGlow"].SetValue(10);
                 }

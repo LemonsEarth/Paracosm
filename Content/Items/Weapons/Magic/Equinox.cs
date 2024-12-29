@@ -25,6 +25,7 @@ namespace Paracosm.Content.Items.Weapons.Magic
             Item.useStyle = ItemUseStyleID.Shoot;
             Item.noMelee = true;
             Item.knockBack = 6;
+            Item.mana = 30;
             Item.value = Item.buyPrice(gold: 60);
             Item.rare = ParacosmRarity.Orange;
             Item.UseSound = SoundID.Item1;

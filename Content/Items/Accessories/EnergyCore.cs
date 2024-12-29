@@ -36,13 +36,15 @@ namespace Paracosm.Content.Items.Accessories
             {
                 player.GetDamage(DamageClass.Generic) += damageBoost / 100f;
             }
+            player.noKnockback = true;
         }
 
         public override void AddRecipes()
         {
             Recipe recipe = CreateRecipe();
+            recipe.AddIngredient(ModContent.ItemType<RoundShield>());
             recipe.AddIngredient(ModContent.ItemType<VortexianPlating>(), 6);
-            recipe.AddIngredient(ModContent.ItemType<NebulousEnergy>(), 4);
+            recipe.AddIngredient(ModContent.ItemType<UnstableNebulousFlame>(), 4);
             recipe.AddIngredient(ModContent.ItemType<VoidEssence>(), 13);
             recipe.AddTile(TileID.LunarCraftingStation);
             recipe.Register();

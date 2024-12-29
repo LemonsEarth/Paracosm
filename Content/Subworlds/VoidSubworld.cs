@@ -1,6 +1,7 @@
 ﻿
 using SubworldLibrary;
 using System.Collections.Generic;
+using System.Xml.Serialization;
 using Terraria.WorldBuilding;
 
 namespace Paracosm.Content.Subworlds

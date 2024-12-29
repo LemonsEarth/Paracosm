@@ -780,7 +780,62 @@ EnergyCore: {
 	DisplayName: Energy Core
 	Tooltip:
 		'''
+		Grants immunity to knockback
 		{0}% increased damage when above 50% life
 		{1}% increased damage reduction when below 50% life
+		'''
+}
+
+SuperManaStar: {
+	DisplayName: Super Mana Star
+	Tooltip:
+		'''
+		Increases maximum mana by {0}
+		{1}% decreased mana usage
+		Increased pickup range for mana stars
+		Automatically consume mana potions when needed
+		'''
+}
+
+ChampionEmblem: {
+	DisplayName: Champion Emblem
+	Tooltip:
+		'''
+		{$CommonItemTooltip.PercentIncreasedMeleeDamage}
+		{$CommonItemTooltip.PercentIncreasedMeleeCritChance@1}
+		{$CommonItemTooltip.PercentIncreasedMeleeSpeed@2}
+		"An accessory belonging to an old warrior, may be rarely found in Void chests"
+		'''
+}
+
+CommanderEmblem: {
+	DisplayName: Commander Emblem
+	Tooltip:
+		'''
+		{$CommonItemTooltip.PercentIncreasedSummonDamage}
+		{$CommonItemTooltip.IncreasesMaxMinionsBy@1}
+		{$CommonItemTooltip.IncreasesMaxSentriesBy@2}
+		"An accessory belonging to an old warrior, may be rarely found in Void chests"
+		'''
+}
+
+RaiderEmblem: {
+	DisplayName: Raider Emblem
+	Tooltip:
+		'''
+		{$CommonItemTooltip.PercentIncreasedRangedDamage}
+		{$CommonItemTooltip.PercentIncreasedRangedCritChance@1}
+		Enemies are less likely to target you
+		"An accessory belonging to an old warrior, may be rarely found in Void chests"
+		'''
+}
+
+WarlockEmblem: {
+	DisplayName: Warlock Emblem
+	Tooltip:
+		'''
+		{$CommonItemTooltip.PercentIncreasedMagicDamage}
+		{$CommonItemTooltip.IncreasesMaxManaBy@1}
+		"An accessory belonging to an old warrior, may be rarely found in Void chests"
 		'''
 }

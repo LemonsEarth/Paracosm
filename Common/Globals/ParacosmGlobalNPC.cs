@@ -104,6 +104,21 @@ namespace Paracosm.Common.Globals
             }
         }
 
+        public override void EditSpawnRate(Player player, ref int spawnRate, ref int maxSpawns)
+        {
+            if (player.InModBiome<VoidLow>())
+            {
+                spawnRate *= 10;
+                maxSpawns = 1;
+            }
+
+            if (player.InModBiome<VoidMid>())
+            {
+                spawnRate *= 2;
+                maxSpawns = 8;
+            }
+        }
+
         public override void EditSpawnPool(IDictionary<int, float> pool, NPCSpawnInfo spawnInfo)
         {
             if (spawnInfo.Player.InModBiome<ParacosmicDistortion>())
@@ -116,8 +131,14 @@ namespace Paracosm.Common.Globals
             if (spawnInfo.Player.InModBiome<VoidMid>())
             {
                 pool.Clear();
+                pool.Add(ModContent.NPCType<VoidSteeple>(), 0.1f);
                 pool.Add(ModContent.NPCType<ShadowSeeker>(), 0.05f);
-                pool.Add(ModContent.NPCType<VoidWormHead>(), 0.01f);
+            }
+
+            if (spawnInfo.Player.InModBiome<VoidLow>())
+            {
+                pool.Clear();
+                pool.Add(ModContent.NPCType<VoidWormHead>(), 0.005f);
             }
         }
 

@@ -1,10 +1,13 @@
 ﻿using Microsoft.Xna.Framework;
 using Paracosm.Common.Utils;
+using Paracosm.Content.Items.Accessories;
 using StructureHelper;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.IO;
+using Terraria.ModLoader;
+using Terraria.Utilities;
 using Terraria.WorldBuilding;
 
 namespace Paracosm.Content.Subworlds
@@ -32,20 +35,20 @@ namespace Paracosm.Content.Subworlds
             //Amount of "Terrain"
             for (int splotches = 0; splotches < 30; splotches++)
             {
-                int tiles = WorldGen.genRand.Next(100, 500);
-                int x = WorldGen.genRand.Next(0, 1000);
-                int y = WorldGen.genRand.Next(1000, 2000);
-                double strength = WorldGen.genRand.Next(5, 8);
-                int steps = WorldGen.genRand.Next(60, 80);
-                int dirX = WorldGen.genRand.Next(-1, 2);
-                int dirY = WorldGen.genRand.Next(-1, 2);
+                int tiles = Main.rand.Next(100, 500);
+                int x = Main.rand.Next(0, 1000);
+                int y = Main.rand.Next(1000, 2000);
+                double strength = Main.rand.Next(5, 8);
+                int steps = Main.rand.Next(60, 80);
+                int dirX = Main.rand.Next(-1, 2);
+                int dirY = Main.rand.Next(-1, 2);
 
                 for (int i = 0; i < tiles; i++)
                 {
                     if (i % 25 == 0)
                     {
-                        dirX = WorldGen.genRand.Next(-1, 2);
-                        dirY = WorldGen.genRand.Next(-1, 2);
+                        dirX = Main.rand.Next(-1, 2);
+                        dirY = Main.rand.Next(-1, 2);
                     }
                     int truePosX = x + i * dirX;
                     int truePosY = y + i * dirY;
@@ -65,7 +68,7 @@ namespace Paracosm.Content.Subworlds
                 {
                     int posX = i * 10;
                     int posY = 2600 + j * 100;
-                    WorldGen.TileRunner(posX, posY, 10 + WorldGen.genRand.Next(-3, 5), 40 + WorldGen.genRand.Next(-10, 10), TileID.ShimmerBrick, true);
+                    WorldGen.TileRunner(posX, posY, 10 + Main.rand.Next(-3, 5), 40 + Main.rand.Next(-10, 10), TileID.ShimmerBrick, true);
                 }
             }
 
@@ -107,7 +110,7 @@ namespace Paracosm.Content.Subworlds
             progress.Message = "The Void Chests";
             for (int chestIndex = 0; chestIndex < Main.maxChests; chestIndex++)
             {
-                int items = WorldGen.genRand.Next(8, 16);
+                int items = Main.rand.Next(8, 16);
                 Chest chest = Main.chest[chestIndex];
                 if (chest == null)
                 {
@@ -116,6 +119,12 @@ namespace Paracosm.Content.Subworlds
 
                 for (int inventoryIndex = 0; inventoryIndex < items; inventoryIndex++)
                 {
+                    if (Main.rand.Next(0, 100) == 1)
+                    {
+                        int randEmblem = Main.rand.NextFromList(ModContent.ItemType<ChampionEmblem>(), ModContent.ItemType<RaiderEmblem>(), ModContent.ItemType<WarlockEmblem>(), ModContent.ItemType<CommanderEmblem>());
+                        chest.item[inventoryIndex].SetDefaults(randEmblem);
+                        continue;
+                    }
                     chest.item[inventoryIndex].SetDefaults(LemonUtils.GetRandomItemID());
                     if(chest.item[inventoryIndex].maxStack > 1)
                     {

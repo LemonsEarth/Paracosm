@@ -22,7 +22,7 @@ namespace Paracosm.Content.NPCs.Hostile.Void
     {
         int BodyType => ModContent.NPCType<VoidWormBody>();
         int TailType => ModContent.NPCType<VoidWormTail>();
-        const int MAX_SEGMENT_COUNT = 20;
+        const int MAX_SEGMENT_COUNT = 30;
         int SegmentCount = 0;
 
         ref float AITimer => ref NPC.ai[0];
@@ -50,8 +50,13 @@ namespace Paracosm.Content.NPCs.Hostile.Void
         {
             bestiaryEntry.Info.AddRange(new List<IBestiaryInfoElement>()
                 {
-                    new BestiaryPortraitBackgroundProviderPreferenceInfoElement(ModContent.GetInstance<VoidMid>().ModBiomeBestiaryInfoElement),
+                    new MoonLordPortraitBackgroundProviderBestiaryInfoElement(),
                 });
+        }
+
+        public override float SpawnChance(NPCSpawnInfo spawnInfo)
+        {
+            return spawnInfo.Player.InModBiome<VoidLow>() ? 0.005f : 0;
         }
 
         public override void SetDefaults()
@@ -60,19 +65,18 @@ namespace Paracosm.Content.NPCs.Hostile.Void
             NPC.width = 104;
             NPC.height = 104;
             NPC.Opacity = 1;
-            NPC.lifeMax = 100000;
+            NPC.lifeMax = 250000;
             NPC.defense = 80;
-            NPC.damage = 40;
+            NPC.damage = 120;
             NPC.HitSound = SoundID.NPCHit18;
             NPC.DeathSound = SoundID.DD2_BetsyDeath;
-            SpawnModBiomes = new int[1] { ModContent.GetInstance<VoidMid>().Type };
+            SpawnModBiomes = new int[1] { ModContent.GetInstance<VoidLow>().Type };
             NPC.value = 50000;
             NPC.noTileCollide = true;
             NPC.knockBackResist = 0;
             NPC.noGravity = true;
             NPC.npcSlots = 2;
         }
-
 
         public override void AI()
         {
@@ -87,8 +91,15 @@ namespace Paracosm.Content.NPCs.Hostile.Void
             if (AITimer == 0)
             {
                 SpawnSegments();
+                PlayRoar(1.5f);
             }
+            NPC.Opacity = (float)Math.Clamp(Math.Sin(MathHelper.ToRadians(AITimer * 3)), 0f, 1f);
             AITimer++;
+        }
+
+        public override bool? DrawHealthBar(byte hbPosition, ref float scale, ref Vector2 position)
+        {
+            return false;
         }
 
         void SpawnSegments()
@@ -116,10 +127,10 @@ namespace Paracosm.Content.NPCs.Hostile.Void
         }
 
        
-        void PlayRoar()
+        void PlayRoar(float volume = 1f)
         {
-            SoundEngine.PlaySound(SoundID.DD2_BetsyDeath with { PitchRange = (-0.4f, 0.8f) });
-            SoundEngine.PlaySound(SoundID.Roar with { PitchRange = (-1f, -0.8f) });
+            SoundEngine.PlaySound(SoundID.DD2_BetsyDeath with { Volume = volume, PitchRange = (-0.4f, 0.8f) });
+            SoundEngine.PlaySound(SoundID.Roar with { Volume = volume, PitchRange = (-1f, -0.8f) });
         }
 
         public override void ModifyNPCLoot(NPCLoot npcLoot)

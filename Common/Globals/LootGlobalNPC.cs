@@ -40,8 +40,11 @@ namespace Paracosm.Common.Globals
                 case NPCID.GoblinSummoner:
                     npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<ShadowflowerStaff>(), 4));
                     break;
+                case NPCID.DeadlySphere or NPCID.DrManFly or NPCID.Nailhead or NPCID.Psycho or NPCID.Butcher:
+                    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Equinox>(), 25));
+                    break;
                 case NPCID.Mothron:
-                    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Equinox>(), 4));
+                    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Equinox>(), 10));
                     break;
             }
         }
