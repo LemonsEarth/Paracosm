@@ -1,4 +1,5 @@
 ﻿using Paracosm.Content.Items.Accessories;
+using Paracosm.Content.Items.Weapons.Magic;
 using Paracosm.Content.Items.Weapons.Summon;
 using Terraria;
 using Terraria.GameContent.ItemDropRules;
@@ -38,6 +39,9 @@ namespace Paracosm.Common.Globals
 
                 case NPCID.GoblinSummoner:
                     npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<ShadowflowerStaff>(), 4));
+                    break;
+                case NPCID.Mothron:
+                    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Equinox>(), 4));
                     break;
             }
         }

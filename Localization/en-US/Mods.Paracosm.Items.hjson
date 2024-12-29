@@ -765,3 +765,22 @@ CommandersWill: {
 		Your sentries will follow you, but get massively reduced lifetime
 		'''
 }
+
+Equinox: {
+	Tooltip:
+		'''
+		Hold LMB to summon a Sun and Moon that orbit around you
+		Release LMB to fire homing projectiles
+		If the Sun and Moon are overlapping when released, many more projectiles spawn
+		'''
+	DisplayName: Equinox
+}
+
+EnergyCore: {
+	DisplayName: Energy Core
+	Tooltip:
+		'''
+		{0}% increased damage when above 50% life
+		{1}% increased damage reduction when below 50% life
+		'''
+}
