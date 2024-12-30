@@ -5,12 +5,30 @@ using Terraria.ModLoader;
 using Microsoft.Xna.Framework;
 using Paracosm.Content.Projectiles.Friendly;
 using Paracosm.Content.Buffs.Cooldowns;
+using Terraria.DataStructures;
+using Paracosm.Content.Items.Accessories;
 
 namespace Paracosm.Common.Globals
 {
     public class ParacosmGlobalProjectile : GlobalProjectile
     {
         public override bool InstancePerEntity => true;
+
+        public override void OnSpawn(Projectile projectile, IEntitySource source)
+        {
+            Player player = Main.player[projectile.owner];
+            if (Main.myPlayer == projectile.owner && player.GetModPlayer<ParacosmPlayer>().secondHand)
+            {
+                if (projectile.CountsAsClass(DamageClass.Melee))
+                {
+                    projectile.position = projectile.Center;
+                    projectile.scale *= 1.25f;
+                    projectile.width = (int)(projectile.width * 1.25f);
+                    projectile.height = (int)(projectile.height * 1.25f);
+                    projectile.Center = projectile.position;
+                }
+            }
+        }
 
         public override void PostAI(Projectile projectile)
         {

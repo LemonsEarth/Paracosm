@@ -26,7 +26,7 @@ namespace Paracosm.Content.Items.Weapons.Melee
             Item.useStyle = ItemUseStyleID.Shoot;
             Item.knockBack = 6;
             Item.value = Item.buyPrice(gold: 15);
-            Item.rare = ParacosmRarity.Black;
+            Item.rare = ParacosmRarity.DarkGray;
             Item.UseSound = SoundID.Item71;
             Item.autoReuse = true;
             Item.useTurn = false;

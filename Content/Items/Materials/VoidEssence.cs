@@ -23,7 +23,7 @@ namespace Paracosm.Content.Items.Materials
             Item.height = 30;
             Item.maxStack = Item.CommonMaxStack;
             Item.value = Item.sellPrice(0, 0, 0, 50);
-            Item.rare = ParacosmRarity.Black;
+            Item.rare = ParacosmRarity.DarkGray;
         }
 
         public override void PostUpdate()

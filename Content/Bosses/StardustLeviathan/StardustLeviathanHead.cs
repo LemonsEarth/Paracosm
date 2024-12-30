@@ -126,7 +126,7 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
             NPC.width = 174;
             NPC.height = 300;
             NPC.Opacity = 1;
-            NPC.lifeMax = 1450000;
+            NPC.lifeMax = 1600000;
             NPC.defense = 80;
             NPC.damage = 40;
             NPC.HitSound = SoundID.NPCHit56;

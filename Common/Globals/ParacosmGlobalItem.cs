@@ -31,6 +31,17 @@ namespace Paracosm.Common.Globals
             }
         }
 
+        public override void ModifyItemScale(Item item, Player player, ref float scale)
+        {
+            if (player.GetModPlayer<ParacosmPlayer>().secondHand)
+            {
+                if (item.damage > 0 && item.CountsAsClass(DamageClass.Melee))
+                {
+                    scale += 1f;
+                }
+            }
+        }
+
         public override void GrabRange(Item item, Player player, ref int grabRange)
         {
             if (player.GetModPlayer<ParacosmPlayer>().nebulousPower)

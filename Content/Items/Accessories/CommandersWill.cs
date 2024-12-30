@@ -44,11 +44,11 @@ namespace Paracosm.Content.Items.Accessories
             recipe.AddIngredient(ItemID.ApprenticeScarf, 1);
             recipe.AddIngredient(ItemID.MonkBelt, 1);
             recipe.AddIngredient(ItemID.SquireShield, 1);
-            recipe.AddTile(TileID.MythrilAnvil);
             recipe.AddIngredient(ModContent.ItemType<Parashard>(), 12);
             recipe.AddIngredient(ModContent.ItemType<CosmicFlames>(), 8);
             recipe.AddIngredient(ItemID.ChlorophyteBar, 10);
             recipe.AddIngredient(ItemID.Ectoplasm, 10);
+            recipe.AddTile(TileID.TinkerersWorkbench);
             recipe.Register();
         }
     }

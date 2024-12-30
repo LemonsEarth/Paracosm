@@ -56,7 +56,7 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
             NPC.height = 64;
             NPC.Opacity = 1;
             NPC.lifeMax = 1500000;
-            NPC.defense = 160;
+            NPC.defense = 200;
             NPC.damage = 120;
             NPC.HitSound = SoundID.NPCHit56;
             NPC.DeathSound = SoundID.NPCDeath60;
@@ -254,7 +254,7 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
                 case 0:
                     if (Main.netMode != NetmodeID.MultiplayerClient && SegmentNum % 4 == 0)
                     {
-                        for (int i = -1; i <= 1; i+=2)
+                        for (int i = -1; i <= 1; i += 2)
                         {
                             Vector2 toFollowing = Main.npc[FollowingNPC].Center - NPC.Center;
                             Vector2 perpendicular = toFollowing.SafeNormalize(Vector2.Zero).RotatedBy(i * MathHelper.PiOver2);
@@ -276,7 +276,7 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
             {
                 return;
             }
-            switch(AttackTimer)
+            switch (AttackTimer)
             {
                 case 0:
                     if (Main.netMode != NetmodeID.MultiplayerClient)
@@ -382,7 +382,7 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
                             Vector2 pos = head.player.Center + new Vector2(0, -800).RotatedBy(MathHelper.ToRadians(i * 72));
                             Vector2 posToPlayer = pos.DirectionTo(head.player.Center);
                             Projectile.NewProjectile(NPC.GetSource_FromAI(), pos, posToPlayer * 20, head.Proj["Starshot"], head.NPC.damage, 1, ai1: 1);
-                        }              
+                        }
                     }
                     NPC.netUpdate = true;
                     AttackTimer = CHASING2_ATTACK_RATE;
@@ -402,7 +402,7 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
         {
             if (projectile.type == ProjectileID.LastPrismLaser)
             {
-                modifiers.FinalDamage /= 2;
+                modifiers.FinalDamage /= 3;
             }
             else if (projectile.type == ModContent.ProjectileType<HorizonSplitterProj>())
             {
@@ -412,10 +412,7 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
 
         public override void ModifyIncomingHit(ref NPC.HitModifiers modifiers)
         {
-            if (head.phase == 1)
-            {
-                modifiers.FinalDamage *= 0.9f;
-            }
+            modifiers.FinalDamage *= 0.7f;
         }
 
         public void DeleteProjectiles(int projID)

@@ -42,7 +42,6 @@ ParashardSigil: {
 		'''
 		{$CommonItemTooltip.PercentIncreasedDamage}
 		{$CommonItemTooltip.PercentIncreasedCritChance@1}
-		Increases life regeneration by {3}
 		Taking damage creates vengeful flames whose damage scales based on damage taken
 		'''
 }
@@ -837,5 +836,35 @@ WarlockEmblem: {
 		{$CommonItemTooltip.PercentIncreasedMagicDamage}
 		{$CommonItemTooltip.IncreasesMaxManaBy@1}
 		"An accessory belonging to an old warrior, may be rarely found in Void chests"
+		'''
+}
+
+VoidCharm: {
+	DisplayName: Void Charm
+	Tooltip: Getting hit releases void bombs in 4 directions
+}
+
+PendantOfEmptiness: {
+	DisplayName: Pendant of Emptiness
+	Tooltip:
+		'''
+		Getting hit releases void bombs in 8 directions
+		Increases immune time after being struck
+		'''
+}
+
+SecondHand: {
+	DisplayName: Second Hand
+	Tooltip: Increases the size of melee weapons and projectiles
+}
+
+OathOfVengeance: {
+	DisplayName: Oath Of Vengeance
+	Tooltip:
+		'''
+		Increases the size of melee weapons and projectiles
+		Effects of all coatings
+		Getting hit grants you the Striking Moment buff for 2 seconds
+		This effect has a 20 second cooldown
 		'''
 }

@@ -15,13 +15,18 @@ namespace Paracosm.Content.Items.Accessories
         static readonly float maxLifeBoost = 80;
         public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(maxLifeBoost);
 
+        public override bool CanAccessoryBeEquippedWith(Item equippedItem, Item incomingItem, Player player)
+        {
+            return incomingItem.type != ModContent.ItemType<CharmOfLife>() && incomingItem.type != ModContent.ItemType<CorruptedLifeCrystal>();
+        }
+
         public override void SetDefaults()
         {
             Item.width = 36;
             Item.height = 30;
             Item.accessory = true;
             Item.value = Item.sellPrice(0, 10);
-            Item.rare = ParacosmRarity.Black;
+            Item.rare = ParacosmRarity.DarkGray;
         }
 
         public override void UpdateAccessory(Player player, bool hideVisual)
@@ -48,8 +53,8 @@ namespace Paracosm.Content.Items.Accessories
             Recipe recipe = CreateRecipe();
             recipe.AddIngredient(ModContent.ItemType<CorruptedLifeCrystal>());
             recipe.AddIngredient(ModContent.ItemType<CharmOfLife>());
-            recipe.AddIngredient(ModContent.ItemType<VoidEssence>(), 15);
-            recipe.AddTile(TileID.LunarCraftingStation);
+            recipe.AddIngredient(ModContent.ItemType<VoidEssence>(), 35);
+            recipe.AddTile(TileID.TinkerersWorkbench);
             recipe.Register();
         }
     }

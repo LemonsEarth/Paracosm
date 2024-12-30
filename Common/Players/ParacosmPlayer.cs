@@ -30,6 +30,8 @@ namespace Paracosm.Common.Players
         public bool corruptedDragonHeart = false;
         public bool corruptedLifeCrystal = false;
         public bool voidHeart = false;
+        public bool voidCharm = false;
+        public bool voidPendant = false;
         public bool parashardSigil = false;
         float paraSigilHitTimer = 120;
         bool paraSigilActiveTimer = false;
@@ -39,7 +41,12 @@ namespace Paracosm.Common.Players
         public bool spiritCoating = false;
         public bool universalCoating = false;
         public bool commandersWill = false;
+        public bool secondHand = false;
+        public bool oathOfVengeance = false;
         public int sentryCount = 0;
+
+        int oathTimer = 0;
+        const int OATH_COOLDOWN = 1200;
 
         int hitTimer = 0;
         const int HIT_TIMER_CD = 10;
@@ -72,12 +79,16 @@ namespace Paracosm.Common.Players
             parashardSigil = false;
             nebulousEnergy = false;
             voidHeart = false;
+            voidCharm = false;
+            voidPendant = false;
             starfallCoating = false;
             craterCoating = false;
             spiritCoating = false;
             universalCoating = false;
             commandersWill = false;
             sentryCount = 0;
+            secondHand = false;
+            oathOfVengeance = false;
 
             paracosmicHelmetBuff = false;
             paracosmicGogglesBuff = false;
@@ -165,7 +176,7 @@ namespace Paracosm.Common.Players
                     int damage = item.damage;
                     Vector2 velocity = pos.DirectionTo(target.Center).RotatedBy(MathHelper.ToRadians(Main.rand.Next(-30, 30))) * (UniversalCoating.METEOR_VELOCITY + Main.rand.NextFloat(-4f, 4f));
                     Projectile.NewProjectile(item.GetSource_OnHit(target), pos, velocity, ProjectileID.Meteor1, damage, 0f, ai1: 1f); // ai1 is scale
-                }             
+                }
             }
 
             hitTimer = HIT_TIMER_CD;
@@ -325,6 +336,14 @@ namespace Paracosm.Common.Players
                     }
                     LemonUtils.DustCircle(Player.Center, 16, 5, DustID.SolarFlare, Main.rand.NextFloat(0.8f, 1.2f));
                 }
+
+                if (oathOfVengeance)
+                {
+                    if (oathTimer > 0)
+                    {
+                        oathTimer--;
+                    }
+                }
             }
 
             if (nebulousPower)
@@ -393,7 +412,7 @@ namespace Paracosm.Common.Players
                 Player.buffImmune[BuffID.Ichor] = true;
             }
 
-            if (parashardSigil)
+            if (parashardSigil || voidPendant)
             {
                 if (paraSigilActiveTimer == true)
                 {
@@ -477,11 +496,57 @@ namespace Paracosm.Common.Players
                 if (paraSigilActiveTimer == false && paraSigilHitTimer > 0)
                 {
                     paraSigilActiveTimer = true;
-                    for (int i = 0; i < 5; i++)
+                    if (Main.myPlayer == Player.whoAmI)
                     {
-                        Projectile.NewProjectile(Item.GetSource_None(), Player.MountedCenter, Main.rand.NextVector2Circular(1, 1).SafeNormalize(Vector2.Zero) * 10, ModContent.ProjectileType<HomingBlueFire>(), 100 + info.Damage, info.Knockback);
+                        for (int i = 0; i < 5; i++)
+                        {
+                            Projectile.NewProjectile(Item.GetSource_None(), Player.MountedCenter, Main.rand.NextVector2Circular(1, 1).SafeNormalize(Vector2.Zero) * 10, ModContent.ProjectileType<HomingBlueFire>(), 50 + info.Damage, info.Knockback);
+                        }
                     }
                 }
+            }
+
+            if (voidCharm)
+            {
+                if (Main.myPlayer == Player.whoAmI)
+                {
+                    for (int i = 0; i < 4; i++)
+                    {
+                        Projectile.NewProjectile(Player.GetSource_FromAI(), Player.MountedCenter, (Vector2.UnitY * 20).RotatedBy(MathHelper.PiOver2 * i), ModContent.ProjectileType<VoidBomb>(), 250 + info.Damage, info.Knockback);
+                    }
+                }
+            }
+
+            if (voidPendant)
+            {
+                if (paraSigilActiveTimer == false && paraSigilHitTimer > 0)
+                {
+                    paraSigilActiveTimer = true;
+                    if (Main.myPlayer == Player.whoAmI)
+                    {
+                        for (int i = 0; i < 8; i++)
+                        {
+                            Projectile.NewProjectile(Player.GetSource_FromAI(), Player.MountedCenter, (Vector2.UnitY * 20).RotatedBy(MathHelper.PiOver4 * i), ModContent.ProjectileType<VoidBomb>(), 300 + info.Damage, info.Knockback);
+                        }
+                    }
+                }
+            }
+
+            if (oathOfVengeance)
+            {
+                if (oathTimer <= 0)
+                {
+                    Player.AddBuff(BuffID.ParryDamageBuff, 120);
+                    oathTimer = OATH_COOLDOWN;
+                }
+            }
+        }
+
+        public override void PostHurt(Player.HurtInfo info)
+        {
+            if (voidPendant)
+            {
+                Player.AddImmuneTime(info.CooldownCounter, 100);
             }
         }
 

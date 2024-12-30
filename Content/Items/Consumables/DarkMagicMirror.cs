@@ -27,7 +27,7 @@ namespace Paracosm.Content.Items.Consumables
             Item.width = 68;
             Item.height = 68;
             Item.maxStack = 1;
-            Item.rare = ParacosmRarity.Black;
+            Item.rare = ParacosmRarity.DarkGray;
             Item.useAnimation = 121;
             Item.useTime = 121;
             Item.useStyle = ItemUseStyleID.HoldUp;

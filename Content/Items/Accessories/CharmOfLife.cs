@@ -13,6 +13,11 @@ namespace Paracosm.Content.Items.Accessories
 
         public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(maxLifeBoost, lifeRegenBoost);
 
+        public override bool CanAccessoryBeEquippedWith(Item equippedItem, Item incomingItem, Player player)
+        {
+            return incomingItem.type != ItemID.CharmofMyths;
+        }
+
         public override void SetDefaults()
         {
             Item.width = 30;

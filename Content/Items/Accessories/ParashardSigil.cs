@@ -8,12 +8,11 @@ namespace Paracosm.Content.Items.Accessories
 {
     public class ParashardSigil : ModItem
     {
-        static readonly float damageBoost = 10;
-        static readonly float critBoost = 10;
+        static readonly float damageBoost = 8;
+        static readonly float critBoost = 8;
         static readonly float defenseBoost = 10;
-        static readonly float lifeRegenBoost = 2;
 
-        public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(damageBoost, critBoost, defenseBoost, lifeRegenBoost);
+        public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(damageBoost, critBoost, defenseBoost);
 
         public override void SetDefaults()
         {
@@ -23,7 +22,6 @@ namespace Paracosm.Content.Items.Accessories
             Item.value = 50000;
             Item.rare = ItemRarityID.Expert;
             Item.defense = (int)defenseBoost;
-            Item.lifeRegen = (int)lifeRegenBoost;
             Item.expert = true;
         }
 

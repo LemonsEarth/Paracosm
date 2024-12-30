@@ -28,7 +28,7 @@ namespace Paracosm.Content.Items.Weapons.Magic
             Item.useStyle = ItemUseStyleID.Shoot;
             Item.knockBack = 3;
             Item.value = Item.buyPrice(gold: 20);
-            Item.rare = ParacosmRarity.Black;
+            Item.rare = ParacosmRarity.DarkGray;
             Item.UseSound = SoundID.Item8;
             Item.autoReuse = true;
             Item.mana = 12;

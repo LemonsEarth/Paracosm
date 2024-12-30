@@ -131,7 +131,7 @@ namespace Paracosm.Content.Bosses.VortexMothership
             NPC.width = 1124;
             NPC.height = 368;
             NPC.Opacity = 1;
-            NPC.lifeMax = 700000;
+            NPC.lifeMax = 800000;
             NPC.defense = 80;
             NPC.damage = 40;
             NPC.HitSound = SoundID.NPCHit4;

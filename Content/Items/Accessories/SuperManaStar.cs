@@ -16,6 +16,11 @@ namespace Paracosm.Content.Items.Accessories
 
         public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(manaBoost, manaCostReduction);
 
+        public override bool CanAccessoryBeEquippedWith(Item equippedItem, Item incomingItem, Player player)
+        {
+            return incomingItem.type != ItemID.MagnetFlower;
+        }
+
         public override void SetDefaults()
         {
             Item.width = 32;
@@ -39,7 +44,7 @@ namespace Paracosm.Content.Items.Accessories
             recipe.AddIngredient(ItemID.MagnetFlower);
             recipe.AddIngredient(ModContent.ItemType<SolarCore>(), 6);
             recipe.AddIngredient(ModContent.ItemType<PureStardust>(), 8);
-            recipe.AddIngredient(ModContent.ItemType<VoidEssence>(), 10);
+            recipe.AddIngredient(ModContent.ItemType<VoidEssence>(), 30);
             recipe.AddTile(TileID.LunarCraftingStation);
             recipe.Register();
         }

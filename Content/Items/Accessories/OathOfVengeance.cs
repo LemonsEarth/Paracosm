@@ -1,5 +1,4 @@
-﻿using Microsoft.Build.Framework;
-using Paracosm.Common.Players;
+﻿using Paracosm.Common.Players;
 using Paracosm.Content.Items.Materials;
 using Paracosm.Content.Items.Rarities;
 using Terraria;
@@ -9,35 +8,33 @@ using Terraria.ModLoader;
 
 namespace Paracosm.Content.Items.Accessories
 {
-    public class UniversalCoating : ModItem
+    public class OathOfVengeance : ModItem
     {
-        public static readonly float METEOR_VELOCITY = 14f;
-
         public override void SetDefaults()
         {
-            Item.width = 26;
-            Item.height = 32;
+            Item.width = 60;
+            Item.height = 58;
             Item.accessory = true;
-            Item.value = Item.sellPrice(0, 10);
-            Item.rare = ItemRarityID.Red;
+            Item.value = 15000;
+            Item.rare = ParacosmRarity.DarkGray;
         }
 
         public override void UpdateAccessory(Player player, bool hideVisual)
         {
+            player.GetModPlayer<ParacosmPlayer>().secondHand = true;
             player.GetModPlayer<ParacosmPlayer>().starfallCoating = true;
             player.GetModPlayer<ParacosmPlayer>().craterCoating = true;
             player.GetModPlayer<ParacosmPlayer>().spiritCoating = true;
             player.GetModPlayer<ParacosmPlayer>().universalCoating = true;
+            player.GetModPlayer<ParacosmPlayer>().oathOfVengeance = true;
         }
 
         public override void AddRecipes()
         {
             Recipe recipe = CreateRecipe();
-            recipe.AddIngredient(ModContent.ItemType<StarfallCoating>());
-            recipe.AddIngredient(ModContent.ItemType<CraterCoating>());
-            recipe.AddIngredient(ModContent.ItemType<SpiritCoating>());
-            recipe.AddIngredient(ItemID.BeetleHusk, 8);
-            recipe.AddIngredient(ItemID.MeteoriteBar, 20);
+            recipe.AddIngredient(ModContent.ItemType<SecondHand>());
+            recipe.AddIngredient(ModContent.ItemType<UniversalCoating>());
+            recipe.AddIngredient(ModContent.ItemType<VoidEssence>(), 40);
             recipe.AddTile(TileID.TinkerersWorkbench);
             recipe.Register();
         }

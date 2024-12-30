@@ -45,7 +45,7 @@ namespace Paracosm.Content.Items.Accessories
             recipe.AddIngredient(ItemID.PowerGlove);
             recipe.AddIngredient(ItemID.PanicNecklace);
             recipe.AddIngredient(ItemID.SoulofMight, 10);
-            recipe.AddTile(TileID.MythrilAnvil);
+            recipe.AddTile(TileID.TinkerersWorkbench);
             recipe.Register();
         }
     }

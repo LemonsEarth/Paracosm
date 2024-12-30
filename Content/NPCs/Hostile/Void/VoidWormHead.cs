@@ -2,6 +2,7 @@
 using Paracosm.Common.Systems;
 using Paracosm.Content.Biomes.Void;
 using Paracosm.Content.Buffs;
+using Paracosm.Content.Items.Accessories;
 using Paracosm.Content.Items.BossBags;
 using Paracosm.Content.Items.Materials;
 using Paracosm.Content.Projectiles.Hostile;
@@ -136,6 +137,7 @@ namespace Paracosm.Content.NPCs.Hostile.Void
         public override void ModifyNPCLoot(NPCLoot npcLoot)
         {
             npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<VoidEssence>(), minimumDropped: 2, maximumDropped: 6));
+            npcLoot.Add(ItemDropRule.NormalvsExpert(ModContent.ItemType<VoidCharm>(), 10, 5));
         }
 
         public override bool? CanFallThroughPlatforms()

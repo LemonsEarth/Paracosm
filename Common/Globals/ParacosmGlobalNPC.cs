@@ -22,6 +22,7 @@ namespace Paracosm.Common.Globals
         public bool solarBurn = false;
         public bool melting = false;
         public bool darkBleed = false;
+        public bool infected = false;
 
         public override void ResetEffects(NPC npc)
         {
@@ -44,6 +45,20 @@ namespace Paracosm.Common.Globals
                 if (damage < 150)
                 {
                     damage = 150;
+                }
+            }
+
+            if (infected)
+            {
+                if (npc.lifeRegen > 0)
+                {
+                    npc.lifeRegen = 0;
+                }
+
+                npc.lifeRegen -= 350;
+                if (damage < 350)
+                {
+                    damage = 350;
                 }
             }
 
@@ -92,6 +107,11 @@ namespace Paracosm.Common.Globals
             {
                 modifiers.Defense.Base *= 0;
                 Dust.NewDust(npc.position, npc.width, npc.height, DustID.SolarFlare);
+            }
+
+            if (infected)
+            {
+                modifiers.Defense.Base -= 30;
             }
         }
 

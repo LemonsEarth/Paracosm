@@ -10,7 +10,7 @@ namespace Paracosm.Content.Items.Rarities
         public static int LightBlue => ModContent.RarityType<RarityLightBlue>();
         public static int LightGreen => ModContent.RarityType<RarityLightGreen>();
         public static int PinkPurple => ModContent.RarityType<RarityPinkPurple>();
-        public static int Black => ModContent.RarityType<RarityBlack>();
+        public static int DarkGray => ModContent.RarityType<DarkGray>();
     }
 
     public class RarityOrange : ModRarity
@@ -53,9 +53,9 @@ namespace Paracosm.Content.Items.Rarities
         }
     }
 
-    public class RarityBlack : ModRarity
+    public class DarkGray : ModRarity
     {
-        public override Color RarityColor => new Color(0, 0, 0);
+        public override Color RarityColor => new Color(50, 50, 50);
 
         public override int GetPrefixedRarity(int offset, float valueMult)
         {
