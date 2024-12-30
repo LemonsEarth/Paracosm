@@ -1,7 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Paracosm.Content.Buffs;
 using Terraria;
-using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Paracosm.Content.Projectiles.Friendly
@@ -27,6 +26,7 @@ namespace Paracosm.Content.Projectiles.Friendly
             Projectile.usesLocalNPCImmunity = true;
             Projectile.localNPCHitCooldown = -1;
             Projectile.penetrate = -1;
+            Projectile.DamageType = DamageClass.Generic;
         }
 
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)

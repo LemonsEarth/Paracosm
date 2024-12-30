@@ -6,7 +6,6 @@ using Paracosm.Content.Biomes.Void;
 using Paracosm.Content.Buffs;
 using Paracosm.Content.Buffs.Cooldowns;
 using Paracosm.Content.Items.Accessories;
-using Paracosm.Content.Items.Consumables;
 using Paracosm.Content.Projectiles.Friendly;
 using Terraria;
 using Terraria.Graphics.Shaders;
@@ -43,6 +42,8 @@ namespace Paracosm.Common.Players
         public bool commandersWill = false;
         public bool secondHand = false;
         public bool oathOfVengeance = false;
+        public bool steelSight = false;
+        public bool organicSight = false;
         public int sentryCount = 0;
 
         int oathTimer = 0;
@@ -89,6 +90,8 @@ namespace Paracosm.Common.Players
             sentryCount = 0;
             secondHand = false;
             oathOfVengeance = false;
+            steelSight = false;
+            organicSight = false;
 
             paracosmicHelmetBuff = false;
             paracosmicGogglesBuff = false;
@@ -243,6 +246,31 @@ namespace Paracosm.Common.Players
                 }
 
                 hitTimer = HIT_TIMER_CD;
+            }
+
+            if (Main.myPlayer == Player.whoAmI)
+            {
+                if (steelSight)
+                {
+                    if (hit.Crit && hit.DamageType.CountsAsClass(DamageClass.Ranged) && Main.rand.Next(0, 8) == 1)
+                    {
+                        Projectile.NewProjectile(Player.GetSource_FromAI(), Player.Center, Player.Center.DirectionTo(Main.MouseWorld) * 20, proj.type, proj.damage / 3, proj.knockBack, ai0: proj.ai[0], ai1: proj.ai[1], ai2: proj.ai[2]);
+                    }
+                }
+                if (organicSight)
+                {
+                    if (hit.Crit && hit.DamageType.CountsAsClass(DamageClass.Ranged))
+                    {
+                        if (Main.rand.Next(0, 4) == 1)
+                        {
+                            Projectile.NewProjectile(Player.GetSource_FromAI(), Player.Center, Player.Center.DirectionTo(Main.MouseWorld) * 22, proj.type, proj.damage / 2, proj.knockBack, ai0: proj.ai[0], ai1: proj.ai[1], ai2: proj.ai[2]);
+                        }
+                        if (Main.rand.Next(0, 25) == 1)
+                        {
+                            Player.Heal(3);
+                        }
+                    }
+                }
             }
         }
 

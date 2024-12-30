@@ -1,7 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Paracosm.Content.Items.Materials;
 using Paracosm.Content.Items.Rarities;
-using Paracosm.Content.Projectiles.Friendly;
 using Paracosm.Content.Projectiles.HeldProjectiles;
 using Terraria;
 using Terraria.DataStructures;

@@ -1,12 +1,10 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Paracosm.Content.Biomes.Void;
 using Paracosm.Content.Items.Materials;
 using Paracosm.Content.Projectiles.Hostile;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.Audio;
-using Terraria.GameContent;
 using Terraria.GameContent.Bestiary;
 using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
@@ -110,7 +108,6 @@ namespace Paracosm.Content.NPCs.Hostile.Void
             {
                 NetMessage.SendData(MessageID.SyncNPC, number: npc.whoAmI);
             }
-
         }
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo)

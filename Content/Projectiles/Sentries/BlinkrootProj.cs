@@ -1,10 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Paracosm.Common.Utils;
 using System;
 using Terraria;
 using Terraria.Audio;
-using Terraria.GameContent;
 using Terraria.Graphics.Shaders;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -77,7 +75,7 @@ namespace Paracosm.Content.Projectiles.Sentries
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, shader.Shader, Main.GameViewMatrix.TransformationMatrix);
             shader.Shader.Parameters["time"].SetValue(AITimer / 60f);
-            shader.Shader.Parameters["color"].SetValue((Color.Yellow with { A = 10}).ToVector4());
+            shader.Shader.Parameters["color"].SetValue((Color.Yellow with { A = 10 }).ToVector4());
             shader.Apply();
             Main.EntitySpriteDraw(texture, Projectile.Center - Main.screenPosition, null, Color.White, Projectile.rotation, drawOrigin, Projectile.scale, SpriteEffects.None, 0);
             Main.spriteBatch.End();

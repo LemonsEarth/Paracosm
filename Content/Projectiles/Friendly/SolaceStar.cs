@@ -28,6 +28,7 @@ namespace Paracosm.Content.Projectiles.Friendly
             Projectile.timeLeft = 240;
             Projectile.penetrate = 10;
             Projectile.alpha = 255;
+            Projectile.DamageType = DamageClass.Melee;
         }
 
         public override void AI()

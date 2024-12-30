@@ -1,6 +1,4 @@
-﻿using Paracosm.Common.Players;
-using Terraria;
-using Terraria.ModLoader;
+﻿using Terraria.ModLoader;
 
 namespace Paracosm.Content.Buffs.Cooldowns
 {

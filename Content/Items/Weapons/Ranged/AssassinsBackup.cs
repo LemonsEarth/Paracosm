@@ -1,5 +1,4 @@
 ﻿using Microsoft.Xna.Framework;
-using Paracosm.Content.Items.Materials;
 using Paracosm.Content.Projectiles.Friendly;
 using Terraria;
 using Terraria.DataStructures;

@@ -1,5 +1,4 @@
-﻿using Microsoft.Build.Framework;
-using Paracosm.Common.Players;
+﻿using Paracosm.Common.Players;
 using Paracosm.Content.Items.Materials;
 using Paracosm.Content.Items.Rarities;
 using Terraria;

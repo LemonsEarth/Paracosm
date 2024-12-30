@@ -1,10 +1,10 @@
-﻿using Paracosm.Common.Players;
+﻿using Microsoft.Xna.Framework;
+using Paracosm.Common.Players;
+using Paracosm.Content.Buffs.Cooldowns;
+using Paracosm.Content.Projectiles.Friendly;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Microsoft.Xna.Framework;
-using Paracosm.Content.Projectiles.Friendly;
-using Paracosm.Content.Buffs.Cooldowns;
 
 namespace Paracosm.Common.Globals
 {

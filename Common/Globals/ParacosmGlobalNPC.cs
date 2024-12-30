@@ -128,8 +128,8 @@ namespace Paracosm.Common.Globals
         {
             if (player.InModBiome<VoidLow>())
             {
-                spawnRate *= 10;
-                maxSpawns = 1;
+                spawnRate *= 5;
+                maxSpawns = 5;
             }
 
             if (player.InModBiome<VoidMid>())
@@ -158,6 +158,7 @@ namespace Paracosm.Common.Globals
             if (spawnInfo.Player.InModBiome<VoidLow>())
             {
                 pool.Clear();
+                pool.Add(ModContent.NPCType<VoidPlayer>(), 0.02f);
                 pool.Add(ModContent.NPCType<VoidWormHead>(), 0.005f);
             }
         }

@@ -2,7 +2,6 @@
 using Paracosm.Common.Utils;
 using Terraria;
 using Terraria.Audio;
-using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -27,12 +26,7 @@ namespace Paracosm.Content.Projectiles.Friendly
             Projectile.ignoreWater = true;
             Projectile.tileCollide = true;
             Projectile.timeLeft = 240;
-
-        }
-
-        public override void OnSpawn(IEntitySource source)
-        {
-
+            Projectile.DamageType = DamageClass.Generic;
         }
 
         public override void AI()

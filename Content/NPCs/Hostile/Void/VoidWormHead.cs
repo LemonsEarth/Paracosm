@@ -1,15 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
-using Paracosm.Common.Systems;
 using Paracosm.Content.Biomes.Void;
-using Paracosm.Content.Buffs;
 using Paracosm.Content.Items.Accessories;
-using Paracosm.Content.Items.BossBags;
 using Paracosm.Content.Items.Materials;
-using Paracosm.Content.Projectiles.Hostile;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using Terraria;
 using Terraria.Audio;
 using Terraria.GameContent.Bestiary;
@@ -127,7 +121,7 @@ namespace Paracosm.Content.NPCs.Hostile.Void
             return latestNPC;
         }
 
-       
+
         void PlayRoar(float volume = 1f)
         {
             SoundEngine.PlaySound(SoundID.DD2_BetsyDeath with { Volume = volume, PitchRange = (-0.4f, 0.8f) });

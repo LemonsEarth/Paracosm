@@ -22,7 +22,7 @@ namespace Paracosm.Content.Projectiles.Sentries
             Projectile.DamageType = DamageClass.Summon;
             Projectile.timeLeft = 180;
             Projectile.tileCollide = false;
-            
+
             Projectile.friendly = true;
         }
 

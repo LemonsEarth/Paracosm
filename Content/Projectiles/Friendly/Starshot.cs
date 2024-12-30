@@ -2,7 +2,6 @@
 using Microsoft.Xna.Framework.Graphics;
 using Paracosm.Common.Utils;
 using Terraria;
-using Terraria.Audio;
 using Terraria.DataStructures;
 using Terraria.GameContent;
 using Terraria.ID;

@@ -1,7 +1,6 @@
 ﻿using Paracosm.Common.Players;
 using Terraria;
 using Terraria.ID;
-using Terraria.Localization;
 using Terraria.ModLoader;
 
 namespace Paracosm.Content.Items.Accessories

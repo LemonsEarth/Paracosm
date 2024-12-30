@@ -1,5 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using Paracosm.Common.Utils;
+﻿using Paracosm.Common.Utils;
 using Paracosm.Content.Items.Accessories;
 using StructureHelper;
 using Terraria;
@@ -7,7 +6,6 @@ using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.IO;
 using Terraria.ModLoader;
-using Terraria.Utilities;
 using Terraria.WorldBuilding;
 
 namespace Paracosm.Content.Subworlds
@@ -97,7 +95,7 @@ namespace Paracosm.Content.Subworlds
                         Generator.GenerateMultistructureRandom("Content/Structures/VoidStructures", new Point16(x, y), Paracosm.Instance);
                     }
                 }
-            }      
+            }
         }
     }
 
@@ -126,7 +124,7 @@ namespace Paracosm.Content.Subworlds
                         continue;
                     }
                     chest.item[inventoryIndex].SetDefaults(LemonUtils.GetRandomItemID());
-                    if(chest.item[inventoryIndex].maxStack > 1)
+                    if (chest.item[inventoryIndex].maxStack > 1)
                     {
                         chest.item[inventoryIndex].stack = Main.rand.Next(24, 87);
                     }

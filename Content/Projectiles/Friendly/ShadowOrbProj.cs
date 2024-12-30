@@ -23,7 +23,6 @@ namespace Paracosm.Content.Projectiles.Friendly
             Projectile.height = 26;
             Projectile.penetrate = 1;
             Projectile.tileCollide = true;
-            
             Projectile.friendly = true;
             Projectile.hostile = false;
             Projectile.timeLeft = 60;

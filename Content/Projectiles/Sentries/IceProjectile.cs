@@ -1,5 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using Paracosm.Common.Utils;
+﻿using Paracosm.Common.Utils;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;

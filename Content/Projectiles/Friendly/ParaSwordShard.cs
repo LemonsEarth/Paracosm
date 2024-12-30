@@ -22,7 +22,6 @@ namespace Paracosm.Content.Projectiles.Friendly
             Projectile.width = 20;
             Projectile.height = 20;
             Projectile.timeLeft = 180;
-            
             Projectile.friendly = true;
             Projectile.penetrate = 1;
             Projectile.DamageType = DamageClass.Melee;

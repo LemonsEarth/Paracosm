@@ -2,7 +2,6 @@
 using Paracosm.Content.Items.Materials;
 using Paracosm.Content.Items.Rarities;
 using Paracosm.Content.Projectiles.Friendly;
-using Paracosm.Content.Projectiles.Minions;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;

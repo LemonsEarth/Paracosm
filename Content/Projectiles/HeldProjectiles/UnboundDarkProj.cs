@@ -1,11 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Paracosm.Common.Utils;
-using Paracosm.Content.Buffs;
 using Paracosm.Content.Projectiles.Friendly;
 using System;
 using Terraria;
-using Terraria.Audio;
 using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -53,7 +50,7 @@ namespace Paracosm.Content.Projectiles.HeldProjectiles
             if (AITimer == 0)
             {
                 Projectile.Opacity = 0f;
-               playerToMouse = player.Center.DirectionTo(new Vector2(MousePosX, MousePosY));
+                playerToMouse = player.Center.DirectionTo(new Vector2(MousePosX, MousePosY));
             }
             Vector2 offset = playerToMouse.RotatedBy(-rotDirection * MathHelper.PiOver2) * (122 / 2); // root(2 * 86^2)
             float rot = rotDirection * AITimer * (9 * player.GetAttackSpeed(DamageClass.Melee) * rotMul) * timeMul;

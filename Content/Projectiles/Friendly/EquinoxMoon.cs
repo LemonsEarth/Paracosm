@@ -1,12 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Paracosm.Common.Utils;
-using System;
 using Terraria;
 using Terraria.Audio;
 using Terraria.DataStructures;
-using Terraria.GameContent;
-using Terraria.Graphics.Shaders;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -77,7 +74,7 @@ namespace Paracosm.Content.Projectiles.Friendly
                     player.CheckMana(30, true, true);
                     Vector2 mouseDir = player.Center.DirectionTo(Main.MouseWorld);
                     Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, mouseDir * 4, ModContent.ProjectileType<EquinoxMoonProj>(), Projectile.damage, 4f, ai0: 30f);
-                }                
+                }
             }
 
             if (player.channel)
@@ -123,7 +120,7 @@ namespace Paracosm.Content.Projectiles.Friendly
 
         public override void OnKill(int timeLeft)
         {
-            SoundEngine.PlaySound(SoundID.Item90 with { PitchRange = (0.2f, 0.5f)});
+            SoundEngine.PlaySound(SoundID.Item90 with { PitchRange = (0.2f, 0.5f) });
             LemonUtils.DustCircle(Projectile.Center, 16, 10, DustID.GemDiamond, 1.5f);
         }
 

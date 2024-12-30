@@ -21,7 +21,7 @@ namespace Paracosm.Content.Projectiles.Friendly
             Projectile.penetrate = 3;
             Projectile.DamageType = DamageClass.Magic;
             Projectile.tileCollide = false;
-            
+
             Projectile.timeLeft = 120;
         }
 

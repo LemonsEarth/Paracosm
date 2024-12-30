@@ -1,6 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using Paracosm.Common.Utils;
-using Paracosm.Content.Buffs;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
@@ -30,6 +29,7 @@ namespace Paracosm.Content.Projectiles.Friendly
             Projectile.timeLeft = 180;
             Projectile.penetrate = 1;
             Projectile.tileCollide = false;
+            Projectile.DamageType = DamageClass.Magic;
         }
 
         public override void AI()

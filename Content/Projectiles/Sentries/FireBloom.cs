@@ -21,7 +21,7 @@ namespace Paracosm.Content.Projectiles.Sentries
             Projectile.penetrate = -1;
             Projectile.DamageType = DamageClass.Summon;
             Projectile.tileCollide = true;
-            
+
             Projectile.timeLeft = Projectile.SentryLifeTime;
             Projectile.friendly = false;
             Projectile.sentry = true;

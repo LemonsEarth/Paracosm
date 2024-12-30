@@ -21,7 +21,7 @@ namespace Paracosm.Content.Projectiles.Friendly
             Projectile.penetrate = 1;
             Projectile.DamageType = DamageClass.Melee;
             Projectile.tileCollide = false;
-            
+
             Projectile.friendly = true;
             Projectile.timeLeft = 180;
             DrawOriginOffsetY = 16;

@@ -1,10 +1,8 @@
-﻿using Microsoft.Build.Framework;
-using Paracosm.Common.Players;
+﻿using Paracosm.Common.Players;
 using Paracosm.Content.Items.Materials;
 using Paracosm.Content.Items.Rarities;
 using Terraria;
 using Terraria.ID;
-using Terraria.Localization;
 using Terraria.ModLoader;
 
 namespace Paracosm.Content.Items.Accessories

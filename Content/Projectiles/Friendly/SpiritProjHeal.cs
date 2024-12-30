@@ -1,5 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using Paracosm.Common.Utils;
+﻿using Paracosm.Common.Utils;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
@@ -46,7 +45,7 @@ namespace Paracosm.Content.Projectiles.Friendly
                     {
                         owner.Heal(5);
                         Projectile.Kill();
-                    }    
+                    }
                 }
             }
             else
@@ -79,7 +78,7 @@ namespace Paracosm.Content.Projectiles.Friendly
 
         public override void OnKill(int timeLeft)
         {
-            SoundEngine.PlaySound(SoundID.NPCHit36 with { PitchRange = (-0.3f, 0.3f), Volume = 0.5f}, Projectile.position);
+            SoundEngine.PlaySound(SoundID.NPCHit36 with { PitchRange = (-0.3f, 0.3f), Volume = 0.5f }, Projectile.position);
             LemonUtils.DustCircle(Projectile.Center, 16, 5, DustID.GemDiamond);
         }
     }

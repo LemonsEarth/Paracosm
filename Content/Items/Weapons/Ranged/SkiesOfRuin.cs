@@ -59,7 +59,7 @@ namespace Paracosm.Content.Items.Weapons.Ranged
                         Projectile.NewProjectile(source, pos, (Main.MouseWorld - pos).SafeNormalize(Vector2.Zero) * ((Item.shootSpeed * 2) / j), proj, damage * 2, knockback, ai0: 90);
                     }
                 }
-                
+
                 useCounter = 0;
             }
 

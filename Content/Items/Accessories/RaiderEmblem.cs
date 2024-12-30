@@ -1,6 +1,5 @@
 ﻿using Paracosm.Content.Items.Rarities;
 using Terraria;
-using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
 

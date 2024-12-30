@@ -28,6 +28,7 @@ namespace Paracosm.Content.Projectiles.Friendly
             Projectile.tileCollide = false;
             Projectile.timeLeft = 480;
             Projectile.alpha = 255;
+            Projectile.DamageType = DamageClass.Summon;
         }
 
         public override void AI()

@@ -1,8 +1,4 @@
-﻿using Paracosm.Content.Bosses.SolarChampion;
-using Paracosm.Content.Items.Materials;
-using Paracosm.Content.Items.Rarities;
-using Terraria;
-using Terraria.Audio;
+﻿using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -33,7 +29,7 @@ namespace Paracosm.Content.Items.Consumables
         }
 
         public override bool? UseItem(Player player)
-        {   
+        {
             if (player.whoAmI == Main.myPlayer)
             {
                 if (player.statLife > 20) player.statLife -= 20;

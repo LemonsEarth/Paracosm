@@ -1,6 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using Terraria.ModLoader;
-using Terraria;
 
 namespace Paracosm.Content.Items.Rarities
 {

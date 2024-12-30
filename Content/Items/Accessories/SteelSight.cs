@@ -1,24 +1,24 @@
 ﻿using Paracosm.Common.Players;
-using Paracosm.Content.Items.Rarities;
 using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Paracosm.Content.Items.Accessories
 {
-    public class VoidCharm : ModItem
+    public class SteelSight : ModItem
     {
         public override void SetDefaults()
         {
-            Item.width = 22;
-            Item.height = 32;
+            Item.width = 24;
+            Item.height = 24;
             Item.accessory = true;
-            Item.value = Item.sellPrice(0, 8);
-            Item.rare = ParacosmRarity.DarkGray;
+            Item.value = Item.buyPrice(0, 10);
+            Item.rare = ItemRarityID.Green;
         }
 
         public override void UpdateAccessory(Player player, bool hideVisual)
         {
-            player.GetModPlayer<ParacosmPlayer>().voidCharm = true;
+            player.GetModPlayer<ParacosmPlayer>().steelSight = true;
         }
     }
 }

@@ -30,6 +30,7 @@ namespace Paracosm.Content.Projectiles.Friendly
             Projectile.penetrate = -1;
             Projectile.usesLocalNPCImmunity = true;
             Projectile.localNPCHitCooldown = 10;
+            Projectile.DamageType = DamageClass.Melee;
         }
 
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)

@@ -13,7 +13,6 @@ using System.IO;
 using System.Linq;
 using Terraria;
 using Terraria.Audio;
-using Terraria.Chat;
 using Terraria.GameContent.Bestiary;
 using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
@@ -219,7 +218,7 @@ namespace Paracosm.Content.Bosses.NebulaMaster
             if (AITimer == 0)
             {
                 NPC.Opacity = 0;
-            } 
+            }
 
             Lighting.AddLight(NPC.Center, 100, 100, 100);
 
@@ -919,7 +918,7 @@ namespace Paracosm.Content.Bosses.NebulaMaster
 
                 int index = PopupText.NewText(message, NPC.Center + -Vector2.UnitY * NPC.height / 2);
                 Main.popupText[index].scale = 2f;
-            }     
+            }
         }
 
         public override bool CheckActive()

@@ -3,9 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Paracosm.Common.Utils;
 using System.IO;
 using Terraria;
-using Terraria.Audio;
 using Terraria.DataStructures;
-using Terraria.GameContent;
 using Terraria.Graphics.Shaders;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -17,7 +15,7 @@ namespace Paracosm.Content.Projectiles.Friendly
         ref float AITimer => ref Projectile.ai[0];
         ref float speed => ref Projectile.ai[1];
         NPC closestNPC;
-        Color[] glowColors = { new Color(1f, 1f, 0.1f), Color.White, new Color(1f, 0.2f, 1f), new Color(0.1f, 1f, 1f)};
+        Color[] glowColors = { new Color(1f, 1f, 0.1f), Color.White, new Color(1f, 0.2f, 1f), new Color(0.1f, 1f, 1f) };
         Color glowColor = Color.White;
 
         public override void SetDefaults()

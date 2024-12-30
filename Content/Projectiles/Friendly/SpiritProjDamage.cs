@@ -30,6 +30,7 @@ namespace Paracosm.Content.Projectiles.Friendly
             Projectile.penetrate = 1;
             Projectile.usesLocalNPCImmunity = true;
             Projectile.localNPCHitCooldown = 30;
+            Projectile.DamageType = DamageClass.Melee;
         }
 
         public override void AI()

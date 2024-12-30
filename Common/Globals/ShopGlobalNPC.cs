@@ -1,4 +1,5 @@
 ﻿using Paracosm.Content.Items.Accessories;
+using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -11,6 +12,10 @@ namespace Paracosm.Common.Globals
             if (shop.NpcType == NPCID.Merchant)
             {
                 shop.Add(ModContent.ItemType<SunCoin>());
+            }
+            if (shop.NpcType == NPCID.ArmsDealer)
+            {
+                shop.Add(ModContent.ItemType<SteelSight>(), Condition.DownedDeerclops);
             }
         }
     }

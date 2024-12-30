@@ -1,9 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using System.IO;
 using Terraria;
+using Terraria.Graphics.Effects;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Terraria.Graphics.Effects;
 
 namespace Paracosm.Content.Bosses.StardustLeviathan
 {

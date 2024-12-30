@@ -1,5 +1,4 @@
-﻿using Paracosm.Content.Bosses.NebulaMaster;
-using Paracosm.Content.Bosses.StardustLeviathan;
+﻿using Paracosm.Content.Bosses.StardustLeviathan;
 using Paracosm.Content.Items.Materials;
 using Paracosm.Content.Items.Rarities;
 using Terraria;

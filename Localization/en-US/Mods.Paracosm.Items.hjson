@@ -868,3 +868,26 @@ OathOfVengeance: {
 		This effect has a 20 second cooldown
 		'''
 }
+
+FadedFates: {
+	DisplayName: Faded Fates
+	Tooltip: Throw a knife that splits into homing knives
+}
+
+SteelSight: {
+	DisplayName: Steel Sight
+	Tooltip:
+		'''
+		Landing ranged critical hits have a small chance to spawn aditional, weaker projectiles
+		"The big eye of that furry beast may prove useful after all..."
+		'''
+}
+
+OrganicSight: {
+	DisplayName: Organic Sight
+	Tooltip:
+		'''
+		Landing ranged critical hits have a slightly higher chance to spawn aditional, weaker projectiles and steal life
+		If the accessory is not hidden, a line of red dust will appear between the player and their cursor
+		'''
+}

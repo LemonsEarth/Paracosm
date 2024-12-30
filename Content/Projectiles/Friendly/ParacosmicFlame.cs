@@ -28,6 +28,7 @@ namespace Paracosm.Content.Projectiles.Friendly
             Projectile.penetrate = 10;
             Projectile.usesLocalNPCImmunity = true;
             Projectile.localNPCHitCooldown = 60;
+            Projectile.DamageType = DamageClass.Ranged;
         }
 
         public override void OnSpawn(IEntitySource source)

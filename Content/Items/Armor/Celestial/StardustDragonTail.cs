@@ -1,5 +1,4 @@
 ﻿using Paracosm.Common.Players;
-using Paracosm.Content.Items.Materials;
 using Terraria;
 using Terraria.ID;
 using Terraria.Localization;
@@ -43,7 +42,7 @@ namespace Paracosm.Content.Items.Armor.Celestial
         }
 
         public override void UpdateEquip(Player player)
-        {     
+        {
             player.moveSpeed += moveSpeedBoost / 100;
             player.GetDamage(DamageClass.Summon) += damageBoost / 100f;
             player.whipRangeMultiplier += whipRangeBoost / 100f;

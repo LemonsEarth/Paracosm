@@ -45,7 +45,7 @@ namespace Paracosm.Content.Projectiles.HeldProjectiles
             Projectile.height = 80;
             Projectile.damage = 50;
             Projectile.timeLeft = 120;
-            
+
             Projectile.hide = true;
             Projectile.friendly = true;
             Projectile.penetrate = -1;
