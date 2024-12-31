@@ -676,7 +676,7 @@ VoidcoreStaff: {
 	Tooltip:
 		'''
 		Fires 4 Shadow Orbs around your cursor
-		Each orb fires a tiny eater, with a 25% chance to fire an Archmage projectile
+		Each orb fires a tiny eater, with a 25% chance to fire an Archmage bolt
 		'''
 	DisplayName: Voidcore Staff
 }
@@ -762,6 +762,7 @@ CommandersWill: {
 		{2}% decreased non-summon damage
 		{$CommonItemTooltip.PercentIncreasedMovementSpeed@3}
 		Your sentries will follow you, but get massively reduced lifetime
+		Reduces max minions by {4}
 		'''
 }
 
@@ -890,4 +891,19 @@ OrganicSight: {
 		Landing ranged critical hits have a slightly higher chance to spawn aditional, weaker projectiles and steal life
 		If the accessory is not hidden, a line of red dust will appear between the player and their cursor
 		'''
+}
+
+MasterEmblem: {
+	Tooltip:
+		'''
+		{$CommonItemTooltip.PercentIncreasedDamage}
+		{$CommonItemTooltip.PercentIncreasedCritChance@1}
+		{$CommonItemTooltip.IncreasesMaxManaBy@2}
+		{$CommonItemTooltip.IncreasesMaxMinionsBy@3}
+		{$CommonItemTooltip.IncreasesMaxSentriesBy@4}
+		Don't get hit.
+		"Those who stand at the top are always looked at by others..."
+		"...That way, everyone can see when they fall."
+		'''
+	DisplayName: Master Emblem
 }

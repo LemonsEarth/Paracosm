@@ -31,6 +31,7 @@ namespace Paracosm.Common.Players
         public bool voidHeart = false;
         public bool voidCharm = false;
         public bool voidPendant = false;
+        public bool masterEmblem = false;
         public bool parashardSigil = false;
         float paraSigilHitTimer = 120;
         bool paraSigilActiveTimer = false;
@@ -62,6 +63,8 @@ namespace Paracosm.Common.Players
         public bool solarBurn = false;
         public bool melting = false;
         public bool vortexForce = false;
+        public bool voidTerror = false;
+        int voidTerrorTimer = 0;
 
         public override void ResetEffects()
         {
@@ -92,6 +95,7 @@ namespace Paracosm.Common.Players
             oathOfVengeance = false;
             steelSight = false;
             organicSight = false;
+            masterEmblem = false;
 
             paracosmicHelmetBuff = false;
             paracosmicGogglesBuff = false;
@@ -103,6 +107,7 @@ namespace Paracosm.Common.Players
             solarBurn = false;
             melting = false;
             vortexForce = false;
+            voidTerror = false;
         }
 
         public override void GetHealLife(Item item, bool quickHeal, ref int healValue)
@@ -364,13 +369,35 @@ namespace Paracosm.Common.Players
                     }
                     LemonUtils.DustCircle(Player.Center, 16, 5, DustID.SolarFlare, Main.rand.NextFloat(0.8f, 1.2f));
                 }
+            }
 
-                if (oathOfVengeance)
+            if (oathOfVengeance)
+            {
+                if (oathTimer > 0)
                 {
-                    if (oathTimer > 0)
-                    {
-                        oathTimer--;
-                    }
+                    oathTimer--;
+                }
+            }
+
+            if (voidTerror)
+            {
+                Dust.NewDust(Player.position, Player.width, Player.height, DustID.SolarFlare, newColor: Color.Black);
+                if (Main.rand.Next(0, 250) == 1)
+                {
+                    int randDebuff = Main.rand.NextFromList(20, 22, 23, 24, 31, 32, 33, 35, 36, 37, 38, 39, 46, 47, 67, 68, 69, 70, 80, 144, 149, 153, 156, 195, 196, 197,
+                                                            ModContent.BuffType<SolarBurn>(), ModContent.BuffType<ParacosmicBurn>(), ModContent.BuffType<MeltingDebuff>());
+                    Player.AddBuff(randDebuff, 120); 
+                }
+
+                if (!Player.HasBuff(BuffID.PotionSickness) && Main.rand.Next(0, 300) == 1) // Separate chance to inflict potion sickness
+                {
+                    Player.AddBuff(BuffID.PotionSickness, 600);
+                }
+
+                if (Main.rand.Next(0, 300) == 1) // Chance to remove minions and sentries
+                {
+                    Player.maxTurrets = 0;
+                    Player.maxMinions = 0;
                 }
             }
 
@@ -515,6 +542,21 @@ namespace Paracosm.Common.Players
                     Terraria.Graphics.Effects.Filters.Scene["Paracosm:ScreenTintShader"].GetShader().UseProgress(1);
                 }
             }
+
+            if (voidTerror)
+            {
+                if (voidTerrorTimer < 95)
+                {
+                    voidTerrorTimer++;
+                }
+                ScreenShaderData shader = Terraria.Graphics.Effects.Filters.Scene.Activate("Paracosm:DarknessShader").GetShader();
+                shader.Shader.Parameters["distance"].SetValue(1 - (voidTerrorTimer / 100f));
+                shader.Shader.Parameters["maxGlow"].SetValue(1f);
+            }
+            else
+            {
+                voidTerrorTimer = 0;
+            }
         }
 
         public override void OnHurt(Player.HurtInfo info)
@@ -566,6 +608,14 @@ namespace Paracosm.Common.Players
                 {
                     Player.AddBuff(BuffID.ParryDamageBuff, 120);
                     oathTimer = OATH_COOLDOWN;
+                }
+            }
+
+            if (masterEmblem && Main.myPlayer == Player.whoAmI)
+            {
+                if (Main.rand.Next(0, 2) == 1 && !voidTerror)
+                {
+                    Player.AddBuff(ModContent.BuffType<VoidTerrorDebuff>(), 600);
                 }
             }
         }

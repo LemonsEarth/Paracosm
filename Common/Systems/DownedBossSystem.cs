@@ -13,6 +13,7 @@ namespace Paracosm.Common.Systems
         public static bool downedVortexMothership = false;
         public static bool downedNebulaMaster = false;
         public static bool downedStardustLeviathan = false;
+        public static bool downedTheNameless = false;
 
         public override void ClearWorld()
         {
@@ -22,6 +23,7 @@ namespace Paracosm.Common.Systems
             downedVortexMothership = false;
             downedNebulaMaster = false;
             downedStardustLeviathan = false;
+            downedTheNameless = false;
         }
 
 
@@ -51,6 +53,10 @@ namespace Paracosm.Common.Systems
             {
                 tag["downedStardustLeviathan"] = true;
             }
+            if (downedStardustLeviathan)
+            {
+                tag["downedTheNameless"] = true;
+            }
         }
 
         public override void LoadWorldData(TagCompound tag)
@@ -61,6 +67,7 @@ namespace Paracosm.Common.Systems
             downedVortexMothership = tag.ContainsKey("downedVortexMothership");
             downedNebulaMaster = tag.ContainsKey("downedNebulaMaster");
             downedStardustLeviathan = tag.ContainsKey("downedStardustLeviathan");
+            downedTheNameless = tag.ContainsKey("downedTheNameless");
         }
 
         public override void NetSend(BinaryWriter writer)
@@ -72,6 +79,7 @@ namespace Paracosm.Common.Systems
             flags[3] = downedVortexMothership;
             flags[4] = downedNebulaMaster;
             flags[5] = downedStardustLeviathan;
+            flags[6] = downedTheNameless;
             writer.Write(flags);
         }
 
@@ -84,6 +92,7 @@ namespace Paracosm.Common.Systems
             downedVortexMothership = flags[3];
             downedNebulaMaster = flags[4];
             downedStardustLeviathan = flags[5];
+            downedTheNameless = flags[6];
         }
     }
 }

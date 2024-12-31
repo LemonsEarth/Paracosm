@@ -94,3 +94,8 @@ BranchedOfLifedBuff: {
 	DisplayName: Power of the Jungle
 	Description: Increased damage, critical strike chance and life regeneration
 }
+
+VoidTerrorDebuff: {
+	Description: Mods.Paracosm.Buffs.VoidTerrorDebuff.Description
+	DisplayName: Void Terror Debuff
+}

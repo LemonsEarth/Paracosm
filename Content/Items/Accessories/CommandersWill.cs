@@ -10,11 +10,12 @@ namespace Paracosm.Content.Items.Accessories
     public class CommandersWill : ModItem
     {
         static readonly int sentryBoost = 4;
+        static readonly int minionUnBoost = 2;
         static readonly float summonDamageBoost = 12;
         static readonly float nonSummonDamageDecrease = 20;
         static readonly float moveSpeedBoost = 16;
 
-        public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(sentryBoost, summonDamageBoost, nonSummonDamageDecrease, moveSpeedBoost);
+        public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(sentryBoost, summonDamageBoost, nonSummonDamageDecrease, moveSpeedBoost, minionUnBoost);
 
         public override void SetDefaults()
         {
@@ -29,6 +30,7 @@ namespace Paracosm.Content.Items.Accessories
         {
             player.GetModPlayer<ParacosmPlayer>().commandersWill = true;
             player.maxTurrets += sentryBoost;
+            player.maxMinions -= minionUnBoost;
             player.GetDamage(DamageClass.Summon) += summonDamageBoost / 100;
             player.GetDamage(DamageClass.Melee) -= nonSummonDamageDecrease / 100;
             player.GetDamage(DamageClass.Ranged) -= nonSummonDamageDecrease / 100;

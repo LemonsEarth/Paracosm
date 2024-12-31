@@ -10,7 +10,7 @@ using Terraria.ModLoader;
 
 namespace Paracosm.Content.Projectiles.Hostile
 {
-    public class StardustShot : ModProjectile
+    public class VoidSpearHostile : ModProjectile
     {
         ref float AITimer => ref Projectile.ai[0];
         bool DoIndicators
@@ -22,31 +22,31 @@ namespace Paracosm.Content.Projectiles.Hostile
             }
         }
 
-        public Color glowColor = new Color(1f, 1f, 1f, 1f); // values 0f to 1f;
-
         public override void SetStaticDefaults()
         {
             ProjectileID.Sets.TrailCacheLength[Projectile.type] = 8;
             ProjectileID.Sets.TrailingMode[Projectile.type] = 2;
-            Main.projFrames[Type] = 3;
+            Main.projFrames[Type] = 1;
         }
 
         public override void SetDefaults()
         {
-            Projectile.width = 14;
-            Projectile.height = 14;
+            Projectile.width = 66;
+            Projectile.height = 66;
             Projectile.friendly = false;
             Projectile.hostile = true;
             Projectile.timeLeft = 360;
             Projectile.tileCollide = false;
-            Projectile.penetrate = 2;
+            Projectile.penetrate = -1;
             Projectile.alpha = 255;
             Projectile.light = 1f;
+            DrawOffsetX = -75;
+            DrawOriginOffsetX = 30;
         }
 
         public override void OnSpawn(IEntitySource source)
         {
-            LemonUtils.DustCircle(Projectile.Center, 16, 2, DustID.YellowTorch);
+            LemonUtils.DustCircle(Projectile.Center, 16, 2, DustID.Granite);
         }
 
         public override void AI()
@@ -59,7 +59,7 @@ namespace Paracosm.Content.Projectiles.Hostile
 
             if (AITimer == 0)
             {
-                SoundEngine.PlaySound(SoundID.Item20 with { MaxInstances = 2 });
+                SoundEngine.PlaySound(SoundID.Item1 with { MaxInstances = 2, Volume = 0.7f, PitchRange = (-0.1f, 0.3f) });
                 if (DoIndicators)
                 {
                     if (Main.netMode != NetmodeID.MultiplayerClient)
@@ -69,16 +69,6 @@ namespace Paracosm.Content.Projectiles.Hostile
                 }
             }
 
-            Projectile.frameCounter++;
-            if (Projectile.frameCounter == 4)
-            {
-                Projectile.frame++;
-                Projectile.frameCounter = 0;
-                if (Projectile.frame >= 3)
-                {
-                    Projectile.frame = 0;
-                }
-            }
             AITimer++;
         }
 
@@ -87,26 +77,11 @@ namespace Paracosm.Content.Projectiles.Hostile
             SoundEngine.PlaySound(SoundID.Dig, Projectile.position);
             for (int i = 0; i < 5; i++)
             {
-                Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, DustID.GemTopaz);
+                Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, DustID.Granite);
                 dust.noGravity = true;
                 dust.velocity *= 1.5f;
                 dust.scale *= 0.9f;
             }
-        }
-
-        public override void PostDraw(Color lightColor)
-        {
-            Texture2D texture = ModContent.Request<Texture2D>("Paracosm/Assets/Textures/FX/Empty100Tex").Value;
-            Vector2 drawOrigin = new Vector2(texture.Width * 0.5f, texture.Height * 0.5f);
-            var shader = GameShaders.Misc["Paracosm:ProjectileLightShader"];
-            Main.spriteBatch.End();
-            Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, shader.Shader, Main.GameViewMatrix.TransformationMatrix);
-            shader.Shader.Parameters["time"].SetValue(AITimer / 60f);
-            shader.Shader.Parameters["color"].SetValue(glowColor.ToVector4());
-            shader.Apply();
-            Main.EntitySpriteDraw(texture, Projectile.Center - Main.screenPosition, null, Color.White, Projectile.rotation, drawOrigin, Projectile.scale, SpriteEffects.None, 0);
-            Main.spriteBatch.End();
-            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, null, Main.GameViewMatrix.TransformationMatrix);
         }
     }
 }
