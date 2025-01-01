@@ -39,8 +39,6 @@ namespace Paracosm.Content.Projectiles.Hostile
 
         public override void AI()
         {
-            var dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, DustID.Granite);
-            dust.noGravity = true;
             if (AITimer >= DeathTime)
             {
                 Projectile.Kill();
@@ -72,9 +70,9 @@ namespace Paracosm.Content.Projectiles.Hostile
         {
             switch (SplitCount)
             {
-                case >= 2: return Color.Purple;
-                case 1: return Color.Blue;
-                default: return Color.White;
+                case >= 2: return Color.Red;
+                case 1: return Color.White;
+                default: return Color.Black;
             }
         }
 

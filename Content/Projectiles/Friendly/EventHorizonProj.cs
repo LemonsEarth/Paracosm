@@ -46,11 +46,6 @@ namespace Paracosm.Content.Projectiles.Friendly
             }
 
             Projectile.rotation = Projectile.velocity.ToRotation();
-            for (int i = 0; i < 2; i++)
-            {
-                var dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, DustID.GemAmethyst, Scale: 1f);
-                dust.noGravity = true;
-            }
             AITimer++;
         }
 

@@ -45,6 +45,7 @@ namespace Paracosm.Common.Players
         public bool oathOfVengeance = false;
         public bool steelSight = false;
         public bool organicSight = false;
+        public bool infiltratorMark = false;
         public int sentryCount = 0;
 
         int oathTimer = 0;
@@ -96,6 +97,7 @@ namespace Paracosm.Common.Players
             steelSight = false;
             organicSight = false;
             masterEmblem = false;
+            infiltratorMark = false;
 
             paracosmicHelmetBuff = false;
             paracosmicGogglesBuff = false;
@@ -108,17 +110,32 @@ namespace Paracosm.Common.Players
             melting = false;
             vortexForce = false;
             voidTerror = false;
+
+            // Dash
+            
+            if (Player.controlRight && Player.releaseRight && Player.doubleTapCardinalTimer[2] < 15 && Player.doubleTapCardinalTimer[3] == 0)
+            {
+                DashDir = 1;
+            }
+            else if (Player.controlLeft && Player.releaseLeft && Player.doubleTapCardinalTimer[3] < 15 && Player.doubleTapCardinalTimer[2] == 0)
+            {
+                DashDir = -1;
+            }
+            else
+            {
+                DashDir = 0;
+            }
         }
 
         public override void GetHealLife(Item item, bool quickHeal, ref int healValue)
         {
             if (corruptedLifeCrystal)
             {
-                healValue += 20;
+                healValue += 40;
             }
             if (voidHeart)
             {
-                healValue += 50;
+                healValue += 70;
             }
         }
 
@@ -167,7 +184,7 @@ namespace Paracosm.Common.Players
                         damage = SpiritCoating.SPIRIT_DAMAGE_CAP;
                     }
                     int projID = ModContent.ProjectileType<SpiritProjDamage>();
-                    if (Main.rand.Next(0, 4) == 1)
+                    if (Main.rand.NextBool(4))
                     {
                         projID = ModContent.ProjectileType<SpiritProjHeal>();
                     }
@@ -230,7 +247,7 @@ namespace Paracosm.Common.Players
                             damage = SpiritCoating.SPIRIT_DAMAGE_CAP;
                         }
                         int projID = ModContent.ProjectileType<SpiritProjDamage>();
-                        if (Main.rand.Next(0, 4) == 1)
+                        if (Main.rand.NextBool(4))
                         {
                             projID = ModContent.ProjectileType<SpiritProjHeal>();
                         }
@@ -257,7 +274,7 @@ namespace Paracosm.Common.Players
             {
                 if (steelSight)
                 {
-                    if (hit.Crit && hit.DamageType.CountsAsClass(DamageClass.Ranged) && Main.rand.Next(0, 8) == 1)
+                    if (hit.Crit && hit.DamageType.CountsAsClass(DamageClass.Ranged) && Main.rand.NextBool(8))
                     {
                         Projectile.NewProjectile(Player.GetSource_FromAI(), Player.Center, Player.Center.DirectionTo(Main.MouseWorld) * 20, proj.type, proj.damage / 3, proj.knockBack, ai0: proj.ai[0], ai1: proj.ai[1], ai2: proj.ai[2]);
                     }
@@ -266,13 +283,13 @@ namespace Paracosm.Common.Players
                 {
                     if (hit.Crit && hit.DamageType.CountsAsClass(DamageClass.Ranged))
                     {
-                        if (Main.rand.Next(0, 4) == 1)
+                        if (Main.rand.NextBool(4))
                         {
                             Projectile.NewProjectile(Player.GetSource_FromAI(), Player.Center, Player.Center.DirectionTo(Main.MouseWorld) * 22, proj.type, proj.damage / 2, proj.knockBack, ai0: proj.ai[0], ai1: proj.ai[1], ai2: proj.ai[2]);
                         }
-                        if (Main.rand.Next(0, 25) == 1)
+                        if (Main.rand.NextBool(15))
                         {
-                            Player.Heal(3);
+                            Player.Heal(5);
                         }
                     }
                 }
@@ -382,19 +399,19 @@ namespace Paracosm.Common.Players
             if (voidTerror)
             {
                 Dust.NewDust(Player.position, Player.width, Player.height, DustID.SolarFlare, newColor: Color.Black);
-                if (Main.rand.Next(0, 250) == 1)
+                if (Main.rand.NextBool(250))
                 {
                     int randDebuff = Main.rand.NextFromList(20, 22, 23, 24, 31, 32, 33, 35, 36, 37, 38, 39, 46, 47, 67, 68, 69, 70, 80, 144, 149, 153, 156, 195, 196, 197,
                                                             ModContent.BuffType<SolarBurn>(), ModContent.BuffType<ParacosmicBurn>(), ModContent.BuffType<MeltingDebuff>());
                     Player.AddBuff(randDebuff, 120); 
                 }
 
-                if (!Player.HasBuff(BuffID.PotionSickness) && Main.rand.Next(0, 300) == 1) // Separate chance to inflict potion sickness
+                if (!Player.HasBuff(BuffID.PotionSickness) && Main.rand.NextBool(300)) // Separate chance to inflict potion sickness
                 {
                     Player.AddBuff(BuffID.PotionSickness, 600);
                 }
 
-                if (Main.rand.Next(0, 300) == 1) // Chance to remove minions and sentries
+                if (Main.rand.NextBool(300)) // Chance to remove minions and sentries
                 {
                     Player.maxTurrets = 0;
                     Player.maxMinions = 0;
@@ -613,7 +630,7 @@ namespace Paracosm.Common.Players
 
             if (masterEmblem && Main.myPlayer == Player.whoAmI)
             {
-                if (Main.rand.Next(0, 2) == 1 && !voidTerror)
+                if (Main.rand.NextBool(2) && !voidTerror)
                 {
                     Player.AddBuff(ModContent.BuffType<VoidTerrorDebuff>(), 600);
                 }
@@ -704,6 +721,40 @@ namespace Paracosm.Common.Players
                 {
                     Player.lifeRegen -= 50;
                 }
+            }
+        }
+
+        int DashDelay = 0;
+        const int DashCD = 30;
+
+        int DashDir = 0;
+        const int DashVelocity = 20;
+        int DashTimer = 0;
+        const int DashDuration = 30;
+        public override void PreUpdateMovement()
+        {
+            if (!infiltratorMark || Player.mount.Active)
+            {
+                return;
+            }
+
+            if (DashDelay == 0 && DashDir != 0)
+            {
+                Player.velocity = new Vector2(DashDir * DashVelocity, 0f);
+                DashDelay = DashCD;      
+                DashTimer = DashDuration;
+                LemonUtils.DustCircle(Player.Center, 16, 5, DustID.Granite, 1.3f);
+            }
+
+            if (DashTimer > 0)
+            {
+                Dust.NewDust(Player.position, Player.width, Player.height, DustID.Granite);
+                DashTimer--;
+            }
+            
+            if (DashDelay > 0)
+            {
+                DashDelay--;
             }
         }
     }

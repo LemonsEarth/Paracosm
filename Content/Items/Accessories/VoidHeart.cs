@@ -11,7 +11,7 @@ namespace Paracosm.Content.Items.Accessories
     public class VoidHeart : ModItem
     {
         int timer = 0;
-        static readonly float maxLifeBoost = 80;
+        static readonly float maxLifeBoost = 100;
         public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(maxLifeBoost);
 
         public override bool CanAccessoryBeEquippedWith(Item equippedItem, Item incomingItem, Player player)

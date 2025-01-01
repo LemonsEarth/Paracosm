@@ -46,7 +46,6 @@ namespace Paracosm.Content.Projectiles.Hostile
                 SoundEngine.PlaySound(SoundID.DD2_LightningAuraZap with { PitchRange = (-0.4f, -0.2f) });
                 SoundEngine.PlaySound(SoundID.Item94 with { PitchRange = (0.2f, 0.4f) });
             }
-            Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, DustID.Vortex);
 
             Lighting.AddLight(Projectile.Center, 10, 10, 10);
             Projectile.rotation = Projectile.velocity.ToRotation();

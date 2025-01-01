@@ -622,7 +622,11 @@ SkiesOfRuin: {
 
 StaffOfTheStarbearer: {
 	DisplayName: Staff of The Starbearer
-	Tooltip: All minions fire stars!
+	Tooltip:
+		'''
+		All minions and sentries fire stars!
+		Star damage scales with the damage of the minion/sentry.
+		'''
 }
 
 VoidEssence: {
@@ -635,7 +639,7 @@ CorruptedLifeCrystal: {
 	Tooltip:
 		'''
 		Reduces life regeneration to zero
-		Increases health potion health restoration by 20
+		Increases health potion health restoration by 40
 		'''
 }
 
@@ -644,7 +648,7 @@ VoidHeart: {
 	Tooltip:
 		'''
 		Increases maximum life by {0}
-		Increases healing potion health restoration by 50
+		Increases healing potion health restoration by 70
 		Reduces duration of potion sickness
 		Disables life regeneration
 		'''
@@ -906,4 +910,14 @@ MasterEmblem: {
 		"...That way, everyone can see when they fall."
 		'''
 	DisplayName: Master Emblem
+}
+
+MarkOfTheInfiltrator: {
+	DisplayName: Mark Of The Infiltrator
+	Tooltip:
+		'''
+		Allows you to dash, swim and dodge attacks
+		Increases jump speed
+		Grants infinite flight
+		'''
 }

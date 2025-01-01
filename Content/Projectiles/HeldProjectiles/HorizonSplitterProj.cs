@@ -97,6 +97,10 @@ namespace Paracosm.Content.Projectiles.HeldProjectiles
                 {
                     Projectile.damage = savedDamage * (int)DistanceIndex;
                 }
+                else
+                {
+                    Projectile.damage = savedDamage * 3;
+                }
                 rotated += 6 * MouseSide * player.GetAttackSpeed(DamageClass.Melee);
             }
             if (Math.Abs(rotated) >= maxRotation)

@@ -57,7 +57,7 @@ namespace Paracosm.Content.Projectiles.Friendly
             bool usedMana = true;
             if (AITimer % 15 == 0)
             {
-                usedMana = player.CheckMana(2, true, true);
+                usedMana = player.CheckMana(2, true, false);
             }
             if (!player.channel || !usedMana) released = true;
 

@@ -36,7 +36,7 @@ namespace Paracosm.Content.Bosses.TheNameless
                 {
                     diffMod = 0;
                 }
-                int maxVal = phase == 1 ? 1 : 3;
+                int maxVal = phase == 1 ? 2 : 3;
                 if (value > maxVal + diffMod || value < 0)
                 {
                     NPC.ai[1] = 0;
@@ -72,12 +72,14 @@ namespace Paracosm.Content.Bosses.TheNameless
         {
             {"Sphere", ModContent.ProjectileType<BorderSphere>()},
             {"SplitSpear", ModContent.ProjectileType<VoidSpearSplit>()},
+            {"Bomb", ModContent.ProjectileType<VoidBombHostile>()},
         };
 
         public enum Attacks
         {
             SplitSpearThrow,
             RainingSplitShot,
+            BombsWithSpear
         }
 
         public enum Attacks2
@@ -88,6 +90,9 @@ namespace Paracosm.Content.Bosses.TheNameless
         public override void SetStaticDefaults()
         {
             NPCID.Sets.SpecificDebuffImmunity[Type][BuffID.Confused] = true;
+            NPCID.Sets.SpecificDebuffImmunity[Type][BuffID.Ichor] = true;
+            NPCID.Sets.SpecificDebuffImmunity[Type][BuffID.CursedInferno] = true;
+            NPCID.Sets.SpecificDebuffImmunity[Type][BuffID.OnFire3] = true;
             NPCID.Sets.MPAllowedEnemies[Type] = true;
             NPCID.Sets.TrailCacheLength[NPC.type] = 5;
             NPCID.Sets.TrailingMode[NPC.type] = 3;
@@ -119,7 +124,7 @@ namespace Paracosm.Content.Bosses.TheNameless
             NPC.height = 56;
             NPC.Opacity = 1;
             NPC.lifeMax = 1500000;
-            NPC.defense = 40;
+            NPC.defense = 100;
             NPC.damage = 40;
             NPC.HitSound = SoundID.NPCHit54;
             NPC.DeathSound = SoundID.NPCDeath52;
@@ -247,6 +252,9 @@ namespace Paracosm.Content.Bosses.TheNameless
                     case (int)Attacks.RainingSplitShot:
                         RainingSplitShot();
                         break;
+                    case (int)Attacks.BombsWithSpear:
+                        BombsWithSpear();
+                        break;
                 }
             }
             else
@@ -271,6 +279,11 @@ namespace Paracosm.Content.Bosses.TheNameless
             }
         }
 
+        public override void ModifyIncomingHit(ref NPC.HitModifiers modifiers)
+        {
+            modifiers.FinalDamage *= 0.8f;
+        }
+
         void Visuals()
         {
             Lighting.AddLight(NPC.Center, 10, 10, 10);
@@ -280,10 +293,10 @@ namespace Paracosm.Content.Bosses.TheNameless
                 NPC.spriteDirection = -Math.Sign(playerDirection.X);
             }
 
-            foreach (var p in Main.player)
-            {
-                p.moonLordMonolithShader = true;
-            }
+            //foreach (var p in Main.player)
+            //{
+            //    p.moonLordMonolithShader = true;
+            //}
         }
 
         const int INTRO_DURATION = 300;
@@ -323,6 +336,18 @@ namespace Paracosm.Content.Bosses.TheNameless
             NPC.netUpdate = true;
         }
 
+        void ThrowSplitSpear(int timeToFire, int splitInterval, int splitCount)
+        {
+            var proj = Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center, Vector2.Zero, Proj["SplitSpear"], NPC.damage, 1f, ai0: timeToFire, ai1: splitInterval, ai2: splitCount);
+            var spear = (VoidSpearSplit)proj.ModProjectile;
+            spear.NPCOwner = NPC.whoAmI;
+
+            if (Main.netMode == NetmodeID.Server)
+            {
+                NetMessage.SendData(MessageID.SyncProjectile, number: proj.whoAmI);
+            }
+        }
+
         const int SST_ATTACK_RATE = 60;
         const int SST_SPLIT_INTERVAL = 10;
         const int SST_SPLIT_COUNT = 1;
@@ -334,14 +359,7 @@ namespace Paracosm.Content.Bosses.TheNameless
                 case SST_ATTACK_RATE:
                     if (Main.netMode != NetmodeID.MultiplayerClient)
                     {
-                        var proj = Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center, Vector2.Zero, Proj["SplitSpear"], NPC.damage, 1f, ai0: SST_ATTACK_RATE, ai1: SST_SPLIT_INTERVAL, ai2: SST_SPLIT_COUNT);
-                        var spear = (VoidSpearSplit)proj.ModProjectile;
-                        spear.NPCOwner = NPC.whoAmI;
-
-                        if (Main.netMode == NetmodeID.Server)
-                        {
-                            NetMessage.SendData(MessageID.SyncProjectile, number: proj.whoAmI);
-                        }
+                        ThrowSplitSpear(SST_ATTACK_RATE, SST_SPLIT_INTERVAL, SST_SPLIT_COUNT);
                     }
                     break;
                 case 0:
@@ -374,6 +392,38 @@ namespace Paracosm.Content.Bosses.TheNameless
                         }
                         AttackCount++;
                         AttackTimer = RSS_ATTACK_RATE2;
+                    }
+                    return;
+            }
+            AttackTimer--;
+        }
+
+        const int BOMBS_CD = 120;
+        void BombsWithSpear()
+        {
+            NPC.velocity = playerDirection.SafeNormalize(Vector2.Zero) * 2;
+            switch (AttackTimer)
+            {
+                case 0:
+                    AttackTimer = BOMBS_CD;
+                    if (Main.netMode != NetmodeID.MultiplayerClient)
+                    {
+                        for (int i = 0; i < 2; i++)
+                        {
+                            Vector2 pos = player.Center + Main.rand.NextVector2Circular(300, 300);
+                            int direction = -1;
+                            if (pos.Y > player.Center.Y)
+                            {
+                                direction = 1;
+                            }
+                            Projectile.NewProjectile(NPC.GetSource_FromAI(), pos, Vector2.UnitY * Main.rand.Next(10, 25) * direction, Proj["Bomb"], NPC.damage, 1f, ai0: 60, ai1: 8, ai2: -direction);
+                        }                     
+                    }
+                    AttackCount++;
+                    if (AttackCount == 3)
+                    {
+                        ThrowSplitSpear(60, 5, 0);
+                        AttackCount = 0;
                     }
                     return;
             }
