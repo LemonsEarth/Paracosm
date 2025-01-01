@@ -51,7 +51,7 @@ namespace Paracosm.Content.Items.Weapons.Melee
             if (Main.myPlayer == player.whoAmI)
             {
                 int dir = useCounter % 2 == 0 ? 1 : -1;
-                Projectile.NewProjectile(source, position, velocity, type, damage, knockback, ai0: dir, ai1: Main.MouseWorld.X, ai2: Main.MouseWorld.Y);
+                Projectile.NewProjectile(source, position, velocity, type, damage, knockback, player.whoAmI, ai0: dir, ai1: Main.MouseWorld.X, ai2: Main.MouseWorld.Y);
                 useCounter++;
             }
             return false;

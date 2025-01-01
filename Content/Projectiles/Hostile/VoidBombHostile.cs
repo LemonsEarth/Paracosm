@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Paracosm.Common.Utils;
+using System;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
@@ -49,7 +50,7 @@ namespace Paracosm.Content.Projectiles.Hostile
                     {
                         return;
                     }
-                    Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, new Vector2((i + 1) * 5, 10 * ProjSpeedMod), ModContent.ProjectileType<VoidBoltHostile>(), Projectile.damage, Projectile.knockBack, ai0: 60 / ProjSpeedMod, ai1:  5 * ProjSpeedMod, ai2: 60 / ProjSpeedMod);
+                    Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, new Vector2(i * 5, 5 * -ProjSpeedMod), ModContent.ProjectileType<VoidBoltHostile>(), Projectile.damage, Projectile.knockBack, ai0: 60 / Math.Clamp(Math.Abs(ProjSpeedMod), 1f, 10f), ai1: ProjSpeedMod);
                 }
             }
         }

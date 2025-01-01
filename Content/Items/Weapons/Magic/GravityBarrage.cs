@@ -43,7 +43,7 @@ namespace Paracosm.Content.Items.Weapons.Magic
             {
                 for (int i = 0; i < 3; i++)
                 {
-                    Projectile.NewProjectileDirect(source, position, velocity, type, damage, knockback, ai1: 1);
+                    Projectile.NewProjectileDirect(source, position, velocity, type, damage, knockback, player.whoAmI, ai1: 1);
                 }
             }
             return false;

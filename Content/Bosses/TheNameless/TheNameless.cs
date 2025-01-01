@@ -36,7 +36,7 @@ namespace Paracosm.Content.Bosses.TheNameless
                 {
                     diffMod = 0;
                 }
-                int maxVal = phase == 1 ? 2 : 3;
+                int maxVal = phase == 1 ? 1 : 3;
                 if (value > maxVal + diffMod || value < 0)
                 {
                     NPC.ai[1] = 0;
@@ -58,7 +58,7 @@ namespace Paracosm.Content.Bosses.TheNameless
         bool phaseTransition = false;
 
         float attackDuration = 0;
-        int[] attackDurations = { 480, 450, 900 };
+        int[] attackDurations = { 480, 480, 900 };
         int[] attackDurations2 = { 600, 900, 720, 900 };
         public Player player { get; private set; }
         public Vector2 playerDirection { get; private set; }
@@ -71,16 +71,18 @@ namespace Paracosm.Content.Bosses.TheNameless
         Dictionary<string, int> Proj = new Dictionary<string, int>
         {
             {"Sphere", ModContent.ProjectileType<BorderSphere>()},
+            {"SplitSpear", ModContent.ProjectileType<VoidSpearSplit>()},
         };
 
         public enum Attacks
         {
-            
+            SplitSpearThrow,
+            RainingSplitShot,
         }
 
         public enum Attacks2
         {
-            
+
         }
 
         public override void SetStaticDefaults()
@@ -116,7 +118,7 @@ namespace Paracosm.Content.Bosses.TheNameless
             NPC.width = 50;
             NPC.height = 56;
             NPC.Opacity = 1;
-            NPC.lifeMax = 1000000;
+            NPC.lifeMax = 1500000;
             NPC.defense = 40;
             NPC.damage = 40;
             NPC.HitSound = SoundID.NPCHit54;
@@ -196,12 +198,8 @@ namespace Paracosm.Content.Bosses.TheNameless
             }
             player = Main.player[NPC.target];
             playerDirection = player.Center - NPC.Center;
-            if ((player.dead || !player.active || NPC.Center.Distance(player.MountedCenter) > 8000))
-            {
-                NPC.active = false;
-                NPC.life = 0;
-                NetMessage.SendData(MessageID.SyncNPC, number: NPC.whoAmI);
-            }
+
+            DespawnCheck();
 
             //Visuals
             if (AITimer == 0)
@@ -209,17 +207,7 @@ namespace Paracosm.Content.Bosses.TheNameless
                 NPC.Opacity = 0;
             }
 
-            Lighting.AddLight(NPC.Center, 10, 10, 10);
-
-            if (playerDirection.X != 0 && !playerDirection.HasNaNs())
-            {
-                NPC.spriteDirection = -Math.Sign(playerDirection.X);
-            }
-
-            foreach (var p in Main.player)
-            {
-                p.moonLordMonolithShader = true;
-            }
+            Visuals();
 
             if (AITimer > INTRO_DURATION - 150)
             {
@@ -253,21 +241,49 @@ namespace Paracosm.Content.Bosses.TheNameless
             {
                 switch (Attack)
                 {
-                    /*case (int)Attacks.SpeedingFlames:
-                        SpeedingFlames();
-                        break;*/
+                    case (int)Attacks.SplitSpearThrow:
+                        SplitSpearThrow();
+                        break;
+                    case (int)Attacks.RainingSplitShot:
+                        RainingSplitShot();
+                        break;
                 }
             }
             else
             {
                 switch (Attack)
                 {
-                    
+
                 }
             }
 
             attackDuration--;
             AITimer++;
+        }
+
+        void DespawnCheck()
+        {
+            if (player.dead || !player.active || NPC.Center.Distance(player.MountedCenter) > 8000)
+            {
+                NPC.active = false;
+                NPC.life = 0;
+                NetMessage.SendData(MessageID.SyncNPC, number: NPC.whoAmI);
+            }
+        }
+
+        void Visuals()
+        {
+            Lighting.AddLight(NPC.Center, 10, 10, 10);
+
+            if (playerDirection.X != 0 && !playerDirection.HasNaNs())
+            {
+                NPC.spriteDirection = -Math.Sign(playerDirection.X);
+            }
+
+            foreach (var p in Main.player)
+            {
+                p.moonLordMonolithShader = true;
+            }
         }
 
         const int INTRO_DURATION = 300;
@@ -305,6 +321,63 @@ namespace Paracosm.Content.Bosses.TheNameless
                 Spheres.Clear();
             }
             NPC.netUpdate = true;
+        }
+
+        const int SST_ATTACK_RATE = 60;
+        const int SST_SPLIT_INTERVAL = 10;
+        const int SST_SPLIT_COUNT = 1;
+        void SplitSpearThrow()
+        {
+            NPC.velocity = playerDirection.SafeNormalize(Vector2.Zero) * 4;
+            switch (AttackTimer)
+            {
+                case SST_ATTACK_RATE:
+                    if (Main.netMode != NetmodeID.MultiplayerClient)
+                    {
+                        var proj = Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center, Vector2.Zero, Proj["SplitSpear"], NPC.damage, 1f, ai0: SST_ATTACK_RATE, ai1: SST_SPLIT_INTERVAL, ai2: SST_SPLIT_COUNT);
+                        var spear = (VoidSpearSplit)proj.ModProjectile;
+                        spear.NPCOwner = NPC.whoAmI;
+
+                        if (Main.netMode == NetmodeID.Server)
+                        {
+                            NetMessage.SendData(MessageID.SyncProjectile, number: proj.whoAmI);
+                        }
+                    }
+                    break;
+                case 0:
+                    AttackTimer = SST_ATTACK_RATE;
+                    return;
+            }
+            AttackTimer--;
+        }
+
+        const int RSS_ATTACK_RATE1 = 120;
+        const int RSS_ATTACK_RATE2 = 10;
+        const int RSS_ATTACK_COUNT = 6;
+        const int RSS_SPLIT_COUNT = 2;
+        void RainingSplitShot()
+        {
+            NPC.velocity = playerDirection.SafeNormalize(Vector2.Zero) * 2;
+            switch (AttackTimer)
+            {
+                case 0:
+                    if (AttackCount >= RSS_ATTACK_COUNT)
+                    {
+                        AttackTimer = RSS_ATTACK_RATE1;
+                        AttackCount = 0;
+                    }
+                    else
+                    {
+                        if (Main.netMode != NetmodeID.MultiplayerClient)
+                        {
+                            Projectile.NewProjectile(NPC.GetSource_FromAI(), player.Center - Vector2.UnitY * 400, Vector2.UnitY * 7, ModContent.ProjectileType<VoidBoltSplit>(), NPC.damage, 1f, ai0: 60, ai1: RSS_SPLIT_COUNT);
+                        }
+                        AttackCount++;
+                        AttackTimer = RSS_ATTACK_RATE2;
+                    }
+                    return;
+            }
+            AttackTimer--;
         }
 
         void MoveToPos(Vector2 pos, float xAccel = 1f, float yAccel = 1f, float xSpeed = 1f, float ySpeed = 1f)

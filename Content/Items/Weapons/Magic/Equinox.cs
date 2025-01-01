@@ -37,8 +37,8 @@ namespace Paracosm.Content.Items.Weapons.Magic
 
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
-            int sunID = Projectile.NewProjectile(source, player.MountedCenter - Vector2.UnitY * 45.25f, Vector2.Zero, type, damage, knockback);
-            Projectile.NewProjectile(source, player.MountedCenter + Vector2.UnitY * 33.94f, Vector2.Zero, ModContent.ProjectileType<EquinoxMoon>(), damage, knockback, ai0: sunID);
+            int sunID = Projectile.NewProjectile(source, player.MountedCenter - Vector2.UnitY * 45.25f, Vector2.Zero, type, damage, knockback, player.whoAmI);
+            Projectile.NewProjectile(source, player.MountedCenter + Vector2.UnitY * 33.94f, Vector2.Zero, ModContent.ProjectileType<EquinoxMoon>(), damage, knockback, player.whoAmI, ai0: sunID);
             return false;
         }
     }

@@ -39,7 +39,7 @@ namespace Paracosm.Content.Items.Weapons.Magic
         {
             if (Main.myPlayer == player.whoAmI)
             {
-                Projectile.NewProjectile(source, position, velocity, Item.shoot, Item.damage, 1, ai1: Main.MouseWorld.X, ai2: Main.MouseWorld.Y);
+                Projectile.NewProjectile(source, position, velocity, Item.shoot, Item.damage, knockback, player.whoAmI, ai1: Main.MouseWorld.X, ai2: Main.MouseWorld.Y);
             }
             return false;
         }

@@ -40,7 +40,7 @@ namespace Paracosm.Content.Items.Weapons.Melee
         {
             if (Main.myPlayer == player.whoAmI)
             {
-                Projectile.NewProjectile(source, position, velocity, type, damage, knockback);
+                Projectile.NewProjectile(source, position, velocity, type, damage, knockback, player.whoAmI);
             }
             return false;
         }

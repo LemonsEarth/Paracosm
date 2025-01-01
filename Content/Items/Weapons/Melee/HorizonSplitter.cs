@@ -38,7 +38,7 @@ namespace Paracosm.Content.Items.Weapons.Melee
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
             float mousePosRel = Main.MouseWorld.X > player.Center.X ? 1 : -1;
-            Projectile.NewProjectile(source, player.MountedCenter + new Vector2(-mousePosRel * 20, -20), Vector2.Zero, type, damage, knockback, ai1: 1, ai2: mousePosRel);
+            Projectile.NewProjectile(source, player.MountedCenter + new Vector2(-mousePosRel * 20, -20), Vector2.Zero, type, damage, knockback, player.whoAmI, ai1: 1, ai2: mousePosRel);
             return false;
         }
 

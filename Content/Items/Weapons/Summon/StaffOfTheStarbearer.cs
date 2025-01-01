@@ -41,7 +41,7 @@ namespace Paracosm.Content.Items.Weapons.Summon
                 if (proj.minion || proj.sentry)
                 {
                     Vector2 direction = proj.velocity.SafeNormalize(Vector2.Zero);
-                    Projectile.NewProjectile(source, proj.Center, direction * Item.shootSpeed, type, damage + proj.damage, knockback, ai0: 30);
+                    Projectile.NewProjectile(source, proj.Center, direction * Item.shootSpeed, type, damage + proj.damage, knockback, player.whoAmI, ai0: 30);
                 }
             }
             return false;

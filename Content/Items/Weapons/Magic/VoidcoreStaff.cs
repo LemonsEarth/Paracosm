@@ -47,7 +47,7 @@ namespace Paracosm.Content.Items.Weapons.Magic
                     {
                         projID = ModContent.ProjectileType<ArchmageBolt>();
                     }
-                    Projectile.NewProjectile(source, Main.MouseWorld, Vector2.UnitY.RotatedBy(MathHelper.PiOver2 * i) * 20, type, damage, knockback, ai0: projID, ai2: 1);
+                    Projectile.NewProjectile(source, Main.MouseWorld, Vector2.UnitY.RotatedBy(MathHelper.PiOver2 * i) * 20, type, damage, knockback, player.whoAmI, ai0: projID, ai2: 1);
                 }
             }
             return false;

@@ -40,7 +40,7 @@ namespace Paracosm.Content.Items.Weapons.Ranged
             {
                 Vector2 mousePos = Main.MouseWorld;
                 position = mousePos + new Vector2(Main.rand.NextFloat(-100, 100), -Main.rand.NextFloat(500, 600));
-                Projectile.NewProjectile(source, position, velocity, type, damage, knockback, ai0: 25);
+                Projectile.NewProjectile(source, position, velocity, type, damage, knockback, player.whoAmI, ai0: 25);
             }
 
             return false;

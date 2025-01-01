@@ -48,11 +48,11 @@ namespace Paracosm.Content.Items.Weapons.Ranged
                 {
                     for (int i = 0; i < 8; i++)
                     {
-                        Projectile.NewProjectile(source, position, velocity.RotatedBy(i * MathHelper.PiOver4) / 10, ModContent.ProjectileType<BloodseekerArrow>(), damage, knockback / 3, ai0: 45);
+                        Projectile.NewProjectile(source, position, velocity.RotatedBy(i * MathHelper.PiOver4) / 10, ModContent.ProjectileType<BloodseekerArrow>(), damage, knockback, player.whoAmI, ai0: 45);
                     }
                 }
             }
-            Projectile.NewProjectile(source, position, velocity, type, damage, knockback, ai0: 25);
+            Projectile.NewProjectile(source, position, velocity, type, damage, knockback, player.whoAmI, ai0: 25);
 
             useCounter++;
             if (useCounter >= 30)

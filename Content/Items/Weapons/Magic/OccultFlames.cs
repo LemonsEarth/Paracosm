@@ -45,7 +45,7 @@ namespace Paracosm.Content.Items.Weapons.Magic
 
                 if (useCounter == 2)
                 {
-                    var proj = Projectile.NewProjectileDirect(source, position, velocity / 10, ModContent.ProjectileType<CursedSpiritFlameFriendly>(), damage, knockback, ai0: 20);
+                    var proj = Projectile.NewProjectileDirect(source, position, velocity / 10, ModContent.ProjectileType<CursedSpiritFlameFriendly>(), damage, knockback, player.whoAmI, ai0: 20);
                     CursedSpiritFlameFriendly csf = (CursedSpiritFlameFriendly)proj.ModProjectile;
                     csf.speed = 10;
                     useCounter = 0;

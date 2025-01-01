@@ -48,11 +48,11 @@ namespace Paracosm.Content.Items.Weapons.Ranged
                     Item.useTime -= 2;
                     Item.useAnimation -= 2;
                 }
-                Projectile.NewProjectile(Item.GetSource_FromAI(), position, velocity, type, damage, knockback);
+                Projectile.NewProjectile(Item.GetSource_FromAI(), position, velocity, type, damage, knockback, player.whoAmI);
                 if (speed > 40)
                 {
-                    Projectile.NewProjectile(Item.GetSource_FromAI(), position, velocity / 1.2f, type, damage, knockback);
-                    Projectile.NewProjectile(Item.GetSource_FromAI(), position, velocity / 1.4f, type, damage, knockback);
+                    Projectile.NewProjectile(Item.GetSource_FromAI(), position, velocity / 1.2f, type, damage, knockback, player.whoAmI);
+                    Projectile.NewProjectile(Item.GetSource_FromAI(), position, velocity / 1.4f, type, damage, knockback, player.whoAmI);
                 }
                 if (speed >= 60)
                 {

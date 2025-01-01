@@ -34,6 +34,7 @@ namespace Paracosm.Content.Projectiles.Hostile
             Projectile.tileCollide = false;
             Projectile.penetrate = -1;
             Projectile.timeLeft = 180;
+            Projectile.Opacity = 0f;
         }
 
         public override void AI()
@@ -44,6 +45,15 @@ namespace Paracosm.Content.Projectiles.Hostile
             {
                 Projectile.Kill();
             }
+
+            //if (AITimer < DeathTime / 3)
+            //{
+            //    Projectile.Opacity = MathHelper.Lerp(Projectile.Opacity, 1f, AITimer / (DeathTime / 3));
+            //}
+            //else if (AITimer > DeathTime * 0.75f)
+            //{
+            //    Projectile.Opacity = MathHelper.Lerp(Projectile.Opacity, 0.25f, AITimer - (DeathTime * 0.75f) / DeathTime - (DeathTime * 0.75f));
+            //}
             Projectile.frameCounter++;
             if (Projectile.frameCounter == 6)
             {
@@ -56,6 +66,16 @@ namespace Paracosm.Content.Projectiles.Hostile
             }
             Projectile.rotation = Projectile.velocity.ToRotation();
             AITimer++;
+        }
+
+        public override Color? GetAlpha(Color lightColor)
+        {
+            switch (SplitCount)
+            {
+                case >= 2: return Color.Purple;
+                case 1: return Color.Blue;
+                default: return Color.White;
+            }
         }
 
         public override void OnKill(int timeLeft)
@@ -92,7 +112,7 @@ namespace Paracosm.Content.Projectiles.Hostile
                 Rectangle drawRectangle = texture.Frame(1, Main.projFrames[Type], 0, 1);
 
                 Vector2 drawPos = (Projectile.oldPos[k] - Main.screenPosition) + drawOrigin + new Vector2(0f, Projectile.gfxOffY);
-                Color color = Color.Black * ((Projectile.oldPos.Length - k) / (float)Projectile.oldPos.Length);
+                Color color = Projectile.GetAlpha(lightColor) * ((Projectile.oldPos.Length - k) / (float)Projectile.oldPos.Length);
                 Main.EntitySpriteDraw(texture, drawPos, drawRectangle, color, Projectile.rotation, drawOrigin, Projectile.scale, SpriteEffects.None, 0);
             }
             return true;

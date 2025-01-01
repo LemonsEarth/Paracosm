@@ -49,7 +49,7 @@ namespace Paracosm.Content.Items.Weapons.Melee
             {
                 for (int i = 0; i < 10; i++)
                 {
-                    Projectile.NewProjectile(source, position + new Vector2(Main.rand.Next(-150, 150), Main.rand.Next(-170, 170)), velocity, type, damage, knockback);
+                    Projectile.NewProjectile(source, position + new Vector2(Main.rand.Next(-150, 150), Main.rand.Next(-170, 170)), velocity, type, damage, knockback, player.whoAmI);
                 }
             }
             return false;

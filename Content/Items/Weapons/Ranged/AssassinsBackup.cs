@@ -42,13 +42,13 @@ namespace Paracosm.Content.Items.Weapons.Ranged
 
                     for (int i = -4; i < 4; i++)
                     {
-                        Projectile.NewProjectile(source, position, mouseDir.RotatedBy(i * MathHelper.ToRadians(180f / 8f)) * Item.shootSpeed, type, damage, knockback, ai1: 1);
+                        Projectile.NewProjectile(source, position, mouseDir.RotatedBy(i * MathHelper.ToRadians(180f / 8f)) * Item.shootSpeed, type, damage, knockback, player.whoAmI, ai1: 1);
                     }
                     useCounter = 0;
                 }
                 else
                 {
-                    Projectile.NewProjectile(source, position, velocity, type, damage, knockback);
+                    Projectile.NewProjectile(source, position, velocity, type, damage, knockback, player.whoAmI);
                     useCounter++;
                 }
             }

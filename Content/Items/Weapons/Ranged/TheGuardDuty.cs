@@ -54,7 +54,7 @@ namespace Paracosm.Content.Items.Weapons.Ranged
             if (Main.myPlayer == player.whoAmI)
             {
                 useCounter++;
-                Projectile.NewProjectile(Item.GetSource_FromAI(), position, velocity, type, damage, knockback);
+                Projectile.NewProjectile(Item.GetSource_FromAI(), position, velocity, type, damage, knockback, player.whoAmI);
 
                 if (useCounter == 20)
                 {
@@ -62,7 +62,7 @@ namespace Paracosm.Content.Items.Weapons.Ranged
                     {
                         int beeID = player.beeType();
                         int beeDamage = player.beeDamage(damage * 3);
-                        Projectile.NewProjectile(Item.GetSource_FromAI(), position, velocity / Main.rand.Next(10, 20), beeID, beeDamage, knockback);
+                        Projectile.NewProjectile(Item.GetSource_FromAI(), position, velocity / Main.rand.Next(10, 20), beeID, beeDamage, knockback, player.whoAmI);
                     }
                     SoundEngine.PlaySound(SoundID.Item97 with { Volume = 0.7f });
                     useCounter = 0;

@@ -45,7 +45,7 @@ namespace Paracosm.Content.Items.Weapons.Ranged
             }
             if (useCounter < 60)
             {
-                Projectile.NewProjectile(source, position, velocity, type, damage, knockback, ai0: 30);
+                Projectile.NewProjectile(source, position, velocity, type, damage, knockback, player.whoAmI, ai0: 30);
                 useCounter++;
             }
             else
@@ -56,7 +56,7 @@ namespace Paracosm.Content.Items.Weapons.Ranged
                     {
                         int proj = Main.rand.NextFromList(ProjectileID.SuperStar, ProjectileID.StarCannonStar, type, ProjectileID.StarWrath);
                         Vector2 pos = Main.MouseWorld + (Vector2.UnitY * 800).RotatedBy(MathHelper.ToRadians(i * 72));
-                        Projectile.NewProjectile(source, pos, (Main.MouseWorld - pos).SafeNormalize(Vector2.Zero) * ((Item.shootSpeed * 2) / j), proj, damage * 2, knockback, ai0: 90);
+                        Projectile.NewProjectile(source, pos, (Main.MouseWorld - pos).SafeNormalize(Vector2.Zero) * ((Item.shootSpeed * 2) / j), proj, damage * 2, knockback, player.whoAmI, ai0: 90);
                     }
                 }
 

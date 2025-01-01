@@ -46,7 +46,7 @@ namespace Paracosm.Content.Items.Weapons.Melee
             {
                 if (useCounter < 3)
                 {
-                    Projectile.NewProjectile(source, position, velocity, Item.shoot, damage * damageBoost, knockback, ai0: 0);
+                    Projectile.NewProjectile(source, position, velocity, Item.shoot, damage * damageBoost, knockback, player.whoAmI, ai0: 0);
                     if (damageBoost > 1)
                     {
                         for (int i = 0; i < 3; i++)
@@ -59,7 +59,7 @@ namespace Paracosm.Content.Items.Weapons.Melee
                 }
                 else
                 {
-                    Projectile.NewProjectile(source, position, velocity, Item.shoot, damage, knockback, ai0: 1);
+                    Projectile.NewProjectile(source, position, velocity, Item.shoot, damage, knockback, player.whoAmI, ai0: 1);
                     SoundEngine.PlaySound(SoundID.Item4, player.MountedCenter);
                     damageBoost = 10;
                     useCounter = 0;

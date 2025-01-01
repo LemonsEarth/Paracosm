@@ -46,14 +46,14 @@ namespace Paracosm.Content.Items.Weapons.Ranged
                 useCounter++;
                 for (int i = -3; i < 3; i++)
                 {
-                    Projectile.NewProjectile(Item.GetSource_FromAI(), position, velocity.RotatedBy(MathHelper.ToRadians(3 * i)), type, damage, knockback);
+                    Projectile.NewProjectile(Item.GetSource_FromAI(), position, velocity.RotatedBy(MathHelper.ToRadians(3 * i)), type, damage, knockback, player.whoAmI);
                 }
 
                 if (useCounter == 10)
                 {
                     for (int i = -4; i <= 4; i++)
                     {
-                        Projectile.NewProjectile(Item.GetSource_FromAI(), position, velocity.RotatedBy(MathHelper.ToRadians(10 * i)) * 2, ProjectileID.VortexBeaterRocket, damage * 2, knockback);
+                        Projectile.NewProjectile(Item.GetSource_FromAI(), position, velocity.RotatedBy(MathHelper.ToRadians(10 * i)) * 2, ProjectileID.VortexBeaterRocket, damage * 2, knockback, player.whoAmI);
                     }
                     useCounter = 0;
                 }

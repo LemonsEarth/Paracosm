@@ -50,7 +50,7 @@ namespace Paracosm.Content.Items.Weapons.Magic
         {
             if (Main.myPlayer == player.whoAmI)
             {
-                var projectile = Projectile.NewProjectileDirect(source, position, velocity, type, damage, knockback);
+                var projectile = Projectile.NewProjectileDirect(source, position, velocity, type, damage, knockback, player.whoAmI);
                 projectile.originalDamage = projectile.damage;
                 projectile.DamageType = DamageClass.Magic;
             }

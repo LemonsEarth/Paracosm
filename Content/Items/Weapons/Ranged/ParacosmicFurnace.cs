@@ -47,13 +47,13 @@ namespace Paracosm.Content.Items.Weapons.Ranged
         {
             if (Main.myPlayer == player.whoAmI)
             {
-                Projectile.NewProjectile(source, position, velocity.RotatedBy(MathHelper.ToRadians((float)Math.Sin(useCounter) / 3 * 30 * 1)), type, damage, knockback);
-                Projectile.NewProjectile(source, position, velocity.RotatedBy(MathHelper.ToRadians((float)Math.Sin(useCounter) / 3 * 30 * -1)), type, damage, knockback);
+                Projectile.NewProjectile(source, position, velocity.RotatedBy(MathHelper.ToRadians((float)Math.Sin(useCounter) / 3 * 30 * 1)), type, damage, knockback, player.whoAmI);
+                Projectile.NewProjectile(source, position, velocity.RotatedBy(MathHelper.ToRadians((float)Math.Sin(useCounter) / 3 * 30 * -1)), type, damage, knockback, player.whoAmI);
                 if (useCounter % 10 == 0)
                 {
-                    Projectile.NewProjectile(source, position, velocity / 3, ModContent.ProjectileType<HomingBlueFire>(), damage * 2, knockback * 3);
-                    Projectile.NewProjectile(source, position, velocity.RotatedBy(MathHelper.PiOver4) / 3, ModContent.ProjectileType<HomingBlueFire>(), damage * 2, knockback * 3);
-                    Projectile.NewProjectile(source, position, velocity.RotatedBy(-MathHelper.PiOver4) / 3, ModContent.ProjectileType<HomingBlueFire>(), damage * 2, knockback * 3);
+                    Projectile.NewProjectile(source, position, velocity / 3, ModContent.ProjectileType<HomingBlueFire>(), damage * 2, knockback, player.whoAmI);
+                    Projectile.NewProjectile(source, position, velocity.RotatedBy(MathHelper.PiOver4) / 3, ModContent.ProjectileType<HomingBlueFire>(), damage * 2, knockback, player.whoAmI);
+                    Projectile.NewProjectile(source, position, velocity.RotatedBy(-MathHelper.PiOver4) / 3, ModContent.ProjectileType<HomingBlueFire>(), damage * 2, knockback, player.whoAmI);
                 }
             }
             useCounter++;

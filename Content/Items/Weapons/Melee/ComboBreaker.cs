@@ -46,7 +46,7 @@ namespace Paracosm.Content.Items.Weapons.Melee
             {
                 for (int i = 0; i < 2; i++)
                 {
-                    Projectile.NewProjectile(source, position + velocity.SafeNormalize(Vector2.Zero) * 2, velocity.RotatedBy(MathHelper.ToRadians(Main.rand.Next(-15, 15))) * Main.rand.NextFloat(0.5f, 1.5f), type, damage, knockback);
+                    Projectile.NewProjectile(source, position + velocity.SafeNormalize(Vector2.Zero) * 2, velocity.RotatedBy(MathHelper.ToRadians(Main.rand.Next(-15, 15))) * Main.rand.NextFloat(0.5f, 1.5f), type, damage, knockback, player.whoAmI);
                 }
                 if (useCounter < 100) useCounter++;
             }
@@ -66,7 +66,7 @@ namespace Paracosm.Content.Items.Weapons.Melee
             }
             if (player.altFunctionUse == 2 && useCounter >= 100)
             {
-                Projectile.NewProjectile(Item.GetSource_FromThis(), player.Center, (Main.MouseWorld - player.Center).SafeNormalize(Vector2.Zero), ModContent.ProjectileType<NebulaBeamFriendly>(), Item.damage * 10, 1f, ai0: 30);
+                Projectile.NewProjectile(Item.GetSource_FromThis(), player.Center, (Main.MouseWorld - player.Center).SafeNormalize(Vector2.Zero), ModContent.ProjectileType<NebulaBeamFriendly>(), Item.damage * 10, 1f, player.whoAmI, ai0: 30);
                 useCounter = 0;
             }
             return true;

@@ -49,7 +49,7 @@ namespace Paracosm.Content.Items.Weapons.Magic
             {
                 for (int i = 0; i < 8; i++)
                 {
-                    Projectile.NewProjectile(source, player.Center, Vector2.Zero, type, damage, knockback, ai1: i);
+                    Projectile.NewProjectile(source, player.Center, Vector2.Zero, type, damage, knockback, player.whoAmI, ai1: i);
                 }
             }
             return false;

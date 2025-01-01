@@ -40,7 +40,7 @@ namespace Paracosm.Content.Items.Weapons.Melee
             {
                 for (int i = 0; i < 3; i++)
                 {
-                    Projectile.NewProjectile(source, position, velocity.RotatedBy(MathHelper.ToRadians(Main.rand.Next(-15, 15))) * Main.rand.NextFloat(0.8f, 1.2f), type, damage, knockback);
+                    Projectile.NewProjectile(source, position, velocity.RotatedBy(MathHelper.ToRadians(Main.rand.Next(-15, 15))) * Main.rand.NextFloat(0.8f, 1.2f), type, damage, knockback, player.whoAmI);
                 }
             }
             return false;
