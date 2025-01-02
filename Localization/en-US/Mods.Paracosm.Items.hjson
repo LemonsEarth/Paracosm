@@ -921,3 +921,12 @@ MarkOfTheInfiltrator: {
 		Grants infinite flight
 		'''
 }
+
+RingOfDesperation: {
+	DisplayName: Ring Of Desperation
+	Tooltip:
+		'''
+		Not Consumable
+		One last Challenge
+		'''
+}

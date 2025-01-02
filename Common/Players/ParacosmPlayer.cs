@@ -740,7 +740,7 @@ namespace Paracosm.Common.Players
 
             if (DashDelay == 0 && DashDir != 0)
             {
-                Player.velocity = new Vector2(DashDir * DashVelocity, 0f);
+                Player.velocity = new Vector2(DashDir * DashVelocity, Player.velocity.Y);
                 DashDelay = DashCD;      
                 DashTimer = DashDuration;
                 LemonUtils.DustCircle(Player.Center, 16, 5, DustID.Granite, 1.3f);

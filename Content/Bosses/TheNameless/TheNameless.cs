@@ -36,7 +36,7 @@ namespace Paracosm.Content.Bosses.TheNameless
                 {
                     diffMod = 0;
                 }
-                int maxVal = phase == 1 ? 2 : 3;
+                int maxVal = phase == 1 ? 3 : 3;
                 if (value > maxVal + diffMod || value < 0)
                 {
                     NPC.ai[1] = 0;
@@ -58,7 +58,7 @@ namespace Paracosm.Content.Bosses.TheNameless
         bool phaseTransition = false;
 
         float attackDuration = 0;
-        int[] attackDurations = { 480, 480, 900 };
+        int[] attackDurations = { 480, 480, 900, 1200, 600 };
         int[] attackDurations2 = { 600, 900, 720, 900 };
         public Player player { get; private set; }
         public Vector2 playerDirection { get; private set; }
@@ -73,13 +73,15 @@ namespace Paracosm.Content.Bosses.TheNameless
             {"Sphere", ModContent.ProjectileType<BorderSphere>()},
             {"SplitSpear", ModContent.ProjectileType<VoidSpearSplit>()},
             {"Bomb", ModContent.ProjectileType<VoidBombHostile>()},
+            {"Vortex", ModContent.ProjectileType<VoidVortex>()},
         };
 
         public enum Attacks
         {
             SplitSpearThrow,
             RainingSplitShot,
-            BombsWithSpear
+            BombsWithSpear,
+            VortexSpam
         }
 
         public enum Attacks2
@@ -255,6 +257,9 @@ namespace Paracosm.Content.Bosses.TheNameless
                     case (int)Attacks.BombsWithSpear:
                         BombsWithSpear();
                         break;
+                    case (int)Attacks.VortexSpam:
+                        VortexSpam();
+                        break;
                 }
             }
             else
@@ -303,7 +308,7 @@ namespace Paracosm.Content.Bosses.TheNameless
         void Intro()
         {
             NPC.dontTakeDamage = true;
-            NPC.velocity = NPC.Center.DirectionTo(player.Center + new Vector2(500, 0)) * (NPC.Center.Distance(player.Center + new Vector2(500, 0)) / 12);
+            NPC.velocity = NPC.Center.DirectionTo(player.Center + new Vector2(500, 0)) * (NPC.Center.Distance(player.Center + new Vector2(500, 0)) / 36);
             NPC.Opacity += 1f / 20f;
             Attack = 0;
             attackDuration = attackDurations[(int)Attack];
@@ -425,6 +430,30 @@ namespace Paracosm.Content.Bosses.TheNameless
                         ThrowSplitSpear(60, 5, 0);
                         AttackCount = 0;
                     }
+                    return;
+            }
+            AttackTimer--;
+        }
+
+        const int VORTEX_START_TIME = 240;
+        const int VORTEX_INDICATOR_TIME = 180;
+        const int VORTEX_SHOOT_TIME = 120;
+        void VortexSpam()
+        {
+            NPC.velocity = playerDirection.SafeNormalize(Vector2.Zero) * 2;
+            switch (AttackTimer)
+            {
+                case VORTEX_INDICATOR_TIME:
+                    LemonUtils.DustCircle(NPC.Center, 8, 15f, DustID.Granite, 1.3f);
+                    break;
+                case VORTEX_SHOOT_TIME:
+                    if (Main.netMode != NetmodeID.MultiplayerClient)
+                    {
+                        Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, playerDirection.SafeNormalize(Vector2.Zero) * 15, Proj["Vortex"], NPC.damage, 1f, ai0: 300, ai1: 100, ai2: 30);
+                    }
+                    break;
+                case 0:
+                    AttackTimer = VORTEX_START_TIME;                   
                     return;
             }
             AttackTimer--;
