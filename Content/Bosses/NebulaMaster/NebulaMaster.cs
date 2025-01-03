@@ -359,7 +359,7 @@ namespace Paracosm.Content.Bosses.NebulaMaster
                     LemonUtils.DustCircle(NPC.Center, 16, Main.rand.NextFloat(15, 20), DustID.GemAmethyst, Main.rand.NextFloat(1.2f, 1.8f), true);
                     if (NPC.life < NPC.lifeMax)
                     {
-                        int lifeHealed = 5000;
+                        int lifeHealed = NPC.lifeMax / 100;
                         if (NPC.life + lifeHealed > NPC.lifeMax)
                         {
                             lifeHealed = NPC.lifeMax - NPC.life;

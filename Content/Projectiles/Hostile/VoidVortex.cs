@@ -79,14 +79,14 @@ namespace Paracosm.Content.Projectiles.Hostile
 
             foreach (Player player in Main.player)
             {
-                if (player.Center.Distance(Projectile.Center) < 600)
+                if (player.Center.Distance(Projectile.Center) < 400)
                 {
                     player.velocity += player.Center.DirectionTo(Projectile.Center) * 1f;
                 }
             }
 
             Lighting.AddLight(Projectile.Center, 10, 80, 10);
-            Projectile.rotation = MathHelper.ToRadians(AITimer * 6);
+            Projectile.rotation = MathHelper.ToRadians(AITimer * 12);
 
             Projectile.frameCounter++;
             if (Projectile.frameCounter == 6)

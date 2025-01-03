@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Paracosm.Common.Systems;
 using Paracosm.Common.Utils;
+using Paracosm.Content.Biomes.Void;
 using Paracosm.Content.Buffs;
 using Paracosm.Content.Items.BossBags;
 using Paracosm.Content.Items.Materials;
@@ -13,8 +14,11 @@ using System.IO;
 using System.Linq;
 using Terraria;
 using Terraria.Audio;
+using Terraria.GameContent;
 using Terraria.GameContent.Bestiary;
 using Terraria.GameContent.ItemDropRules;
+using Terraria.Graphics.Effects;
+using Terraria.Graphics.Shaders;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
@@ -36,7 +40,7 @@ namespace Paracosm.Content.Bosses.TheNameless
                 {
                     diffMod = 0;
                 }
-                int maxVal = phase == 1 ? 3 : 3;
+                int maxVal = phase == 1 ? 3 : 0;
                 if (value > maxVal + diffMod || value < 0)
                 {
                     NPC.ai[1] = 0;
@@ -59,7 +63,7 @@ namespace Paracosm.Content.Bosses.TheNameless
 
         float attackDuration = 0;
         int[] attackDurations = { 480, 480, 900, 1200, 600 };
-        int[] attackDurations2 = { 600, 900, 720, 900 };
+        int[] attackDurations2 = { 900, 900, 720, 900 };
         public Player player { get; private set; }
         public Vector2 playerDirection { get; private set; }
         Vector2 targetPosition = Vector2.Zero;
@@ -68,12 +72,14 @@ namespace Paracosm.Content.Bosses.TheNameless
         bool arenaFollow = true;
 
         List<Projectile> Spheres = new List<Projectile>();
+        List<Projectile> VoidEruptionHooks = new List<Projectile>();
         Dictionary<string, int> Proj = new Dictionary<string, int>
         {
             {"Sphere", ModContent.ProjectileType<BorderSphere>()},
             {"SplitSpear", ModContent.ProjectileType<VoidSpearSplit>()},
             {"Bomb", ModContent.ProjectileType<VoidBombHostile>()},
             {"Vortex", ModContent.ProjectileType<VoidVortex>()},
+            {"VoidEruption", ModContent.ProjectileType<VoidEruption>()},
         };
 
         public enum Attacks
@@ -86,7 +92,7 @@ namespace Paracosm.Content.Bosses.TheNameless
 
         public enum Attacks2
         {
-
+            VoidEruptionSpin
         }
 
         public override void SetStaticDefaults()
@@ -126,7 +132,7 @@ namespace Paracosm.Content.Bosses.TheNameless
             NPC.height = 56;
             NPC.Opacity = 1;
             NPC.lifeMax = 1500000;
-            NPC.defense = 100;
+            NPC.defense = 40;
             NPC.damage = 40;
             NPC.HitSound = SoundID.NPCHit54;
             NPC.DeathSound = SoundID.NPCDeath52;
@@ -139,7 +145,7 @@ namespace Paracosm.Content.Bosses.TheNameless
 
             if (!Main.dedServ)
             {
-                Music = MusicLoader.GetMusicSlot(Mod, "Content/Audio/Music/CelestialShowdown");
+                Music = MusicLoader.GetMusicSlot(Mod, "Content/Audio/Music/AnotherSamePlace");
             }
         }
 
@@ -235,8 +241,16 @@ namespace Paracosm.Content.Bosses.TheNameless
             if (NPC.life <= (NPC.lifeMax * 0.5f) && !phase2FirstTime)
             {
                 SwitchAttacks();
-                phase2FirstTime = true;
-                phase = 2;
+                AttackTimer = PHASE_TRANSITION_DURATION;
+                phaseTransition = true;
+            }
+
+
+            if (phaseTransition)
+            {
+                PhaseTransition();
+                AITimer++;
+                return;
             }
 
             if (attackDuration <= 0)
@@ -246,6 +260,7 @@ namespace Paracosm.Content.Bosses.TheNameless
 
             if (phase == 1)
             {
+                NPC.defense = 60;
                 switch (Attack)
                 {
                     case (int)Attacks.SplitSpearThrow:
@@ -264,14 +279,74 @@ namespace Paracosm.Content.Bosses.TheNameless
             }
             else
             {
+                NPC.defense = 100;
                 switch (Attack)
                 {
-
+                    case (int)Attacks2.VoidEruptionSpin:
+                        VoidEruptionSpin();
+                        break;
                 }
             }
 
             attackDuration--;
             AITimer++;
+        }
+
+        const int PHASE_TRANSITION_DURATION = 420;
+        void PhaseTransition()
+        {
+            switch (AttackTimer)
+            {
+                case PHASE_TRANSITION_DURATION:
+                    if (Main.netMode != NetmodeID.MultiplayerClient)
+                    {
+                        phase2FirstTime = true;
+                        phase = 2;
+                    }
+                    if (!Main.dedServ)
+                    {
+                        Music = MusicLoader.GetMusicSlot(Mod, "Content/Audio/Music/AMemoryOfATime");
+                    }
+                    NPC.velocity = Vector2.Zero;
+                    NPC.netUpdate = true;
+                    NPC.dontTakeDamage = true;
+                    break;
+
+                case PHASE_TRANSITION_DURATION - 180:
+                    SoundEngine.PlaySound(SoundID.DD2_EtherianPortalDryadTouch);
+                    SoundEngine.PlaySound(SoundID.DD2_EtherianPortalOpen);
+                    SoundEngine.PlaySound(SoundID.Zombie105 with { Pitch = -1f, Volume = 2f });
+                    break;
+
+                case < PHASE_TRANSITION_DURATION - 180 and > PHASE_TRANSITION_DURATION - 360:
+                    LemonUtils.DustCircle(NPC.Center, 16, Main.rand.NextFloat(15, 20), DustID.Granite, Main.rand.NextFloat(1.2f, 1.8f), true);
+                    LemonUtils.DustCircle(NPC.Center, 16, Main.rand.NextFloat(15, 20), DustID.Granite, Main.rand.NextFloat(1.2f, 1.8f), true);
+                    if (NPC.life < NPC.lifeMax)
+                    {
+                        int lifeHealed = NPC.lifeMax / 100;
+                        if (NPC.life + lifeHealed > NPC.lifeMax)
+                        {
+                            lifeHealed = NPC.lifeMax - NPC.life;
+                        }
+                        NPC.life += lifeHealed;
+                        if (Main.netMode != NetmodeID.MultiplayerClient)
+                        {
+                            NPC.HealEffect(lifeHealed, true);
+                            NPC.netUpdate = true;
+                        }
+                    }
+                    break;
+
+                case 0:
+                    if (Main.netMode != NetmodeID.MultiplayerClient)
+                    {
+                        phaseTransition = false;
+                    }
+                    SwitchAttacks();
+                    NPC.netUpdate = true;
+                    return;
+            }
+            AttackTimer--;
         }
 
         void DespawnCheck()
@@ -286,7 +361,10 @@ namespace Paracosm.Content.Bosses.TheNameless
 
         public override void ModifyIncomingHit(ref NPC.HitModifiers modifiers)
         {
-            modifiers.FinalDamage *= 0.8f;
+            if (phase == 2)
+            {
+                modifiers.FinalDamage *= 0.8f;
+            }
         }
 
         void Visuals()
@@ -298,10 +376,16 @@ namespace Paracosm.Content.Bosses.TheNameless
                 NPC.spriteDirection = -Math.Sign(playerDirection.X);
             }
 
-            //foreach (var p in Main.player)
-            //{
-            //    p.moonLordMonolithShader = true;
-            //}
+            if (phase == 2)
+            {
+                if (!Terraria.Graphics.Effects.Filters.Scene["Paracosm:DarknessShader"].IsActive() && Main.netMode != NetmodeID.Server)
+                {
+                    ScreenShaderData shader = Terraria.Graphics.Effects.Filters.Scene.Activate("Paracosm:DarknessShader").GetShader();
+                    shader.Shader.Parameters["distance"].SetValue(0.2f);
+                    shader.Shader.Parameters["maxGlow"].SetValue(1f);
+
+                }
+            }
         }
 
         const int INTRO_DURATION = 300;
@@ -332,6 +416,7 @@ namespace Paracosm.Content.Bosses.TheNameless
                     if (proj.Key != "Sphere")
                         DeleteProjectiles(proj.Value);
                 }
+                VoidEruptionHooks.Clear();
             }
 
             if (Spheres.Any(p => p.active == false))
@@ -343,13 +428,16 @@ namespace Paracosm.Content.Bosses.TheNameless
 
         void ThrowSplitSpear(int timeToFire, int splitInterval, int splitCount)
         {
-            var proj = Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center, Vector2.Zero, Proj["SplitSpear"], NPC.damage, 1f, ai0: timeToFire, ai1: splitInterval, ai2: splitCount);
-            var spear = (VoidSpearSplit)proj.ModProjectile;
-            spear.NPCOwner = NPC.whoAmI;
-
-            if (Main.netMode == NetmodeID.Server)
+            if (Main.netMode != NetmodeID.MultiplayerClient)
             {
-                NetMessage.SendData(MessageID.SyncProjectile, number: proj.whoAmI);
+                var proj = Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center, Vector2.Zero, Proj["SplitSpear"], NPC.damage, 1f, ai0: timeToFire, ai1: splitInterval, ai2: splitCount);
+                var spear = (VoidSpearSplit)proj.ModProjectile;
+                spear.NPCOwner = NPC.whoAmI;
+
+                if (Main.netMode == NetmodeID.Server)
+                {
+                    NetMessage.SendData(MessageID.SyncProjectile, number: proj.whoAmI);
+                }
             }
         }
 
@@ -362,10 +450,7 @@ namespace Paracosm.Content.Bosses.TheNameless
             switch (AttackTimer)
             {
                 case SST_ATTACK_RATE:
-                    if (Main.netMode != NetmodeID.MultiplayerClient)
-                    {
-                        ThrowSplitSpear(SST_ATTACK_RATE, SST_SPLIT_INTERVAL, SST_SPLIT_COUNT);
-                    }
+                    ThrowSplitSpear(SST_ATTACK_RATE, SST_SPLIT_INTERVAL, SST_SPLIT_COUNT);
                     break;
                 case 0:
                     AttackTimer = SST_ATTACK_RATE;
@@ -422,7 +507,7 @@ namespace Paracosm.Content.Bosses.TheNameless
                                 direction = 1;
                             }
                             Projectile.NewProjectile(NPC.GetSource_FromAI(), pos, Vector2.UnitY * Main.rand.Next(10, 25) * direction, Proj["Bomb"], NPC.damage, 1f, ai0: 60, ai1: 8, ai2: -direction);
-                        }                     
+                        }
                     }
                     AttackCount++;
                     if (AttackCount == 3)
@@ -453,9 +538,48 @@ namespace Paracosm.Content.Bosses.TheNameless
                     }
                     break;
                 case 0:
-                    AttackTimer = VORTEX_START_TIME;                   
+                    AttackTimer = VORTEX_START_TIME;
                     return;
             }
+            AttackTimer--;
+        }
+
+        const int ERUPTION_DEPLOY_TIME = 900;
+        const int ERUPTION_SPEAR_SHOOT_INTERVAL = 60;
+        const int ERUPTION_TIME_TO_POS = 60;
+        const int ERUPTION_WAIT_TIME = 60;
+        void VoidEruptionSpin()
+        {
+            switch (AttackTimer)
+            {
+                case ERUPTION_DEPLOY_TIME:
+                    if (Main.netMode != NetmodeID.MultiplayerClient)
+                    {
+                        for (int i = 0; i < 4; i++)
+                        {
+                            Projectile proj = Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center, Vector2.Zero, Proj["VoidEruption"], NPC.damage, 1f, ai0: NPC.whoAmI, ai1: 30, ai2: 60);
+                            VoidEruption eruption = proj.ModProjectile as VoidEruption;
+                            Vector2 destination = NPC.Center + (Vector2.UnitY * ERUPTION_SPIN_ARENA_DISTANCE).RotatedBy(i * MathHelper.PiOver2);
+                            eruption.Position = destination;
+                            eruption.TimeToPosition = ERUPTION_TIME_TO_POS;
+                            eruption.WaitTime = ERUPTION_WAIT_TIME;
+                            eruption.RotSpeed = 1;
+                            VoidEruptionHooks.Add(proj);
+                            NetMessage.SendData(MessageID.SyncProjectile, number: proj.whoAmI);
+                        }
+                    }
+                    break;
+                case > 0:
+                    if (AttackTimer % ERUPTION_SPEAR_SHOOT_INTERVAL == 0 && Main.expertMode)
+                    {
+                        ThrowSplitSpear(60, 20, 0);
+                    }
+                    break;
+                case 0:
+                    AttackTimer = ERUPTION_DEPLOY_TIME;
+                    return;
+            }
+
             AttackTimer--;
         }
 
@@ -472,6 +596,7 @@ namespace Paracosm.Content.Bosses.TheNameless
         }
 
         const int BASE_ARENA_DISTANCE = 1500;
+        const int ERUPTION_SPIN_ARENA_DISTANCE = 800;
         public void Arena()
         {
             float targetArenaDistance = BASE_ARENA_DISTANCE;
@@ -489,10 +614,13 @@ namespace Paracosm.Content.Bosses.TheNameless
             }
             else
             {
-                /*switch (Attack)
+                switch (Attack)
                 {
-
-                }*/
+                    case (int)Attacks2.VoidEruptionSpin:
+                        targetArenaDistance = ERUPTION_SPIN_ARENA_DISTANCE;
+                        arenaFollow = false;
+                        break;
+                }
             }
             if (AITimer % 5 == 0)
             {
@@ -578,6 +706,32 @@ namespace Paracosm.Content.Bosses.TheNameless
                 if (NPC.frame.Y > 2 * frameHeight)
                 {
                     NPC.frame.Y = 0;
+                }
+            }
+        }
+
+        public override void PostDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
+        {
+            if (VoidEruptionHooks.Count == 0)
+            {
+                return;
+            }
+            foreach (var hook in VoidEruptionHooks) // draw hook chains
+            {
+                Vector2 drawPos = NPC.Center;
+                Vector2 NPCToProj = hook.Center - NPC.Center;
+                int segmentHeight = 34;
+                float distanceLeft = NPCToProj.Length() + segmentHeight / 2;
+                float rotation = NPCToProj.ToRotation();
+                Texture2D texture = TextureAssets.Projectile[hook.type].Value;
+                Rectangle secondFrame = texture.Frame(1, 3, 0, 1);
+
+                while (distanceLeft > 0f)
+                {
+                    drawPos += NPCToProj.SafeNormalize(Vector2.Zero) * segmentHeight;
+                    distanceLeft = drawPos.Distance(hook.Center);
+                    distanceLeft -= segmentHeight;
+                    Main.EntitySpriteDraw(texture, drawPos - Main.screenPosition, secondFrame, Color.White, rotation, new Vector2(17, 17), 1f, SpriteEffects.None);
                 }
             }
         }
