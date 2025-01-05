@@ -8,86 +8,81 @@ using Terraria.ModLoader;
 
 namespace Paracosm.Content.Projectiles.Hostile
 {
-    public class BorderSphere : ModProjectile
+    public class DarkFist : ModProjectile
     {
-        ref float AITimer => ref Projectile.ai[0];
-        ref float DamageNullTimer => ref Projectile.ai[1];
+        int AITimer = 0;
+        ref float SpeedMul => ref Projectile.ai[0];
 
         public override void SetStaticDefaults()
         {
-            Main.projFrames[Projectile.type] = 2;
+            Main.projFrames[Projectile.type] = 3;
             ProjectileID.Sets.TrailCacheLength[Projectile.type] = 4;
-            ProjectileID.Sets.TrailingMode[Projectile.type] = 0;
+            ProjectileID.Sets.TrailingMode[Projectile.type] = 2;
         }
 
         public override void SetDefaults()
         {
-            Projectile.width = 60;
-            Projectile.height = 60;
+            Projectile.width = 50;
+            Projectile.height = 50;
             Projectile.hostile = true;
             Projectile.friendly = false;
             Projectile.ignoreWater = true;
             Projectile.tileCollide = false;
-            Projectile.timeLeft = 3600;
-            Projectile.alpha = 255;
+            Projectile.timeLeft = 240;
             Projectile.penetrate = -1;
-            Projectile.netImportant = true;
+            DrawOffsetX = -15;
         }
 
         public override void AI()
         {
             if (Projectile.alpha > 0)
             {
-                Projectile.alpha -= 255 / 60;
+                Projectile.alpha -= 7;
             }
             if (AITimer == 0)
             {
-                SoundEngine.PlaySound(SoundID.Item20 with { MaxInstances = 2 });
-                Projectile.damage = 0;
-                Projectile.netUpdate = true;
+                if (SpeedMul == 0)
+                {
+                    SpeedMul = 1;
+                }
+                SoundEngine.PlaySound(SoundID.Zombie81 with { MaxInstances = 2, PitchRange = (-0.5f, -0.3f)});
             }
 
-            if (AITimer % 5 == 0)
-            {
-                Projectile.netUpdate = true;
-            }
-
-            if (DamageNullTimer == 0)
-            {
-                Projectile.damage = Projectile.originalDamage;
-                Projectile.netUpdate = true;
-            }
-            Lighting.AddLight(Projectile.Center, 10, 10, 10);
-            Projectile.rotation = AITimer;
+            Projectile.velocity *= SpeedMul;
 
             Projectile.frameCounter++;
             if (Projectile.frameCounter == 6)
             {
                 Projectile.frame++;
                 Projectile.frameCounter = 0;
-                if (Projectile.frame >= 2)
+                if (Projectile.frame >= 3)
                 {
                     Projectile.frame = 0;
                 }
             }
+
+            Projectile.rotation = Projectile.velocity.ToRotation();
             AITimer++;
-            DamageNullTimer--;
+        }
+
+        public override void OnKill(int timeLeft)
+        {
+            SoundEngine.PlaySound(SoundID.Item89 with { MaxInstances = 1, SoundLimitBehavior = SoundLimitBehavior.ReplaceOldest, PitchRange = (-0.2f, 0.2f)}, Projectile.Center);
         }
 
         public override bool PreDraw(ref Color lightColor)
         {
             Texture2D texture = TextureAssets.Projectile[Type].Value;
-
             Vector2 drawOrigin = new Vector2(texture.Width * 0.5f, Projectile.height * 0.5f);
             for (int k = Projectile.oldPos.Length - 1; k > 0; k--)
             {
-                Rectangle drawRectangle = texture.Frame(1, Main.projFrames[Type], 0, 1);
+                Rectangle drawRectangle = texture.Frame(1, Main.projFrames[Type], 0, k);
 
-                Vector2 drawPos = (Projectile.oldPos[k] - Main.screenPosition) + drawOrigin + new Vector2(0f, Projectile.gfxOffY);
+                Vector2 drawPos = (Projectile.oldPos[k] - Main.screenPosition) + drawOrigin + new Vector2(DrawOffsetX, DrawOriginOffsetY);
                 Color color = Projectile.GetAlpha(lightColor) * ((Projectile.oldPos.Length - k) / (float)Projectile.oldPos.Length);
+                color.A /= 2;
                 Main.EntitySpriteDraw(texture, drawPos, drawRectangle, color, Projectile.rotation, drawOrigin, Projectile.scale, SpriteEffects.None, 0);
             }
-
             return true;
         }
     }

@@ -25,6 +25,7 @@ namespace Paracosm
             GameShaders.Misc["Paracosm:ProjectileLightShader"] = new MiscShaderData(projLightShader, "ProjectileLight");
 
             SkyManager.Instance["Paracosm:VoidSky"] = new VoidSkySky();
+            SkyManager.Instance["Paracosm:NamelessSky"] = new NamelessSky();
         }
     }
 }

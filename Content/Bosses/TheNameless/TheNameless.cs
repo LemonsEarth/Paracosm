@@ -40,7 +40,7 @@ namespace Paracosm.Content.Bosses.TheNameless
                 {
                     diffMod = 0;
                 }
-                int maxVal = phase == 1 ? 3 : 0;
+                int maxVal = phase == 1 ? 3 : 2;
                 if (value > maxVal + diffMod || value < 0)
                 {
                     NPC.ai[1] = 0;
@@ -80,6 +80,7 @@ namespace Paracosm.Content.Bosses.TheNameless
             {"Bomb", ModContent.ProjectileType<VoidBombHostile>()},
             {"Vortex", ModContent.ProjectileType<VoidVortex>()},
             {"VoidEruption", ModContent.ProjectileType<VoidEruption>()},
+            {"Fist", ModContent.ProjectileType<DarkFist>()},
         };
 
         public enum Attacks
@@ -87,12 +88,14 @@ namespace Paracosm.Content.Bosses.TheNameless
             SplitSpearThrow,
             RainingSplitShot,
             BombsWithSpear,
-            VortexSpam
+            VortexSpam,
         }
 
         public enum Attacks2
         {
-            VoidEruptionSpin
+            VoidEruptionSpin,
+            DashFistSpam,
+            BombRain,
         }
 
         public override void SetStaticDefaults()
@@ -285,6 +288,12 @@ namespace Paracosm.Content.Bosses.TheNameless
                     case (int)Attacks2.VoidEruptionSpin:
                         VoidEruptionSpin();
                         break;
+                    case (int)Attacks2.DashFistSpam:
+                        DashFistSpam();
+                        break;
+                    case (int)Attacks2.BombRain:
+                        BombRain();
+                        break;
                 }
             }
 
@@ -306,6 +315,10 @@ namespace Paracosm.Content.Bosses.TheNameless
                     if (!Main.dedServ)
                     {
                         Music = MusicLoader.GetMusicSlot(Mod, "Content/Audio/Music/AMemoryOfATime");
+                    }
+                    if (SkyManager.Instance["Paracosm:NamelessSky"] != null && !SkyManager.Instance["Paracosm:NamelessSky"].IsActive())
+                    {
+                        SkyManager.Instance.Activate("Paracosm:NamelessSky");
                     }
                     NPC.velocity = Vector2.Zero;
                     NPC.netUpdate = true;
@@ -353,6 +366,7 @@ namespace Paracosm.Content.Bosses.TheNameless
         {
             if (player.dead || !player.active || NPC.Center.Distance(player.MountedCenter) > 8000)
             {
+                SkyManager.Instance.Deactivate("Paracosm:NamelessSky");
                 NPC.active = false;
                 NPC.life = 0;
                 NetMessage.SendData(MessageID.SyncNPC, number: NPC.whoAmI);
@@ -381,8 +395,8 @@ namespace Paracosm.Content.Bosses.TheNameless
                 if (!Terraria.Graphics.Effects.Filters.Scene["Paracosm:DarknessShader"].IsActive() && Main.netMode != NetmodeID.Server)
                 {
                     ScreenShaderData shader = Terraria.Graphics.Effects.Filters.Scene.Activate("Paracosm:DarknessShader").GetShader();
-                    shader.Shader.Parameters["distance"].SetValue(0.2f);
-                    shader.Shader.Parameters["maxGlow"].SetValue(1f);
+                    shader.Shader.Parameters["distance"].SetValue(0.8f);
+                    shader.Shader.Parameters["maxGlow"].SetValue(1.1f);
 
                 }
             }
@@ -579,7 +593,77 @@ namespace Paracosm.Content.Bosses.TheNameless
                     AttackTimer = ERUPTION_DEPLOY_TIME;
                     return;
             }
+            NPC.velocity = Vector2.Zero;
+            AttackTimer--;
+        }
 
+        const int DASH_FIST_START_TIME = 120;
+        const int DASH_FIST_DASH_TIME = 60;
+        const int DASH_FIST_FIST_TIME = 30;
+        void DashFistSpam()
+        {
+            switch(AttackTimer)
+            {
+                case DASH_FIST_DASH_TIME:
+                    NPC.velocity = playerDirection.SafeNormalize(Vector2.Zero) * 30;
+                    break;
+                case > DASH_FIST_FIST_TIME:
+                    if (AITimer % 2 == 0)
+                    {
+                        LemonUtils.DustCircle(NPC.Center, 16, Main.rand.NextFloat(15, 20), DustID.Granite, Main.rand.NextFloat(1.2f, 1.5f), true);
+                    }
+                    break;
+                case DASH_FIST_FIST_TIME:
+                    NPC.velocity = Vector2.Zero;
+
+                    LemonUtils.DustCircle(NPC.Center, 16, Main.rand.NextFloat(15, 20), DustID.Granite, Main.rand.NextFloat(1.5f, 2.3f), true);
+                    if (Main.netMode != NetmodeID.MultiplayerClient)
+                    {
+                        for (int i = -3; i <= 3; i++)
+                        {
+                            Vector2 direction = playerDirection.RotatedBy(MathHelper.ToRadians(i * 15 + Main.rand.Next(-10, 10)));
+                            Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, direction.SafeNormalize(Vector2.Zero) * Main.rand.NextFloat(5f, 8f), Proj["Fist"], NPC.damage, 1f, ai0: Main.rand.NextFloat(1.02f, 1.06f));
+                        }
+                    }
+                    break;
+                case > 0 and < DASH_FIST_FIST_TIME:
+                    NPC.velocity = playerDirection.SafeNormalize(Vector2.Zero) * 8;
+                    break;
+                case 0:
+                    AttackTimer = DASH_FIST_START_TIME;
+                    return;
+            }
+            AttackTimer--;
+        }
+
+        const int BOMB_RAIN_START_TIME = 240;
+        const int BOMB_RAIN_BOMB_TIME = 180;
+        void BombRain()
+        {
+            switch (AttackTimer)
+            {
+                case BOMB_RAIN_START_TIME:
+                    if (Main.netMode != NetmodeID.MultiplayerClient)
+                    {
+                        NPC.velocity = Vector2.UnitY.RotatedByRandom(MathHelper.Pi * 2) * 10;
+                    }
+                    NPC.netUpdate = true;
+                    break;
+                case BOMB_RAIN_BOMB_TIME:
+                    NPC.velocity = Vector2.Zero;
+                    if (Main.netMode != NetmodeID.MultiplayerClient)
+                    {
+                        for (int i = -1; i <= 1; i+=2)
+                        {
+                            Vector2 pos = player.Center + new Vector2(Main.rand.Next(-300, 300), i * 200);
+                            Projectile.NewProjectile(NPC.GetSource_FromAI(), pos, Vector2.Zero, Proj["Bomb"], NPC.damage, 1f, ai0: 60, ai1: 8, ai2: -i * 1.4f);
+                        }
+                    }
+                    break;
+                case 0:
+                    AttackTimer = BOMB_RAIN_START_TIME;
+                    return;
+            }
             AttackTimer--;
         }
 
@@ -597,6 +681,8 @@ namespace Paracosm.Content.Bosses.TheNameless
 
         const int BASE_ARENA_DISTANCE = 1500;
         const int ERUPTION_SPIN_ARENA_DISTANCE = 800;
+        const int DASHFIST_ARENA_DISTANCE = 1600;
+        const int BOMBRAIN_ARENA_DISTANCE = 1200;
         public void Arena()
         {
             float targetArenaDistance = BASE_ARENA_DISTANCE;
@@ -618,7 +704,15 @@ namespace Paracosm.Content.Bosses.TheNameless
                 {
                     case (int)Attacks2.VoidEruptionSpin:
                         targetArenaDistance = ERUPTION_SPIN_ARENA_DISTANCE;
+                        arenaFollow = true;
+                        break;
+                    case (int)Attacks2.DashFistSpam:
+                        targetArenaDistance = DASHFIST_ARENA_DISTANCE;
                         arenaFollow = false;
+                        break;
+                    case (int)Attacks2.BombRain:
+                        targetArenaDistance = BOMBRAIN_ARENA_DISTANCE;
+                        arenaFollow = true;
                         break;
                 }
             }
@@ -759,6 +853,7 @@ namespace Paracosm.Content.Bosses.TheNameless
 
         public override void OnKill()
         {
+            SkyManager.Instance.Deactivate("Paracosm:NamelessSky");
             DeleteProjectiles(Proj["Sphere"]);
             NPC.SetEventFlagCleared(ref DownedBossSystem.downedTheNameless, -1);
             for (int i = 0; i < 16; i++)
