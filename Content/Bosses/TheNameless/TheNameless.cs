@@ -603,7 +603,7 @@ namespace Paracosm.Content.Bosses.TheNameless
                 case > 0:
                     if (AttackTimer % ERUPTION_SPEAR_SHOOT_INTERVAL == 0 && Main.expertMode)
                     {
-                        ThrowSplitSpear(60, 20, 0);
+                        ThrowSplitSpear(60, 10, 0);
                     }
                     break;
                 case 0:
@@ -629,6 +629,13 @@ namespace Paracosm.Content.Bosses.TheNameless
                     {
                         LemonUtils.DustCircle(NPC.Center, 16, Main.rand.NextFloat(15, 20), DustID.Granite, Main.rand.NextFloat(1.2f, 1.5f), true);
                     }
+                    if (AttackTimer % 10 == 0)
+                    {
+                        for (int i = -1; i <= 1; i += 2)
+                        {
+                            Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, NPC.velocity.SafeNormalize(Vector2.Zero).RotatedBy(i * MathHelper.PiOver2) * 20, ModContent.ProjectileType<VoidBoltSplit>(), NPC.damage, 1f, ai0: 60, ai1: 0);
+                        }
+                    }
                     break;
                 case DASH_FIST_FIST_TIME:
                     NPC.velocity = Vector2.Zero;
@@ -653,32 +660,33 @@ namespace Paracosm.Content.Bosses.TheNameless
             AttackTimer--;
         }
 
-        const int BOMB_RAIN_START_TIME = 240;
-        const int BOMB_RAIN_BOMB_TIME = 180;
+        const int BOMB_RAIN_START_TIME = 120;
+        const int BOMB_RAIN_BOMB_TIME = 20;
         void BombRain()
         {
             switch (AttackTimer)
             {
-                case BOMB_RAIN_START_TIME:
-                    if (Main.netMode != NetmodeID.MultiplayerClient)
-                    {
-                        NPC.velocity = Vector2.UnitY.RotatedByRandom(MathHelper.Pi * 2) * 10;
-                    }
-                    NPC.netUpdate = true;
-                    break;
                 case BOMB_RAIN_BOMB_TIME:
-                    NPC.velocity = Vector2.Zero;
                     if (Main.netMode != NetmodeID.MultiplayerClient)
                     {
-                        for (int i = -1; i <= 1; i += 2)
-                        {
-                            Vector2 pos = player.Center + new Vector2(Main.rand.Next(-300, 300), i * 200);
-                            Projectile.NewProjectile(NPC.GetSource_FromAI(), pos, Vector2.Zero, Proj["Bomb"], NPC.damage, 1f, ai0: 60, ai1: 8, ai2: -i * 1.4f);
-                        }
+                        Vector2 pos = player.Center + -Vector2.UnitY * 150;
+                        Projectile.NewProjectile(NPC.GetSource_FromAI(), pos, Vector2.Zero, Proj["Bomb"], NPC.damage, 1f, ai0: 60, ai1: 8, ai2: 1.2f);
                     }
+                    AttackCount++;
+                    break;
+                case > 0:
+                    NPC.velocity = playerDirection.SafeNormalize(Vector2.Zero) * 2;
                     break;
                 case 0:
-                    AttackTimer = BOMB_RAIN_START_TIME;
+                    if (AttackCount < 12)
+                    {
+                        AttackTimer = BOMB_RAIN_BOMB_TIME;
+                    }
+                    else
+                    {
+                        AttackTimer = BOMB_RAIN_START_TIME;
+                        AttackCount = 0;
+                    }
                     return;
             }
             AttackTimer--;
