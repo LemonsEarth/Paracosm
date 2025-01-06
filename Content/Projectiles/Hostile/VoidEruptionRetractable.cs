@@ -15,30 +15,13 @@ namespace Paracosm.Content.Projectiles.Hostile
     {
         int AITimer = 0;
         ref float NPCToFollow => ref Projectile.ai[0];
+        ref float MoveTime => ref Projectile.ai[1];
+        ref float RetractTime => ref Projectile.ai[2];
 
         public override string Texture => "Paracosm/Content/Projectiles/Hostile/VoidEruption";
-
-        public Vector2 Position { get; set; }
-        public float TimeToPosition { get; set; }
-        public float RetractTime { get; set; }
         public override void SetStaticDefaults()
         {
             Main.projFrames[Projectile.type] = 3;
-        }
-
-        public override void SendExtraAI(BinaryWriter writer)
-        {
-            writer.Write(Position.X);
-            writer.Write(Position.Y);
-            writer.Write(TimeToPosition);
-            writer.Write(RetractTime);
-        }
-
-        public override void ReceiveExtraAI(BinaryReader reader)
-        {
-            Position = new Vector2(reader.ReadSingle(), reader.ReadSingle());
-            TimeToPosition = reader.ReadSingle();
-            RetractTime = reader.ReadSingle();
         }
 
         public override void SetDefaults()
@@ -68,13 +51,15 @@ namespace Paracosm.Content.Projectiles.Hostile
 
             Projectile.rotation = nameless.Center.DirectionTo(Projectile.Center).ToRotation();
 
-            if (AITimer < TimeToPosition)
+            if (AITimer > MoveTime)
             {
-                Projectile.Center = Vector2.Lerp(Projectile.Center, Position, 1 / TimeToPosition);
+                Projectile.velocity = Vector2.Zero;
+                Projectile.velocity = (nameless.Center - Projectile.Center) / 12;
             }
-            else
+
+            if (AITimer - MoveTime > RetractTime)
             {
-                Projectile.Center = Vector2.Lerp(Projectile.Center, nameless.Center, 1 / RetractTime);
+                Projectile.Kill();
             }
 
             AITimer++;

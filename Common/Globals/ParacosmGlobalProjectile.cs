@@ -28,6 +28,7 @@ namespace Paracosm.Common.Globals
 
         public override void PostAI(Projectile projectile)
         {
+            if (projectile.owner <= 0) return;
             Player player = Main.player[projectile.owner];
             if (player.GetModPlayer<ParacosmPlayer>().commandersWill && projectile.sentry)
             {
