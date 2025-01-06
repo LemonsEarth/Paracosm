@@ -30,16 +30,19 @@ namespace Paracosm.Content.Shaders.Skies
         public override void Activate(Vector2 position, params object[] args)
         {
             _isActive = true;
+            opacity = 0;
         }
 
         public override void Deactivate(params object[] args)
         {
             _isActive = false;
+            opacity = 0;
         }
 
         public override void Reset()
         {
             _isActive = false;
+            opacity = 0;
         }
     }
 }
