@@ -3,11 +3,13 @@ using Paracosm.Common.Systems;
 using Paracosm.Common.Utils;
 using Paracosm.Content.Biomes.Overworld;
 using Paracosm.Content.Biomes.Void;
+using Paracosm.Content.Bosses.TheNameless;
 using Paracosm.Content.Buffs;
 using Paracosm.Content.Buffs.Cooldowns;
 using Paracosm.Content.Items.Accessories;
 using Paracosm.Content.Projectiles.Friendly;
 using Terraria;
+using Terraria.Graphics.Effects;
 using Terraria.Graphics.Shaders;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -573,6 +575,12 @@ namespace Paracosm.Common.Players
             else
             {
                 voidTerrorTimer = 0;
+            }
+
+            if (!NPC.AnyNPCs(ModContent.NPCType<TheNameless>()))
+            {
+                Filters.Scene.Deactivate("Paracosm:DarknessShaderPos");
+                SkyManager.Instance.Deactivate("Paracosm:NamelessSky");
             }
         }
 

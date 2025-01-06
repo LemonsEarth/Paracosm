@@ -21,6 +21,10 @@ namespace Paracosm
             Asset<Effect> darknessShader = Assets.Request<Effect>("Content/Shaders/DarknessShader");
             Filters.Scene["Paracosm:DarknessShader"] = new Filter(new ScreenShaderData(darknessShader, "Darkness"), EffectPriority.Medium);
 
+            // Darkness shader with position
+            Asset<Effect> darknessShaderPos = Assets.Request<Effect>("Content/Shaders/DarknessShaderPositioned");
+            Filters.Scene["Paracosm:DarknessShaderPos"] = new Filter(new ScreenShaderData(darknessShaderPos, "DarknessPos"), EffectPriority.Medium);
+
             Asset<Effect> projLightShader = Assets.Request<Effect>("Content/Shaders/ProjectileLightShader");
             GameShaders.Misc["Paracosm:ProjectileLightShader"] = new MiscShaderData(projLightShader, "ProjectileLight");
 

@@ -29,6 +29,9 @@ namespace Paracosm.Content.Bosses.TheNameless
     [AutoloadBossHead]
     public class TheNameless : ModNPC
     {
+        const string NoisePath = "Paracosm/Assets/Textures/FX/noiseTexture";
+        Asset<Texture2D> Noise;
+
         ref float AITimer => ref NPC.ai[0];
         public float Attack
         {
@@ -152,6 +155,11 @@ namespace Paracosm.Content.Bosses.TheNameless
             }
         }
 
+        public override void Load()
+        {
+            Noise = ModContent.Request<Texture2D>(NoisePath);
+        }
+
         public override void ApplyDifficultyAndPlayerScaling(int numPlayers, float balance, float bossAdjustment)
         {
             NPC.lifeMax = (int)(NPC.lifeMax * balance * bossAdjustment * 0.6f);
@@ -227,7 +235,14 @@ namespace Paracosm.Content.Bosses.TheNameless
 
             if (AITimer > INTRO_DURATION - 150)
             {
-                Arena();
+                if (phase == 1)
+                {
+                    Arena(50);
+                }
+                else
+                {
+                    Arena(0);
+                }
             }
 
             if (AITimer < INTRO_DURATION)
@@ -320,6 +335,7 @@ namespace Paracosm.Content.Bosses.TheNameless
                     {
                         SkyManager.Instance.Activate("Paracosm:NamelessSky");
                     }
+
                     NPC.velocity = Vector2.Zero;
                     NPC.netUpdate = true;
                     NPC.dontTakeDamage = true;
@@ -366,6 +382,7 @@ namespace Paracosm.Content.Bosses.TheNameless
         {
             if (player.dead || !player.active || NPC.Center.Distance(player.MountedCenter) > 8000)
             {
+                Terraria.Graphics.Effects.Filters.Scene.Deactivate("Paracosm:DarknessShaderPos");
                 SkyManager.Instance.Deactivate("Paracosm:NamelessSky");
                 NPC.active = false;
                 NPC.life = 0;
@@ -520,7 +537,7 @@ namespace Paracosm.Content.Bosses.TheNameless
                             {
                                 direction = 1;
                             }
-                            Projectile.NewProjectile(NPC.GetSource_FromAI(), pos, Vector2.UnitY * Main.rand.Next(10, 25) * direction, Proj["Bomb"], NPC.damage, 1f, ai0: 60, ai1: 8, ai2: -direction);
+                            Projectile.NewProjectile(NPC.GetSource_FromAI(), pos, Vector2.UnitY * Main.rand.Next(10, 25) * direction, Proj["Bomb"], NPC.damage, 1f, ai0: 60, ai1: 8, ai2: -direction * 0.8f);
                         }
                     }
                     AttackCount++;
@@ -548,7 +565,7 @@ namespace Paracosm.Content.Bosses.TheNameless
                 case VORTEX_SHOOT_TIME:
                     if (Main.netMode != NetmodeID.MultiplayerClient)
                     {
-                        Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, playerDirection.SafeNormalize(Vector2.Zero) * 15, Proj["Vortex"], NPC.damage, 1f, ai0: 300, ai1: 100, ai2: 30);
+                        Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, playerDirection.SafeNormalize(Vector2.Zero) * 10, Proj["Vortex"], NPC.damage, 1f, ai0: 300, ai1: 100, ai2: 30);
                     }
                     break;
                 case 0:
@@ -602,7 +619,7 @@ namespace Paracosm.Content.Bosses.TheNameless
         const int DASH_FIST_FIST_TIME = 30;
         void DashFistSpam()
         {
-            switch(AttackTimer)
+            switch (AttackTimer)
             {
                 case DASH_FIST_DASH_TIME:
                     NPC.velocity = playerDirection.SafeNormalize(Vector2.Zero) * 30;
@@ -653,7 +670,7 @@ namespace Paracosm.Content.Bosses.TheNameless
                     NPC.velocity = Vector2.Zero;
                     if (Main.netMode != NetmodeID.MultiplayerClient)
                     {
-                        for (int i = -1; i <= 1; i+=2)
+                        for (int i = -1; i <= 1; i += 2)
                         {
                             Vector2 pos = player.Center + new Vector2(Main.rand.Next(-300, 300), i * 200);
                             Projectile.NewProjectile(NPC.GetSource_FromAI(), pos, Vector2.Zero, Proj["Bomb"], NPC.damage, 1f, ai0: 60, ai1: 8, ai2: -i * 1.4f);
@@ -683,7 +700,7 @@ namespace Paracosm.Content.Bosses.TheNameless
         const int ERUPTION_SPIN_ARENA_DISTANCE = 800;
         const int DASHFIST_ARENA_DISTANCE = 1600;
         const int BOMBRAIN_ARENA_DISTANCE = 1200;
-        public void Arena()
+        public void Arena(int offset)
         {
             float targetArenaDistance = BASE_ARENA_DISTANCE;
             arenaFollow = true;
@@ -716,54 +733,80 @@ namespace Paracosm.Content.Bosses.TheNameless
                         break;
                 }
             }
+
             if (AITimer % 5 == 0)
             {
                 NPC.netUpdate = true;
             }
 
-            if (Main.netMode != NetmodeID.MultiplayerClient)
+            if (phase == 1)
             {
-                if (Spheres.Count < 40)
+                if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
-                    for (int i = 0; i < 40; i++)
+                    if (Spheres.Count < 40)
                     {
-                        var sphere = Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center + new Vector2(0, -arenaDistance).RotatedBy(i * MathHelper.ToRadians(9)), Vector2.Zero, Proj["Sphere"], NPC.damage, 1, ai1: 90f);
+                        for (int i = 0; i < 40; i++)
+                        {
+                            var sphere = Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center + new Vector2(0, -arenaDistance).RotatedBy(i * MathHelper.ToRadians(9)), Vector2.Zero, Proj["Sphere"], NPC.damage, 1, ai1: 90f);
 
-                        Spheres.Add(sphere);
+                            Spheres.Add(sphere);
+                        }
                     }
                 }
             }
-            NPC.netUpdate = true;
 
             if (arenaFollow)
             {
                 arenaCenter = NPC.Center;
             }
 
-            for (int i = 0; i < Spheres.Count; i++)
+            if (phase == 1)
             {
-                Vector2 pos = arenaCenter + new Vector2(0, -arenaDistance).RotatedBy(i * MathHelper.ToRadians(9)).RotatedBy(MathHelper.ToRadians(AITimer));
-                if (Spheres[i].type != Proj["Sphere"])
+                for (int i = 0; i < Spheres.Count; i++)
                 {
-                    continue;
-                }
+                    Vector2 pos = arenaCenter + new Vector2(0, -arenaDistance).RotatedBy(i * MathHelper.ToRadians(9)).RotatedBy(MathHelper.ToRadians(AITimer));
+                    if (Spheres[i].type != Proj["Sphere"])
+                    {
+                        continue;
+                    }
 
-                Spheres[i].velocity = (pos - Spheres[i].Center).SafeNormalize(Vector2.Zero) * (Spheres[i].Center.Distance(pos) / 50);
-                Spheres[i].timeLeft = 180;
+                    Spheres[i].velocity = (pos - Spheres[i].Center).SafeNormalize(Vector2.Zero) * (Spheres[i].Center.Distance(pos) / 50);
+                    Spheres[i].timeLeft = 180;
+                }
             }
 
-            arenaDistance += ((targetArenaDistance - arenaDistance) / 60);
+            if (phase == 1)
+            {
+                arenaDistance += (targetArenaDistance - arenaDistance) / 60;
+            }
+            else
+            {
+                arenaDistance += (targetArenaDistance - arenaDistance) / 30;
+            }
 
+            if (phase == 1)
+            {
+                Terraria.Graphics.Effects.Filters.Scene.Deactivate("Paracosm:DarknessShaderPos");
+            }
+            else
+            {
+                ScreenShaderData shader2 = Terraria.Graphics.Effects.Filters.Scene.Activate("Paracosm:DarknessShaderPos").GetShader();
+                shader2.UseTargetPosition(arenaCenter);
+                shader2.UseImage(Noise, 1);
+                shader2.Shader.Parameters["desiredPos"].SetValue(arenaCenter + new Vector2(arenaDistance - 200, 0));
+                shader2.Apply();
+            }
+
+            ArenaDebuff(offset);
+        }
+
+        void ArenaDebuff(float offset = 50)
+        {
             foreach (var player in Main.ActivePlayers)
             {
-                if (arenaCenter.Distance(player.MountedCenter) > arenaDistance + 50 && AITimer > INTRO_DURATION + 30)
+                if (arenaCenter.Distance(player.MountedCenter) > arenaDistance + offset && AITimer > INTRO_DURATION + 30)
                 {
                     player.AddBuff(ModContent.BuffType<Infected>(), 2);
-                }
-
-                if (arenaCenter.Distance(player.MountedCenter) < arenaDistance + 50 && AITimer > INTRO_DURATION - 60)
-                {
-                    player.AddBuff(ModContent.BuffType<NebulousPower>(), 2);
                 }
             }
         }
@@ -853,6 +896,7 @@ namespace Paracosm.Content.Bosses.TheNameless
 
         public override void OnKill()
         {
+            Terraria.Graphics.Effects.Filters.Scene.Deactivate("Paracosm:DarknessShaderPos");
             SkyManager.Instance.Deactivate("Paracosm:NamelessSky");
             DeleteProjectiles(Proj["Sphere"]);
             NPC.SetEventFlagCleared(ref DownedBossSystem.downedTheNameless, -1);
