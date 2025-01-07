@@ -913,7 +913,7 @@ MasterEmblem: {
 }
 
 MarkOfTheInfiltrator: {
-	DisplayName: Mark Of The Infiltrator
+	DisplayName: Mark of The Infiltrator
 	Tooltip:
 		'''
 		Allows you to dash, swim and dodge attacks

@@ -13,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 using Terraria;
 using Terraria.Audio;
 using Terraria.GameContent;
@@ -44,7 +45,7 @@ namespace Paracosm.Content.Bosses.TheNameless
                 {
                     diffMod = 0;
                 }
-                int maxVal = phase == 1 ? 3 : 5;
+                int maxVal = phase == 1 ? 3 : 6;
                 if (value > maxVal + diffMod || value < 0)
                 {
                     NPC.ai[1] = 0;
@@ -67,7 +68,7 @@ namespace Paracosm.Content.Bosses.TheNameless
 
         float attackDuration = 0;
         int[] attackDurations = { 480, 480, 900, 1200, 600 };
-        int[] attackDurations2 = { 900, 900, 720, 720, 900, 900, 720, 900, 720, 780 };
+        int[] attackDurations2 = { 900, 900, 720, 720, 900, 1080, 960, 900, 720, 780 };
         public Player player { get; private set; }
         public Vector2 playerDirection { get; private set; }
         Vector2 targetPosition = Vector2.Zero;
@@ -105,6 +106,7 @@ namespace Paracosm.Content.Bosses.TheNameless
             VoidEruptionReturn,
             SplitShotSpam,
             ConeFistSpear,
+            VortexSpam2,
         }
 
         public override void SetStaticDefaults()
@@ -187,6 +189,16 @@ namespace Paracosm.Content.Bosses.TheNameless
             writer.Write(Spheres.Count);
             writer.Write(phaseTransition);
             writer.Write(NPC.Opacity);
+
+            foreach (Vector2 pos in vortexPositions)
+            {
+                writer.Write(pos.X);
+            }
+
+            foreach (Vector2 pos in vortexPositions)
+            {
+                writer.Write(pos.Y);
+            }
         }
 
         public override void ReceiveExtraAI(BinaryReader reader)
@@ -218,6 +230,14 @@ namespace Paracosm.Content.Bosses.TheNameless
             }
             phaseTransition = reader.ReadBoolean();
             NPC.Opacity = reader.ReadSingle();
+            for (int i = 0; i < 5; i++)
+            {
+                vortexPositions[i].X = reader.ReadSingle();
+            }
+            for (int i = 0; i < 5; i++)
+            {
+                vortexPositions[i].Y = reader.ReadSingle();
+            }
         }
 
         public override void AI()
@@ -323,6 +343,9 @@ namespace Paracosm.Content.Bosses.TheNameless
                         break;
                     case (int)Attacks2.ConeFistSpear:
                         ConeFistSpear();
+                        break;
+                    case (int)Attacks2.VortexSpam2:
+                        VortexSpam2();
                         break;
                 }
             }
@@ -652,7 +675,7 @@ namespace Paracosm.Content.Bosses.TheNameless
                             {
                                 Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, NPC.velocity.SafeNormalize(Vector2.Zero).RotatedBy(i * MathHelper.PiOver2) * 20, Proj["SplitShot"], NPC.damage, 1f, ai0: 60, ai1: 0);
                             }
-                        }                     
+                        }
                     }
                     break;
                 case DASH_FIST_FIST_TIME:
@@ -712,7 +735,7 @@ namespace Paracosm.Content.Bosses.TheNameless
 
         const int VER_START_TIME = 720;
         const int VER_HOOK_INTERVAL = 20;
-        const int VER_SPLIT_INTERVAL= 30;
+        const int VER_SPLIT_INTERVAL = 30;
 
         void VoidEruptionReturn()
         {
@@ -739,7 +762,7 @@ namespace Paracosm.Content.Bosses.TheNameless
                                 Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, playerDirection.SafeNormalize(Vector2.Zero).RotatedBy(i * MathHelper.PiOver4) * 10, Proj["SplitShot"], NPC.damage, 1f, ai0: 60, ai1: 1);
                             }
                         }
-                    }                
+                    }
                     break;
                 case 0:
                     AttackTimer = VER_START_TIME;
@@ -776,7 +799,7 @@ namespace Paracosm.Content.Bosses.TheNameless
         const int CFS_START_TIME = 270;
         const int CFS_CONE_START_TIME = 210;
         const int CFS_CONE_FIST_RATE = 5;
-        const int CFS_DASH_TIME = 10;
+        const int CFS_DASH_TIME = 60;
         void ConeFistSpear()
         {
             switch (AttackTimer)
@@ -784,7 +807,7 @@ namespace Paracosm.Content.Bosses.TheNameless
                 case CFS_CONE_START_TIME:
                     NPC.velocity = Vector2.Zero;
                     break;
-                case > CFS_DASH_TIME and < CFS_CONE_START_TIME:
+                case > CFS_DASH_TIME and < CFS_CONE_START_TIME - 20:
                     if (Main.netMode != NetmodeID.MultiplayerClient)
                     {
                         if (AttackTimer % CFS_CONE_FIST_RATE == 0)
@@ -792,7 +815,15 @@ namespace Paracosm.Content.Bosses.TheNameless
                             for (int i = -1; i <= 1; i += 2)
                             {
                                 Vector2 direction = playerDirection.SafeNormalize(Vector2.Zero).RotatedBy(MathHelper.ToRadians(15 * i));
-                                Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, direction * 5, Proj["Fist"], NPC.damage, 1f, ai0: 1.1f);
+                                Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, direction * 7, Proj["Fist"], NPC.damage, 1f, ai0: 1.1f);
+                            }
+                            for (int i = -4; i <= 4; i++)
+                            {
+                                if (i >= -1 && i <= 1)
+                                {
+                                    continue;
+                                }
+                                Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, playerDirection.SafeNormalize(Vector2.Zero).RotatedBy(i * MathHelper.PiOver4) * 10, Proj["SplitShot"], NPC.damage, 1f, ai0: 60, ai1: 1);
                             }
                         }
                     }
@@ -802,10 +833,64 @@ namespace Paracosm.Content.Bosses.TheNameless
                     }
                     break;
                 case CFS_DASH_TIME:
-                    NPC.velocity = playerDirection.SafeNormalize(Vector2.Zero) * 30;
+                    if (Main.netMode != NetmodeID.MultiplayerClient)
+                    {
+                        targetPosition = arenaCenter + new Vector2(Main.rand.Next(-200, 200), Main.rand.Next(-200, 200));
+                    }
+                    NPC.netUpdate = true;
+                    break;
+                case > 0 and < CFS_DASH_TIME:
+                    MoveToPos(targetPosition, 1f, 1f, 1f, 1f);
                     break;
                 case 0:
                     AttackTimer = CFS_START_TIME;
+                    return;
+            }
+            AttackTimer--;
+        }
+
+        const int VS2_START_TIME = 240;
+        const int VS2_SPAWN_TIME = 180;
+
+        Vector2[] vortexPositions = new Vector2[5];
+
+        void VortexSpam2()
+        {
+            switch (AttackTimer)
+            {
+                case VS2_START_TIME:
+                    NPC.velocity = Vector2.Zero;
+                    if (Main.netMode != NetmodeID.MultiplayerClient)
+                    {
+                        vortexPositions[0] = NPC.Center;
+                        float distance = VS2_ARENA_DISTANCE - 200;
+                        for (int i = 1; i < vortexPositions.Length; i++)
+                        {
+                            vortexPositions[i] = arenaCenter + new Vector2(Main.rand.NextFloat(-distance, distance), Main.rand.NextFloat(-distance, distance));
+                        }
+                    }
+                    NPC.netUpdate = true;
+                    break;
+                case > VS2_SPAWN_TIME:
+                    if (AttackTimer % 20 == 0)
+                    {
+                        foreach (var pos in vortexPositions)
+                        {
+                            LemonUtils.DustCircle(pos, 16, Main.rand.NextFloat(15, 20), DustID.Granite, Main.rand.NextFloat(2f, 3f), true);
+                        }
+                    }
+                    break;
+                case VS2_SPAWN_TIME:
+                    if (Main.netMode != NetmodeID.MultiplayerClient)
+                    {
+                        for (int i = 0; i < vortexPositions.Length; i++)
+                        {
+                            Projectile.NewProjectile(NPC.GetSource_FromAI(), vortexPositions[i], Vector2.Zero, Proj["Vortex"], NPC.damage, 1f, ai0: 180, ai1: 60, ai2: 180);
+                        }
+                    }
+                    break;
+                case 0:
+                    AttackTimer = VS2_START_TIME;
                     return;
             }
             AttackTimer--;
@@ -830,6 +915,7 @@ namespace Paracosm.Content.Bosses.TheNameless
         const int VERETURN_ARENA_DISTANCE = 1300;
         const int SSS_ARENA_DISTANCE = 1000;
         const int CFS_ARENA_DISTANCE = 1000;
+        const int VS2_ARENA_DISTANCE = 1100;
         public void Arena(int offset)
         {
             float targetArenaDistance = BASE_ARENA_DISTANCE;
@@ -871,6 +957,10 @@ namespace Paracosm.Content.Bosses.TheNameless
                         break;
                     case (int)Attacks2.ConeFistSpear:
                         targetArenaDistance = CFS_ARENA_DISTANCE;
+                        arenaFollow = false;
+                        break;
+                    case (int)Attacks2.VortexSpam2:
+                        targetArenaDistance = VS2_ARENA_DISTANCE;
                         arenaFollow = true;
                         break;
                 }

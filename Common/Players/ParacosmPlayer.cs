@@ -577,7 +577,7 @@ namespace Paracosm.Common.Players
                 voidTerrorTimer = 0;
             }
 
-            if (!NPC.AnyNPCs(ModContent.NPCType<TheNameless>()))
+            if (!NPC.AnyNPCs(ModContent.NPCType<TheNameless>()) && SkyManager.Instance["Paracosm:NamelessSky"].IsActive())
             {
                 Filters.Scene.Deactivate("Paracosm:DarknessShaderPos");
                 SkyManager.Instance.Deactivate("Paracosm:NamelessSky");
