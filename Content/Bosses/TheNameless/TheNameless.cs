@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection.Metadata;
 using Terraria;
 using Terraria.Audio;
 using Terraria.GameContent;
@@ -68,13 +69,16 @@ namespace Paracosm.Content.Bosses.TheNameless
 
         float attackDuration = 0;
         int[] attackDurations = { 480, 480, 900, 1200, 600 };
-        int[] attackDurations2 = { 900, 900, 720, 720, 900, 1080, 960, 900, 720, 780 };
+        int[] attackDurations2 = { 900, 900, 720, 720, 900, 1080, 960 };
         public Player player { get; private set; }
         public Vector2 playerDirection { get; private set; }
         Vector2 targetPosition = Vector2.Zero;
         float arenaDistance = 0;
         Vector2 arenaCenter = Vector2.Zero;
         bool arenaFollow = true;
+
+        bool enteredFinalPhase = false;
+        bool doDeath = false;
 
         List<Projectile> Spheres = new List<Projectile>();
         List<Projectile> VoidEruptionHooks = new List<Projectile>();
@@ -277,7 +281,7 @@ namespace Paracosm.Content.Bosses.TheNameless
                 AITimer++;
                 return;
             }
-            if (!phaseTransition)
+            if (!phaseTransition && !enteredFinalPhase)
             {
                 NPC.dontTakeDamage = false;
             }
@@ -289,7 +293,6 @@ namespace Paracosm.Content.Bosses.TheNameless
                 phaseTransition = true;
             }
 
-
             if (phaseTransition)
             {
                 PhaseTransition();
@@ -297,60 +300,67 @@ namespace Paracosm.Content.Bosses.TheNameless
                 return;
             }
 
-            if (attackDuration <= 0)
+            if (!enteredFinalPhase)
             {
-                SwitchAttacks();
-            }
-
-            if (phase == 1)
-            {
-                NPC.defense = 60;
-                switch (Attack)
+                if (attackDuration <= 0)
                 {
-                    case (int)Attacks.SplitSpearThrow:
-                        SplitSpearThrow();
-                        break;
-                    case (int)Attacks.RainingSplitShot:
-                        RainingSplitShot();
-                        break;
-                    case (int)Attacks.BombsWithSpear:
-                        BombsWithSpear();
-                        break;
-                    case (int)Attacks.VortexSpam:
-                        VortexSpam();
-                        break;
+                    SwitchAttacks();
                 }
+
+                if (phase == 1)
+                {
+                    NPC.defense = 60;
+                    switch (Attack)
+                    {
+                        case (int)Attacks.SplitSpearThrow:
+                            SplitSpearThrow();
+                            break;
+                        case (int)Attacks.RainingSplitShot:
+                            RainingSplitShot();
+                            break;
+                        case (int)Attacks.BombsWithSpear:
+                            BombsWithSpear();
+                            break;
+                        case (int)Attacks.VortexSpam:
+                            VortexSpam();
+                            break;
+                    }
+                }
+                else
+                {
+                    NPC.defense = 100;
+                    switch (Attack)
+                    {
+                        case (int)Attacks2.VoidEruptionSpin:
+                            VoidEruptionSpin();
+                            break;
+                        case (int)Attacks2.DashFistSpam:
+                            DashFistSpam();
+                            break;
+                        case (int)Attacks2.BombRain:
+                            BombRain();
+                            break;
+                        case (int)Attacks2.VoidEruptionReturn:
+                            VoidEruptionReturn();
+                            break;
+                        case (int)Attacks2.SplitShotSpam:
+                            SplitShotSpam();
+                            break;
+                        case (int)Attacks2.ConeFistSpear:
+                            ConeFistSpear();
+                            break;
+                        case (int)Attacks2.VortexSpam2:
+                            VortexSpam2();
+                            break;
+                    }
+                }
+                attackDuration--;
             }
             else
             {
-                NPC.defense = 100;
-                switch (Attack)
-                {
-                    case (int)Attacks2.VoidEruptionSpin:
-                        VoidEruptionSpin();
-                        break;
-                    case (int)Attacks2.DashFistSpam:
-                        DashFistSpam();
-                        break;
-                    case (int)Attacks2.BombRain:
-                        BombRain();
-                        break;
-                    case (int)Attacks2.VoidEruptionReturn:
-                        VoidEruptionReturn();
-                        break;
-                    case (int)Attacks2.SplitShotSpam:
-                        SplitShotSpam();
-                        break;
-                    case (int)Attacks2.ConeFistSpear:
-                        ConeFistSpear();
-                        break;
-                    case (int)Attacks2.VortexSpam2:
-                        VortexSpam2();
-                        break;
-                }
+                FinalPhase();
             }
 
-            attackDuration--;
             AITimer++;
         }
 
@@ -637,6 +647,7 @@ namespace Paracosm.Content.Bosses.TheNameless
                             NetMessage.SendData(MessageID.SyncProjectile, number: proj.whoAmI);
                         }
                     }
+                    NPC.netUpdate = true;
                     break;
                 case > 0:
                     if (AttackTimer % ERUPTION_SPEAR_SHOOT_INTERVAL == 0 && Main.expertMode)
@@ -743,15 +754,19 @@ namespace Paracosm.Content.Bosses.TheNameless
             switch (AttackTimer)
             {
                 case > 0:
-                    if (Main.netMode != NetmodeID.MultiplayerClient)
+                    if (AttackTimer % VER_HOOK_INTERVAL == 0)
                     {
-                        if (AttackTimer % VER_HOOK_INTERVAL == 0)
+                        if (Main.netMode != NetmodeID.MultiplayerClient)
                         {
                             var proj = Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center, playerDirection.SafeNormalize(Vector2.Zero) * 40, Proj["ReturnEruption"], NPC.damage, 1f, ai0: NPC.whoAmI, ai1: 45, ai2: 30);
                             VoidEruptionHooks.Add(proj);
                         }
+                        NPC.netUpdate = true;
+                    }
 
-                        if (AttackTimer % VER_SPLIT_INTERVAL == 0)
+                    if (AttackTimer % VER_SPLIT_INTERVAL == 0)
+                    {
+                        if (Main.netMode != NetmodeID.MultiplayerClient)
                         {
                             for (int i = -4; i <= 4; i++)
                             {
@@ -763,6 +778,7 @@ namespace Paracosm.Content.Bosses.TheNameless
                             }
                         }
                     }
+
                     break;
                 case 0:
                     AttackTimer = VER_START_TIME;
@@ -896,6 +912,99 @@ namespace Paracosm.Content.Bosses.TheNameless
             AttackTimer--;
         }
 
+        const int FINAL_PHASE_DURATION = 2100;
+
+        const int FINAL1_SPEAR_THROW_DURATION = 300;
+        const int FINAL1_SPEAR_THROW_RATE = 30;
+
+        const int FINAL2_RETURNERUPTIONSPAM_DURATION = 600;
+        const int FINAL2_RETURNERUPTIONSPAM_RATE = 10;
+
+        const int FINAL3_SPLITSHOTSPAM_DURATION = 1200;
+
+        const int FINAL4_DASKSHINE_SUCK_DURATION = 2100;
+        float angleBoost = 0;
+        void FinalPhase()
+        {
+            NPC.velocity = Vector2.Zero;
+            switch (AttackTimer)
+            {
+                case < 60:
+                    LemonUtils.DustCircle(NPC.Center, 16, Main.rand.NextFloat(15, 20), DustID.Granite, Main.rand.NextFloat(1.2f, 1.8f), true);
+                    break;
+                case < FINAL1_SPEAR_THROW_DURATION and > 60:
+                    if (AttackTimer % FINAL1_SPEAR_THROW_RATE == 0)
+                    {
+                        ThrowSplitSpear(30, 5, 0);
+                    }
+                    break;
+                case < FINAL2_RETURNERUPTIONSPAM_DURATION:
+                    if (AttackTimer % FINAL2_RETURNERUPTIONSPAM_RATE == 0)
+                    {
+                        if (Main.netMode != NetmodeID.MultiplayerClient)
+                        {
+                            var proj = Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center, playerDirection.SafeNormalize(Vector2.Zero) * AttackCount, Proj["ReturnEruption"], NPC.damage, 1f, ai0: NPC.whoAmI, ai1: 45, ai2: 30);
+                            VoidEruptionHooks.Add(proj);
+                        }
+                        NPC.netUpdate = true;
+                        AttackCount += 2f;
+                    }
+                    break;
+                case FINAL2_RETURNERUPTIONSPAM_DURATION:
+                    AttackCount = 0;
+                    break;
+                case < FINAL3_SPLITSHOTSPAM_DURATION:
+                    if (AttackTimer % 10 == 0)
+                    {
+                        if (Main.netMode != NetmodeID.MultiplayerClient)
+                        {
+                            for (int i = 0; i < 5; i++)
+                            {
+                                Vector2 direction = Vector2.UnitY.RotatedBy(MathHelper.ToRadians(i * 72));
+                                Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, direction * 7, Proj["SplitShot"], NPC.damage, 1f, ai0: 60, ai1: 3);
+                            }
+                        }
+                        AttackCount++;
+                    }
+                    break;
+                case FINAL3_SPLITSHOTSPAM_DURATION:
+                    AttackCount = 0;
+                    break;
+                case < FINAL4_DASKSHINE_SUCK_DURATION:
+                    if (AttackTimer % (30 - AttackCount) == 0)
+                    {
+                        if (Main.netMode != NetmodeID.MultiplayerClient)
+                        {
+                            for (int i = 0; i < 3; i++)
+                            {
+                                Vector2 pos = NPC.Center + (Vector2.UnitY * arenaDistance).RotatedByRandom(MathHelper.Pi * 2);
+                                Vector2 direction = pos.DirectionTo(NPC.Center);
+                                Projectile.NewProjectile(NPC.GetSource_FromAI(), pos, direction * (Main.rand.NextFloat(0.2f, 2f) + (AttackCount / 25f)), Proj["Fist"], NPC.damage, 1f, ai0: Main.rand.NextFloat(1.005f, 1.015f));
+                            }
+                            if (AttackCount < 25)
+                            {
+                                AttackCount += 1f;
+                            }
+                        }
+                    }
+                    break;
+                case >= FINAL_PHASE_DURATION and < FINAL_PHASE_DURATION + 300:
+                    LemonUtils.DustCircle(NPC.Center, 16, Main.rand.NextFloat(15, 20), DustID.Granite, Main.rand.NextFloat(1.2f, 1.8f), true);
+                    FINALPHASEARENADISTANCE -= 2;
+                    break;
+                default:
+                    doDeath = true;
+                    NPC.dontTakeDamage = false;
+                    if (FINALPHASEARENADISTANCE > 100)
+                    {
+                        FINALPHASEARENADISTANCE -= 2;
+                    }
+                    NPC.netUpdate = true;
+                    break;
+            }
+            AttackTimer++;
+        }
+
         void MoveToPos(Vector2 pos, float xAccel = 1f, float yAccel = 1f, float xSpeed = 1f, float ySpeed = 1f)
         {
             Vector2 direction = NPC.Center.DirectionTo(pos);
@@ -916,6 +1025,7 @@ namespace Paracosm.Content.Bosses.TheNameless
         const int SSS_ARENA_DISTANCE = 1000;
         const int CFS_ARENA_DISTANCE = 1000;
         const int VS2_ARENA_DISTANCE = 1100;
+        int FINALPHASEARENADISTANCE = 1200;
         public void Arena(int offset)
         {
             float targetArenaDistance = BASE_ARENA_DISTANCE;
@@ -964,6 +1074,12 @@ namespace Paracosm.Content.Bosses.TheNameless
                         arenaFollow = true;
                         break;
                 }
+            }
+
+            if (enteredFinalPhase)
+            {
+                targetArenaDistance = FINALPHASEARENADISTANCE;
+                arenaFollow = true;
             }
 
             if (AITimer % 5 == 0)
@@ -1081,6 +1197,24 @@ namespace Paracosm.Content.Bosses.TheNameless
                     NPC.frame.Y = 0;
                 }
             }
+        }
+
+        public override bool CheckDead()
+        {
+            if (!Main.expertMode)
+            {
+                return true;
+            }
+            if (!enteredFinalPhase || (enteredFinalPhase && !doDeath))
+            {
+                enteredFinalPhase = true;
+                NPC.dontTakeDamage = true;
+                NPC.life = 1;
+                SwitchAttacks();
+                AttackTimer = 0;
+                return false;
+            }
+            return true;
         }
 
         public override void PostDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)

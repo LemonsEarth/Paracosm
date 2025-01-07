@@ -80,7 +80,7 @@ namespace Paracosm.Content.Projectiles.Hostile
         public override void OnKill(int timeLeft)
         {
             SoundEngine.PlaySound(SoundID.Item110 with { Volume = 0.5f, PitchRange = (-0.3f, 0.3f) }, Projectile.Center);
-            LemonUtils.DustCircle(Projectile.Center, 16, 10, DustID.Granite, 1f);
+            LemonUtils.DustCircle(Projectile.Center, 16, 2, DustID.Granite, 1f);
 
             if (SplitCount <= 0)
             {

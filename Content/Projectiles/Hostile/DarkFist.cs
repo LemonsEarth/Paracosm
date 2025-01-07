@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Paracosm.Common.Utils;
 using Terraria;
 using Terraria.Audio;
 using Terraria.GameContent;
@@ -28,7 +29,7 @@ namespace Paracosm.Content.Projectiles.Hostile
             Projectile.friendly = false;
             Projectile.ignoreWater = true;
             Projectile.tileCollide = false;
-            Projectile.timeLeft = 240;
+            Projectile.timeLeft = 180;
             Projectile.penetrate = -1;
             DrawOffsetX = -15;
         }
@@ -67,6 +68,7 @@ namespace Paracosm.Content.Projectiles.Hostile
 
         public override void OnKill(int timeLeft)
         {
+            LemonUtils.DustCircle(Projectile.Center, 16, Main.rand.NextFloat(15, 20), DustID.Granite, Main.rand.NextFloat(1.2f, 1.8f), true);
             SoundEngine.PlaySound(SoundID.Item89 with { MaxInstances = 1, SoundLimitBehavior = SoundLimitBehavior.ReplaceOldest, PitchRange = (-0.2f, 0.2f)}, Projectile.Center);
         }
 
