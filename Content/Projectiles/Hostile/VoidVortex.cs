@@ -44,7 +44,7 @@ namespace Paracosm.Content.Projectiles.Hostile
             }
             if (AITimer == 0)
             {
-                SoundEngine.PlaySound(SoundID.Item84 with { MaxInstances = 2, PitchRange = (-1f, -0.5f) });
+                SoundEngine.PlaySound(SoundID.Item84 with { MaxInstances = 2, PitchRange = (-1f, -0.5f) }, Projectile.Center);
             }
 
             if (ShootInterval > 0)

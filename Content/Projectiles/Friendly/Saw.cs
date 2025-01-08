@@ -42,11 +42,11 @@ namespace Paracosm.Content.Projectiles.Friendly
                 var num = Main.rand.Next(0, 2);
                 if (num == 0)
                 {
-                    SoundEngine.PlaySound(SoundID.Item22);
+                    SoundEngine.PlaySound(SoundID.Item22, Projectile.Center);
                 }
                 else
                 {
-                    SoundEngine.PlaySound(SoundID.Item23);
+                    SoundEngine.PlaySound(SoundID.Item23, Projectile.Center);
                 }
             }
             AITimer++;

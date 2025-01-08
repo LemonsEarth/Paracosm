@@ -46,7 +46,7 @@ namespace Paracosm.Content.Projectiles.Hostile
                 {
                     SpeedMul = 1;
                 }
-                SoundEngine.PlaySound(SoundID.Zombie81 with { MaxInstances = 2, PitchRange = (-0.5f, -0.3f)});
+                SoundEngine.PlaySound(SoundID.Zombie81 with { MaxInstances = 2, PitchRange = (-0.5f, -0.3f)}, Projectile.Center);
             }
 
             Projectile.velocity *= SpeedMul;

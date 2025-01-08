@@ -44,7 +44,7 @@ namespace Paracosm.Content.Projectiles.Sentries
                             Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Projectile.Center.DirectionTo(closestEnemy.Center).RotatedBy(MathHelper.ToRadians(9) * i) * 10, ModContent.ProjectileType<ShadowBolt>(), Projectile.damage, 1f);
                         }
                     }
-                    SoundEngine.PlaySound(SoundID.Item43 with { Volume = 0.5f, PitchRange = (-0.2f, 0.2f) });
+                    SoundEngine.PlaySound(SoundID.Item43 with { Volume = 0.5f, PitchRange = (-0.2f, 0.2f) }, Projectile.Center);
                     AttackTimer = 0;
                 }
                 AttackTimer++;

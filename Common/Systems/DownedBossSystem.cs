@@ -53,7 +53,7 @@ namespace Paracosm.Common.Systems
             {
                 tag["downedStardustLeviathan"] = true;
             }
-            if (downedStardustLeviathan)
+            if (downedTheNameless)
             {
                 tag["downedTheNameless"] = true;
             }

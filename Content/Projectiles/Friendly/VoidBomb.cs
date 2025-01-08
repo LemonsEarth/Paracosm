@@ -37,8 +37,8 @@ namespace Paracosm.Content.Projectiles.Friendly
 
         public override void OnKill(int timeLeft)
         {
-            SoundEngine.PlaySound(SoundID.Item14);
-            SoundEngine.PlaySound(SoundID.NPCDeath6 with { Pitch = -0.5f });
+            SoundEngine.PlaySound(SoundID.Item14, Projectile.Center);
+            SoundEngine.PlaySound(SoundID.NPCDeath6 with { Pitch = -0.5f }, Projectile.Center);
             LemonUtils.DustCircle(Projectile.Center, 16, 10, DustID.DarkCelestial, 1.2f);
             for (int i = 0; i < 5; i++)
             {
@@ -58,7 +58,7 @@ namespace Paracosm.Content.Projectiles.Friendly
             }
             if (AITimer == 0)
             {
-                SoundEngine.PlaySound(SoundID.Zombie67 with { Volume = 0.3f, PitchRange = (0.5f, 1f) });
+                SoundEngine.PlaySound(SoundID.Zombie67 with { Volume = 0.3f, PitchRange = (0.5f, 1f) }, Projectile.Center);
                 if (TimeToBlow != 0)
                 {
                     Projectile.timeLeft = (int)TimeToBlow;

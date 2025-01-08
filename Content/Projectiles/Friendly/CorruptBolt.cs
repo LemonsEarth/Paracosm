@@ -29,7 +29,7 @@ namespace Paracosm.Content.Projectiles.Friendly
         {
             if (AITimer == 0)
             {
-                SoundEngine.PlaySound(SoundID.Item43);
+                SoundEngine.PlaySound(SoundID.Item43, Projectile.Center);
             }
             AITimer++;
             var dust = Dust.NewDustDirect(Projectile.position, Projectile.width / 2, Projectile.height / 2, DustID.Shadowflame, Projectile.velocity.X, Projectile.velocity.Y);

@@ -948,8 +948,6 @@ namespace Paracosm.Content.Bosses.DivineSeeker
                     }
                     break;
             }
-
-
         }
 
         public override void FindFrame(int frameHeight)

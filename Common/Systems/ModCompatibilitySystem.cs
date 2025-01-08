@@ -5,6 +5,7 @@ using Paracosm.Content.Bosses.InfectedRevenant;
 using Paracosm.Content.Bosses.NebulaMaster;
 using Paracosm.Content.Bosses.SolarChampion;
 using Paracosm.Content.Bosses.StardustLeviathan;
+using Paracosm.Content.Bosses.TheNameless;
 using Paracosm.Content.Bosses.VortexMothership;
 using Paracosm.Content.Items.Consumables;
 using System;
@@ -179,6 +180,31 @@ namespace Paracosm.Common.Systems
                 () => DownedBossSystem.downedStardustLeviathan,
                 ModContent.NPCType<StardustLeviathanHead>(),
                 additionalSL
+                );
+
+
+            //Log The Nameless
+            int spawnItemTypeTN = ModContent.ItemType<RingOfDesperation>();
+            LocalizedText spawnInfoTN = Language.GetText("Mods.Paracosm.NPCs.TheNameless.BossChecklistCompatibility.SpawnInfo");
+
+            List<int> collectiblesTN = new List<int>()
+            {
+                ModContent.ItemType<Content.Items.Placeable.Furniture.TheNamelessRelic>()
+            };
+            Dictionary<string, object> additionalTN = new Dictionary<string, object>()
+            {
+                ["spawnItems"] = spawnItemTypeTN,
+                ["spawnInfo"] = spawnInfoTN,
+                ["collectibles"] = collectiblesTN,
+            };
+
+            LogBoss(
+                BossChecklist,
+                "TheNameless",
+                19f,
+                () => DownedBossSystem.downedTheNameless,
+                ModContent.NPCType<TheNameless>(),
+                additionalTN
                 );
         }
 

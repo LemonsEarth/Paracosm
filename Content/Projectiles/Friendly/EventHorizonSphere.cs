@@ -49,7 +49,7 @@ namespace Paracosm.Content.Projectiles.Friendly
             }
             if (AITimer == 0)
             {
-                SoundEngine.PlaySound(SoundID.Item92 with { MaxInstances = 2 });
+                SoundEngine.PlaySound(SoundID.Item92 with { MaxInstances = 2 }, Projectile.Center);
             }
 
             player.manaRegen = 0;

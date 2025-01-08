@@ -58,7 +58,7 @@ namespace Paracosm.Content.Projectiles.Friendly
             }
             if (AITimer == 0)
             {
-                SoundEngine.PlaySound(SoundID.Item92 with { MaxInstances = 2 });
+                SoundEngine.PlaySound(SoundID.Item92 with { MaxInstances = 2 }, Projectile.Center);
             }
 
             if (AITimer == 30)
@@ -120,7 +120,7 @@ namespace Paracosm.Content.Projectiles.Friendly
 
         public override void OnKill(int timeLeft)
         {
-            SoundEngine.PlaySound(SoundID.Item90 with { PitchRange = (0.2f, 0.5f) });
+            SoundEngine.PlaySound(SoundID.Item90 with { PitchRange = (0.2f, 0.5f) }, Projectile.Center);
             LemonUtils.DustCircle(Projectile.Center, 16, 10, DustID.GemDiamond, 1.5f);
         }
 

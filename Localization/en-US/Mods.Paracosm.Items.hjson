@@ -905,7 +905,7 @@ MasterEmblem: {
 		{$CommonItemTooltip.IncreasesMaxManaBy@2}
 		{$CommonItemTooltip.IncreasesMaxMinionsBy@3}
 		{$CommonItemTooltip.IncreasesMaxSentriesBy@4}
-		Don't get hit.
+		Taking damage inflicts you with Void Terror, reducing vision and causing random debuffs
 		"Those who stand at the top are always looked at by others..."
 		"...That way, everyone can see when they fall."
 		'''
@@ -923,10 +923,44 @@ MarkOfTheInfiltrator: {
 }
 
 RingOfDesperation: {
-	DisplayName: Ring Of Desperation
+	DisplayName: Ring of Desperation
 	Tooltip:
 		'''
 		Not Consumable
 		One last Challenge
+		'''
+}
+
+TheNamelessBossBag: {
+	DisplayName: Treasure Bag (The Nameless)
+	Tooltip: "{$CommonItemTooltip.RightClickToOpen}"
+}
+
+TheNamelessRelic: {
+	DisplayName: The Nameless Relic
+	Tooltip: ""
+}
+
+SoulOfAHero: {
+	DisplayName: Soul of A Hero
+	Tooltip:
+		'''
+		Grants immunity to Void Terror
+		You will be revived when life reaches 0
+		This effect has a 300 second cooldown
+		'''
+}
+
+VoidTremor: {
+	DisplayName: Void Tremor
+	Tooltip: '''"The entire null realm trembles..."'''
+}
+
+Judgement: {
+	DisplayName: Judgement
+	Tooltip:
+		'''
+		Throw a spear that releases splitting, homing projectiles if it hits an enemy
+		If charged, more projectiles are spawned
 		'''
 }

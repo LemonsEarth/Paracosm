@@ -48,6 +48,7 @@ namespace Paracosm.Common.Players
         public bool steelSight = false;
         public bool organicSight = false;
         public bool infiltratorMark = false;
+        public bool heroSoul = false;
         public int sentryCount = 0;
 
         int oathTimer = 0;
@@ -100,6 +101,7 @@ namespace Paracosm.Common.Players
             organicSight = false;
             masterEmblem = false;
             infiltratorMark = false;
+            heroSoul = false;
 
             paracosmicHelmetBuff = false;
             paracosmicGogglesBuff = false;
@@ -114,7 +116,7 @@ namespace Paracosm.Common.Players
             voidTerror = false;
 
             // Dash
-            
+
             if (Player.controlRight && Player.releaseRight && Player.doubleTapCardinalTimer[2] < 15 && Player.doubleTapCardinalTimer[3] == 0)
             {
                 DashDir = 1;
@@ -211,7 +213,7 @@ namespace Paracosm.Common.Players
 
         public override void OnHitNPCWithProj(Projectile proj, NPC target, NPC.HitInfo hit, int damageDone)
         {
-            if (Main.myPlayer == Player.whoAmI && hit.DamageType.CountsAsClass(DamageClass.Melee) && proj.whoAmI == Player.heldProj && hitTimer == 0)
+            if (Main.myPlayer == Player.whoAmI && hit.DamageType.CountsAsClass(DamageClass.Melee) && (proj.whoAmI == Player.heldProj || proj.type == ModContent.ProjectileType<VoidTremorProj>()) && hitTimer == 0)
             {
                 if (starfallCoating)
                 {
@@ -405,7 +407,7 @@ namespace Paracosm.Common.Players
                 {
                     int randDebuff = Main.rand.NextFromList(20, 22, 23, 24, 31, 32, 33, 35, 36, 37, 38, 39, 46, 47, 67, 68, 69, 70, 80, 144, 149, 153, 156, 195, 196, 197,
                                                             ModContent.BuffType<SolarBurn>(), ModContent.BuffType<ParacosmicBurn>(), ModContent.BuffType<MeltingDebuff>());
-                    Player.AddBuff(randDebuff, 120); 
+                    Player.AddBuff(randDebuff, 120);
                 }
 
                 if (!Player.HasBuff(BuffID.PotionSickness) && Main.rand.NextBool(300)) // Separate chance to inflict potion sickness
@@ -577,10 +579,13 @@ namespace Paracosm.Common.Players
                 voidTerrorTimer = 0;
             }
 
-            if (!NPC.AnyNPCs(ModContent.NPCType<TheNameless>()) && SkyManager.Instance["Paracosm:NamelessSky"].IsActive())
+            if (!NPC.AnyNPCs(ModContent.NPCType<TheNameless>()))
             {
                 Filters.Scene.Deactivate("Paracosm:DarknessShaderPos");
-                SkyManager.Instance.Deactivate("Paracosm:NamelessSky");
+                if (SkyManager.Instance["Paracosm:NamelessSky"].IsActive())
+                {
+                    SkyManager.Instance.Deactivate("Paracosm:NamelessSky");
+                }
             }
         }
 
@@ -647,6 +652,20 @@ namespace Paracosm.Common.Players
 
         public override void PostHurt(Player.HurtInfo info)
         {
+            if (heroSoul && !Player.HasBuff(ModContent.BuffType<Soulrest>()))
+            {
+                if (info.Damage > Player.statLife)
+                {
+                    Player.Heal(Player.statLifeMax);
+                    Player.AddBuff(ModContent.BuffType<Soulrest>(), 18000);
+                    Player.AddImmuneTime(ImmunityCooldownID.General, 200);
+                    for (int i = 1; i < 4; i++)
+                    {
+                        LemonUtils.DustCircle(Player.Center, 16, 6 + 2 * i, DustID.Granite, 1.3f * i);
+                    }
+                }
+            }
+
             if (voidPendant)
             {
                 Player.AddImmuneTime(info.CooldownCounter, 100);
@@ -749,7 +768,7 @@ namespace Paracosm.Common.Players
             if (DashDelay == 0 && DashDir != 0)
             {
                 Player.velocity = new Vector2(DashDir * DashVelocity, Player.velocity.Y);
-                DashDelay = DashCD;      
+                DashDelay = DashCD;
                 DashTimer = DashDuration;
                 LemonUtils.DustCircle(Player.Center, 16, 5, DustID.Granite, 1.3f);
             }
@@ -759,7 +778,7 @@ namespace Paracosm.Common.Players
                 Dust.NewDust(Player.position, Player.width, Player.height, DustID.Granite);
                 DashTimer--;
             }
-            
+
             if (DashDelay > 0)
             {
                 DashDelay--;

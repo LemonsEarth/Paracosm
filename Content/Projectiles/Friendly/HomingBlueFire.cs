@@ -33,7 +33,7 @@ namespace Paracosm.Content.Projectiles.Friendly
         {
             if (AITimer == 0)
             {
-                SoundEngine.PlaySound(SoundID.Item20 with { MaxInstances = 0 });
+                SoundEngine.PlaySound(SoundID.Item20 with { MaxInstances = 0 }, Projectile.Center);
             }
             AITimer++;
             Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, DustID.IceTorch);

@@ -33,7 +33,7 @@ namespace Paracosm.Content.Projectiles.Hostile
             {
                 if (AITimer == 0)
                 {
-                    SoundEngine.PlaySound(SoundID.NPCDeath13 with { MaxInstances = 1 });
+                    SoundEngine.PlaySound(SoundID.NPCDeath13 with { MaxInstances = 1 }, Projectile.Center);
                 }
                 Projectile.velocity = (Main.player[(int)PlayerIDToTrack].Center - Projectile.Center).SafeNormalize(Vector2.Zero) * 6;
                 if (AITimer % 30 == 0 && Main.netMode != NetmodeID.MultiplayerClient)
@@ -45,7 +45,7 @@ namespace Paracosm.Content.Projectiles.Hostile
             {
                 if (AITimer == 0)
                 {
-                    SoundEngine.PlaySound(SoundID.NPCDeath13 with { MaxInstances = 1 });
+                    SoundEngine.PlaySound(SoundID.NPCDeath13 with { MaxInstances = 1 }, Projectile.Center);
                 }
             }
 

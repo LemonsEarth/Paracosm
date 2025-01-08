@@ -7,6 +7,8 @@ using Paracosm.Content.Biomes.Void;
 using Paracosm.Content.Buffs;
 using Paracosm.Content.Items.BossBags;
 using Paracosm.Content.Items.Materials;
+using Paracosm.Content.Items.Weapons;
+using Paracosm.Content.Items.Weapons.Melee;
 using Paracosm.Content.Projectiles.Hostile;
 using ReLogic.Content;
 using System;
@@ -390,9 +392,9 @@ namespace Paracosm.Content.Bosses.TheNameless
                     break;
 
                 case PHASE_TRANSITION_DURATION - 180:
-                    SoundEngine.PlaySound(SoundID.DD2_EtherianPortalDryadTouch);
-                    SoundEngine.PlaySound(SoundID.DD2_EtherianPortalOpen);
-                    SoundEngine.PlaySound(SoundID.Zombie105 with { Pitch = -1f, Volume = 2f });
+                    SoundEngine.PlaySound(SoundID.DD2_EtherianPortalDryadTouch, NPC.Center);
+                    SoundEngine.PlaySound(SoundID.DD2_EtherianPortalOpen, NPC.Center);
+                    SoundEngine.PlaySound(SoundID.Zombie105 with { Pitch = -1f, Volume = 2f }, NPC.Center);
                     break;
 
                 case < PHASE_TRANSITION_DURATION - 180 and > PHASE_TRANSITION_DURATION - 360:
@@ -984,7 +986,7 @@ namespace Paracosm.Content.Bosses.TheNameless
                             if (AttackCount < 25)
                             {
                                 AttackCount += 1f;
-                            }
+                            }     
                         }
                     }
                     break;
@@ -1249,11 +1251,11 @@ namespace Paracosm.Content.Bosses.TheNameless
         public override void ModifyNPCLoot(NPCLoot npcLoot)
         {
             LeadingConditionRule classicRule = new LeadingConditionRule(new Conditions.NotExpert());
-            classicRule.OnSuccess(ItemDropRule.Common(ModContent.ItemType<UnstableNebulousFlame>(), 1, 4, 8));
-            classicRule.OnSuccess(ItemDropRule.Common(ItemID.FragmentNebula, 1, 10, 20));
-            classicRule.OnSuccess(ItemDropRule.Common(ItemID.LunarBar, 1, 5, 12));
+            classicRule.OnSuccess(ItemDropRule.OneFromOptions(1, ModContent.ItemType<VoidTremor>()));
+            classicRule.OnSuccess(ItemDropRule.Common(ModContent.ItemType<Judgement>(), 4, 1, 1));
             npcLoot.Add(classicRule);
-            npcLoot.Add(ItemDropRule.BossBag(ModContent.ItemType<NebulaMasterBossBag>()));
+            npcLoot.Add(ItemDropRule.BossBag(ModContent.ItemType<TheNamelessBossBag>()));
+            npcLoot.Add(ItemDropRule.MasterModeCommonDrop(ModContent.ItemType<Items.Placeable.Furniture.TheNamelessRelic>()));
         }
 
         public override void BossLoot(ref string name, ref int potionType)

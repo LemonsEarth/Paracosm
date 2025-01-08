@@ -79,7 +79,7 @@ namespace Paracosm.Content.Bosses.InfectedRevenant
             NPC.position = body.WingsPos;
             if (AITimer % 45 == 0 && body.phaseTransition == false)
             {
-                SoundEngine.PlaySound(SoundID.DD2_BetsyFireballShot with { MaxInstances = 1, PitchVariance = 1.0f, Volume = 0.5f });
+                SoundEngine.PlaySound(SoundID.DD2_BetsyFireballShot with { MaxInstances = 1, PitchVariance = 1.0f, Volume = 0.5f }, NPC.Center);
             }
             AITimer++;
             if (body.phaseTransition)

@@ -124,8 +124,8 @@ namespace Paracosm.Content.NPCs.Hostile.Void
 
         void PlayRoar(float volume = 1f)
         {
-            SoundEngine.PlaySound(SoundID.DD2_BetsyDeath with { Volume = volume, PitchRange = (-0.4f, 0.8f) });
-            SoundEngine.PlaySound(SoundID.Roar with { Volume = volume, PitchRange = (-1f, -0.8f) });
+            SoundEngine.PlaySound(SoundID.DD2_BetsyDeath with { Volume = volume, PitchRange = (-0.4f, 0.8f) }, NPC.Center);
+            SoundEngine.PlaySound(SoundID.Roar with { Volume = volume, PitchRange = (-1f, -0.8f) }, NPC.Center);
         }
 
         public override void ModifyNPCLoot(NPCLoot npcLoot)

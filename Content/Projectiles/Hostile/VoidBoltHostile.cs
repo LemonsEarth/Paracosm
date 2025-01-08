@@ -42,9 +42,9 @@ namespace Paracosm.Content.Projectiles.Hostile
             }
             if (AITimer == 0)
             {
-                SoundEngine.PlaySound(SoundID.DD2_LightningBugZap);
-                SoundEngine.PlaySound(SoundID.DD2_LightningAuraZap with { PitchRange = (-0.4f, -0.2f) });
-                SoundEngine.PlaySound(SoundID.Item94 with { PitchRange = (0.2f, 0.4f) });
+                SoundEngine.PlaySound(SoundID.DD2_LightningBugZap, Projectile.Center);
+                SoundEngine.PlaySound(SoundID.DD2_LightningAuraZap with { PitchRange = (-0.4f, -0.2f) }, Projectile.Center);
+                SoundEngine.PlaySound(SoundID.Item94 with { PitchRange = (0.2f, 0.4f) }, Projectile.Center);
             }
 
             Lighting.AddLight(Projectile.Center, 10, 10, 10);

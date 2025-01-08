@@ -64,7 +64,7 @@ namespace Paracosm.Content.Items.Weapons.Ranged
                         int beeDamage = player.beeDamage(damage * 3);
                         Projectile.NewProjectile(Item.GetSource_FromAI(), position, velocity / Main.rand.Next(10, 20), beeID, beeDamage, knockback, player.whoAmI);
                     }
-                    SoundEngine.PlaySound(SoundID.Item97 with { Volume = 0.7f });
+                    SoundEngine.PlaySound(SoundID.Item97 with { Volume = 0.7f }, player.Center);
                     useCounter = 0;
                 }
             }

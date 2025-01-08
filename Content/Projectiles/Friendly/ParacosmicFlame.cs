@@ -45,7 +45,7 @@ namespace Paracosm.Content.Projectiles.Friendly
         {
             if (AITimer == 0)
             {
-                SoundEngine.PlaySound(SoundID.Item20 with { MaxInstances = 1, Pitch = -0.1f });
+                SoundEngine.PlaySound(SoundID.Item20 with { MaxInstances = 1, Pitch = -0.1f }, Projectile.Center);
             }
             AITimer++;
             Projectile.alpha += 10;

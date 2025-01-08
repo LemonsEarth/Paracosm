@@ -742,8 +742,8 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
 
         void PlayRoar()
         {
-            SoundEngine.PlaySound(SoundID.DD2_BetsyDeath with { PitchRange = (0.2f, 0.6f) });
-            SoundEngine.PlaySound(SoundID.Roar with { PitchRange = (-1f, -0.5f) });
+            SoundEngine.PlaySound(SoundID.DD2_BetsyDeath with { PitchRange = (0.2f, 0.6f) }, NPC.Center);
+            SoundEngine.PlaySound(SoundID.Roar with { PitchRange = (-1f, -0.5f) }, NPC.Center);
         }
 
         public void DeleteProjectiles(int projID)

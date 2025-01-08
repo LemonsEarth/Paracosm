@@ -53,7 +53,7 @@ namespace Paracosm.Content.Items.Weapons.Melee
             if (useCounter >= 100)
             {
                 LemonUtils.DustCircle(player.Center, 16, 10, DustID.GemAmethyst);
-                SoundEngine.PlaySound(SoundID.Item172 with { MaxInstances = 1, PitchRange = (-0.2f, 0.2f), SoundLimitBehavior = SoundLimitBehavior.IgnoreNew });
+                SoundEngine.PlaySound(SoundID.Item172 with { MaxInstances = 1, PitchRange = (-0.2f, 0.2f), SoundLimitBehavior = SoundLimitBehavior.IgnoreNew }, player.Center);
             }
             return false;
         }

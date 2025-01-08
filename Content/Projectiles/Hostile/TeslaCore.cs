@@ -40,7 +40,7 @@ namespace Paracosm.Content.Projectiles.Hostile
 
         public override void OnKill(int timeLeft)
         {
-            SoundEngine.PlaySound(SoundID.Item62);
+            SoundEngine.PlaySound(SoundID.Item62, Projectile.Center);
             LemonUtils.DustCircle(Projectile.Center, 16, 10, DustID.MushroomTorch, 1.2f);
             if (Main.netMode != NetmodeID.MultiplayerClient)
             {

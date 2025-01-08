@@ -48,9 +48,9 @@ namespace Paracosm.Content.Projectiles.Hostile
             }
             if (AITimer == 0)
             {
-                SoundEngine.PlaySound(SoundID.DD2_LightningBugZap);
-                SoundEngine.PlaySound(SoundID.DD2_LightningAuraZap);
-                SoundEngine.PlaySound(SoundID.Item94 with { PitchRange = (0.2f, 0.4f) });
+                SoundEngine.PlaySound(SoundID.DD2_LightningBugZap, Projectile.Center);
+                SoundEngine.PlaySound(SoundID.DD2_LightningAuraZap, Projectile.Center);
+                SoundEngine.PlaySound(SoundID.Item94 with { PitchRange = (0.2f, 0.4f) }, Projectile.Center);
                 accelInit = Acceleration;
             }
             Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, DustID.Vortex);

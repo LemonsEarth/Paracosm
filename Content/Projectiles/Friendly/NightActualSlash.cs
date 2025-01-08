@@ -56,7 +56,7 @@ namespace Paracosm.Content.Projectiles.Friendly
                     Projectile.rotation = MathHelper.ToRadians(randomValue);
                     Projectile.netUpdate = true;
                 }
-                SoundEngine.PlaySound(SoundID.Item60 with { MaxInstances = 2 });
+                SoundEngine.PlaySound(SoundID.Item60 with { MaxInstances = 2 }, Projectile.Center);
                 Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, DustID.Ash, -Projectile.velocity.X, -Projectile.velocity.Y);
             }
             Projectile.damage = savedDamage;

@@ -45,7 +45,7 @@ namespace Paracosm.Content.Projectiles.Sentries
                             Projectile.NewProjectile(Projectile.GetSource_FromAI(), closestEnemy.Center + offset, Vector2.UnitY * 2, ModContent.ProjectileType<WaterfallDrop>(), Projectile.damage, 1f);
                         }
                     }
-                    SoundEngine.PlaySound(SoundID.Item21 with { Volume = 0.5f, PitchRange = (-0.2f, 0.2f) });
+                    SoundEngine.PlaySound(SoundID.Item21 with { Volume = 0.5f, PitchRange = (-0.2f, 0.2f) }, Projectile.Center);
                     AttackTimer = 0;
                 }
                 AttackTimer++;

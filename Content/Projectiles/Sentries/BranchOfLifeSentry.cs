@@ -65,7 +65,7 @@ namespace Paracosm.Content.Projectiles.Sentries
                                 Projectile.NewProjectile(Projectile.GetSource_FromAI(), npc.Center + offset, Vector2.Zero, ModContent.ProjectileType<BranchOfLifeProj>(), Projectile.damage, 1f);
                             }
                         }
-                        SoundEngine.PlaySound(SoundID.Item4 with { Volume = 0.3f, PitchRange = (-0.2f, 0.2f) });
+                        SoundEngine.PlaySound(SoundID.Item4 with { Volume = 0.3f, PitchRange = (-0.2f, 0.2f) }, Projectile.Center);
                         AttackTimer = 0;
                     }
                 }

@@ -30,7 +30,7 @@ namespace Paracosm.Content.Projectiles.Hostile
         {
             if (AITimer == 0)
             {
-                SoundEngine.PlaySound(SoundID.Item33 with { MaxInstances = 1 });
+                SoundEngine.PlaySound(SoundID.Item33 with { MaxInstances = 1 }, Projectile.Center);
             }
             Projectile.spriteDirection = Projectile.direction = (Projectile.velocity.X > 0).ToDirectionInt();
             Projectile.rotation = Projectile.velocity.ToRotation() + (Projectile.spriteDirection == 1 ? 0 : MathHelper.Pi);

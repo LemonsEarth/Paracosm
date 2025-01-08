@@ -13,8 +13,8 @@ namespace Paracosm.Content.Items.Accessories
 {
     public class MasterEmblem : ModItem
     {
-        static readonly float damageBoost = 50;
-        static readonly float critBoost = 50;
+        static readonly float damageBoost = 40;
+        static readonly float critBoost = 35;
         static readonly int manaBoost = 100;
         static readonly int minionBoost = 2;
         static readonly int sentryBoost = 2;

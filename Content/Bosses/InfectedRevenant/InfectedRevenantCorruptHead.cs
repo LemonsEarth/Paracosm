@@ -441,7 +441,7 @@ namespace Paracosm.Content.Bosses.InfectedRevenant
             NPC.velocity = (position - NPC.Center).SafeNormalize(Vector2.Zero) * NPC.Center.Distance(position) / 12;
             if (AttackTimer == 0)
             {
-                SoundEngine.PlaySound(SoundID.DD2_BetsyFlameBreath with { MaxInstances = 2, PitchVariance = 1.0f });
+                SoundEngine.PlaySound(SoundID.DD2_BetsyFlameBreath with { MaxInstances = 2, PitchVariance = 1.0f }, NPC.Center);
                 if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
                     for (int i = -1; i < 2; i++)
@@ -509,7 +509,7 @@ namespace Paracosm.Content.Bosses.InfectedRevenant
                 case > 540:
                     if (AttackTimer <= 0)
                     {
-                        SoundEngine.PlaySound(SoundID.DD2_BetsyFlameBreath with { MaxInstances = 2, PitchVariance = 1.0f });
+                        SoundEngine.PlaySound(SoundID.DD2_BetsyFlameBreath with { MaxInstances = 2, PitchVariance = 1.0f }, NPC.Center);
                         if (Main.netMode != NetmodeID.MultiplayerClient)
                         {
                             for (int i = -1; i < 2; i++)
@@ -530,7 +530,7 @@ namespace Paracosm.Content.Bosses.InfectedRevenant
                 case > 360:
                     if (AttackTimer <= 0)
                     {
-                        SoundEngine.PlaySound(SoundID.DD2_BetsyFlameBreath with { MaxInstances = 2, PitchVariance = 1.0f });
+                        SoundEngine.PlaySound(SoundID.DD2_BetsyFlameBreath with { MaxInstances = 2, PitchVariance = 1.0f }, NPC.Center);
                         if (Main.netMode != NetmodeID.MultiplayerClient)
                         {
                             for (int i = -1; i < 2; i++)
@@ -551,7 +551,7 @@ namespace Paracosm.Content.Bosses.InfectedRevenant
                 case > 180:
                     if (AttackTimer <= 0)
                     {
-                        SoundEngine.PlaySound(SoundID.DD2_BetsyFlameBreath with { MaxInstances = 2, PitchVariance = 1.0f });
+                        SoundEngine.PlaySound(SoundID.DD2_BetsyFlameBreath with { MaxInstances = 2, PitchVariance = 1.0f }, NPC.Center);
                         if (Main.netMode != NetmodeID.MultiplayerClient)
                         {
                             for (int i = -1; i < 2; i++)
@@ -571,7 +571,7 @@ namespace Paracosm.Content.Bosses.InfectedRevenant
                 case > 0:
                     if (AttackTimer <= 0)
                     {
-                        SoundEngine.PlaySound(SoundID.DD2_BetsyFlameBreath with { MaxInstances = 2, PitchVariance = 1.0f });
+                        SoundEngine.PlaySound(SoundID.DD2_BetsyFlameBreath with { MaxInstances = 2, PitchVariance = 1.0f }, NPC.Center);
                         if (Main.netMode != NetmodeID.MultiplayerClient)
                         {
                             for (int i = -1; i < 2; i++)

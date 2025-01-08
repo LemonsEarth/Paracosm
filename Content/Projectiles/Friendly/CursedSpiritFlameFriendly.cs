@@ -51,7 +51,7 @@ namespace Paracosm.Content.Projectiles.Friendly
             if (AITimer == 0)
             {
                 Projectile.scale = 0.1f;
-                SoundEngine.PlaySound(SoundID.Zombie53 with { MaxInstances = 8, PitchVariance = 1.0f, Volume = 0.2f });
+                SoundEngine.PlaySound(SoundID.Zombie53 with { MaxInstances = 8, PitchVariance = 1.0f, Volume = 0.2f }, Projectile.Center);
             }
             if (AITimer < SpawnTime)
             {

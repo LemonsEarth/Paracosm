@@ -36,7 +36,7 @@ namespace Paracosm.Content.Projectiles.Sentries
 
         public override void OnKill(int timeLeft)
         {
-            SoundEngine.PlaySound(SoundID.Item29 with { PitchRange = (-0.3f, 0.3f), Volume = 0.5f });
+            SoundEngine.PlaySound(SoundID.Item29 with { PitchRange = (-0.3f, 0.3f), Volume = 0.5f }, Projectile.Center);
 
             Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, DustID.GemTopaz);
             Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, DustID.GemDiamond);

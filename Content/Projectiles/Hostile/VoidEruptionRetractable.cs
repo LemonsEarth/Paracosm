@@ -41,7 +41,7 @@ namespace Paracosm.Content.Projectiles.Hostile
             Projectile.frame = 2;
             if (AITimer == 0)
             {
-                SoundEngine.PlaySound(SoundID.Item116 with { MaxInstances = 1, SoundLimitBehavior = SoundLimitBehavior.ReplaceOldest });
+                SoundEngine.PlaySound(SoundID.Item116 with { MaxInstances = 1, SoundLimitBehavior = SoundLimitBehavior.ReplaceOldest }, Projectile.Center);
             }
             NPC nameless = Main.npc[(int)NPCToFollow];
             if (nameless is null || !nameless.active || nameless.life == 0)

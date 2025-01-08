@@ -85,7 +85,7 @@ namespace Paracosm.Content.Projectiles.Hostile
             else if (AITimer == WaitTime)
             {
                 Projectile.velocity = Projectile.Center.DirectionTo(nameless.player.Center) * 30;
-                SoundEngine.PlaySound(SoundID.Item1 with { MaxInstances = 2, Volume = 1.2f, PitchRange = (-0.1f, 0.3f) });
+                SoundEngine.PlaySound(SoundID.Item1 with { MaxInstances = 2, Volume = 1.2f, PitchRange = (-0.1f, 0.3f) }, Projectile.Center);
 
             }
             else

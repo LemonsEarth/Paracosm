@@ -40,7 +40,7 @@ namespace Paracosm.Content.Projectiles.Hostile
             }
             if (AITimer == 0)
             {
-                SoundEngine.PlaySound(SoundID.Item20 with { MaxInstances = 2 });
+                SoundEngine.PlaySound(SoundID.Item20 with { MaxInstances = 2 }, Projectile.Center);
             }
             for (int i = 0; i < 3; i++)
             {

@@ -59,7 +59,7 @@ namespace Paracosm.Content.Projectiles.Hostile
 
             if (AITimer == 0)
             {
-                SoundEngine.PlaySound(SoundID.Item20 with { MaxInstances = 2 });
+                SoundEngine.PlaySound(SoundID.Item20 with { MaxInstances = 2 }, Projectile.Center);
                 if (DoIndicators)
                 {
                     if (Main.netMode != NetmodeID.MultiplayerClient)

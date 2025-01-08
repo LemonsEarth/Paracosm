@@ -60,7 +60,7 @@ namespace Paracosm.Content.Projectiles.HeldProjectiles
                 savedDamage = Projectile.damage;
                 Projectile.scale = 0.1f;
                 LemonUtils.DustCircle(Projectile.position, 16, 10, DustID.SolarFlare, 2f, true);
-                SoundEngine.PlaySound(SoundID.Item92 with { PitchRange = (-0.3f, 0.3f) });
+                SoundEngine.PlaySound(SoundID.Item92 with { PitchRange = (-0.3f, 0.3f) }, Projectile.Center);
             }
             if (Projectile.scale < 1)
             {
@@ -124,7 +124,7 @@ namespace Paracosm.Content.Projectiles.HeldProjectiles
 
         public override void OnKill(int timeLeft)
         {
-            SoundEngine.PlaySound(SoundID.Item14 with { MaxInstances = 2 });
+            SoundEngine.PlaySound(SoundID.Item14 with { MaxInstances = 2 }, Projectile.Center);
             for (int i = 0; i < 3; i++)
             {
                 Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, DustID.SolarFlare);

@@ -34,12 +34,12 @@ namespace Paracosm.Content.Projectiles.Hostile
             if (AITimer == 0)
             {
                 Projectile.Opacity = 0;
-                SoundEngine.PlaySound(SoundID.DD2_LightningBugZap);
-                SoundEngine.PlaySound(SoundID.DD2_LightningAuraZap);
-                SoundEngine.PlaySound(SoundID.Item94 with { PitchRange = (0.5f, 0.7f) });
+                SoundEngine.PlaySound(SoundID.DD2_LightningBugZap, Projectile.Center);
+                SoundEngine.PlaySound(SoundID.DD2_LightningAuraZap, Projectile.Center);
+                SoundEngine.PlaySound(SoundID.Item94 with { PitchRange = (0.5f, 0.7f) }, Projectile.Center);
             }
             Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, DustID.BlueMoss);
-            Lighting.AddLight(Projectile.Center, 0, 80, 80);
+            Lighting.AddLight(Projectile.Center, 0, 10, 10);
             Projectile.rotation = Projectile.velocity.ToRotation();
             if (AITimer > 60)
             {

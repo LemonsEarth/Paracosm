@@ -454,7 +454,7 @@ namespace Paracosm.Content.Bosses.SolarChampion
                 }
                 if (AttackTimer == 0)
                 {
-                    SoundEngine.PlaySound(SoundID.DD2_SonicBoomBladeSlash);
+                    SoundEngine.PlaySound(SoundID.DD2_SonicBoomBladeSlash, NPC.Center);
                     AttackCount2++;
                     Swords.Clear();
                     NPC.netUpdate = true;
@@ -560,7 +560,7 @@ namespace Paracosm.Content.Bosses.SolarChampion
             switch (AttackTimer)
             {
                 case 0:
-                    SoundEngine.PlaySound(SoundID.Item71);
+                    SoundEngine.PlaySound(SoundID.Item71, NPC.Center);
                     break;
                 case <= 120: // Lerp axes to position
                     for (int i = 0; i < Axes.Count; i++)
@@ -702,7 +702,7 @@ namespace Paracosm.Content.Bosses.SolarChampion
                 }
                 if (AttackTimer == 0)
                 {
-                    SoundEngine.PlaySound(SoundID.DD2_SonicBoomBladeSlash);
+                    SoundEngine.PlaySound(SoundID.DD2_SonicBoomBladeSlash, NPC.Center);
                     AttackCount2++;
                     Swords.Clear();
                     NPC.netUpdate = true;
@@ -813,7 +813,7 @@ namespace Paracosm.Content.Bosses.SolarChampion
             switch (AttackTimer)
             {
                 case 0:
-                    SoundEngine.PlaySound(SoundID.Item71);
+                    SoundEngine.PlaySound(SoundID.Item71, NPC.Center);
                     break;
                 case <= 120:
                     AttackCount2 = 90;

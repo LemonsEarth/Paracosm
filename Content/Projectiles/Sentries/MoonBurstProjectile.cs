@@ -34,7 +34,7 @@ namespace Paracosm.Content.Projectiles.Sentries
         {
             if (AITimer == 0)
             {
-                SoundEngine.PlaySound(SoundID.Item28);
+                SoundEngine.PlaySound(SoundID.Item28, Projectile.Center);
             }
             Projectile.rotation = MathHelper.ToRadians(AITimer * 2);
             AITimer++;

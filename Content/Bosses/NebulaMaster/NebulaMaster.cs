@@ -349,9 +349,9 @@ namespace Paracosm.Content.Bosses.NebulaMaster
                     break;
 
                 case PHASE_TRANSITION_DURATION - 180:
-                    SoundEngine.PlaySound(SoundID.DD2_EtherianPortalDryadTouch);
-                    SoundEngine.PlaySound(SoundID.DD2_EtherianPortalOpen);
-                    SoundEngine.PlaySound(SoundID.Zombie105);
+                    SoundEngine.PlaySound(SoundID.DD2_EtherianPortalDryadTouch, NPC.Center);
+                    SoundEngine.PlaySound(SoundID.DD2_EtherianPortalOpen, NPC.Center);
+                    SoundEngine.PlaySound(SoundID.Zombie105, NPC.Center);
                     break;
 
                 case < PHASE_TRANSITION_DURATION - 180 and > PHASE_TRANSITION_DURATION - 360:
@@ -764,7 +764,7 @@ namespace Paracosm.Content.Bosses.NebulaMaster
                 case > 0:
                     if (AttackTimer % 14 == 0)
                     {
-                        SoundEngine.PlaySound(SoundID.Item84 with { PitchRange = (-0.2f, 0.2f) });
+                        SoundEngine.PlaySound(SoundID.Item84 with { PitchRange = (-0.2f, 0.2f) }, NPC.Center);
                         if (Main.netMode != NetmodeID.MultiplayerClient)
                         {
                             targetPosition = new Vector2(NPC.Center.X, arenaCenter.Y) + new Vector2(-400, Main.rand.NextFloat(-DASH_BLASTER_ARENA_DISTANCE * 0.75f, DASH_BLASTER_ARENA_DISTANCE * 0.75f));

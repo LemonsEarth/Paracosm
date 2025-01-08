@@ -42,7 +42,7 @@ namespace Paracosm.Content.Projectiles.Sentries
                         Vector2 offset = new Vector2(Main.rand.NextFloat(-20, 20), closestEnemy.height + 10);
                         Projectile.NewProjectile(Projectile.GetSource_FromAI(), closestEnemy.Center + offset, -Vector2.UnitY * 30, ProjectileID.VilethornBase, Projectile.damage, 1f);
                     }
-                    SoundEngine.PlaySound(SoundID.Item43 with { Volume = 0.5f, PitchRange = (-0.2f, 0.2f) });
+                    SoundEngine.PlaySound(SoundID.Item43 with { Volume = 0.5f, PitchRange = (-0.2f, 0.2f) }, Projectile.Center);
 
                     AttackTimer = 0;
                 }

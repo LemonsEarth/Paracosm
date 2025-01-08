@@ -67,8 +67,13 @@ StardustLeviathanHead: {
 StardustLeviathanBody.DisplayName: " "
 StardustLeviathanTail.DisplayName: " "
 VoidWormBody.DisplayName: " "
-VoidWormHead.DisplayName: Remnant Devourer
+VoidWormHead.DisplayName: Void Leviathan
 VoidWormTail.DisplayName: " "
 VoidSteeple.DisplayName: Steeple of Emptiness
 VoidPlayer.DisplayName: Lost Player
-TheNameless.DisplayName: The Nameless
+
+TheNameless: {
+	DisplayName: The Nameless
+	BossChecklistCompatibility.SpawnInfo: Use a [i:Paracosm/RingOfDesperation]
+	Bestiary: A dark remnant of an individual who failed to save his world, cursed to roam the realm between realities.
+}

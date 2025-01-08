@@ -75,7 +75,7 @@ namespace Paracosm.Content.Projectiles.HeldProjectiles
 
             if (AITimer == 60)
             {
-                SoundEngine.PlaySound(SoundID.MaxMana);
+                SoundEngine.PlaySound(SoundID.MaxMana, Projectile.Center);
             }
 
             if (player.channel && canSpin)

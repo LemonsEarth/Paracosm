@@ -128,7 +128,7 @@ namespace Paracosm.Content.NPCs.Hostile.Void
             }
             else
             {
-                SoundEngine.PlaySound(SoundID.NPCDeath11);
+                SoundEngine.PlaySound(SoundID.NPCDeath11, NPC.Center);
                 return true;
             }
         }

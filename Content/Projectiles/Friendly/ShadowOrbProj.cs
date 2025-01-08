@@ -30,7 +30,7 @@ namespace Paracosm.Content.Projectiles.Friendly
 
         public override void OnKill(int timeLeft)
         {
-            SoundEngine.PlaySound(SoundID.Item62);
+            SoundEngine.PlaySound(SoundID.Item62, Projectile.Center);
             if (Projectile.owner == Main.myPlayer)
             {
                 if (Amount == 0) Amount = 6;
