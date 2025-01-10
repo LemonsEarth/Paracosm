@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Paracosm.Content.Biomes.Overworld;
+using Paracosm.Content.Items.Accessories;
 using Paracosm.Content.Items.Materials;
 using System;
 using System.Collections.Generic;
@@ -28,7 +29,7 @@ namespace Paracosm.Content.NPCs.Hostile.Paracosmic
             NPC.height = 50;
             NPC.lifeMax = 80;
             NPC.defense = 2;
-            NPC.damage = 30;
+            NPC.damage = 15;
             NPC.HitSound = SoundID.NPCHit54;
             NPC.DeathSound = SoundID.NPCDeath52;
             NPC.value = 200;
@@ -55,6 +56,7 @@ namespace Paracosm.Content.NPCs.Hostile.Paracosmic
         public override void ModifyNPCLoot(NPCLoot npcLoot)
         {
             npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Parashard>(), minimumDropped: 1, maximumDropped: 6));
+            npcLoot.Add(ItemDropRule.NormalvsExpert(ModContent.ItemType<WanderersVeil>(), 10, 3));
         }
 
         public override bool? CanFallThroughPlatforms()

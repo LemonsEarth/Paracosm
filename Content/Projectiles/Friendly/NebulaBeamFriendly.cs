@@ -47,15 +47,15 @@ namespace Paracosm.Content.Projectiles.Friendly
                 Projectile.rotation = Projectile.velocity.ToRotation();
                 direction = Projectile.velocity.SafeNormalize(Vector2.Zero);
                 Projectile.frame = (int)SegmentFrame;
-                if (Main.netMode != NetmodeID.MultiplayerClient)
+                if (Main.myPlayer == Projectile.owner)
                 {
                     if (SegmentCount > 1)
                     {
-                        Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center + direction * Projectile.height, direction, Type, Projectile.damage, 1, ai0: SegmentCount - 1, ai1: 1);
+                        Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center + direction * Projectile.height, direction, Type, Projectile.damage, 1, Projectile.owner, ai0: SegmentCount - 1, ai1: 1);
                     }
                     else if (SegmentCount > 0)
                     {
-                        Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center + direction * Projectile.height, direction, Type, Projectile.damage, 1, ai0: SegmentCount - 1, ai1: 3);
+                        Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center + direction * Projectile.height, direction, Type, Projectile.damage, 1, Projectile.owner, ai0: SegmentCount - 1, ai1: 3);
                     }
                 }
             }

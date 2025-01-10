@@ -51,7 +51,7 @@ namespace Paracosm.Content.Projectiles.Friendly
                 if (Main.myPlayer == Projectile.owner)
                 {
                     SpawnPos = Projectile.position + new Vector2(Main.rand.Next(0, Projectile.width), Main.rand.Next(10, Projectile.height - 10));
-                    Projectile.NewProjectile(Projectile.GetSource_FromAI(), SpawnPos, new Vector2(0, 10), ProjectileID.BloodRain, Projectile.damage, 1f);
+                    Projectile.NewProjectile(Projectile.GetSource_FromAI(), SpawnPos, new Vector2(0, 10), ProjectileID.BloodRain, Projectile.damage, 1f, Projectile.owner);
                 }
             }
             if (AITimer % 30 == 0)
@@ -59,7 +59,7 @@ namespace Paracosm.Content.Projectiles.Friendly
                 if (Main.myPlayer == Projectile.owner)
                 {
                     SpawnPos = Projectile.position + new Vector2(Main.rand.Next(0, Projectile.width), Main.rand.Next(10, Projectile.height - 10));
-                    Projectile.NewProjectile(Projectile.GetSource_FromAI(), SpawnPos, new Vector2(0, 5), ModContent.ProjectileType<BloodDrop>(), Projectile.damage * 2, 1f);
+                    Projectile.NewProjectile(Projectile.GetSource_FromAI(), SpawnPos, new Vector2(0, 5), ModContent.ProjectileType<BloodDrop>(), Projectile.damage * 2, 1f, Projectile.owner);
                 }
             }
             Projectile.frameCounter++;

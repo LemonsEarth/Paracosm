@@ -93,7 +93,7 @@ namespace Paracosm.Content.Projectiles.Minions
                 {
                     if (Main.myPlayer == Projectile.owner)
                     {
-                        Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Projectile.Center.DirectionTo(closestNPC.Center) * 12, ProjectileID.GoldenShowerFriendly, Projectile.damage, 1f);
+                        Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Projectile.Center.DirectionTo(closestNPC.Center) * 12, ProjectileID.GoldenShowerFriendly, Projectile.damage, 1f, Projectile.owner);
                         Projectile.netUpdate = true;
                     }
                     AttackTimer = 30;
@@ -105,7 +105,7 @@ namespace Paracosm.Content.Projectiles.Minions
                         {
                             for (int i = -1; i <= 1; i++)
                             {
-                                Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Projectile.Center.DirectionTo(closestNPC.Center).RotatedBy(i * MathHelper.PiOver4) * 12, ModContent.ProjectileType<BloodDrop>(), Projectile.damage, 1f);
+                                Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Projectile.Center.DirectionTo(closestNPC.Center).RotatedBy(i * MathHelper.PiOver4) * 12, ModContent.ProjectileType<BloodDrop>(), Projectile.damage, 1f, Projectile.owner);
                             }
                         }
                     }

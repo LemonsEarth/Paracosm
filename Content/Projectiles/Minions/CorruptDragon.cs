@@ -94,7 +94,7 @@ namespace Paracosm.Content.Projectiles.Minions
                 {
                     if (Main.myPlayer == Projectile.owner)
                     {
-                        Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Projectile.Center.DirectionTo(closestNPC.Center) * 12, ProjectileID.CursedFlameFriendly, Projectile.damage, 1f);
+                        Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Projectile.Center.DirectionTo(closestNPC.Center) * 12, ProjectileID.CursedFlameFriendly, Projectile.damage, 1f, Projectile.owner);
                         Projectile.netUpdate = true;
                     }
                     AttackTimer = 45;
@@ -104,7 +104,7 @@ namespace Paracosm.Content.Projectiles.Minions
                         AttackCount = 0;
                         if (Main.myPlayer == Projectile.owner)
                         {
-                            Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Projectile.Center.DirectionTo(closestNPC.Center) * 12, ModContent.ProjectileType<ShadowOrbProj>(), Projectile.damage, 1f, ai0: ProjectileID.TinyEater);
+                            Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Projectile.Center.DirectionTo(closestNPC.Center) * 12, ModContent.ProjectileType<ShadowOrbProj>(), Projectile.damage, 1f, Projectile.owner, ai0: ProjectileID.TinyEater);
                         }
                     }
                 }

@@ -93,7 +93,7 @@ namespace Paracosm.Content.Projectiles.HeldProjectiles
                     if (Main.myPlayer == Projectile.owner)
                     {
                         Main.player[Projectile.owner].CheckMana(15, true, true);
-                        Projectile.NewProjectile(Projectile.GetSource_FromAI(), mousePos, Vector2.Zero, ModContent.ProjectileType<SolarExplosionMagic>(), Projectile.damage * (int)(projCount / 5) + 69, Projectile.knockBack);
+                        Projectile.NewProjectile(Projectile.GetSource_FromAI(), mousePos, Vector2.Zero, ModContent.ProjectileType<SolarExplosionMagic>(), Projectile.damage * (int)(projCount / 5) + 69, Projectile.knockBack, Projectile.owner);
                     }
                     switch (projCount)
                     {

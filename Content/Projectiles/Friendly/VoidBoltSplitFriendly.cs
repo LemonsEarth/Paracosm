@@ -96,12 +96,12 @@ namespace Paracosm.Content.Projectiles.Friendly
                 return;
             }
             SplitCount--;
-            if (Main.netMode != NetmodeID.MultiplayerClient)
+            if (Main.myPlayer == Projectile.owner)
             {
                 for (int i = 0; i < 3; i++)
                 {
                     Vector2 direction = Projectile.velocity.SafeNormalize(Vector2.Zero).RotatedBy(MathHelper.PiOver2);
-                    Projectile.NewProjectile(Projectile.GetSource_Death(), Projectile.Center, direction.RotatedBy(i * -MathHelper.PiOver2) * 12, Type, Projectile.damage, Projectile.knockBack, ai0: 60, ai1: SplitCount);
+                    Projectile.NewProjectile(Projectile.GetSource_Death(), Projectile.Center, direction.RotatedBy(i * -MathHelper.PiOver2) * 12, Type, Projectile.damage, Projectile.knockBack, Projectile.owner, ai0: 60, ai1: SplitCount);
                 }
             }
         }

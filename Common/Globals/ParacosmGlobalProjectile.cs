@@ -12,6 +12,7 @@ namespace Paracosm.Common.Globals
 
         public override void OnSpawn(Projectile projectile, IEntitySource source)
         {
+            if (projectile.owner < 0) return;
             Player player = Main.player[projectile.owner];
             if (Main.myPlayer == projectile.owner && player.GetModPlayer<ParacosmPlayer>().secondHand)
             {
@@ -28,7 +29,7 @@ namespace Paracosm.Common.Globals
 
         public override void PostAI(Projectile projectile)
         {
-            if (projectile.owner <= 0) return;
+            if (projectile.owner < 0) return;
             Player player = Main.player[projectile.owner];
             if (player.GetModPlayer<ParacosmPlayer>().commandersWill && projectile.sentry)
             {

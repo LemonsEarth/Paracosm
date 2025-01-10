@@ -111,11 +111,14 @@ namespace Paracosm.Content.Projectiles.HeldProjectiles
                 int splitInterval = 30 - (int)boostValue;
                 if (AITimer % splitInterval == 0 && hitSomething)
                 {
-                    for (int i = -1; i <= 1; i += 2)
+                    if (Main.myPlayer == Projectile.owner)
                     {
-                        int splitCount = holdTimer > 80 ? 2 : 1;
-                        Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Projectile.velocity.SafeNormalize(Vector2.Zero).RotatedBy(i * MathHelper.PiOver2) * 7, ModContent.ProjectileType<VoidBoltSplitFriendly>(), Projectile.damage, 1f, ai0: 30, ai1: splitCount);
-                    }
+                        for (int i = -1; i <= 1; i += 2)
+                        {
+                            int splitCount = holdTimer > 80 ? 2 : 1;
+                            Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Projectile.velocity.SafeNormalize(Vector2.Zero).RotatedBy(i * MathHelper.PiOver2) * 7, ModContent.ProjectileType<VoidBoltSplitFriendly>(), Projectile.damage, 1f, Projectile.owner, ai0: 30, ai1: splitCount);
+                        }
+                    }       
                 }
             }
 

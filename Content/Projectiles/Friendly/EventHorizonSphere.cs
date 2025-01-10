@@ -80,7 +80,7 @@ namespace Paracosm.Content.Projectiles.Friendly
                             if (AITimer % 30 == 0)
                             {
                                 Vector2 direction = Projectile.Center.DirectionTo(closestNPC.Center);
-                                Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, direction * 15, ModContent.ProjectileType<EventHorizonProj>(), Projectile.originalDamage / 2, 0.5f);
+                                Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, direction * 15, ModContent.ProjectileType<EventHorizonProj>(), Projectile.originalDamage / 2, 0.5f, Projectile.owner);
                             }
                         }
                     }

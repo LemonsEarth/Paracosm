@@ -37,7 +37,7 @@ namespace Paracosm.Content.Projectiles.Friendly
                 for (int i = 0; i < Amount; i++)
                 {
                     RandomRot = Main.rand.Next(-45, 45);
-                    Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Projectile.velocity.SafeNormalize(Vector2.Zero).RotatedBy(MathHelper.ToRadians(RandomRot)) * 10, (int)AmmoType, Projectile.damage / 2, Projectile.knockBack);
+                    Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Projectile.velocity.SafeNormalize(Vector2.Zero).RotatedBy(MathHelper.ToRadians(RandomRot)) * 10, (int)AmmoType, Projectile.damage / 2, Projectile.knockBack, Projectile.owner);
                 }
                 Projectile.netUpdate = true;
             }

@@ -10,11 +10,6 @@ namespace Paracosm.Content.Items.Weapons.Magic
 {
     public class TheCrucible : ModItem
     {
-        public override void SetStaticDefaults()
-        {
-            Item.staff[Type] = true;
-        }
-
         public override void SetDefaults()
         {
             Item.damage = 233;

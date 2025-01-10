@@ -76,10 +76,10 @@ namespace Paracosm.Content.Projectiles.Friendly
             }
             else
             {
-                if (Main.netMode != NetmodeID.MultiplayerClient)
+                if (Main.myPlayer == Projectile.owner)
                 {
                     Vector2 mouseDir = player.Center.DirectionTo(Main.MouseWorld);
-                    Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, mouseDir * 12, ModContent.ProjectileType<EquinoxSunProj>(), Projectile.damage, 4f, ai0: 30f);
+                    Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, mouseDir * 12, ModContent.ProjectileType<EquinoxSunProj>(), Projectile.damage, 4f, Projectile.owner, ai0: 30f);
                 }
                 Projectile.Kill();
             }

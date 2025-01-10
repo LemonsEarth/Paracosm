@@ -1,8 +1,12 @@
 ﻿using Paracosm.Content.Items.Materials;
+using Paracosm.Content.Projectiles.Friendly;
+using System;
 using Terraria;
+using Terraria.Audio;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
+using Microsoft.Xna.Framework;
 
 namespace Paracosm.Content.Items.Accessories
 {
@@ -10,6 +14,7 @@ namespace Paracosm.Content.Items.Accessories
     {
         static readonly float damageBoost = 22;
         static readonly float DRBoost = 22;
+        int timer = 0;
 
         public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(damageBoost, DRBoost);
 
@@ -34,12 +39,27 @@ namespace Paracosm.Content.Items.Accessories
                 player.GetDamage(DamageClass.Generic) += damageBoost / 100f;
             }
             player.noKnockback = true;
+
+            if (Math.Abs(player.velocity.X) > 4.5f)
+            {
+                if (Main.myPlayer == player.whoAmI && timer == 30)
+                {
+                    SoundEngine.PlaySound(SoundID.Item69, player.Center);
+                    Projectile.NewProjectile(player.GetSource_Accessory(Item), player.Center, (player.velocity - (Vector2.UnitY)) * 4, ModContent.ProjectileType<Paraboulder>(), 2000, 1f, player.whoAmI);
+                    timer = 0;
+                }
+            }
+
+            if (timer < 30)
+            {
+                timer++;
+            }
         }
 
         public override void AddRecipes()
         {
             Recipe recipe = CreateRecipe();
-            recipe.AddIngredient(ModContent.ItemType<RoundShield>());
+            recipe.AddIngredient(ModContent.ItemType<RollerShield>());
             recipe.AddIngredient(ModContent.ItemType<VortexianPlating>(), 6);
             recipe.AddIngredient(ModContent.ItemType<UnstableNebulousFlame>(), 4);
             recipe.AddIngredient(ModContent.ItemType<VoidEssence>(), 13);

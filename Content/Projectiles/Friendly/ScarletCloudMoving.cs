@@ -56,7 +56,7 @@ namespace Paracosm.Content.Projectiles.Friendly
             {
                 if (Main.myPlayer == Projectile.owner)
                 {
-                    Projectile.NewProjectile(Projectile.GetSource_FromAI(), SpawnPos, Vector2.Zero, ModContent.ProjectileType<ScarletCloud>(), Projectile.damage, 1f);
+                    Projectile.NewProjectile(Projectile.GetSource_FromAI(), SpawnPos, Vector2.Zero, ModContent.ProjectileType<ScarletCloud>(), Projectile.damage, 1f, Projectile.owner);
                     Projectile.Kill();
                 }
             }

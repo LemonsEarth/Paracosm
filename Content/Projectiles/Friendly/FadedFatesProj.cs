@@ -68,11 +68,11 @@ namespace Paracosm.Content.Projectiles.Friendly
         {
             if (Homing > 0) return;
             SoundEngine.PlaySound(SoundID.Item27 with { Volume = 0.5f, PitchRange = (-0.3f, 0.3f) }, Projectile.Center);
-            if (Main.netMode != NetmodeID.MultiplayerClient)
+            if (Main.myPlayer == Projectile.owner)
             {
                 for (int i = 0; i < 3; i++)
                 {
-                    Projectile.NewProjectile(Projectile.GetSource_Death(), Projectile.Center, -Vector2.UnitY.RotatedBy(MathHelper.ToRadians(120 * i)) * 10, Type, Projectile.damage, Projectile.knockBack, ai1: 1);
+                    Projectile.NewProjectile(Projectile.GetSource_Death(), Projectile.Center, -Vector2.UnitY.RotatedBy(MathHelper.ToRadians(120 * i)) * 10, Type, Projectile.damage, Projectile.knockBack, Projectile.owner, ai1: 1);
                 }
             }
         }

@@ -34,7 +34,7 @@ namespace Paracosm.Content.Projectiles.Sentries
             if (Main.myPlayer == Projectile.owner && AITimer % 60 == 0 && closestEnemy != null)
             {
                 Vector2 spawnPos = Projectile.position + new Vector2(Main.rand.Next(0, Projectile.width), Main.rand.Next(0, 20));
-                Projectile.NewProjectile(Projectile.GetSource_FromAI(), spawnPos, (closestEnemy.Center - spawnPos).SafeNormalize(Vector2.Zero) * 10, ModContent.ProjectileType<PoisonBloomPetal>(), Projectile.damage, 2f);
+                Projectile.NewProjectile(Projectile.GetSource_FromAI(), spawnPos, (closestEnemy.Center - spawnPos).SafeNormalize(Vector2.Zero) * 10, ModContent.ProjectileType<PoisonBloomPetal>(), Projectile.damage, 2f, Projectile.owner);
                 Projectile.netUpdate = true;
             }
 

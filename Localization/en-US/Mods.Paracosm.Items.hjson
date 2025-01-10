@@ -787,6 +787,7 @@ EnergyCore: {
 		Grants immunity to knockback
 		{0}% increased damage when above 50% life
 		{1}% increased damage reduction when below 50% life
+		Moving quickly causes you to fire out friendly paracosmic boulders, which split into shards on contact with tiles or enemies
 		'''
 }
 
@@ -963,4 +964,27 @@ Judgement: {
 		Throw a spear that releases splitting, homing projectiles if it hits an enemy
 		If charged, more projectiles are spawned
 		'''
+}
+
+WanderersVeil: {
+	DisplayName: Wanderer's Veil
+	Tooltip:
+		'''
+		Press the "Wanderer's Veil" key to gain the ability to phase through blocks for 10 seconds
+		While phasing, you gain {0}% damage reduction
+		'''
+}
+
+RollerShield: {
+	DisplayName: Roller Shield
+	Tooltip:
+		'''
+		Grants immunity to knockback
+		Moving quickly causes you to fire out friendly paracosmic boulders, which split into shards on contact with tiles or enemies
+		'''
+}
+
+DevourerRift: {
+	DisplayName: Devourer Rift
+	Tooltip: ""
 }

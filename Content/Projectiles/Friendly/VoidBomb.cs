@@ -44,9 +44,9 @@ namespace Paracosm.Content.Projectiles.Friendly
             {
                 Gore gore = Gore.NewGoreDirect(Projectile.GetSource_FromThis(), Projectile.Center, new Vector2(Main.rand.NextFloat(-5, 5)), Main.rand.Next(61, 64), Main.rand.NextFloat(0.5f, 1.1f));
             }
-            if (Main.netMode != NetmodeID.MultiplayerClient)
+            if (Main.myPlayer == Projectile.owner)
             {
-                Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Vector2.Zero, ModContent.ProjectileType<VoidExplosion>(), Projectile.originalDamage * 2, Projectile.knockBack);
+                Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Vector2.Zero, ModContent.ProjectileType<VoidExplosion>(), Projectile.originalDamage * 2, Projectile.knockBack, Projectile.owner);
             }
         }
 

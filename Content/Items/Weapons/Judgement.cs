@@ -20,7 +20,7 @@ namespace Paracosm.Content.Items.Weapons
         public override void SetDefaults()
         {
             Item.width = 66;
-            Item.height = 150;
+            Item.height = 134;
             Item.rare = ParacosmRarity.DarkGray;
             Item.value = Item.sellPrice(0, 30);
             Item.useStyle = ItemUseStyleID.Shoot;

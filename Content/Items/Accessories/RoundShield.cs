@@ -14,7 +14,7 @@ namespace Paracosm.Content.Items.Accessories
             Item.width = 30;
             Item.height = 28;
             Item.accessory = true;
-            Item.value = Item.buyPrice(0, 30);
+            Item.value = Item.buyPrice(0, 1);
             Item.rare = ItemRarityID.White;
         }
 

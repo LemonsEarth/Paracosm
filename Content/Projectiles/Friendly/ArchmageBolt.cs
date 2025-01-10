@@ -29,11 +29,11 @@ namespace Paracosm.Content.Projectiles.Friendly
             {
                 for (int i = 0; i < 6; i++)
                 {
-                    Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, new Vector2(Main.rand.Next(-10, 10), Main.rand.Next(-10, 10)), ProjectileID.InfernoFriendlyBolt, Projectile.damage, Projectile.knockBack);
+                    Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, new Vector2(Main.rand.Next(-10, 10), Main.rand.Next(-10, 10)), ProjectileID.InfernoFriendlyBolt, Projectile.damage, Projectile.knockBack, Projectile.owner);
                 }
                 for (int i = 0; i < 4; i++)
                 {
-                    Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, new Vector2(Main.rand.Next(-20, 20), Main.rand.Next(-20, 20)), ProjectileID.ShadowBeamFriendly, Projectile.damage, Projectile.knockBack);
+                    Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, new Vector2(Main.rand.Next(-20, 20), Main.rand.Next(-20, 20)), ProjectileID.ShadowBeamFriendly, Projectile.damage, Projectile.knockBack, Projectile.owner);
                 }
             }
         }

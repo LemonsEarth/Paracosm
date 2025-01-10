@@ -69,7 +69,7 @@ namespace Paracosm.Content.Projectiles.Friendly
 
             if (AITimer % 30 == 0)
             {
-                if (Main.netMode != NetmodeID.MultiplayerClient)
+                if (Main.myPlayer == Projectile.owner)
                 {
                     player.CheckMana(30, true, true);
                     Vector2 mouseDir = player.Center.DirectionTo(Main.MouseWorld);
@@ -87,25 +87,25 @@ namespace Paracosm.Content.Projectiles.Friendly
             }
             else
             {
-                if (Main.netMode != NetmodeID.MultiplayerClient)
+                if (Main.myPlayer == Projectile.owner)
                 {
                     if (Projectile.Colliding(Projectile.Hitbox, Main.projectile[(int)SunID].Hitbox))
                     {
                         player.CheckMana(80, true, true);
                         for (int i = 0; i < 8; i++)
                         {
-                            Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, (Vector2.UnitY * 16).RotatedBy(MathHelper.PiOver4 * i), ModContent.ProjectileType<EquinoxMoonProj>(), Projectile.damage, 4f, ai0: 30f);
+                            Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, (Vector2.UnitY * 16).RotatedBy(MathHelper.PiOver4 * i), ModContent.ProjectileType<EquinoxMoonProj>(), Projectile.damage, 4f, Projectile.owner, ai0: 30f);
                         }
                         for (int i = 0; i < 8; i++)
                         {
-                            Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, (Vector2.UnitY * 16).RotatedBy(MathHelper.PiOver4 * i + MathHelper.PiOver4 / 2), ModContent.ProjectileType<EquinoxSunProj>(), Projectile.damage, 4f, ai0: 30f);
+                            Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, (Vector2.UnitY * 16).RotatedBy(MathHelper.PiOver4 * i + MathHelper.PiOver4 / 2), ModContent.ProjectileType<EquinoxSunProj>(), Projectile.damage, 4f, Projectile.owner, ai0: 30f);
                         }
                     }
                     else
                     {
                         player.CheckMana(30, true, true);
                         Vector2 mouseDir = player.Center.DirectionTo(Main.MouseWorld);
-                        Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, mouseDir * 12, ModContent.ProjectileType<EquinoxMoonProj>(), Projectile.damage, 4f, ai0: 30f);
+                        Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, mouseDir * 12, ModContent.ProjectileType<EquinoxMoonProj>(), Projectile.damage, 4f, Projectile.owner, ai0: 30f);
                     }
                 }
                 Projectile.Kill();

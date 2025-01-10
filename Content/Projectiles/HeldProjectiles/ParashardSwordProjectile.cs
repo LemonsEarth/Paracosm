@@ -118,7 +118,7 @@ namespace Paracosm.Content.Projectiles.HeldProjectiles
                     {
                         for (int i = 0; i < 5; i++)
                         {
-                            Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, new Vector2(Main.rand.NextBool().ToDirectionInt() * Main.rand.Next(5, 16), Main.rand.NextBool().ToDirectionInt() * Main.rand.Next(5, 16)), ModContent.ProjectileType<ParaSwordShard>(), 30, 2);
+                            Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, new Vector2(Main.rand.NextBool().ToDirectionInt() * Main.rand.Next(5, 16), Main.rand.NextBool().ToDirectionInt() * Main.rand.Next(5, 16)), ModContent.ProjectileType<ParaSwordShard>(), 30, 2, Projectile.owner);
                         }
                     }
                 }

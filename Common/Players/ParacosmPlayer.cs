@@ -49,6 +49,7 @@ namespace Paracosm.Common.Players
         public bool organicSight = false;
         public bool infiltratorMark = false;
         public bool heroSoul = false;
+        public bool wanderersVeil = false;
         public int sentryCount = 0;
 
         int oathTimer = 0;
@@ -102,6 +103,7 @@ namespace Paracosm.Common.Players
             masterEmblem = false;
             infiltratorMark = false;
             heroSoul = false;
+            wanderersVeil = false;
 
             paracosmicHelmetBuff = false;
             paracosmicGogglesBuff = false;
@@ -504,6 +506,32 @@ namespace Paracosm.Common.Players
             if ((craterCoating || spiritCoating || starfallCoating) && hitTimer > 0)
             {
                 hitTimer--;
+            }
+
+            if (wanderersVeil)
+            {
+                Vector2 pos = Player.Center;
+                if (Player.controlDown)
+                {
+                    pos.Y += 15;
+                }
+                else if (Player.controlUp)
+                {
+                    pos.Y -= 15;
+                }
+                
+                if (Player.controlRight)
+                {
+                    pos.X += 15;
+                }
+                else if (Player.controlLeft)
+                {
+                    pos.X -= 15;
+                }
+
+                Player.Center = pos;
+
+                Player.endurance += WanderersVeil.DRBoost / 100;
             }
         }
 

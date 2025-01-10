@@ -38,7 +38,7 @@ namespace Paracosm.Content.Projectiles.Sentries
 
                 Dust.NewDust(spawnPos, 0, 0, DustID.IceTorch);
                 AITimer = 0;
-                Projectile.NewProjectile(Projectile.GetSource_FromAI(), spawnPos, (closestEnemy.Center - spawnPos).SafeNormalize(Vector2.Zero) * 8, ModContent.ProjectileType<MoonBurstProjectile>(), Projectile.damage, 2f, ai1: 2, ai2: 1);
+                Projectile.NewProjectile(Projectile.GetSource_FromAI(), spawnPos, (closestEnemy.Center - spawnPos).SafeNormalize(Vector2.Zero) * 8, ModContent.ProjectileType<MoonBurstProjectile>(), Projectile.damage, 2f, Projectile.owner, ai1: 2, ai2: 1);
                 Projectile.netUpdate = true;
             }
 

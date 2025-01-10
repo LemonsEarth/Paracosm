@@ -104,3 +104,13 @@ Soulrest: {
 	DisplayName: Soulrest
 	Description: Your soul needs rest
 }
+
+WanderersVeilCooldown: {
+	DisplayName: Wanderers Veil Cooldown
+	Description: Mods.Paracosm.Buffs.WanderersVeilCooldown.Description
+}
+
+WanderersVeilBuff: {
+	DisplayName: Wanderers Veil Buff
+	Description: Mods.Paracosm.Buffs.WanderersVeilBuff.Description
+}

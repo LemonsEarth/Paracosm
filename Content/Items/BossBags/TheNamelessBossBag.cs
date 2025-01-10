@@ -1,6 +1,7 @@
 ﻿using Paracosm.Content.Items.Accessories;
 using Paracosm.Content.Items.Materials;
 using Paracosm.Content.Items.Weapons;
+using Paracosm.Content.Items.Weapons.Magic;
 using Paracosm.Content.Items.Weapons.Melee;
 using Terraria;
 using Terraria.GameContent.ItemDropRules;
@@ -35,7 +36,7 @@ namespace Paracosm.Content.Items.BossBags
 
         public override void ModifyItemLoot(ItemLoot itemLoot)
         {
-            itemLoot.Add(ItemDropRule.OneFromOptions(1, ModContent.ItemType<VoidTremor>()));
+            itemLoot.Add(ItemDropRule.OneFromOptions(1, ModContent.ItemType<VoidTremor>(), ModContent.ItemType<DevourerRift>()));
             itemLoot.Add(ItemDropRule.Common(ModContent.ItemType<Judgement>(), 1, 1, 1));
             itemLoot.Add(ItemDropRule.Common(ModContent.ItemType<SoulOfAHero>(), 1, 1, 1));
         }

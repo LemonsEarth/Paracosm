@@ -42,7 +42,7 @@ namespace Paracosm.Content.Projectiles.Friendly
 
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
-            if (Main.netMode != NetmodeID.MultiplayerClient)
+            if (Main.myPlayer == Projectile.owner)
             {
                 for (int i = 0; i < 3; i++)
                 {

@@ -62,7 +62,7 @@ namespace Paracosm.Content.Projectiles.Sentries
                             for (int i = 0; i < 3; i++)
                             {
                                 Vector2 offset = new Vector2(Main.rand.NextFloat(-20, 20), Main.rand.NextFloat(-20, 20));
-                                Projectile.NewProjectile(Projectile.GetSource_FromAI(), npc.Center + offset, Vector2.Zero, ModContent.ProjectileType<BranchOfLifeProj>(), Projectile.damage, 1f);
+                                Projectile.NewProjectile(Projectile.GetSource_FromAI(), npc.Center + offset, Vector2.Zero, ModContent.ProjectileType<BranchOfLifeProj>(), Projectile.damage, 1f, Projectile.owner);
                             }
                         }
                         SoundEngine.PlaySound(SoundID.Item4 with { Volume = 0.3f, PitchRange = (-0.2f, 0.2f) }, Projectile.Center);

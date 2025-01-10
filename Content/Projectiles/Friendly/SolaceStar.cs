@@ -64,7 +64,7 @@ namespace Paracosm.Content.Projectiles.Friendly
                         }
                         closestEnemy = LemonUtils.GetClosestNPC(Projectile);
                         RandomRot = Main.rand.Next(-15, 15);
-                        Projectile.NewProjectile(Projectile.GetSource_Death(), Projectile.Center, Projectile.Center.DirectionTo(closestEnemy.Center).RotatedBy(MathHelper.ToRadians(RandomRot)) * 16, ProjectileID.HallowStar, Projectile.damage, 1f);
+                        Projectile.NewProjectile(Projectile.GetSource_Death(), Projectile.Center, Projectile.Center.DirectionTo(closestEnemy.Center).RotatedBy(MathHelper.ToRadians(RandomRot)) * 16, ProjectileID.HallowStar, Projectile.damage, 1f, Projectile.owner);
                         Projectile.netUpdate = true;
                     }
                 }

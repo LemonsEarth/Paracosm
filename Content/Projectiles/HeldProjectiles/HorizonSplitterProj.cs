@@ -86,7 +86,7 @@ namespace Paracosm.Content.Projectiles.HeldProjectiles
                 {
                     if (Main.myPlayer == Projectile.owner)
                     {
-                        Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center + playerToProj * distance, Vector2.Zero, Type, savedDamage, 6, ai1: DistanceIndex + 1, ai2: MouseSide);
+                        Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center + playerToProj * distance, Vector2.Zero, Type, savedDamage, 6, Projectile.owner, ai1: DistanceIndex + 1, ai2: MouseSide);
                     }
                 }
             }

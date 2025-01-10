@@ -73,10 +73,10 @@ namespace Paracosm.Content.Projectiles.HeldProjectiles
             Projectile.velocity = Vector2.Zero;
             if (AITimer % 3 == 0 && AttackCount < 5)
             {
-                if (Main.netMode != NetmodeID.MultiplayerClient)
+                if (Main.myPlayer == Projectile.owner)
                 {
                     AttackCount++;
-                    Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, playerToProj * 15, ModContent.ProjectileType<LightsEndBeam>(), Projectile.damage / 5, 1);
+                    Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, playerToProj * 15, ModContent.ProjectileType<LightsEndBeam>(), Projectile.damage / 5, 1, Projectile.owner);
                 }
             }
             Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, DustID.Wraith, Scale: Main.rand.NextFloat(1f, 1.4f));
