@@ -9,7 +9,7 @@ namespace Paracosm.Content.Subworlds
     {
         public override int Width => 1000;
         public override int Height => 3000;
-        public override bool ShouldSave => false;
+        public override bool ShouldSave => true;
         public override bool NoPlayerSaving => false;
 
         public override List<GenPass> Tasks => new List<GenPass>()

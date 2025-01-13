@@ -17,9 +17,9 @@ namespace Paracosm.Content.Projectiles.HeldProjectiles
 {
     public class JudgementProj : ModProjectile
     {
-        int AITimer = 0;
+        ref float AITimer => ref Projectile.ai[0];
         bool released = false;
-        float holdTimer = 0;
+        ref float holdTimer => ref Projectile.ai[1];
         Vector2 mouseDir = Vector2.Zero;
         bool hitSomething = false;
 
@@ -28,6 +28,22 @@ namespace Paracosm.Content.Projectiles.HeldProjectiles
             ProjectileID.Sets.TrailCacheLength[Projectile.type] = 8;
             ProjectileID.Sets.TrailingMode[Projectile.type] = 2;
             Main.projFrames[Type] = 1;
+        }
+
+        public override void SendExtraAI(BinaryWriter writer)
+        {
+            writer.Write(released);
+            writer.Write(hitSomething);
+            writer.Write(mouseDir.X);
+            writer.Write(mouseDir.Y);
+        }
+
+        public override void ReceiveExtraAI(BinaryReader reader)
+        {
+            released = reader.ReadBoolean();
+            hitSomething = reader.ReadBoolean();
+            mouseDir.X = reader.ReadSingle();
+            mouseDir.Y = reader.ReadSingle();
         }
 
         public override void SetDefaults()
@@ -96,6 +112,11 @@ namespace Paracosm.Content.Projectiles.HeldProjectiles
                         LemonUtils.DustCircle(Main.MouseWorld, 16, 10, DustID.Granite);
                     }
                 }
+            }
+
+            if (AITimer % 5 == 0)
+            {
+                Projectile.netUpdate = true;
             }
 
             if (!player.channel)

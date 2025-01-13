@@ -17,6 +17,10 @@ namespace Paracosm.Common.Globals
             {
                 shop.Add(ModContent.ItemType<SteelSight>(), Condition.DownedDeerclops);
             }
+            if (shop.NpcType == NPCID.BestiaryGirl)
+            {
+                shop.Add(ItemID.Burger, Condition.DownedPlantera);
+            }
         }
     }
 }

@@ -20,7 +20,7 @@ namespace Paracosm.Content.Items.Weapons.Summon
             Item.height = 40;
             Item.mana = 10;
             Item.noMelee = true;
-            Item.damage = 24;
+            Item.damage = 18;
             Item.DamageType = DamageClass.Summon;
             Item.useStyle = ItemUseStyleID.Swing;
             Item.useTime = 20;

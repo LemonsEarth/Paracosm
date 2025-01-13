@@ -1,18 +1,24 @@
 Paracosm is a content mod that adds new bosses, weapons, accessories and structures to the game.
 
+--- New Update! ---
+
+- 5 new post-Moon Lord bosses!
+- Lots of new items and weapons!
+- A new subworld!
+- And some other stuff...
+
 Currently adds:
 
-- 2 Hardmode Bosses
-- 26 Weapons
-- 2 Armor Sets
-- 8 Accessories
+- 2 Hardmode Bosses, 5 post - Moon Lord Bosses
+- 50 Weapons
+- 3 Armor Sets
+- 33 Accessories
 - 5 Structures
 - 1 new minibiome
+- A new subworld!
 
-Paracosm doesn't add much QoL, so I recommend using some like Recipe Browser and Boss Checklist
+Some mods I recommend to use alongside this one are Boss Checklist, Recipe Browser and Fargo's Mutant Mod
 
 The mod was designed with multiplayer and other mods in mind, but there may still be bugs, so please report them.
 
 Developed by LemonEarth.
-
-GitHub: https://github.com/LemonsEarth/Paracosm

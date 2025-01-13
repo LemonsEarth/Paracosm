@@ -197,6 +197,7 @@ namespace Paracosm.Content.Bosses.TheNameless
             writer.Write(phaseTransition);
             writer.Write(NPC.Opacity);
 
+            writer.Write(vortexPositions.Length);
             foreach (Vector2 pos in vortexPositions)
             {
                 writer.Write(pos.X);
@@ -206,6 +207,8 @@ namespace Paracosm.Content.Bosses.TheNameless
             {
                 writer.Write(pos.Y);
             }
+
+            writer.Write(VoidEruptionHooks.Count);
         }
 
         public override void ReceiveExtraAI(BinaryReader reader)
@@ -237,13 +240,30 @@ namespace Paracosm.Content.Bosses.TheNameless
             }
             phaseTransition = reader.ReadBoolean();
             NPC.Opacity = reader.ReadSingle();
-            for (int i = 0; i < 5; i++)
+
+            int length = reader.ReadInt32();
+            for (int i = 0; i < length; i++)
             {
                 vortexPositions[i].X = reader.ReadSingle();
             }
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < length; i++)
             {
                 vortexPositions[i].Y = reader.ReadSingle();
+            }
+
+            int countHooks = reader.ReadInt32();
+            int count2 = 0;
+            foreach (var proj in Main.ActiveProjectiles)
+            {
+                if (proj.type == Proj["VoidEruption"] || proj.type == Proj["ReturnEruption"])
+                {
+                    VoidEruptionHooks.Add(proj);
+                    count2++;
+                    if (count2 >= countHooks)
+                    {
+                        break;
+                    }
+                }
             }
         }
 
@@ -378,18 +398,19 @@ namespace Paracosm.Content.Bosses.TheNameless
                         phase2FirstTime = true;
                         phase = 2;
                     }
+                    NPC.netUpdate = true;
                     if (!Main.dedServ)
                     {
                         Music = MusicLoader.GetMusicSlot(Mod, "Content/Audio/Music/AMemoryOfATime");
                     }
-                    if (SkyManager.Instance["Paracosm:NamelessSky"] != null && !SkyManager.Instance["Paracosm:NamelessSky"].IsActive())
+                    if (SkyManager.Instance["Paracosm:NamelessSky"] != null && !SkyManager.Instance["Paracosm:NamelessSky"].IsActive() && Main.netMode != NetmodeID.Server)
                     {
                         SkyManager.Instance.Activate("Paracosm:NamelessSky");
                     }
 
                     NPC.velocity = Vector2.Zero;
-                    NPC.netUpdate = true;
                     NPC.dontTakeDamage = true;
+                    NPC.netUpdate = true;
                     break;
 
                 case PHASE_TRANSITION_DURATION - 180:
@@ -467,6 +488,15 @@ namespace Paracosm.Content.Bosses.TheNameless
                     shader.Shader.Parameters["maxGlow"].SetValue(1.1f);
 
                 }
+
+                if (SkyManager.Instance["Paracosm:NamelessSky"] != null && !SkyManager.Instance["Paracosm:NamelessSky"].IsActive() && Main.netMode != NetmodeID.Server)
+                {
+                    SkyManager.Instance.Activate("Paracosm:NamelessSky");
+                }
+                if (!Main.dedServ)
+                {
+                    Music = MusicLoader.GetMusicSlot(Mod, "Content/Audio/Music/AMemoryOfATime");
+                }
             }
         }
 
@@ -498,8 +528,8 @@ namespace Paracosm.Content.Bosses.TheNameless
                     if (proj.Key != "Sphere")
                         DeleteProjectiles(proj.Value);
                 }
-                VoidEruptionHooks.Clear();
             }
+            VoidEruptionHooks.Clear();
 
             if (Spheres.Any(p => p.active == false))
             {
@@ -987,7 +1017,7 @@ namespace Paracosm.Content.Bosses.TheNameless
                             if (AttackCount < 25)
                             {
                                 AttackCount += 1f;
-                            }     
+                            }
                         }
                     }
                     break;
@@ -1034,6 +1064,63 @@ namespace Paracosm.Content.Bosses.TheNameless
             float targetArenaDistance = BASE_ARENA_DISTANCE;
             arenaFollow = true;
 
+            ModifyArena(ref targetArenaDistance);
+
+            if (phase == 1)
+            {
+                SpawnSpheres();
+            }
+
+            if (arenaFollow)
+            {
+                arenaCenter = NPC.Center;
+            }
+
+            if (AITimer % 5 == 0)
+            {
+                NPC.netUpdate = true;
+            }
+
+            if (phase == 1)
+            {
+                ControlSpheres();
+            }
+
+            if (phase == 1)
+            {
+                arenaDistance += (targetArenaDistance - arenaDistance) / 60;
+            }
+            else
+            {
+                arenaDistance += (targetArenaDistance - arenaDistance) / 30;
+            }
+
+            ControlShader();
+
+            ArenaDebuff(offset);
+        }
+
+        void ControlShader()
+        {
+            if (phase == 1)
+            {
+                Terraria.Graphics.Effects.Filters.Scene.Deactivate("Paracosm:DarknessShaderPos");
+            }
+            else
+            {
+                if (Main.netMode != NetmodeID.Server)
+                {
+                    ScreenShaderData shader2 = Terraria.Graphics.Effects.Filters.Scene.Activate("Paracosm:DarknessShaderPos").GetShader();
+                    shader2.UseTargetPosition(arenaCenter);
+                    shader2.UseImage(Noise, 1);
+                    shader2.Shader.Parameters["desiredPos"].SetValue(arenaCenter + new Vector2(arenaDistance - 200, 0));
+                    shader2.Apply();
+                }
+            }
+        }
+
+        void ModifyArena(ref float targetArenaDistance)
+        {
             if (phase == 1)
             {
                 /*switch (Attack)
@@ -1084,71 +1171,37 @@ namespace Paracosm.Content.Bosses.TheNameless
                 targetArenaDistance = FINALPHASEARENADISTANCE;
                 arenaFollow = true;
             }
+        }
 
-            if (AITimer % 5 == 0)
+        void SpawnSpheres()
+        {
+            if (Main.netMode != NetmodeID.MultiplayerClient)
             {
-                NPC.netUpdate = true;
-            }
-
-            if (phase == 1)
-            {
-                if (Main.netMode != NetmodeID.MultiplayerClient)
+                if (Spheres.Count < 40)
                 {
-                    if (Spheres.Count < 40)
+                    for (int i = 0; i < 40; i++)
                     {
-                        for (int i = 0; i < 40; i++)
-                        {
-                            var sphere = Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center + new Vector2(0, -arenaDistance).RotatedBy(i * MathHelper.ToRadians(9)), Vector2.Zero, Proj["Sphere"], NPC.damage, 1, ai1: 90f);
+                        var sphere = Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center + new Vector2(0, -arenaDistance).RotatedBy(i * MathHelper.ToRadians(9)), Vector2.Zero, Proj["Sphere"], NPC.damage, 1, ai1: 90f);
 
-                            Spheres.Add(sphere);
-                        }
+                        Spheres.Add(sphere);
                     }
                 }
             }
+        }
 
-            if (arenaFollow)
+        void ControlSpheres()
+        {
+            for (int i = 0; i < Spheres.Count; i++)
             {
-                arenaCenter = NPC.Center;
-            }
-
-            if (phase == 1)
-            {
-                for (int i = 0; i < Spheres.Count; i++)
+                Vector2 pos = arenaCenter + new Vector2(0, -arenaDistance).RotatedBy(i * MathHelper.ToRadians(9)).RotatedBy(MathHelper.ToRadians(AITimer));
+                if (Spheres[i].type != Proj["Sphere"])
                 {
-                    Vector2 pos = arenaCenter + new Vector2(0, -arenaDistance).RotatedBy(i * MathHelper.ToRadians(9)).RotatedBy(MathHelper.ToRadians(AITimer));
-                    if (Spheres[i].type != Proj["Sphere"])
-                    {
-                        continue;
-                    }
-
-                    Spheres[i].velocity = (pos - Spheres[i].Center).SafeNormalize(Vector2.Zero) * (Spheres[i].Center.Distance(pos) / 50);
-                    Spheres[i].timeLeft = 180;
+                    continue;
                 }
-            }
 
-            if (phase == 1)
-            {
-                arenaDistance += (targetArenaDistance - arenaDistance) / 60;
+                Spheres[i].velocity = (pos - Spheres[i].Center).SafeNormalize(Vector2.Zero) * (Spheres[i].Center.Distance(pos) / 50);
+                Spheres[i].timeLeft = 180;
             }
-            else
-            {
-                arenaDistance += (targetArenaDistance - arenaDistance) / 30;
-            }
-
-            if (phase == 1)
-            {
-                Terraria.Graphics.Effects.Filters.Scene.Deactivate("Paracosm:DarknessShaderPos");
-            }
-            else
-            {
-                ScreenShaderData shader2 = Terraria.Graphics.Effects.Filters.Scene.Activate("Paracosm:DarknessShaderPos").GetShader();
-                shader2.UseTargetPosition(arenaCenter);
-                shader2.UseImage(Noise, 1);
-                shader2.Shader.Parameters["desiredPos"].SetValue(arenaCenter + new Vector2(arenaDistance - 200, 0));
-                shader2.Apply();
-            }
-
-            ArenaDebuff(offset);
         }
 
         void ArenaDebuff(float offset = 50)

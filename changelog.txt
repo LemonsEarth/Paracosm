@@ -1,3 +1,6 @@
 -------New Content-------
-- Added the Void Subworld, featuring fractured terrain and buildings, as well as horrors beyond one's comprehension
-- Added 4 post - Moon Lord bosses
+- Added the Void Subworld, featuring fractured terrain and buildings, as well as horrors beyond human comprehension
+- Added 5 post - Moon Lord bosses
+- New weapons, accessories and a post - Moon Lord expert - only armor set
+- Many new sentries for summoners to enjoy
+- Some QoL stuff

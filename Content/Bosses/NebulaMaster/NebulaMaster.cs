@@ -128,7 +128,7 @@ namespace Paracosm.Content.Bosses.NebulaMaster
             NPC.lifeMax = 500000;
             NPC.defense = 40;
             NPC.damage = 40;
-            NPC.HitSound = SoundID.NPCHit30;
+            NPC.HitSound = SoundID.NPCHit1;
             NPC.DeathSound = SoundID.NPCHit52;
             NPC.value = 5000000;
             NPC.noTileCollide = true;

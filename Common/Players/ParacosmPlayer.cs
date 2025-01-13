@@ -405,19 +405,19 @@ namespace Paracosm.Common.Players
             if (voidTerror)
             {
                 Dust.NewDust(Player.position, Player.width, Player.height, DustID.SolarFlare, newColor: Color.Black);
-                if (Main.rand.NextBool(250))
+                if (Main.rand.NextBool(150))
                 {
                     int randDebuff = Main.rand.NextFromList(20, 22, 23, 24, 31, 32, 33, 35, 36, 37, 38, 39, 46, 47, 67, 68, 69, 70, 80, 144, 149, 153, 156, 195, 196, 197,
                                                             ModContent.BuffType<SolarBurn>(), ModContent.BuffType<ParacosmicBurn>(), ModContent.BuffType<MeltingDebuff>());
                     Player.AddBuff(randDebuff, 120);
                 }
 
-                if (!Player.HasBuff(BuffID.PotionSickness) && Main.rand.NextBool(300)) // Separate chance to inflict potion sickness
+                if (!Player.HasBuff(BuffID.PotionSickness) && Main.rand.NextBool(250)) // Separate chance to inflict potion sickness
                 {
                     Player.AddBuff(BuffID.PotionSickness, 600);
                 }
 
-                if (Main.rand.NextBool(300)) // Chance to remove minions and sentries
+                if (Main.rand.NextBool(250)) // Chance to remove minions and sentries
                 {
                     Player.maxTurrets = 0;
                     Player.maxMinions = 0;
@@ -541,7 +541,7 @@ namespace Paracosm.Common.Players
             {
                 Player.moonLordMonolithShader = true;
 
-                if (!Terraria.Graphics.Effects.Filters.Scene["Paracosm:DarknessShader"].IsActive() && Main.netMode != NetmodeID.Server)
+                if (Main.netMode != NetmodeID.Server)
                 {
                     ScreenShaderData shader = Terraria.Graphics.Effects.Filters.Scene.Activate("Paracosm:DarknessShader").GetShader();
                     if (Player.InModBiome<VoidHigh>())

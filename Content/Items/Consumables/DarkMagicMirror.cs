@@ -82,14 +82,25 @@ namespace Paracosm.Content.Items.Consumables
 
         public override void AddRecipes()
         {
-            Recipe recipe = CreateRecipe();
-            recipe.AddIngredient(ItemID.LunarBar, 5);
-            recipe.AddIngredient(ItemID.FragmentSolar, 5);
-            recipe.AddIngredient(ItemID.FragmentVortex, 5);
-            recipe.AddIngredient(ItemID.FragmentNebula, 5);
-            recipe.AddIngredient(ItemID.FragmentStardust, 5);
-            recipe.AddTile(TileID.LunarCraftingStation);
-            recipe.Register();
+            Recipe recipe1 = CreateRecipe();
+            recipe1.AddIngredient(ItemID.MagicMirror);
+            recipe1.AddIngredient(ItemID.LunarBar, 5);
+            recipe1.AddIngredient(ItemID.FragmentSolar, 5);
+            recipe1.AddIngredient(ItemID.FragmentVortex, 5);
+            recipe1.AddIngredient(ItemID.FragmentNebula, 5);
+            recipe1.AddIngredient(ItemID.FragmentStardust, 5);
+            recipe1.AddTile(TileID.LunarCraftingStation);
+            recipe1.Register();
+
+            Recipe recipe2 = CreateRecipe();
+            recipe2.AddIngredient(ItemID.IceMirror);
+            recipe2.AddIngredient(ItemID.LunarBar, 5);
+            recipe2.AddIngredient(ItemID.FragmentSolar, 5);
+            recipe2.AddIngredient(ItemID.FragmentVortex, 5);
+            recipe2.AddIngredient(ItemID.FragmentNebula, 5);
+            recipe2.AddIngredient(ItemID.FragmentStardust, 5);
+            recipe2.AddTile(TileID.LunarCraftingStation);
+            recipe2.Register();
         }
     }
 }

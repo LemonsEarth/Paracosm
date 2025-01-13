@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Paracosm.Common.Utils;
+using Paracosm.Content.Buffs;
 using Terraria;
 using Terraria.Audio;
 using Terraria.GameContent;
@@ -55,7 +56,7 @@ namespace Paracosm.Content.Projectiles.Hostile
                     {
                         for (int i = 0; i < 8; i++)
                         {
-                            Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, (Vector2.UnitY * 10).RotatedBy(i * MathHelper.PiOver4), ModContent.ProjectileType<VoidBoltSplit>(), Projectile.damage / 2, 1f, ai0: 120, ai1: 0);
+                            Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, (Vector2.UnitY * 10).RotatedBy(i * MathHelper.PiOver4), ModContent.ProjectileType<VoidBoltSplit>(), Projectile.damage, 1f, ai0: 120, ai1: 0);
                         }
                     }
                 }
@@ -81,7 +82,7 @@ namespace Paracosm.Content.Projectiles.Hostile
             {
                 if (player.Center.Distance(Projectile.Center) < 400)
                 {
-                    player.velocity += player.Center.DirectionTo(Projectile.Center) * 1f;
+                    player.velocity += player.Center.DirectionTo(Projectile.Center) * 0.75f;
                 }
             }
 
@@ -101,6 +102,11 @@ namespace Paracosm.Content.Projectiles.Hostile
             AITimer++;
         }
 
+        public override void OnHitPlayer(Player target, Player.HurtInfo hurtInfo)
+        {
+            target.AddBuff(ModContent.BuffType<VoidTerrorDebuff>(), 120);
+        }
+
         public override void OnKill(int timeLeft)
         {
             if (Main.netMode != NetmodeID.MultiplayerClient)
@@ -108,7 +114,7 @@ namespace Paracosm.Content.Projectiles.Hostile
                 for (int i = 0; i < 8; i++)
                 {
                     LemonUtils.DustCircle(Projectile.Center, 8, 2f * i, DustID.Granite, 1.3f);
-                    Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, (Vector2.UnitY * 20).RotatedBy(i * MathHelper.PiOver4), ModContent.ProjectileType<VoidBoltSplit>(), Projectile.damage / 2, 1f, ai0: 120, ai1: 0);
+                    Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, (Vector2.UnitY * 20).RotatedBy(i * MathHelper.PiOver4), ModContent.ProjectileType<VoidBoltSplit>(), Projectile.damage, 1f, ai0: 120, ai1: 0);
                 }
             }
         }

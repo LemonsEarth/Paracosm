@@ -123,7 +123,12 @@ namespace Paracosm.Content.Subworlds
                         chest.item[inventoryIndex].SetDefaults(randEmblem);
                         continue;
                     }
-                    chest.item[inventoryIndex].SetDefaults(LemonUtils.GetRandomItemID());
+                    int randItemID = LemonUtils.GetRandomItemID();
+                    if (randItemID == ItemID.Zenith)
+                    {
+                        continue;
+                    }
+                    chest.item[inventoryIndex].SetDefaults(randItemID);
                     if (chest.item[inventoryIndex].maxStack > 1)
                     {
                         chest.item[inventoryIndex].stack = Main.rand.Next(24, 87);

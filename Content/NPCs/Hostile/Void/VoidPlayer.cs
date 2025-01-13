@@ -2,6 +2,7 @@
 using Newtonsoft.Json.Serialization;
 using Paracosm.Common.Utils;
 using Paracosm.Content.Biomes.Void;
+using Paracosm.Content.Buffs;
 using Paracosm.Content.Items.Materials;
 using Paracosm.Content.Projectiles.Hostile;
 using System;
@@ -126,6 +127,11 @@ namespace Paracosm.Content.NPCs.Hostile.Void
 
             Lighting.AddLight(NPC.Center, 10, 10, 10);
             AITimer++;
+        }
+
+        public override void OnHitPlayer(Player target, Player.HurtInfo hurtInfo)
+        {
+            target.AddBuff(ModContent.BuffType<VoidTerrorDebuff>(), 300);
         }
 
         const int MELEE_DASH_CD = 180;

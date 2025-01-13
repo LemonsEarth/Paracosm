@@ -152,14 +152,14 @@ namespace Paracosm.Common.Globals
             {
                 pool.Clear();
                 pool.Add(ModContent.NPCType<VoidSteeple>(), 0.1f);
-                pool.Add(ModContent.NPCType<ShadowSeeker>(), 0.05f);
+                pool.Add(ModContent.NPCType<ShadowSeeker>(), 0.2f);
             }
 
             if (spawnInfo.Player.InModBiome<VoidLow>())
             {
                 pool.Clear();
                 pool.Add(ModContent.NPCType<VoidPlayer>(), 0.02f);
-                pool.Add(ModContent.NPCType<VoidWormHead>(), 0.005f);
+                pool.Add(ModContent.NPCType<VoidWormHead>(), 0.01f);
             }
         }
 

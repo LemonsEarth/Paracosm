@@ -512,7 +512,13 @@ RogueDefender: {
 
 DarkMagicMirror: {
 	DisplayName: Dark Magic Mirror
-	Tooltip: Teleports you... somewhere else
+	Tooltip:
+		'''
+		Teleports you to the void
+		[c/ff0000:If playing in multiplayer, the host should use this item in singleplayer first.]
+		[c/ff0000:Subworlds in multiplayer may be unstable. Tread carefully.]
+		Changes to the subworld are saved upon returning.
+		'''
 }
 
 RisingStar: {
@@ -986,5 +992,5 @@ RollerShield: {
 
 DevourerRift: {
 	DisplayName: Devourer Rift
-	Tooltip: ""
+	Tooltip: Casts forth a vortex that follows your mouse cursor and sucks enemies in
 }

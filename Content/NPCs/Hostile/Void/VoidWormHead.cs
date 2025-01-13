@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Paracosm.Content.Biomes.Void;
+using Paracosm.Content.Buffs;
 using Paracosm.Content.Items.Accessories;
 using Paracosm.Content.Items.Materials;
 using System;
@@ -51,7 +52,7 @@ namespace Paracosm.Content.NPCs.Hostile.Void
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
-            return spawnInfo.Player.InModBiome<VoidLow>() ? 0.005f : 0;
+            return spawnInfo.Player.InModBiome<VoidLow>() ? 0.01f : 0;
         }
 
         public override void SetDefaults()
@@ -95,6 +96,11 @@ namespace Paracosm.Content.NPCs.Hostile.Void
         public override bool? DrawHealthBar(byte hbPosition, ref float scale, ref Vector2 position)
         {
             return false;
+        }
+
+        public override void OnHitPlayer(Player target, Player.HurtInfo hurtInfo)
+        {
+            target.AddBuff(ModContent.BuffType<VoidTerrorDebuff>(), 300);
         }
 
         void SpawnSegments()

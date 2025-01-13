@@ -135,7 +135,7 @@ namespace Paracosm.Content.NPCs.Hostile.Void
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
-            return spawnInfo.Player.InModBiome<VoidMid>() ? 0.05f : 0;
+            return spawnInfo.Player.InModBiome<VoidMid>() ? 0.02f : 0;
         }
 
         public override void FindFrame(int frameHeight)

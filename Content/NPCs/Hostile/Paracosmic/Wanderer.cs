@@ -56,7 +56,7 @@ namespace Paracosm.Content.NPCs.Hostile.Paracosmic
         public override void ModifyNPCLoot(NPCLoot npcLoot)
         {
             npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Parashard>(), minimumDropped: 1, maximumDropped: 6));
-            npcLoot.Add(ItemDropRule.NormalvsExpert(ModContent.ItemType<WanderersVeil>(), 10, 3));
+            npcLoot.Add(ItemDropRule.NormalvsExpert(ModContent.ItemType<WanderersVeil>(), 20, 10));
         }
 
         public override bool? CanFallThroughPlatforms()

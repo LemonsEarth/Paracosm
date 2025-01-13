@@ -71,13 +71,13 @@ NebulousPower: {
 }
 
 StardustTailBuff: {
-	DisplayName: Stardust Tail Buff
-	Description: Mods.Paracosm.Buffs.StardustTailBuff.Description
+	DisplayName: Shimi shimi yay shimi yay shimi yaaa
+	Description: swalalala
 }
 
 StardustTailCD: {
-	DisplayName: Stardust Tail C D
-	Description: Mods.Paracosm.Buffs.StardustTailCD.Description
+	DisplayName: Shimi shimi yay shimi yay shimi yaaa
+	Description: swalalala
 }
 
 StardustTailDebuff: {
@@ -96,7 +96,7 @@ BranchedOfLifedBuff: {
 }
 
 VoidTerrorDebuff: {
-	Description: Mods.Paracosm.Buffs.VoidTerrorDebuff.Description
+	Description: The darkness consumes you
 	DisplayName: Void Terror Debuff
 }
 
@@ -107,10 +107,10 @@ Soulrest: {
 
 WanderersVeilCooldown: {
 	DisplayName: Wanderers Veil Cooldown
-	Description: Mods.Paracosm.Buffs.WanderersVeilCooldown.Description
+	Description: You cannot phase yet
 }
 
 WanderersVeilBuff: {
 	DisplayName: Wanderers Veil Buff
-	Description: Mods.Paracosm.Buffs.WanderersVeilBuff.Description
+	Description: You can move through blocks!
 }

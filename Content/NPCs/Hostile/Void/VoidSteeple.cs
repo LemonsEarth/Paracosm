@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Paracosm.Content.Biomes.Void;
+using Paracosm.Content.Buffs;
 using Paracosm.Content.Items.Materials;
 using Paracosm.Content.Projectiles.Hostile;
 using System.Collections.Generic;
@@ -112,7 +113,7 @@ namespace Paracosm.Content.NPCs.Hostile.Void
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
-            return spawnInfo.Player.InModBiome<VoidMid>() ? 0.03f : 0;
+            return spawnInfo.Player.InModBiome<VoidMid>() ? 0.01f : 0;
         }
 
         public override void FindFrame(int frameHeight)

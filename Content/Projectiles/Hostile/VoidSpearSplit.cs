@@ -93,10 +93,13 @@ namespace Paracosm.Content.Projectiles.Hostile
                 Projectile.rotation = Projectile.velocity.ToRotation();
                 if (AITimer % SplitInterval == 0)
                 {
-                    for (int i = -1; i <= 1; i+=2)
+                    if (Main.netMode != NetmodeID.MultiplayerClient)
                     {
-                        Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Projectile.velocity.SafeNormalize(Vector2.Zero).RotatedBy(i * MathHelper.PiOver2) * 10, ModContent.ProjectileType<VoidBoltSplit>(), Projectile.damage, 1f, ai0: 60, ai1: SplitCount);
-                    }
+                        for (int i = -1; i <= 1; i += 2)
+                        {
+                            Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Projectile.velocity.SafeNormalize(Vector2.Zero).RotatedBy(i * MathHelper.PiOver2) * 10, ModContent.ProjectileType<VoidBoltSplit>(), Projectile.damage, 1f, ai0: 60, ai1: SplitCount);
+                        }
+                    }                
                 }
             }
 
