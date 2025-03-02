@@ -92,6 +92,7 @@ namespace Paracosm.Content.Subworlds
                     for (int j = 0; j < numBuildings; j++) //num of building stacked on top of each other
                     {
                         int y = 2600 + (depthMul * 100) + (j * dims.Y) - 1;
+                        if (x + dims.X > 1000 || y + dims.Y > 3000) continue;
                         Generator.GenerateMultistructureRandom("Content/Structures/VoidStructures", new Point16(x, y), Paracosm.Instance);
                     }
                 }

@@ -34,7 +34,7 @@ namespace Paracosm.Content.NPCs.Hostile.Paracosmic
             NPC.height = 84;
             NPC.lifeMax = 100;
             NPC.defense = 5;
-            NPC.damage = 50;
+            NPC.damage = 20;
             NPC.HitSound = SoundID.NPCHit41;
             NPC.DeathSound = SoundID.NPCDeath43;
             NPC.value = 300;
@@ -89,22 +89,25 @@ namespace Paracosm.Content.NPCs.Hostile.Paracosmic
                 {
                     RandomPos = player.MountedCenter;
                 }
-                if (DashTimer == 45)
+                if (DashTimer == 60)
                 {
                     Dash();
                 }
-                if (DashTimer >= 60 && DashTimer < 75)
+                if (DashTimer >= 75 && DashTimer < 90)
                 {
                     NPC.velocity = Vector2.Zero;
                 }
-                if (DashTimer == 75)
+                if (DashTimer == 90)
                 {
                     positionChosen = false;
                     DashTimer = 0;
                 }
             }
+        }
 
-
+        public override float SpawnChance(NPCSpawnInfo spawnInfo)
+        {
+            return spawnInfo.Player.InModBiome<ParacosmicDistortion>() ? 0.05f : 0f;
         }
 
         void ChoosePosition(Player target)
@@ -113,8 +116,8 @@ namespace Paracosm.Content.NPCs.Hostile.Paracosmic
             {
                 RandomPos = target.Center + new Vector2(Main.rand.NextBool().ToDirectionInt() * Main.rand.Next(50, 100), Main.rand.NextBool().ToDirectionInt() * Main.rand.Next(50, 100));
                 positionChosen = true;
-                NPC.netUpdate = true;
             }
+            NPC.netUpdate = true;
         }
 
         void Dash()

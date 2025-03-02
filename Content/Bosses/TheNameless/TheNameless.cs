@@ -152,7 +152,7 @@ namespace Paracosm.Content.Bosses.TheNameless
             NPC.width = 50;
             NPC.height = 56;
             NPC.Opacity = 1;
-            NPC.lifeMax = 1200000;
+            NPC.lifeMax = 800000;
             NPC.defense = 40;
             NPC.damage = 40;
             NPC.HitSound = SoundID.NPCHit54;
@@ -177,8 +177,8 @@ namespace Paracosm.Content.Bosses.TheNameless
 
         public override void ApplyDifficultyAndPlayerScaling(int numPlayers, float balance, float bossAdjustment)
         {
-            NPC.lifeMax = (int)(NPC.lifeMax * balance * bossAdjustment * 0.6f);
-            NPC.damage = (int)(NPC.damage * balance * 0.5f);
+            NPC.lifeMax = (int)(NPC.lifeMax * balance * bossAdjustment * 0.5f);
+            NPC.damage = (int)(NPC.damage * balance * 0.4f);
         }
 
         public override void SendExtraAI(BinaryWriter writer)
@@ -416,7 +416,9 @@ namespace Paracosm.Content.Bosses.TheNameless
                 case PHASE_TRANSITION_DURATION - 180:
                     SoundEngine.PlaySound(SoundID.DD2_EtherianPortalDryadTouch, NPC.Center);
                     SoundEngine.PlaySound(SoundID.DD2_EtherianPortalOpen, NPC.Center);
-                    SoundEngine.PlaySound(SoundID.Zombie105 with { Pitch = -1f, Volume = 2f }, NPC.Center);
+                    SoundEngine.PlaySound(SoundID.Zombie105 with { Pitch = -1f, Volume = 2f, MaxInstances = 0 }, NPC.Center);
+                    SoundEngine.PlaySound(SoundID.Zombie105 with { Pitch = -1f, Volume = 2f, MaxInstances = 0 }, NPC.Center);
+                    SoundEngine.PlaySound(SoundID.Zombie105 with { Pitch = -1f, Volume = 2f, MaxInstances = 0 }, NPC.Center);
                     break;
 
                 case < PHASE_TRANSITION_DURATION - 180 and > PHASE_TRANSITION_DURATION - 360:

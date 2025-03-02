@@ -127,7 +127,7 @@ namespace Paracosm.Content.Bosses.NebulaMaster
             NPC.Opacity = 1;
             NPC.lifeMax = 500000;
             NPC.defense = 40;
-            NPC.damage = 40;
+            NPC.damage = 30;
             NPC.HitSound = SoundID.NPCHit1;
             NPC.DeathSound = SoundID.NPCHit52;
             NPC.value = 5000000;
@@ -145,8 +145,8 @@ namespace Paracosm.Content.Bosses.NebulaMaster
 
         public override void ApplyDifficultyAndPlayerScaling(int numPlayers, float balance, float bossAdjustment)
         {
-            NPC.lifeMax = (int)(NPC.lifeMax * balance * bossAdjustment * 0.6f);
-            NPC.damage = (int)(NPC.damage * balance * 0.5f);
+            NPC.lifeMax = (int)(NPC.lifeMax * balance * bossAdjustment * 0.5f);
+            NPC.damage = (int)(NPC.damage * balance * 0.4f);
         }
 
         public override void SendExtraAI(BinaryWriter writer)
@@ -463,7 +463,7 @@ namespace Paracosm.Content.Bosses.NebulaMaster
                             for (int i = -2; i <= 2; i++)
                             {
                                 Vector2 direction = playerDirection.SafeNormalize(Vector2.Zero).RotatedBy(MathHelper.ToRadians(i * 15));
-                                Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, direction * 2, Proj["SpeedFlames"], NPC.damage / 2, 1, ai0: 30, ai1: 25, ai2: 1);
+                                Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, direction * 2, Proj["SpeedFlames"], NPC.damage, 1, ai0: 30, ai1: 25, ai2: 1);
                             }
                         }
                     }
@@ -546,7 +546,7 @@ namespace Paracosm.Content.Bosses.NebulaMaster
                         if (Main.netMode != NetmodeID.MultiplayerClient)
                         {
                             Vector2 direction = playerDirection.RotatedBy(-MathHelper.PiOver2).SafeNormalize(Vector2.Zero).RotatedBy(MathHelper.ToRadians(AttackCount * 15));
-                            Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, direction * 2, Proj["SpeedFlames"], NPC.damage / 2, 1, ai0: 30, ai1: 25, ai2: 1);
+                            Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, direction * 2, Proj["SpeedFlames"], NPC.damage, 1, ai0: 30, ai1: 25, ai2: 1);
                         }
                         AttackCount++;
                     }
@@ -558,7 +558,7 @@ namespace Paracosm.Content.Bosses.NebulaMaster
                     {
                         if (Main.netMode != NetmodeID.MultiplayerClient)
                         {
-                            Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, targetPosition.SafeNormalize(Vector2.Zero), Proj["Beam"], NPC.damage * 2, 1, ai0: 100, ai1: 0);
+                            Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, targetPosition.SafeNormalize(Vector2.Zero), Proj["Beam"], NPC.damage, 1, ai0: 100, ai1: 0);
                         }
                     }
                     break;
@@ -606,7 +606,7 @@ namespace Paracosm.Content.Bosses.NebulaMaster
                         if (Main.netMode != NetmodeID.MultiplayerClient)
                         {
                             AttackCount2 = Main.rand.Next(-15, 15);
-                            Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, -Vector2.UnitX.RotatedBy(MathHelper.ToRadians(AttackCount2)), Proj["SpeedFlames"], NPC.damage / 2, 1, ai0: 0, ai1: 10, ai2: 0);
+                            Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, -Vector2.UnitX.RotatedBy(MathHelper.ToRadians(AttackCount2)), Proj["SpeedFlames"], NPC.damage, 1, ai0: 0, ai1: 10, ai2: 0);
                         }
                         NPC.netUpdate = true;
                     }

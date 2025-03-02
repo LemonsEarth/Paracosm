@@ -134,8 +134,14 @@ namespace Paracosm.Common.Globals
 
             if (player.InModBiome<VoidMid>())
             {
-                spawnRate *= 2;
+                spawnRate =(int)(spawnRate * 3f);
                 maxSpawns = 8;
+            }
+
+            if (player.InModBiome<ParacosmicDistortion>())
+            {
+                spawnRate = (int)(spawnRate * 2f);
+                maxSpawns = (int)(spawnRate * 0.5f);
             }
         }
 
@@ -144,8 +150,8 @@ namespace Paracosm.Common.Globals
             if (spawnInfo.Player.InModBiome<ParacosmicDistortion>())
             {
                 pool.Clear();
-                pool.Add(ModContent.NPCType<Wanderer>(), 0.3f);
-                pool.Add(ModContent.NPCType<ParastoneRoller>(), 0.1f);
+                pool.Add(ModContent.NPCType<Wanderer>(), 0.1f);
+                pool.Add(ModContent.NPCType<ParastoneRoller>(), 0.05f);
             }
 
             if (spawnInfo.Player.InModBiome<VoidMid>())

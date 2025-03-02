@@ -138,6 +138,10 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
                 return;
             }
 
+            if (SegmentNum % 2 == 0)
+            {
+                NPC.dontTakeDamage = true;
+            }
             if (head.phase == 1)
             {
                 switch (head.Attack)
@@ -399,18 +403,15 @@ namespace Paracosm.Content.Bosses.StardustLeviathan
 
         public override void OnHitByProjectile(Projectile projectile, NPC.HitInfo hit, int damageDone)
         {
-            //projectile.damage /= 2;
+            projectile.damage = (int)(projectile.damage / 3f);
+            NetMessage.SendData(MessageID.SyncProjectile, number: projectile.whoAmI);
         }
 
         public override void ModifyHitByProjectile(Projectile projectile, ref NPC.HitModifiers modifiers)
         {
-            if (projectile.type == ProjectileID.LastPrismLaser)
+            if (projectile.type == ProjectileID.LastPrismLaser || projectile.penetrate > 3 || projectile.penetrate == -1)
             {
-                modifiers.FinalDamage /= 3;
-            }
-            else if (projectile.type == ModContent.ProjectileType<HorizonSplitterProj>())
-            {
-                modifiers.FinalDamage /= 8;
+                modifiers.FinalDamage /= 2;
             }
         }
 

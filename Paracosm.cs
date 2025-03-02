@@ -11,6 +11,12 @@ namespace Paracosm
     public class Paracosm : Mod
     {
         public static Paracosm Instance { get; private set; }
+
+        public Paracosm()
+        {
+            MusicSkipsVolumeRemap = true;
+        }
+
         public override void Load()
         {
             Instance = this;

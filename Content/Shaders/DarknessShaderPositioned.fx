@@ -12,7 +12,7 @@ float uTime;
 float4 DarknessPos(float4 sampleColor : COLOR0, float2 coords : TEXCOORD0, float4 position : SV_Position) : COLOR0
 {
     float4 baseColor = tex2D(uImage0, coords);
-    float4 fogColor = tex2D(uImage1, coords);
+    float4 fogColor = tex2D(uImage1, coords + uTime * 0.05f);
     sampleColor = baseColor;
     float2 centeredCoords = coords * 2.0 - 1.0;
     float2 targetCoords = (uTargetPosition - uScreenPosition) / uScreenResolution;

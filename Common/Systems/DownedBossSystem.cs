@@ -26,7 +26,6 @@ namespace Paracosm.Common.Systems
             downedTheNameless = false;
         }
 
-
         public override void SaveWorldData(TagCompound tag)
         {
             if (downedDivineSeeker)

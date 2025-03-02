@@ -16,7 +16,7 @@ namespace Paracosm.Content.Biomes.Overworld
 
         public override bool IsBiomeActive(Player player)
         {
-            return player.ZoneRockLayerHeight && ModContent.GetInstance<BiomeTileCounts>().parastoneCount >= 100;
+            return player.ZoneRockLayerHeight && ModContent.GetInstance<BiomeTileCounts>().parastoneCount >= 200;
         }
     }
 }

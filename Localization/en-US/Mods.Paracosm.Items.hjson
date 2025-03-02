@@ -517,6 +517,7 @@ DarkMagicMirror: {
 		Teleports you to the void
 		[c/ff0000:If playing in multiplayer, the host should use this item in singleplayer first.]
 		[c/ff0000:Subworlds in multiplayer may be unstable. Tread carefully.]
+		Return home using the return button in the settings menu.
 		Changes to the subworld are saved upon returning.
 		'''
 }

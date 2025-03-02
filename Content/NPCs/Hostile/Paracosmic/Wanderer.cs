@@ -37,7 +37,7 @@ namespace Paracosm.Content.NPCs.Hostile.Paracosmic
             NPC.aiStyle = -1;
             SpawnModBiomes = new int[1] { ModContent.GetInstance<ParacosmicDistortion>().Type };
             NPC.noTileCollide = true;
-            NPC.knockBackResist = 0.7f;
+            NPC.knockBackResist = 0.8f;
         }
 
         public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
@@ -56,7 +56,7 @@ namespace Paracosm.Content.NPCs.Hostile.Paracosmic
         public override void ModifyNPCLoot(NPCLoot npcLoot)
         {
             npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Parashard>(), minimumDropped: 1, maximumDropped: 6));
-            npcLoot.Add(ItemDropRule.NormalvsExpert(ModContent.ItemType<WanderersVeil>(), 20, 10));
+            npcLoot.Add(ItemDropRule.NormalvsExpert(ModContent.ItemType<WanderersVeil>(), 40, 20));
         }
 
         public override bool? CanFallThroughPlatforms()
@@ -115,7 +115,12 @@ namespace Paracosm.Content.NPCs.Hostile.Paracosmic
             {
                 NPC.rotation = NPC.rotation.AngleLerp(0, MathHelper.ToRadians(1));
             }
-            speed += 0.2f;
+            if (speed < 6) speed += 0.2f;
+        }
+
+        public override float SpawnChance(NPCSpawnInfo spawnInfo)
+        {
+            return spawnInfo.Player.InModBiome<ParacosmicDistortion>() ? 0.1f : 0f;
         }
 
         public override void FindFrame(int frameHeight)

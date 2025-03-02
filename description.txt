@@ -15,7 +15,7 @@ Currently adds:
 - 33 Accessories
 - 5 Structures
 - 1 new minibiome
-- A new subworld!
+- A new subworld you can access with the Dark Magic Mirror
 
 Some mods I recommend to use alongside this one are Boss Checklist, Recipe Browser and Fargo's Mutant Mod
 
