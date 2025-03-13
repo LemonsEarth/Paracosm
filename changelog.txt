@@ -1,0 +1,2 @@
+Updated to latest Structure Helper version
+!! If you made a world before this update and after the Structure Helper 3.0.0 update, please make a new world !!
