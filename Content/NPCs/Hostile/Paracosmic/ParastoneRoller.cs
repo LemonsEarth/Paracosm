@@ -32,8 +32,8 @@ namespace Paracosm.Content.NPCs.Hostile.Paracosmic
         {
             NPC.width = 84;
             NPC.height = 84;
-            NPC.lifeMax = 100;
-            NPC.defense = 5;
+            NPC.lifeMax = 80;
+            NPC.defense = 3;
             NPC.damage = 20;
             NPC.HitSound = SoundID.NPCHit41;
             NPC.DeathSound = SoundID.NPCDeath43;
@@ -103,6 +103,16 @@ namespace Paracosm.Content.NPCs.Hostile.Paracosmic
                     DashTimer = 0;
                 }
             }
+        }
+
+        public override void OnHitByItem(Player player, Item item, NPC.HitInfo hit, int damageDone)
+        {
+            DashTimer -= 2;
+        }
+
+        public override void OnHitByProjectile(Projectile projectile, NPC.HitInfo hit, int damageDone)
+        {
+            DashTimer -= 2;
         }
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo)

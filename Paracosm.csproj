@@ -8,23 +8,11 @@
 		
 	</PropertyGroup>
 	<ItemGroup>
-	  <None Remove="Content\Projectiles\Friendly\CraterExplosion.png" />
-	  <None Remove="Content\Projectiles\Friendly\VoidBoltSplitFriendly.png" />
-	  <None Remove="Content\Projectiles\Friendly\VoidVortexFriendly.png" />
-	  <None Remove="Content\Projectiles\HeldProjectiles\JudgementProj.png" />
-	  <None Remove="Content\Projectiles\HeldProjectiles\UnboundDarkProj.png" />
-	  <None Remove="Content\Projectiles\Sentries\BranchOfLifeProj.png" />
-	  <None Remove="Content\Shaders\DarknessShaderPositioned.fx" />
-	</ItemGroup>
-	<ItemGroup>
-	  <Folder Include="lib\" />
-	</ItemGroup>
-	<ItemGroup>
-	  <Reference Include="StructureHelper">
-	    <HintPath>..\..\ModReader\StructureHelper\StructureHelper.dll</HintPath>
-	  </Reference>
 	  <Reference Include="SubworldLibrary">
 	    <HintPath>lib\SubworldLibrary.dll</HintPath>
+	  </Reference>
+	  <Reference Include="StructureHelper">
+	    <HintPath>lib\StructureHelper.dll</HintPath>
 	  </Reference>
 	</ItemGroup>
 

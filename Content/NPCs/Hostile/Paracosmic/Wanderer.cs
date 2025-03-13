@@ -2,6 +2,7 @@
 using Paracosm.Content.Biomes.Overworld;
 using Paracosm.Content.Items.Accessories;
 using Paracosm.Content.Items.Materials;
+using rail;
 using System;
 using System.Collections.Generic;
 using Terraria;
@@ -27,7 +28,7 @@ namespace Paracosm.Content.NPCs.Hostile.Paracosmic
         {
             NPC.width = 28;
             NPC.height = 50;
-            NPC.lifeMax = 80;
+            NPC.lifeMax = 60;
             NPC.defense = 2;
             NPC.damage = 15;
             NPC.HitSound = SoundID.NPCHit54;
@@ -116,6 +117,16 @@ namespace Paracosm.Content.NPCs.Hostile.Paracosmic
                 NPC.rotation = NPC.rotation.AngleLerp(0, MathHelper.ToRadians(1));
             }
             if (speed < 6) speed += 0.2f;
+        }
+
+        public override void OnHitByProjectile(Projectile projectile, NPC.HitInfo hit, int damageDone)
+        {
+            speed = 0;
+        }
+
+        public override void OnHitByItem(Player player, Item item, NPC.HitInfo hit, int damageDone)
+        {
+            speed = 0;
         }
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo)

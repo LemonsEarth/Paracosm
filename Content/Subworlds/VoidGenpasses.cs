@@ -1,5 +1,6 @@
 ﻿using Paracosm.Common.Utils;
 using Paracosm.Content.Items.Accessories;
+using StructureHelper.API;
 using StructureHelper;
 using Terraria;
 using Terraria.DataStructures;
@@ -7,6 +8,7 @@ using Terraria.ID;
 using Terraria.IO;
 using Terraria.ModLoader;
 using Terraria.WorldBuilding;
+using StructureHelper.Models;
 
 namespace Paracosm.Content.Subworlds
 {
@@ -80,8 +82,7 @@ namespace Paracosm.Content.Subworlds
         protected override void ApplyPass(GenerationProgress progress, GameConfiguration configuration)
         {
             progress.Message = "The Void Structures";
-            Point16 dims = default(Point16);
-            Generator.GetMultistructureDimensions("Content/Structures/VoidStructures", Paracosm.Instance, 0, ref dims);
+            Point16 dims = MultiStructureGenerator.GetStructureDimensions("Content/Structures/VoidBuilding", Paracosm.Instance, 0);
             int amountX = (Main.maxTilesX / dims.X) - 1;
             for (int depthMul = 0; depthMul < 5; depthMul++)
             {
@@ -93,7 +94,9 @@ namespace Paracosm.Content.Subworlds
                     {
                         int y = 2600 + (depthMul * 100) + (j * dims.Y) - 1;
                         if (x + dims.X > 1000 || y + dims.Y > 3000) continue;
-                        Generator.GenerateMultistructureRandom("Content/Structures/VoidStructures", new Point16(x, y), Paracosm.Instance);
+                        MultiStructureData structureData = MultiStructureGenerator.GetMultiStructureData("Content/Structures/VoidBuilding", Paracosm.Instance);
+                        if (!MultiStructureGenerator.IsInBounds(structureData, 0, new Point16(x, y))) continue;
+                        MultiStructureGenerator.GenerateMultistructureRandom("Content/Structures/VoidBuilding", new Point16(x, y), Paracosm.Instance);
                     }
                 }
             }
@@ -116,7 +119,7 @@ namespace Paracosm.Content.Subworlds
                     continue;
                 }
 
-                for (int inventoryIndex = 0; inventoryIndex < items; inventoryIndex++)
+                for (int inventoryIndex = 1; inventoryIndex < items; inventoryIndex++)
                 {
                     if (Main.rand.Next(0, 100) == 1)
                     {

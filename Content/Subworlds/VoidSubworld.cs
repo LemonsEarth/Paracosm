@@ -1,5 +1,4 @@
-﻿
-using SubworldLibrary;
+﻿using SubworldLibrary;
 using System.Collections.Generic;
 using Terraria.WorldBuilding;
 

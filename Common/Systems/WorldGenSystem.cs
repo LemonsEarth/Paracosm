@@ -1,5 +1,5 @@
 ﻿using Paracosm.Content.Tiles;
-using StructureHelper;
+using StructureHelper.API;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.DataStructures;
@@ -8,6 +8,7 @@ using Terraria.ID;
 using Terraria.IO;
 using Terraria.ModLoader;
 using Terraria.WorldBuilding;
+using Microsoft.Xna.Framework;
 
 namespace Paracosm.Common.Systems
 {
@@ -19,8 +20,7 @@ namespace Paracosm.Common.Systems
             Point16 point = Point16.Zero;
             while (!successfulGen)
             {
-                Point16 dims = Point16.Zero;
-                Generator.GetDimensions("Content/Structures/CorruptTower", Mod, ref dims);
+                Point16 dims = Generator.GetStructureDimensions("Content/Structures/CorruptTower", Mod);
                 int x = WorldGen.genRand.Next(0 + dims.X, Main.maxTilesX - dims.X);
                 int y = WorldGen.genRand.Next((int)GenVars.worldSurfaceLow, (int)GenVars.worldSurfaceHigh);
                 Tile tile = Main.tile[x, y];
@@ -43,8 +43,7 @@ namespace Paracosm.Common.Systems
             Point16 point = Point16.Zero;
             while (!successfulGen)
             {
-                Point16 dims = Point16.Zero;
-                Generator.GetDimensions("Content/Structures/CrimsonHouse", Mod, ref dims);
+                Point16 dims = Generator.GetStructureDimensions("Content/Structures/CrimsonHouse", Mod);
                 int x = WorldGen.genRand.Next(0 + dims.X, Main.maxTilesX - dims.X);
                 int y = WorldGen.genRand.Next((int)GenVars.worldSurfaceLow, (int)GenVars.worldSurfaceHigh);
                 Tile tile = Main.tile[x, y];
@@ -67,8 +66,7 @@ namespace Paracosm.Common.Systems
             Point16 point = Point16.Zero;
             while (!successfulGen)
             {
-                Point16 dims = Point16.Zero;
-                Generator.GetDimensions("Content/Structures/JungleHouse", Mod, ref dims);
+                Point16 dims = Generator.GetStructureDimensions("Content/Structures/JungleHouse", Mod);
                 int x = WorldGen.genRand.Next(0 + dims.X, Main.maxTilesX - dims.X);
                 int y = WorldGen.genRand.Next((int)GenVars.worldSurfaceLow, (int)GenVars.worldSurfaceHigh);
                 Tile tile = Main.tile[x, y];
@@ -93,13 +91,12 @@ namespace Paracosm.Common.Systems
 
             while (!successfulGen)
             {
-                Point16 dims = Point16.Zero;
-                Generator.GetDimensions("Content/Structures/IceCastle", Mod, ref dims);
+                Point16 dims = Generator.GetStructureDimensions("Content/Structures/FrozenCastle", Mod);
                 int x = WorldGen.genRand.Next(0 + dims.X, Main.maxTilesX - dims.X);
                 int y = WorldGen.genRand.Next((int)(Main.rockLayer + dims.Y), Main.maxTilesY - 200);
                 Tile tile = Main.tile[x, y];
                 point = new Point16(x, y);
-                if ((tile.HasTile && (tile.TileType == TileID.IceBlock || tile.TileType == TileID.SnowBlock)) && (!CheckForTiles(x, y, dims.X, dims.Y, ModContent.TileType<ParastoneBlock>()) && !CheckForTiles(x, y, dims.X, dims.Y, TileID.BlueDungeonBrick) && !CheckForTiles(x, y, dims.X, dims.Y, TileID.GreenDungeonBrick) && !CheckForTiles(x, y, dims.X, dims.Y, TileID.PinkDungeonBrick)))
+                if ((tile.HasTile && (tile.TileType == TileID.IceBlock || tile.TileType == TileID.SnowBlock)) && (!CheckForTiles(x, y, dims.X, dims.Y, ModContent.TileType<ParastoneBlock>()) && !CheckForTiles(x, y, dims.X, dims.Y, TileID.BlueDungeonBrick) && !CheckForTiles(x, y, dims.X, dims.Y, TileID.GreenDungeonBrick) && !CheckForTiles(x, y, dims.X, dims.Y, TileID.PinkDungeonBrick) && !CheckForTiles(x, y, dims.X, dims.Y, TileID.LihzahrdBrick)))
                 {
                     successfulGen = true;
                 }
@@ -107,7 +104,7 @@ namespace Paracosm.Common.Systems
 
             if (successfulGen && point != Point16.Zero)
             {
-                Generator.GenerateStructure("Content/Structures/IceCastle", point, Mod);
+                Generator.GenerateStructure("Content/Structures/FrozenCastle", point, Mod);
             }
         }
 
@@ -118,8 +115,7 @@ namespace Paracosm.Common.Systems
 
             while (!successfulGen)
             {
-                Point16 dims = Point16.Zero;
-                Generator.GetDimensions("Content/Structures/ParacosmicDistortionCore", Mod, ref dims);
+                Point16 dims = Generator.GetStructureDimensions("Content/Structures/ParacosmicDistortionCore", Mod);
                 int x = WorldGen.genRand.Next((int)((float)Main.maxTilesX * (1f / 3f)), (int)((float)Main.maxTilesX * (2f / 3f)));
                 int y = WorldGen.genRand.Next((int)GenVars.rockLayer + 400, Main.maxTilesY - 200);
 
@@ -143,8 +139,7 @@ namespace Paracosm.Common.Systems
 
             while (!successfulGen)
             {
-                Point16 dims = Point16.Zero;
-                Generator.GetDimensions("Content/Structures/ParacosmicCoreLarge", Mod, ref dims);
+                Point16 dims = Generator.GetStructureDimensions("Content/Structures/ParacosmicCoreLarge", Mod);
                 int x = WorldGen.genRand.Next((int)((float)Main.maxTilesX * (1f / 3f)), (int)((float)Main.maxTilesX * (2f / 3f)));
                 int y = WorldGen.genRand.Next((Main.maxTilesY - 200) / 2, Main.maxTilesY - 200);
 
@@ -172,8 +167,8 @@ namespace Paracosm.Common.Systems
                     Point16 point = Point16.Zero;
                     while (!successfulGen)
                     {
-                        Point16 dims = Point16.Zero;
-                        Generator.GetMultistructureDimensions("Content/Structures/AbandonedArmory", Mod, index, ref dims);
+                        Point16 dims = MultiStructureGenerator.GetStructureDimensions("Content/Structures/AbandonedArmory", Mod, index);
+                        //Generator.GetMultistructureDimensions("Content/Structures/AbandonedArmory", Mod, index, ref dims);
                         int x = WorldGen.genRand.Next(dims.X, Main.maxTilesX - dims.X);
                         int y = WorldGen.genRand.Next((Main.maxTilesY - 200) / 3, Main.maxTilesY - 200);
 
@@ -186,7 +181,8 @@ namespace Paracosm.Common.Systems
 
                     if (successfulGen && point != Point16.Zero)
                     {
-                        Generator.GenerateMultistructureSpecific("Content/Structures/AbandonedArmory", point, Mod, index);
+                        MultiStructureGenerator.GenerateMultistructureSpecific("Content/Structures/AbandonedArmory", index, point, Mod);
+                        //Generator.GenerateMultistructureSpecific("Content/Structures/AbandonedArmory", point, Mod, index);
                     }
                 }
             }
@@ -226,7 +222,7 @@ namespace Paracosm.Common.Systems
             {
                 for (int y = yCoord - distanceY; y < yCoord + distanceY; y++)
                 {
-                    if (Main.tile[x, y].HasTile && Main.tile[x, y].TileType == tileID)
+                    if (Main.tile[x, y].HasTile && Main.tile[x, y].TileType == tileID && GenVars.structures.CanPlace(new Rectangle(x, y, distanceX, distanceY)))
                     {
                         return true;
                     }

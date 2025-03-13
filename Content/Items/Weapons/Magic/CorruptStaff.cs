@@ -1,6 +1,7 @@
 ﻿using Paracosm.Content.Projectiles.Friendly;
 using Terraria;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 
 namespace Paracosm.Content.Items.Weapons.Magic
