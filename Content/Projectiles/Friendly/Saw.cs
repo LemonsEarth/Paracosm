@@ -20,8 +20,8 @@ namespace Paracosm.Content.Projectiles.Friendly
 
         public override void SetDefaults()
         {
-            Projectile.width = 40;
-            Projectile.height = 40;
+            Projectile.width = 24;
+            Projectile.height = 24;
             Projectile.friendly = true;
             Projectile.ignoreWater = false;
             Projectile.tileCollide = true;

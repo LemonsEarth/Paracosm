@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Paracosm.Common.Systems;
+using Paracosm.Content.Walls;
 using Terraria;
 using Terraria.ModLoader;
 
@@ -16,7 +17,7 @@ namespace Paracosm.Content.Biomes.Overworld
 
         public override bool IsBiomeActive(Player player)
         {
-            return player.ZoneRockLayerHeight && ModContent.GetInstance<BiomeTileCounts>().parastoneCount >= 200;
+            return player.ZoneRockLayerHeight && ModContent.GetInstance<BiomeTileCounts>().parastoneCount >= 200 && Main.tile[(int)player.Center.X / 16, (int)player.Center.Y / 16].WallType == ModContent.WallType<ParastoneWallUnsafe>();
         }
     }
 }

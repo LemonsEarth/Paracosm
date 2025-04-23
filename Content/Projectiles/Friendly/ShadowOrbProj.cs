@@ -1,6 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
+using Paracosm.Content.Items.Weapons.Magic;
 using Terraria;
 using Terraria.Audio;
+using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -12,6 +14,25 @@ namespace Paracosm.Content.Projectiles.Friendly
         ref float AmmoType => ref Projectile.ai[0];
         ref float RandomRot => ref Projectile.ai[1];
         ref float Amount => ref Projectile.ai[2];
+
+        //bool doGray = false;
+
+        //public override void OnSpawn(IEntitySource source)
+        //{
+        //    if (source is EntitySource_ItemUse_WithAmmo sourceItem && sourceItem.Entity is Item item && item.type == ModContent.ItemType<VoidcoreStaff>())
+        //    {
+        //        doGray = true;
+        //    }
+        //}
+
+        //public override Color? GetAlpha(Color lightColor)
+        //{
+        //    if (!doGray) return null;
+        //    float luminance = 0.3f * lightColor.R + 0.59f * lightColor.G + 0.11f * lightColor.B;
+        //    Color gray = new Color(luminance, luminance, luminance);
+        //    return Color.Lerp(lightColor, gray, 0.5f);
+        //}
+
         public override void SetStaticDefaults()
         {
             Main.projFrames[Projectile.type] = 1;

@@ -1,2 +1,18 @@
-Updated to latest Structure Helper version
-!! If you made a world before this update and after the Structure Helper 3.0.0 update, please make a new world !!
+Update v0.5.6:
+
+World Gen:
+	- Structures now check structure map to hopefully reduce the chance of overlap
+	- Removed small Paracosmic Distortion Cores
+
+Item Tweaks:
+	- Reduced Chainsaw Gun damage (24 -> 20) and projectile size
+	- Reduced Corrupt Staff damage (24 -> 16) and projectile pierce (3 -> 2), reduced projectile hit cooldown (30 -> 15)
+	- Round Shield and Roller Shield knockback immunity is disabled for 20 seconds when you get hit
+	- Lemon Head costs more lemons, reduced defense increase (7 -> 1), grants Well Fed on use
+	- Cat Hat defense reduced (7 -> 1), costs more Flinx Fur and increases summon damage by 5%
+
+Other:
+	- Paracosmic Distortion biome is now only active when the player is in front of an Unsafe Parastone Wall, which prevents enemies attacking you outside of the biome
+
+- Fixes:
+	- Demon Coins now correctly craft a Star Cloak instead of a Star Veil

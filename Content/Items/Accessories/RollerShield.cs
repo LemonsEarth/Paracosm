@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework;
 using Paracosm.Content.Projectiles.Friendly;
 using System;
 using Terraria.Audio;
+using Paracosm.Common.Players;
 
 namespace Paracosm.Content.Items.Accessories
 {
@@ -27,7 +28,7 @@ namespace Paracosm.Content.Items.Accessories
 
         public override void UpdateAccessory(Player player, bool hideVisual)
         {
-            player.noKnockback = true;
+            player.GetModPlayer<ParacosmPlayer>().roundShield = true;
             if (Math.Abs(player.velocity.X) > 4.5f)
             {
                 if (Main.myPlayer == player.whoAmI && timer == 60)

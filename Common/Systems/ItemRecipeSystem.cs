@@ -86,7 +86,7 @@ namespace Paracosm.Common.Systems
                 .AddIngredient(ModContent.ItemType<DemonCoin>(), 5)
                 .AddTile(TileID.DemonAltar)
                 .Register();
-            Recipe.Create(ItemID.StarVeil)
+            Recipe.Create(ItemID.StarCloak)
                 .AddIngredient(ModContent.ItemType<DemonCoin>(), 5)
                 .AddTile(TileID.DemonAltar)
                 .Register();

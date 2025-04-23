@@ -50,6 +50,8 @@ namespace Paracosm.Common.Players
         public bool infiltratorMark = false;
         public bool heroSoul = false;
         public bool wanderersVeil = false;
+        public bool roundShield = false;
+        int kbTimer = 0;
         public int sentryCount = 0;
 
         int oathTimer = 0;
@@ -103,6 +105,7 @@ namespace Paracosm.Common.Players
             masterEmblem = false;
             infiltratorMark = false;
             heroSoul = false;
+            roundShield = false;
             wanderersVeil = false;
 
             paracosmicHelmetBuff = false;
@@ -304,6 +307,13 @@ namespace Paracosm.Common.Players
 
         public override void PostUpdateEquips()
         {
+            if (kbTimer == 0 && roundShield)
+            {
+                Player.noKnockback = true;
+            }
+
+            if (kbTimer > 0) kbTimer--;
+
             if (sunCoin)
             {
                 Player.AddBuff(BuffID.Sunflower, 10);
@@ -619,6 +629,10 @@ namespace Paracosm.Common.Players
 
         public override void OnHurt(Player.HurtInfo info)
         {
+            if (roundShield && Player.whoAmI == Main.myPlayer && kbTimer == 0)
+            {
+                kbTimer = 1200;
+            }
             if (parashardSigil)
             {
                 if (paraSigilActiveTimer == false && paraSigilHitTimer > 0)

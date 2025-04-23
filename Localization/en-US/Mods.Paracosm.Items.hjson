@@ -191,7 +191,11 @@ ForestCrest: {
 
 RoundShield: {
 	DisplayName: Round Shield
-	Tooltip: Grants immunity to knockback
+	Tooltip:
+		'''
+		Grants immunity to knockback
+		On hit, knockback immunity is disabled for 20 seconds
+		'''
 }
 
 CorruptStaff: {
@@ -396,12 +400,16 @@ Solace: {
 }
 
 LemonHead: {
-	Tooltip: Lemon Lemon
+	Tooltip: Grants Well Fed on use
 	DisplayName: Lemon Head
 }
 
 CatHat: {
-	Tooltip: Cat hat for the Roy Boy
+	Tooltip:
+		'''
+		Grants a damage increase of the summoning, also known as minion, damage type by five percent
+		Cat hat for the Roy Boy
+		'''
 	DisplayName: Cat Hat
 }
 
@@ -987,6 +995,7 @@ RollerShield: {
 	Tooltip:
 		'''
 		Grants immunity to knockback
+		On hit, knockback immunity is disabled for 20 seconds
 		Moving quickly causes you to fire out friendly paracosmic boulders, which split into shards on contact with tiles or enemies
 		'''
 }

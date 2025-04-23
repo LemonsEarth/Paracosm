@@ -18,12 +18,12 @@ namespace Paracosm.Content.Projectiles.Sentries
         {
             Projectile.width = 16;
             Projectile.height = 16;
-            Projectile.penetrate = 3;
+            Projectile.penetrate = 2;
             Projectile.tileCollide = true;
             Projectile.timeLeft = 180;
             Projectile.friendly = true;
             Projectile.usesLocalNPCImmunity = true;
-            Projectile.localNPCHitCooldown = 30;
+            Projectile.localNPCHitCooldown = 15;
         }
 
         public override void AI()

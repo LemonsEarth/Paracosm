@@ -1,4 +1,5 @@
-﻿using Terraria;
+﻿using Paracosm.Common.Players;
+using Terraria;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
@@ -20,7 +21,7 @@ namespace Paracosm.Content.Items.Accessories
 
         public override void UpdateAccessory(Player player, bool hideVisual)
         {
-            player.noKnockback = true;
+            player.GetModPlayer<ParacosmPlayer>().roundShield = true;
         }
 
         public override void AddRecipes()

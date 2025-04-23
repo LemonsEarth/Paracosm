@@ -191,8 +191,8 @@ namespace Paracosm.Common.Systems
         public override void ModifyWorldGenTasks(List<GenPass> tasks, ref double totalWeight)
         {
             int templeIndex = tasks.FindIndex(genpass => genpass.Name.Equals("Jungle Temple"));
-            tasks.Insert(templeIndex + 1, new PassLegacy("Paracosmic Core", GenerateParacosmicDistortionCore));
-            tasks.Insert(templeIndex + 1, new PassLegacy("Paracosmic Core", GenerateParacosmicDistortionCore));
+            //tasks.Insert(templeIndex + 1, new PassLegacy("Paracosmic Core", GenerateParacosmicDistortionCore));
+            //tasks.Insert(templeIndex + 1, new PassLegacy("Paracosmic Core", GenerateParacosmicDistortionCore));
             tasks.Insert(templeIndex + 2, new PassLegacy("Large Paracosmic Core", GenerateParacosmicDistortionCoreLarge));
             tasks.Insert(templeIndex + 3, new PassLegacy("Abandoned Armories", GenerateAbandonedArmory));
             tasks.Insert(templeIndex + 4, new PassLegacy("Jungle House", GenerateJungleHouse));

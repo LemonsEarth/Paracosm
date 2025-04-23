@@ -18,15 +18,20 @@ namespace Paracosm.Content.Items.Armor.Vanity
         {
             Item.width = 32;
             Item.height = 32;
-            Item.defense = 7;
+            Item.defense = 1;
             Item.rare = ItemRarityID.Gray;
-            Item.value = Item.sellPrice(0, 5, 0, 0);
+            Item.value = Item.sellPrice(0, 0, 50, 0);
+        }
+
+        public override void UpdateEquip(Player player)
+        {
+            player.GetDamage(DamageClass.Summon) += 0.05f;
         }
 
         public override void AddRecipes()
         {
             Recipe recipe = CreateRecipe();
-            recipe.AddIngredient(ItemID.FlinxFur, 1);
+            recipe.AddIngredient(ItemID.FlinxFur, 3);
             recipe.AddIngredient(ItemID.RichMahogany, 69);
             recipe.AddTile(TileID.Anvils);
             recipe.Register();

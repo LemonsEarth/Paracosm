@@ -15,7 +15,7 @@ namespace Paracosm.Content.Items.Weapons.Magic
 
         public override void SetDefaults()
         {
-            Item.damage = 24;
+            Item.damage = 16;
             Item.DamageType = DamageClass.Magic;
             Item.width = 40;
             Item.height = 40;

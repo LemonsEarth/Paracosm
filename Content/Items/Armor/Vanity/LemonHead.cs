@@ -17,15 +17,22 @@ namespace Paracosm.Content.Items.Armor.Vanity
         {
             Item.width = 40;
             Item.height = 28;
-            Item.defense = 7;
+            Item.defense = 1;
             Item.rare = ItemRarityID.Yellow;
-            Item.value = Item.sellPrice(0, 5, 0, 0);
+            Item.value = Item.sellPrice(0, 0, 50, 0);
+            Item.useStyle = ItemUseStyleID.EatFood;
+        }
+
+        public override bool? UseItem(Player player)
+        {
+            player.AddBuff(BuffID.WellFed, 7200);
+            return true;
         }
 
         public override void AddRecipes()
         {
             Recipe recipe = CreateRecipe();
-            recipe.AddIngredient(ItemID.Lemon, 1);
+            recipe.AddIngredient(ItemID.Lemon, 3);
             recipe.AddTile(TileID.Anvils);
             recipe.Register();
         }
