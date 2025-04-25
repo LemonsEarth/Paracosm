@@ -125,8 +125,8 @@ namespace Paracosm.Content.Bosses.NebulaMaster
             NPC.width = 86;
             NPC.height = 154;
             NPC.Opacity = 1;
-            NPC.lifeMax = 500000;
-            NPC.defense = 40;
+            NPC.lifeMax = 400000;
+            NPC.defense = 30;
             NPC.damage = 30;
             NPC.HitSound = SoundID.NPCHit1;
             NPC.DeathSound = SoundID.NPCHit52;
@@ -286,7 +286,6 @@ namespace Paracosm.Content.Bosses.NebulaMaster
             }
             else
             {
-                NPC.defense = NPC.defDefense + 60;
                 for (int i = 0; i < 2; i++)
                 {
                     Dust.NewDust(NPC.position, NPC.width, NPC.height, DustID.GemDiamond);

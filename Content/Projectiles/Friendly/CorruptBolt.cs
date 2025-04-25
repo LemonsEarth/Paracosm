@@ -18,10 +18,11 @@ namespace Paracosm.Content.Projectiles.Friendly
             Projectile.CloneDefaults(ProjectileID.DiamondBolt);
             Projectile.width = 16;
             Projectile.height = 16;
-            Projectile.penetrate = 3;
+            Projectile.penetrate = 2;
             Projectile.DamageType = DamageClass.Magic;
             Projectile.tileCollide = false;
-
+            Projectile.usesLocalNPCImmunity = true;
+            Projectile.localNPCHitCooldown = 15;
             Projectile.timeLeft = 120;
         }
 

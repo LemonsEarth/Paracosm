@@ -153,7 +153,7 @@ namespace Paracosm.Content.Bosses.VortexMothership
         {
             if (phase == 1)
             {
-                modifiers.FinalDamage *= 0.8f;
+                modifiers.FinalDamage *= 0.9f;
             }
         }
 

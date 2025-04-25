@@ -28,7 +28,7 @@ namespace Paracosm.Content.Items.Weapons.Magic
             Item.autoReuse = true;
             Item.mana = 15;
             Item.shoot = ModContent.ProjectileType<VoidVortexFriendly>();
-            Item.noUseGraphic = true;
+            Item.noUseGraphic = false;
             Item.noMelee = true;
             Item.channel = true;
         }

@@ -159,7 +159,7 @@ namespace Paracosm.Common.Systems
 
         private void GenerateAbandonedArmory(GenerationProgress progress, GameConfiguration config)
         {
-            for (int i = 0; i < GetWorldSize() * 3; i++)
+            for (int i = 0; i < GetWorldSize() * 6; i++)
             {
                 for (int index = 0; index < 5; index++)
                 {

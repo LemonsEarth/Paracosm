@@ -694,8 +694,8 @@ UnboundDark: {
 VoidcoreStaff: {
 	Tooltip:
 		'''
-		Fires 4 Shadow Orbs around your cursor
-		Each orb fires a tiny eater, with a 25% chance to fire an Archmage bolt
+		Left click fires homing projectile that charges the weapon on hit
+		With enough charge, press right click to fire bursts of Void Bolts
 		'''
 	DisplayName: Voidcore Staff
 }

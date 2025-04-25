@@ -152,7 +152,7 @@ namespace Paracosm.Content.Bosses.TheNameless
             NPC.width = 50;
             NPC.height = 56;
             NPC.Opacity = 1;
-            NPC.lifeMax = 800000;
+            NPC.lifeMax = 650000;
             NPC.defense = 40;
             NPC.damage = 40;
             NPC.HitSound = SoundID.NPCHit54;
@@ -466,9 +466,13 @@ namespace Paracosm.Content.Bosses.TheNameless
 
         public override void ModifyIncomingHit(ref NPC.HitModifiers modifiers)
         {
-            if (phase == 2)
+            if (phase == 1)
             {
-                modifiers.FinalDamage *= 0.8f;
+                modifiers.FinalDamage *= 0.9f;
+            }
+            else
+            {
+                modifiers.FinalDamage *= 0.6f;
             }
         }
 

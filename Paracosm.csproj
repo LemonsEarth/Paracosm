@@ -8,6 +8,9 @@
 		
 	</PropertyGroup>
 	<ItemGroup>
+	  <None Remove="Content\Projectiles\Sentries\VoidBolt.png" />
+	</ItemGroup>
+	<ItemGroup>
 	  <Reference Include="SubworldLibrary">
 	    <HintPath>lib\SubworldLibrary.dll</HintPath>
 	  </Reference>
