@@ -5,74 +5,73 @@ using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Paracosm.Content.Projectiles.Friendly
+namespace Paracosm.Content.Projectiles.Friendly;
+
+public class ParacosmicFlame : ModProjectile
 {
-    public class ParacosmicFlame : ModProjectile
+    ref float AITimer => ref Projectile.ai[0];
+    public override void SetStaticDefaults()
     {
-        ref float AITimer => ref Projectile.ai[0];
-        public override void SetStaticDefaults()
+        Main.projFrames[Projectile.type] = 7;
+    }
+
+    public override void SetDefaults()
+    {
+        Projectile.width = 90;
+        Projectile.height = 90;
+        Projectile.hostile = false;
+        Projectile.friendly = true;
+        Projectile.ignoreWater = true;
+        Projectile.tileCollide = false;
+        Projectile.timeLeft = 24;
+        Projectile.frameCounter = 2;
+        Projectile.penetrate = 10;
+        Projectile.usesLocalNPCImmunity = true;
+        Projectile.localNPCHitCooldown = 60;
+        Projectile.DamageType = DamageClass.Ranged;
+    }
+
+    public override void OnSpawn(IEntitySource source)
+    {
+
+    }
+
+    public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
+    {
+        target.AddBuff(ModContent.BuffType<ParacosmicBurn>(), 300);
+    }
+
+    public override void AI()
+    {
+        if (AITimer == 0)
         {
-            Main.projFrames[Projectile.type] = 7;
+            SoundEngine.PlaySound(SoundID.Item20 with { MaxInstances = 1, Pitch = -0.1f }, Projectile.Center);
         }
-
-        public override void SetDefaults()
+        AITimer++;
+        Projectile.alpha += 10;
+        Projectile.rotation = AITimer / Main.rand.Next(2, 4);
+        Projectile.frameCounter--;
+        if (Projectile.frameCounter == 0)
         {
-            Projectile.width = 90;
-            Projectile.height = 90;
-            Projectile.hostile = false;
-            Projectile.friendly = true;
-            Projectile.ignoreWater = true;
-            Projectile.tileCollide = false;
-            Projectile.timeLeft = 24;
-            Projectile.frameCounter = 2;
-            Projectile.penetrate = 10;
-            Projectile.usesLocalNPCImmunity = true;
-            Projectile.localNPCHitCooldown = 60;
-            Projectile.DamageType = DamageClass.Ranged;
-        }
-
-        public override void OnSpawn(IEntitySource source)
-        {
-
-        }
-
-        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
-        {
-            target.AddBuff(ModContent.BuffType<ParacosmicBurn>(), 300);
-        }
-
-        public override void AI()
-        {
-            if (AITimer == 0)
+            if (Projectile.frame < 2)
             {
-                SoundEngine.PlaySound(SoundID.Item20 with { MaxInstances = 1, Pitch = -0.1f }, Projectile.Center);
+                Projectile.frame++;
+                Projectile.frameCounter = 2;
             }
-            AITimer++;
-            Projectile.alpha += 10;
-            Projectile.rotation = AITimer / Main.rand.Next(2, 4);
-            Projectile.frameCounter--;
-            if (Projectile.frameCounter == 0)
+            else if (Projectile.frame >= 2 && Projectile.frame < 6)
             {
-                if (Projectile.frame < 2)
-                {
-                    Projectile.frame++;
-                    Projectile.frameCounter = 2;
-                }
-                else if (Projectile.frame >= 2 && Projectile.frame < 6)
-                {
-                    Projectile.frame++;
-                    Projectile.frameCounter = 6;
-                }
-                else
-                {
-                    Projectile.frame++;
-                    Projectile.frameCounter = 1;
-                }
+                Projectile.frame++;
+                Projectile.frameCounter = 6;
             }
-            if (AITimer % 2 == 0)
+            else
             {
-                Dust.NewDust(Projectile.Center, Projectile.width / 2, Projectile.height / 2, DustID.IceTorch);
+                Projectile.frame++;
+                Projectile.frameCounter = 1;
             }
+        }
+        if (AITimer % 2 == 0)
+        {
+            Dust.NewDust(Projectile.Center, Projectile.width / 2, Projectile.height / 2, DustID.IceTorch);
         }
     }
 }

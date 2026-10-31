@@ -8,113 +8,112 @@ using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Paracosm.Content.Projectiles.Hostile
+namespace Paracosm.Content.Projectiles.Hostile;
+
+public class VoidBoltSplit : ModProjectile
 {
-    public class VoidBoltSplit : ModProjectile
+    int AITimer = 0;
+    ref float DeathTime => ref Projectile.ai[0];
+    ref float SplitCount => ref Projectile.ai[1];
+    float speed = 0;
+
+    public override void SetStaticDefaults()
     {
-        int AITimer = 0;
-        ref float DeathTime => ref Projectile.ai[0];
-        ref float SplitCount => ref Projectile.ai[1];
-        float speed = 0;
+        ProjectileID.Sets.TrailCacheLength[Projectile.type] = 8;
+        ProjectileID.Sets.TrailingMode[Projectile.type] = 2;
+        Main.projFrames[Projectile.type] = 2;
+    }
 
-        public override void SetStaticDefaults()
+    public override void SetDefaults()
+    {
+        Projectile.width = 18;
+        Projectile.height = 18;
+        Projectile.hostile = true;
+        Projectile.friendly = false;
+        Projectile.ignoreWater = true;
+        Projectile.tileCollide = false;
+        Projectile.penetrate = -1;
+        Projectile.timeLeft = 180;
+        Projectile.Opacity = 0f;
+        DrawOffsetX = -15;
+    }
+
+    public override void AI()
+    {
+        if (AITimer >= DeathTime)
         {
-            ProjectileID.Sets.TrailCacheLength[Projectile.type] = 8;
-            ProjectileID.Sets.TrailingMode[Projectile.type] = 2;
-            Main.projFrames[Projectile.type] = 2;
+            Projectile.Kill();
         }
 
-        public override void SetDefaults()
+        //if (AITimer < DeathTime / 3)
+        //{
+        //    Projectile.Opacity = MathHelper.Lerp(Projectile.Opacity, 1f, AITimer / (DeathTime / 3));
+        //}
+        //else if (AITimer > DeathTime * 0.75f)
+        //{
+        //    Projectile.Opacity = MathHelper.Lerp(Projectile.Opacity, 0.25f, AITimer - (DeathTime * 0.75f) / DeathTime - (DeathTime * 0.75f));
+        //}
+        Projectile.frameCounter++;
+        if (Projectile.frameCounter == 6)
         {
-            Projectile.width = 18;
-            Projectile.height = 18;
-            Projectile.hostile = true;
-            Projectile.friendly = false;
-            Projectile.ignoreWater = true;
-            Projectile.tileCollide = false;
-            Projectile.penetrate = -1;
-            Projectile.timeLeft = 180;
-            Projectile.Opacity = 0f;
-            DrawOffsetX = -15;
-        }
-
-        public override void AI()
-        {
-            if (AITimer >= DeathTime)
+            Projectile.frame++;
+            Projectile.frameCounter = 0;
+            if (Projectile.frame >= 2)
             {
-                Projectile.Kill();
-            }
-
-            //if (AITimer < DeathTime / 3)
-            //{
-            //    Projectile.Opacity = MathHelper.Lerp(Projectile.Opacity, 1f, AITimer / (DeathTime / 3));
-            //}
-            //else if (AITimer > DeathTime * 0.75f)
-            //{
-            //    Projectile.Opacity = MathHelper.Lerp(Projectile.Opacity, 0.25f, AITimer - (DeathTime * 0.75f) / DeathTime - (DeathTime * 0.75f));
-            //}
-            Projectile.frameCounter++;
-            if (Projectile.frameCounter == 6)
-            {
-                Projectile.frame++;
-                Projectile.frameCounter = 0;
-                if (Projectile.frame >= 2)
-                {
-                    Projectile.frame = 0;
-                }
-            }
-            Projectile.rotation = Projectile.velocity.ToRotation();
-            AITimer++;
-        }
-
-        public override Color? GetAlpha(Color lightColor)
-        {
-            switch (SplitCount)
-            {
-                case >= 2: return Color.Red;
-                case 1: return Color.White;
-                default: return Color.Black;
+                Projectile.frame = 0;
             }
         }
+        Projectile.rotation = Projectile.velocity.ToRotation();
+        AITimer++;
+    }
 
-        public override void OnKill(int timeLeft)
+    public override Color? GetAlpha(Color lightColor)
+    {
+        switch (SplitCount)
         {
-            SoundEngine.PlaySound(SoundID.Item110 with { Volume = 0.5f, PitchRange = (-0.3f, 0.3f) }, Projectile.Center);
-            LemonUtils.DustCircle(Projectile.Center, 16, 2, DustID.Granite, 1f);
+            case >= 2: return Color.Red;
+            case 1: return Color.White;
+            default: return Color.Black;
+        }
+    }
 
-            if (SplitCount <= 0)
+    public override void OnKill(int timeLeft)
+    {
+        SoundEngine.PlaySound(SoundID.Item110 with { Volume = 0.5f, PitchRange = (-0.3f, 0.3f) }, Projectile.Center);
+        LemonUtils.DustCircle(Projectile.Center, 16, 2, DustID.Granite, 1f);
+
+        if (SplitCount <= 0)
+        {
+            return;
+        }
+        SplitCount--;
+        if (Main.netMode != NetmodeID.MultiplayerClient)
+        {
+            for (int i = 0; i < 3; i++)
             {
-                return;
-            }
-            SplitCount--;
-            if (Main.netMode != NetmodeID.MultiplayerClient)
-            {
-                for (int i = 0; i < 3; i++)
-                {
-                    Vector2 direction = Projectile.velocity.SafeNormalize(Vector2.Zero).RotatedBy(MathHelper.PiOver2);
-                    Projectile.NewProjectile(Projectile.GetSource_Death(), Projectile.Center, direction.RotatedBy(i * -MathHelper.PiOver2) * 12, Type, Projectile.damage, Projectile.knockBack, ai0: 60, ai1: SplitCount);
-                }
+                Vector2 direction = Projectile.velocity.SafeNormalize(Vector2.Zero).RotatedBy(MathHelper.PiOver2);
+                Projectile.NewProjectile(Projectile.GetSource_Death(), Projectile.Center, direction.RotatedBy(i * -MathHelper.PiOver2) * 12, Type, Projectile.damage, Projectile.knockBack, ai0: 60, ai1: SplitCount);
             }
         }
+    }
 
-        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
+    public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
+    {
+        target.AddBuff(ModContent.BuffType<DarkBleed>(), 240);
+    }
+
+    public override bool PreDraw(ref Color lightColor)
+    {
+        Texture2D texture = TextureAssets.Projectile[Type].Value;
+        Vector2 drawOrigin = new Vector2(texture.Width * 0.5f + DrawOriginOffsetX, Projectile.height * 0.5f);
+        for (int k = Projectile.oldPos.Length - 1; k > 0; k--)
         {
-            target.AddBuff(ModContent.BuffType<DarkBleed>(), 240);
-        }
+            Rectangle drawRectangle = texture.Frame(1, Main.projFrames[Type], 0, 1);
 
-        public override bool PreDraw(ref Color lightColor)
-        {
-            Texture2D texture = TextureAssets.Projectile[Type].Value;
-            Vector2 drawOrigin = new Vector2(texture.Width * 0.5f + DrawOriginOffsetX, Projectile.height * 0.5f);
-            for (int k = Projectile.oldPos.Length - 1; k > 0; k--)
-            {
-                Rectangle drawRectangle = texture.Frame(1, Main.projFrames[Type], 0, 1);
-
-                Vector2 drawPos = (Projectile.oldPos[k] - Main.screenPosition) + drawOrigin + new Vector2(DrawOffsetX, DrawOriginOffsetY);
-                Color color = Projectile.GetAlpha(lightColor) * ((Projectile.oldPos.Length - k) / (float)Projectile.oldPos.Length);
-                Main.EntitySpriteDraw(texture, drawPos, drawRectangle, color, Projectile.rotation, drawOrigin, Projectile.scale, SpriteEffects.None, 0);
-            }
-            return true;
+            Vector2 drawPos = (Projectile.oldPos[k] - Main.screenPosition) + drawOrigin + new Vector2(DrawOffsetX, DrawOriginOffsetY);
+            Color color = Projectile.GetAlpha(lightColor) * ((Projectile.oldPos.Length - k) / (float)Projectile.oldPos.Length);
+            Main.EntitySpriteDraw(texture, drawPos, drawRectangle, color, Projectile.rotation, drawOrigin, Projectile.scale, SpriteEffects.None, 0);
         }
+        return true;
     }
 }

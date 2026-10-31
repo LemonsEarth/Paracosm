@@ -2,13 +2,12 @@
 using Terraria;
 using Terraria.ModLoader;
 
-namespace Paracosm.Content.Buffs
+namespace Paracosm.Content.Buffs;
+
+public class BranchedOfLifedBuff : ModBuff
 {
-    public class BranchedOfLifedBuff : ModBuff
+    public override void Update(Player player, ref int buffIndex)
     {
-        public override void Update(Player player, ref int buffIndex)
-        {
-            player.GetModPlayer<ParacosmPlayer>().branchedOfLifed = true;
-        }
+        player.GetModPlayer<ParacosmPlayer>().branchedOfLifed = true;
     }
 }

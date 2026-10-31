@@ -2,28 +2,27 @@
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Paracosm.Content.Projectiles.Friendly
+namespace Paracosm.Content.Projectiles.Friendly;
+
+public class CraterExplosion : ModProjectile
 {
-    public class CraterExplosion : ModProjectile
+    public override void SetStaticDefaults()
     {
-        public override void SetStaticDefaults()
-        {
-            Main.projFrames[Type] = 5;
-        }
+        Main.projFrames[Type] = 5;
+    }
 
-        public override void SetDefaults()
-        {
-            Projectile.CloneDefaults(ProjectileID.SolarWhipSwordExplosion);
-            Projectile.aiStyle = ProjAIStyleID.SolarEffect;
-            AIType = ProjectileID.SolarWhipSwordExplosion;
-            Projectile.DamageType = DamageClass.Melee;
-            Projectile.usesLocalNPCImmunity = true;
-            Projectile.localNPCHitCooldown = 60;
-        }
+    public override void SetDefaults()
+    {
+        Projectile.CloneDefaults(ProjectileID.SolarWhipSwordExplosion);
+        Projectile.aiStyle = ProjAIStyleID.SolarEffect;
+        AIType = ProjectileID.SolarWhipSwordExplosion;
+        Projectile.DamageType = DamageClass.Melee;
+        Projectile.usesLocalNPCImmunity = true;
+        Projectile.localNPCHitCooldown = 60;
+    }
 
-        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
-        {
-            target.AddBuff(BuffID.OnFire, 120);
-        }
+    public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
+    {
+        target.AddBuff(BuffID.OnFire, 120);
     }
 }

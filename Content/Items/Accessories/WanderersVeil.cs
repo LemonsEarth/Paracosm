@@ -9,30 +9,29 @@ using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
 
-namespace Paracosm.Content.Items.Accessories
+namespace Paracosm.Content.Items.Accessories;
+
+public class WanderersVeil : ModItem
 {
-    public class WanderersVeil : ModItem
+    public static readonly float DRBoost = 20;
+
+    public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(DRBoost);
+
+    public override void SetDefaults()
     {
-        public static readonly float DRBoost = 20;
+        Item.width = 48;
+        Item.height = 56;
+        Item.accessory = true;
+        Item.value = Item.buyPrice(0, 5);
+        Item.rare = ItemRarityID.Purple;
+    }
 
-        public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(DRBoost);
-
-        public override void SetDefaults()
+    public override void UpdateAccessory(Player player, bool hideVisual)
+    {
+        if (KeybindSystem.WanderersVeil.JustPressed && !player.HasBuff(ModContent.BuffType<WanderersVeilCooldown>()))
         {
-            Item.width = 48;
-            Item.height = 56;
-            Item.accessory = true;
-            Item.value = Item.buyPrice(0, 5);
-            Item.rare = ItemRarityID.Purple;
-        }
-
-        public override void UpdateAccessory(Player player, bool hideVisual)
-        {
-            if (KeybindSystem.WanderersVeil.JustPressed && !player.HasBuff(ModContent.BuffType<WanderersVeilCooldown>()))
-            {
-                player.AddBuff(ModContent.BuffType<WanderersVeilBuff>(), 600);
-                player.AddBuff(ModContent.BuffType<WanderersVeilCooldown>(), 2400);
-            }
+            player.AddBuff(ModContent.BuffType<WanderersVeilBuff>(), 600);
+            player.AddBuff(ModContent.BuffType<WanderersVeilCooldown>(), 2400);
         }
     }
 }

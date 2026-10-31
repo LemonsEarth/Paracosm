@@ -5,37 +5,36 @@ using Terraria.Graphics.Effects;
 using Terraria.Graphics.Shaders;
 using Terraria.ModLoader;
 
-namespace Paracosm
+namespace Paracosm;
+
+// Please read https://github.com/tModLoader/tModLoader/wiki/Basic-tModLoader-Modding-Guide#mod-skeleton-contents for more information about the various files in a mod.
+public class Paracosm : Mod
 {
-    // Please read https://github.com/tModLoader/tModLoader/wiki/Basic-tModLoader-Modding-Guide#mod-skeleton-contents for more information about the various files in a mod.
-    public class Paracosm : Mod
+    public static Paracosm Instance { get; private set; }
+
+    public Paracosm()
     {
-        public static Paracosm Instance { get; private set; }
+        MusicSkipsVolumeRemap = true;
+    }
 
-        public Paracosm()
-        {
-            MusicSkipsVolumeRemap = true;
-        }
+    public override void Load()
+    {
+        Instance = this;
 
-        public override void Load()
-        {
-            Instance = this;
+        Asset<Effect> filterShader = Assets.Request<Effect>("Content/Shaders/ScreenTintShader");
+        Filters.Scene["Paracosm:ScreenTintShader"] = new Filter(new ScreenShaderData(filterShader, "ScreenTint"), EffectPriority.Medium);
 
-            Asset<Effect> filterShader = Assets.Request<Effect>("Content/Shaders/ScreenTintShader");
-            Filters.Scene["Paracosm:ScreenTintShader"] = new Filter(new ScreenShaderData(filterShader, "ScreenTint"), EffectPriority.Medium);
+        Asset<Effect> darknessShader = Assets.Request<Effect>("Content/Shaders/DarknessShader");
+        Filters.Scene["Paracosm:DarknessShader"] = new Filter(new ScreenShaderData(darknessShader, "Darkness"), EffectPriority.Medium);
 
-            Asset<Effect> darknessShader = Assets.Request<Effect>("Content/Shaders/DarknessShader");
-            Filters.Scene["Paracosm:DarknessShader"] = new Filter(new ScreenShaderData(darknessShader, "Darkness"), EffectPriority.Medium);
+        // Darkness shader with position
+        Asset<Effect> darknessShaderPos = Assets.Request<Effect>("Content/Shaders/DarknessShaderPositioned");
+        Filters.Scene["Paracosm:DarknessShaderPos"] = new Filter(new ScreenShaderData(darknessShaderPos, "DarknessPos"), EffectPriority.Medium);
 
-            // Darkness shader with position
-            Asset<Effect> darknessShaderPos = Assets.Request<Effect>("Content/Shaders/DarknessShaderPositioned");
-            Filters.Scene["Paracosm:DarknessShaderPos"] = new Filter(new ScreenShaderData(darknessShaderPos, "DarknessPos"), EffectPriority.Medium);
+        Asset<Effect> projLightShader = Assets.Request<Effect>("Content/Shaders/ProjectileLightShader");
+        GameShaders.Misc["Paracosm:ProjectileLightShader"] = new MiscShaderData(projLightShader, "ProjectileLight");
 
-            Asset<Effect> projLightShader = Assets.Request<Effect>("Content/Shaders/ProjectileLightShader");
-            GameShaders.Misc["Paracosm:ProjectileLightShader"] = new MiscShaderData(projLightShader, "ProjectileLight");
-
-            SkyManager.Instance["Paracosm:VoidSky"] = new VoidSkySky();
-            SkyManager.Instance["Paracosm:NamelessSky"] = new NamelessSky();
-        }
+        SkyManager.Instance["Paracosm:VoidSky"] = new VoidSkySky();
+        SkyManager.Instance["Paracosm:NamelessSky"] = new NamelessSky();
     }
 }

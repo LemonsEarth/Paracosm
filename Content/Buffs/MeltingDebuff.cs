@@ -4,25 +4,24 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Paracosm.Content.Buffs
+namespace Paracosm.Content.Buffs;
+
+public class MeltingDebuff : ModBuff
 {
-    public class MeltingDebuff : ModBuff
+    public override void SetStaticDefaults()
     {
-        public override void SetStaticDefaults()
-        {
-            Main.debuff[Type] = true;
-            BuffID.Sets.LongerExpertDebuff[Type] = false;
-            BuffID.Sets.NurseCannotRemoveDebuff[Type] = true;
-        }
+        Main.debuff[Type] = true;
+        BuffID.Sets.LongerExpertDebuff[Type] = false;
+        BuffID.Sets.NurseCannotRemoveDebuff[Type] = true;
+    }
 
-        public override void Update(Player player, ref int buffIndex)
-        {
-            player.GetModPlayer<ParacosmPlayer>().melting = true;
-        }
+    public override void Update(Player player, ref int buffIndex)
+    {
+        player.GetModPlayer<ParacosmPlayer>().melting = true;
+    }
 
-        public override void Update(NPC npc, ref int buffIndex)
-        {
-            npc.GetGlobalNPC<ParacosmGlobalNPC>().melting = true;
-        }
+    public override void Update(NPC npc, ref int buffIndex)
+    {
+        npc.GetGlobalNPC<ParacosmGlobalNPC>().melting = true;
     }
 }

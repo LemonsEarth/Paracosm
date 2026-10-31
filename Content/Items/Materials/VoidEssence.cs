@@ -4,31 +4,30 @@ using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Paracosm.Content.Items.Materials
+namespace Paracosm.Content.Items.Materials;
+
+public class VoidEssence : ModItem
 {
-    public class VoidEssence : ModItem
+    public override void SetStaticDefaults()
     {
-        public override void SetStaticDefaults()
-        {
-            Item.ResearchUnlockCount = 100;
-            Main.RegisterItemAnimation(Item.type, new DrawAnimationVertical(6, 4));
-            ItemID.Sets.AnimatesAsSoul[Type] = true;
-            ItemID.Sets.ItemIconPulse[Item.type] = true;
-            ItemID.Sets.ItemNoGravity[Item.type] = true;
-        }
+        Item.ResearchUnlockCount = 100;
+        Main.RegisterItemAnimation(Item.type, new DrawAnimationVertical(6, 4));
+        ItemID.Sets.AnimatesAsSoul[Type] = true;
+        ItemID.Sets.ItemIconPulse[Item.type] = true;
+        ItemID.Sets.ItemNoGravity[Item.type] = true;
+    }
 
-        public override void SetDefaults()
-        {
-            Item.width = 30;
-            Item.height = 30;
-            Item.maxStack = Item.CommonMaxStack;
-            Item.value = Item.sellPrice(0, 0, 0, 50);
-            Item.rare = ParacosmRarity.DarkGray;
-        }
+    public override void SetDefaults()
+    {
+        Item.width = 30;
+        Item.height = 30;
+        Item.maxStack = Item.CommonMaxStack;
+        Item.value = Item.sellPrice(0, 0, 0, 50);
+        Item.rare = ParacosmRarity.DarkGray;
+    }
 
-        public override void PostUpdate()
-        {
-            Lighting.AddLight(Item.Center, 1f, 1f, 1f);
-        }
+    public override void PostUpdate()
+    {
+        Lighting.AddLight(Item.Center, 1f, 1f, 1f);
     }
 }

@@ -4,69 +4,68 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Paracosm.Content.Projectiles.Friendly
+namespace Paracosm.Content.Projectiles.Friendly;
+
+public class SolaceStar : ModProjectile
 {
-    public class SolaceStar : ModProjectile
+    ref float AITimer => ref Projectile.ai[0];
+    ref float RandomRot => ref Projectile.ai[1];
+    NPC closestEnemy;
+    public override void SetStaticDefaults()
     {
-        ref float AITimer => ref Projectile.ai[0];
-        ref float RandomRot => ref Projectile.ai[1];
-        NPC closestEnemy;
-        public override void SetStaticDefaults()
+        Main.projFrames[Projectile.type] = 5;
+        ProjectileID.Sets.TrailCacheLength[Projectile.type] = 5;
+        ProjectileID.Sets.TrailingMode[Projectile.type] = 0;
+    }
+
+    public override void SetDefaults()
+    {
+        Projectile.width = 62;
+        Projectile.height = 62;
+        Projectile.friendly = true;
+        Projectile.ignoreWater = false;
+        Projectile.tileCollide = true;
+        Projectile.timeLeft = 240;
+        Projectile.penetrate = 10;
+        Projectile.alpha = 255;
+        Projectile.DamageType = DamageClass.Melee;
+    }
+
+    public override void AI()
+    {
+        if (Projectile.alpha > 0)
         {
-            Main.projFrames[Projectile.type] = 5;
-            ProjectileID.Sets.TrailCacheLength[Projectile.type] = 5;
-            ProjectileID.Sets.TrailingMode[Projectile.type] = 0;
+            Projectile.alpha -= 50;
+        }
+        Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, DustID.YellowTorch);
+
+        Projectile.frameCounter++;
+        if (Projectile.frameCounter == 12)
+        {
+            Projectile.frame++;
+            Projectile.frameCounter = 0;
+            if (Projectile.frame >= 4)
+            {
+                Projectile.frame = 0;
+            }
         }
 
-        public override void SetDefaults()
+        Projectile.rotation = MathHelper.ToRadians(AITimer * 10);
+        AITimer++;
+        if (AITimer % 20 == 0)
         {
-            Projectile.width = 62;
-            Projectile.height = 62;
-            Projectile.friendly = true;
-            Projectile.ignoreWater = false;
-            Projectile.tileCollide = true;
-            Projectile.timeLeft = 240;
-            Projectile.penetrate = 10;
-            Projectile.alpha = 255;
-            Projectile.DamageType = DamageClass.Melee;
-        }
-
-        public override void AI()
-        {
-            if (Projectile.alpha > 0)
+            if (Projectile.owner == Main.myPlayer)
             {
-                Projectile.alpha -= 50;
-            }
-            Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, DustID.YellowTorch);
-
-            Projectile.frameCounter++;
-            if (Projectile.frameCounter == 12)
-            {
-                Projectile.frame++;
-                Projectile.frameCounter = 0;
-                if (Projectile.frame >= 4)
+                for (int i = 0; i < 3; i++)
                 {
-                    Projectile.frame = 0;
-                }
-            }
-
-            Projectile.rotation = MathHelper.ToRadians(AITimer * 10);
-            AITimer++;
-            if (AITimer % 20 == 0)
-            {
-                if (Projectile.owner == Main.myPlayer)
-                {
-                    for (int i = 0; i < 3; i++)
+                    if (LemonUtils.GetClosestNPC(Projectile) == null)
                     {
-                        if (LemonUtils.GetClosestNPC(Projectile) == null)
-                        {
-                            return;
-                        }
-                        closestEnemy = LemonUtils.GetClosestNPC(Projectile);
-                        RandomRot = Main.rand.Next(-15, 15);
-                        Projectile.NewProjectile(Projectile.GetSource_Death(), Projectile.Center, Projectile.Center.DirectionTo(closestEnemy.Center).RotatedBy(MathHelper.ToRadians(RandomRot)) * 16, ProjectileID.HallowStar, Projectile.damage, 1f, Projectile.owner);
-                        Projectile.netUpdate = true;
+                        return;
                     }
+                    closestEnemy = LemonUtils.GetClosestNPC(Projectile);
+                    RandomRot = Main.rand.Next(-15, 15);
+                    Projectile.NewProjectile(Projectile.GetSource_Death(), Projectile.Center, Projectile.Center.DirectionTo(closestEnemy.Center).RotatedBy(MathHelper.ToRadians(RandomRot)) * 16, ProjectileID.HallowStar, Projectile.damage, 1f, Projectile.owner);
+                    Projectile.netUpdate = true;
                 }
             }
         }

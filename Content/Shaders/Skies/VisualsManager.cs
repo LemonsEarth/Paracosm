@@ -1,8 +1,7 @@
 ﻿using Terraria.ModLoader;
 
-namespace Paracosm.Content.Shaders.Skies
+namespace Paracosm.Content.Shaders.Skies;
+
+public class VisualsManager : ModSceneEffect
 {
-    public class VisualsManager : ModSceneEffect
-    {
-    }
 }

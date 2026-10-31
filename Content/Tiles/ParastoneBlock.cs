@@ -3,24 +3,23 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Paracosm.Content.Tiles
+namespace Paracosm.Content.Tiles;
+
+public class ParastoneBlock : ModTile
 {
-    public class ParastoneBlock : ModTile
+    public override void SetStaticDefaults()
     {
-        public override void SetStaticDefaults()
-        {
-            Main.tileSolid[Type] = true;
-            Main.tileMergeDirt[Type] = true;
-            Main.tileBlockLight[Type] = true;
+        Main.tileSolid[Type] = true;
+        Main.tileMergeDirt[Type] = true;
+        Main.tileBlockLight[Type] = true;
 
-            DustType = DustID.Obsidian;
+        DustType = DustID.Obsidian;
 
-            AddMapEntry(new Color(13, 2, 99));
-        }
+        AddMapEntry(new Color(13, 2, 99));
+    }
 
-        public override void NumDust(int i, int j, bool fail, ref int num)
-        {
-            num = fail ? 3 : 1;
-        }
+    public override void NumDust(int i, int j, bool fail, ref int num)
+    {
+        num = fail ? 3 : 1;
     }
 }

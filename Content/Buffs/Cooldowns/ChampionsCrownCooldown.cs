@@ -2,15 +2,14 @@
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Paracosm.Content.Buffs.Cooldowns
+namespace Paracosm.Content.Buffs.Cooldowns;
+
+public class ChampionsCrownCooldown : ModBuff
 {
-    public class ChampionsCrownCooldown : ModBuff
+    public override void SetStaticDefaults()
     {
-        public override void SetStaticDefaults()
-        {
-            Main.debuff[Type] = true;
-            BuffID.Sets.LongerExpertDebuff[Type] = false;
-            BuffID.Sets.NurseCannotRemoveDebuff[Type] = true;
-        }
+        Main.debuff[Type] = true;
+        BuffID.Sets.LongerExpertDebuff[Type] = false;
+        BuffID.Sets.NurseCannotRemoveDebuff[Type] = true;
     }
 }

@@ -3,18 +3,17 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Paracosm.Content.Buffs
+namespace Paracosm.Content.Buffs;
+
+public class WanderersVeilBuff : ModBuff
 {
-    public class WanderersVeilBuff : ModBuff
+    public override void SetStaticDefaults()
     {
-        public override void SetStaticDefaults()
-        {
 
-        }
+    }
 
-        public override void Update(Player player, ref int buffIndex)
-        {
-            player.GetModPlayer<ParacosmPlayer>().wanderersVeil = true;
-        }
+    public override void Update(Player player, ref int buffIndex)
+    {
+        player.GetModPlayer<ParacosmPlayer>().wanderersVeil = true;
     }
 }

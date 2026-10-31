@@ -12,170 +12,169 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Paracosm.Common.Globals
+namespace Paracosm.Common.Globals;
+
+public class ParacosmGlobalNPC : GlobalNPC
 {
-    public class ParacosmGlobalNPC : GlobalNPC
+    public override bool InstancePerEntity => true;
+
+    public bool paracosmicBurn = false;
+    public bool solarBurn = false;
+    public bool melting = false;
+    public bool darkBleed = false;
+    public bool infected = false;
+
+    public override void ResetEffects(NPC npc)
     {
-        public override bool InstancePerEntity => true;
+        paracosmicBurn = false;
+        solarBurn = false;
+        melting = false;
+        darkBleed = false;
+    }
 
-        public bool paracosmicBurn = false;
-        public bool solarBurn = false;
-        public bool melting = false;
-        public bool darkBleed = false;
-        public bool infected = false;
-
-        public override void ResetEffects(NPC npc)
+    public override void UpdateLifeRegen(NPC npc, ref int damage)
+    {
+        if (paracosmicBurn)
         {
-            paracosmicBurn = false;
-            solarBurn = false;
-            melting = false;
-            darkBleed = false;
-        }
-
-        public override void UpdateLifeRegen(NPC npc, ref int damage)
-        {
-            if (paracosmicBurn)
+            if (npc.lifeRegen > 0)
             {
-                if (npc.lifeRegen > 0)
-                {
-                    npc.lifeRegen = 0;
-                }
-
-                npc.lifeRegen -= 150;
-                if (damage < 150)
-                {
-                    damage = 150;
-                }
+                npc.lifeRegen = 0;
             }
 
-            if (infected)
+            npc.lifeRegen -= 150;
+            if (damage < 150)
             {
-                if (npc.lifeRegen > 0)
-                {
-                    npc.lifeRegen = 0;
-                }
-
-                npc.lifeRegen -= 350;
-                if (damage < 350)
-                {
-                    damage = 350;
-                }
-            }
-
-
-            if (darkBleed)
-            {
-                if (npc.lifeRegen > 0)
-                {
-                    npc.lifeRegen = 0;
-                }
-
-                npc.lifeRegen -= 50;
-                if (damage < 50)
-                {
-                    damage = 50;
-                }
-            }
-
-
-            if (solarBurn)
-            {
-                if (npc.lifeRegen > 0)
-                {
-                    npc.lifeRegen = 0;
-                }
-
-                npc.lifeRegen -= 300;
-                if (damage < 300)
-                {
-                    damage = 300;
-                }
+                damage = 150;
             }
         }
 
-        public override void OnHitPlayer(NPC npc, Player target, Player.HurtInfo hurtInfo)
+        if (infected)
         {
-            if (darkBleed)
+            if (npc.lifeRegen > 0)
             {
-                hurtInfo.Damage -= (hurtInfo.Damage / 20);
+                npc.lifeRegen = 0;
+            }
+
+            npc.lifeRegen -= 350;
+            if (damage < 350)
+            {
+                damage = 350;
             }
         }
 
-        public override void ModifyIncomingHit(NPC npc, ref NPC.HitModifiers modifiers)
+
+        if (darkBleed)
         {
-            if (melting)
+            if (npc.lifeRegen > 0)
             {
-                modifiers.Defense.Base *= 0;
-                Dust.NewDust(npc.position, npc.width, npc.height, DustID.SolarFlare);
+                npc.lifeRegen = 0;
             }
 
-            if (infected)
+            npc.lifeRegen -= 50;
+            if (damage < 50)
             {
-                modifiers.Defense.Base -= 30;
+                damage = 50;
             }
         }
 
-        public override void ModifyHitByProjectile(NPC npc, Projectile projectile, ref NPC.HitModifiers modifiers)
+
+        if (solarBurn)
         {
-            if (npc.HasBuff<StardustTailDebuff>())
+            if (npc.lifeRegen > 0)
             {
-                float projTagMultiplier = ProjectileID.Sets.SummonTagDamageMultiplier[projectile.type];
-                modifiers.FlatBonusDamage += StardustTailDebuff.TagDamageBoost * projTagMultiplier;
+                npc.lifeRegen = 0;
+            }
+
+            npc.lifeRegen -= 300;
+            if (damage < 300)
+            {
+                damage = 300;
             }
         }
+    }
 
-        public override void EditSpawnRate(Player player, ref int spawnRate, ref int maxSpawns)
+    public override void OnHitPlayer(NPC npc, Player target, Player.HurtInfo hurtInfo)
+    {
+        if (darkBleed)
         {
-            if (player.InModBiome<VoidLow>())
-            {
-                spawnRate *= 5;
-                maxSpawns = 5;
-            }
+            hurtInfo.Damage -= (hurtInfo.Damage / 20);
+        }
+    }
 
-            if (player.InModBiome<VoidMid>())
-            {
-                spawnRate =(int)(spawnRate * 3f);
-                maxSpawns = 8;
-            }
-
-            if (player.InModBiome<ParacosmicDistortion>())
-            {
-                spawnRate = (int)(spawnRate * 2f);
-                maxSpawns = (int)(spawnRate * 0.5f);
-            }
+    public override void ModifyIncomingHit(NPC npc, ref NPC.HitModifiers modifiers)
+    {
+        if (melting)
+        {
+            modifiers.Defense.Base *= 0;
+            Dust.NewDust(npc.position, npc.width, npc.height, DustID.SolarFlare);
         }
 
-        public override void EditSpawnPool(IDictionary<int, float> pool, NPCSpawnInfo spawnInfo)
+        if (infected)
         {
-            if (spawnInfo.Player.InModBiome<ParacosmicDistortion>())
-            {
-                pool.Clear();
-                pool.Add(ModContent.NPCType<Wanderer>(), 0.1f);
-                pool.Add(ModContent.NPCType<ParastoneRoller>(), 0.05f);
-            }
+            modifiers.Defense.Base -= 30;
+        }
+    }
 
-            if (spawnInfo.Player.InModBiome<VoidMid>())
-            {
-                pool.Clear();
-                pool.Add(ModContent.NPCType<VoidSteeple>(), 0.1f);
-                pool.Add(ModContent.NPCType<ShadowSeeker>(), 0.2f);
-            }
+    public override void ModifyHitByProjectile(NPC npc, Projectile projectile, ref NPC.HitModifiers modifiers)
+    {
+        if (npc.HasBuff<StardustTailDebuff>())
+        {
+            float projTagMultiplier = ProjectileID.Sets.SummonTagDamageMultiplier[projectile.type];
+            modifiers.FlatBonusDamage += StardustTailDebuff.TagDamageBoost * projTagMultiplier;
+        }
+    }
 
-            if (spawnInfo.Player.InModBiome<VoidLow>())
-            {
-                pool.Clear();
-                pool.Add(ModContent.NPCType<VoidPlayer>(), 0.02f);
-                pool.Add(ModContent.NPCType<VoidWormHead>(), 0.01f);
-            }
+    public override void EditSpawnRate(Player player, ref int spawnRate, ref int maxSpawns)
+    {
+        if (player.InModBiome<VoidLow>())
+        {
+            spawnRate *= 5;
+            maxSpawns = 5;
         }
 
-        public override bool CanHitPlayer(NPC npc, Player target, ref int cooldownSlot)
+        if (player.InModBiome<VoidMid>())
         {
-            if (npc.type == ModContent.NPCType<VortexMothership>() || npc.type == ModContent.NPCType<VortexTeslaGun>() || npc.type == ModContent.NPCType<InfectedRevenantCorruptHead>() || npc.type == ModContent.NPCType<InfectedRevenantCrimsonHead>() || npc.type == ModContent.NPCType<NebulaMaster>() || npc.type == ModContent.NPCType<StardustLeviathanHead>())
-            {
-                return false;
-            }
-            return true;
+            spawnRate =(int)(spawnRate * 3f);
+            maxSpawns = 8;
         }
+
+        if (player.InModBiome<ParacosmicDistortion>())
+        {
+            spawnRate = (int)(spawnRate * 2f);
+            maxSpawns = (int)(spawnRate * 0.5f);
+        }
+    }
+
+    public override void EditSpawnPool(IDictionary<int, float> pool, NPCSpawnInfo spawnInfo)
+    {
+        if (spawnInfo.Player.InModBiome<ParacosmicDistortion>())
+        {
+            pool.Clear();
+            pool.Add(ModContent.NPCType<Wanderer>(), 0.1f);
+            pool.Add(ModContent.NPCType<ParastoneRoller>(), 0.05f);
+        }
+
+        if (spawnInfo.Player.InModBiome<VoidMid>())
+        {
+            pool.Clear();
+            pool.Add(ModContent.NPCType<VoidSteeple>(), 0.1f);
+            pool.Add(ModContent.NPCType<ShadowSeeker>(), 0.2f);
+        }
+
+        if (spawnInfo.Player.InModBiome<VoidLow>())
+        {
+            pool.Clear();
+            pool.Add(ModContent.NPCType<VoidPlayer>(), 0.02f);
+            pool.Add(ModContent.NPCType<VoidWormHead>(), 0.01f);
+        }
+    }
+
+    public override bool CanHitPlayer(NPC npc, Player target, ref int cooldownSlot)
+    {
+        if (npc.type == ModContent.NPCType<VortexMothership>() || npc.type == ModContent.NPCType<VortexTeslaGun>() || npc.type == ModContent.NPCType<InfectedRevenantCorruptHead>() || npc.type == ModContent.NPCType<InfectedRevenantCrimsonHead>() || npc.type == ModContent.NPCType<NebulaMaster>() || npc.type == ModContent.NPCType<StardustLeviathanHead>())
+        {
+            return false;
+        }
+        return true;
     }
 }
