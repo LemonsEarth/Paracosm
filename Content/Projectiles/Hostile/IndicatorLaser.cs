@@ -20,6 +20,7 @@ public class IndicatorLaser : ModProjectile
     public override void SetStaticDefaults()
     {
         Main.projFrames[Projectile.type] = 1;
+        ProjectileID.Sets.DrawScreenCheckFluff[Type] = 2500;
     }
 
     public override void SetDefaults()

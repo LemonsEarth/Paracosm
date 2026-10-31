@@ -20,6 +20,7 @@ public class VortexLaser : ModProjectile
     public override void SetStaticDefaults()
     {
         Main.projFrames[Projectile.type] = 4;
+        ProjectileID.Sets.DrawScreenCheckFluff[Type] = 2500;
     }
 
     public override void SetDefaults()
@@ -46,7 +47,7 @@ public class VortexLaser : ModProjectile
 
         Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, DustID.HallowSpray);
 
-        if (Projectile.timeLeft > 60)
+        if (Projectile.timeLeft > 60 && Projectile.Opacity < 1f)
         {
             Projectile.Opacity += 2f / 10f;
         }
@@ -80,7 +81,7 @@ public class VortexLaser : ModProjectile
             int frame = i == 0 ? 0 : i == beamLength - 1 ? 3 : ((int)AITimer / 5 + i) % 2 + 1;
             Rectangle sourceRectangle = new(0, frame * frameHeight, texture.Width, frameHeight);
             Vector2 drawPosition = Projectile.Center + direction * i * BeamWidth - Main.screenPosition;
-            Main.EntitySpriteDraw(texture, drawPosition, sourceRectangle, lightColor * Projectile.Opacity, Projectile.rotation, origin, 1f, SpriteEffects.None);
+            Main.EntitySpriteDraw(texture, drawPosition, sourceRectangle, Color.White * Projectile.Opacity, Projectile.rotation, origin, 1f, SpriteEffects.None);
         }
 
         return false;

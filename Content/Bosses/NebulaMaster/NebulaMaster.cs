@@ -709,7 +709,7 @@ public class NebulaMaster : ModNPC
                 {
                     if (Main.netMode != NetmodeID.MultiplayerClient)
                     {
-                        Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, targetPosition.SafeNormalize(Vector2.Zero), Proj["Beam"], NPC.damage, 1f, ai0: 30);
+                        Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, targetPosition.SafeNormalize(Vector2.Zero), Proj["Beam"], NPC.damage, 1f, ai0: 100);
                     }
                     AttackCount++;
                     if (AttackCount < 6)

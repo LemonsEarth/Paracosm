@@ -107,7 +107,7 @@ public class NebulaBeamFriendly : ModProjectile
             int frame = i == 0 ? 0 : i == beamLength - 1 ? 2 : 1;
             Rectangle sourceRectangle = new(0, frame * frameHeight, texture.Width, frameHeight);
             Vector2 drawPosition = Projectile.Center + direction * i * BeamWidth - Main.screenPosition;
-            Main.EntitySpriteDraw(texture, drawPosition, sourceRectangle, lightColor * Projectile.Opacity, Projectile.rotation, origin, 1f, SpriteEffects.None);
+            Main.EntitySpriteDraw(texture, drawPosition, sourceRectangle, Color.White * Projectile.Opacity, Projectile.rotation, origin, 1f, SpriteEffects.None);
         }
 
         return false;
