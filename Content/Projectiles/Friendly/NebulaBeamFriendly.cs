@@ -39,17 +39,31 @@ public class NebulaBeamFriendly : ModProjectile
 
     public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
     {
-        Projectile.damage /= 2;
+        Projectile.damage = (int)(Projectile.damage * 0.75f);
     }
 
     public override void AI()
     {
+        Player player = Main.player[Projectile.owner];
         if (AITimer == 0)
         {
             Projectile.Opacity = 0;
             SoundEngine.PlaySound(SoundID.Zombie104 with { MaxInstances = 1, SoundLimitBehavior = SoundLimitBehavior.ReplaceOldest });
-            Projectile.rotation = Projectile.velocity.ToRotation();
-            direction = Projectile.velocity.SafeNormalize(Vector2.Zero);
+
+            // Projectile.velocity is initialized from the firing player's mouse direction.
+            // Use the projectile owner here so remote clients do not use their own mouse.
+        }
+
+        Projectile.Center = player.Center;
+        if (Main.myPlayer == Projectile.owner)
+        {
+            direction = player.DirectionTo(Main.MouseWorld);
+            Projectile.rotation = direction.ToRotation();
+        }
+
+        if (AITimer % 5 == 0)
+        {
+            Projectile.netUpdate = true;
         }
 
         if (AITimer % 2 == 0)
@@ -76,7 +90,7 @@ public class NebulaBeamFriendly : ModProjectile
     public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
     {
         Vector2 start = Projectile.Center - direction * (BeamWidth / 2f);
-        Vector2 end = Projectile.Center + direction * (Math.Max(BeamLength, 1f) - 1f) * BeamWidth + direction * (BeamWidth / 2f);
+        Vector2 end = Projectile.Center + direction * (Math.Max(BeamLength, 1f) * BeamWidth - BeamWidth / 2f);
         float collisionPoint = 0f;
         return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), start, end, BeamWidth, ref collisionPoint);
     }
