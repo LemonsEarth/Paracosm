@@ -44,8 +44,8 @@ public class VortexTeslaGun : ModNPC
     public override void SetDefaults()
     {
         NPC.aiStyle = -1;
-        NPC.width = 100;
-        NPC.height = 100;
+        NPC.width = 40;
+        NPC.height = 40;
         NPC.lifeMax = 100000;
         NPC.dontTakeDamage = true;
         NPC.defense = 30;
@@ -310,7 +310,7 @@ public class VortexTeslaGun : ModNPC
                 {
                     if (Main.netMode != NetmodeID.MultiplayerClient)
                     {
-                        Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, shootDirection, ModContent.ProjectileType<VortexLaser>(), NPC.damage * 2, 1, ai0: 50, ai1: 0);
+                        Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, shootDirection, ModContent.ProjectileType<VortexLaser>(), NPC.damage * 2, 1, ai0: 50);
                     }
                     AttackTimer = MIX_LASER_CD;
                 }
@@ -379,7 +379,7 @@ public class VortexTeslaGun : ModNPC
             if (Main.netMode != NetmodeID.MultiplayerClient)
             {
                 AttackCount = Main.rand.Next(-10, 5);
-                Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, shootDirection, ModContent.ProjectileType<VortexLaser>(), NPC.damage * 2, 1, ai0: 50, ai1: 0);
+                Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, shootDirection, ModContent.ProjectileType<VortexLaser>(), NPC.damage * 2, 1, ai0: 50);
             }
             AttackTimer = 300;
             NPC.netUpdate = true;

@@ -79,8 +79,8 @@ public class VortexMothership : ModNPC
     {
         new Vector2(-60, 90),
         new Vector2(60, 90),
-        new Vector2(-400, -60),
-        new Vector2(400, -60),
+        new Vector2(-400, -20),
+        new Vector2(400, -20),
     };
     VortexTeslaGun[] teslaGuns = new VortexTeslaGun[4];
 
@@ -127,6 +127,7 @@ public class VortexMothership : ModNPC
 
     public override void SetDefaults()
     {
+
         NPC.boss = true;
         NPC.width = 1124;
         NPC.height = 368;
@@ -488,7 +489,7 @@ public class VortexMothership : ModNPC
         npcLoot.Add(ItemDropRule.BossBag(ModContent.ItemType<VortexMothershipBossBag>()));
     }
 
-    public override void BossLoot(ref string name, ref int potionType)
+    public override void BossLoot(ref int potionType)
     {
         potionType = ItemID.SuperHealingPotion;
     }

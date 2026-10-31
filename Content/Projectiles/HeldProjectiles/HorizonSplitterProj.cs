@@ -21,8 +21,6 @@ public class HorizonSplitterProj : ModProjectile
 
     float rotated = 0;
     const float maxRotation = 360;
-
-    bool spawnedProj = false;
     int savedDamage = 0;
     public override void SetStaticDefaults()
     {

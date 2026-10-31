@@ -976,7 +976,7 @@ public class DivineSeeker : ModNPC
         npcLoot.Add(ItemDropRule.MasterModeCommonDrop(ModContent.ItemType<Items.Placeable.Furniture.DivineSeekerRelic>()));
     }
 
-    public override void BossLoot(ref string name, ref int potionType)
+    public override void BossLoot(ref int potionType)
     {
         potionType = ItemID.GreaterHealingPotion;
     }

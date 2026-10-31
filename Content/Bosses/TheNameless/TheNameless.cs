@@ -962,7 +962,7 @@ public class TheNameless : ModNPC
     const int FINAL3_SPLITSHOTSPAM_DURATION = 1200;
 
     const int FINAL4_DASKSHINE_SUCK_DURATION = 2100;
-    float angleBoost = 0;
+
     void FinalPhase()
     {
         NPC.velocity = Vector2.Zero;
@@ -1318,7 +1318,7 @@ public class TheNameless : ModNPC
         npcLoot.Add(ItemDropRule.MasterModeCommonDrop(ModContent.ItemType<Items.Placeable.Furniture.TheNamelessRelic>()));
     }
 
-    public override void BossLoot(ref string name, ref int potionType)
+    public override void BossLoot(ref int potionType)
     {
         potionType = ItemID.SuperHealingPotion;
     }

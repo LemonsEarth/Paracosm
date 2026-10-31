@@ -658,7 +658,7 @@ public class InfectedRevenantBody : ModNPC
         NPC.frame.Y = (phase - 1) * frameHeight;
     }
 
-    public override void BossLoot(ref string name, ref int potionType)
+    public override void BossLoot(ref int potionType)
     {
         potionType = ItemID.GreaterHealingPotion;
     }

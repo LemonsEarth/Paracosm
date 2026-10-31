@@ -11,7 +11,6 @@ namespace Paracosm.Content.Items.Weapons.Melee;
 
 public class HorizonSplitter : ModItem
 {
-    int useCounter = 0;
     public override void SetDefaults()
     {
         Item.damage = 1000;

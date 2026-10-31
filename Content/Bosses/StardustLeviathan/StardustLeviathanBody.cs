@@ -16,11 +16,6 @@ public class StardustLeviathanBody : ModNPC
         get { return (int)NPC.ai[1]; }
     }
 
-    int FollowerNPC
-    {
-        get { return (int)NPC.ai[0]; }
-    }
-
     int HeadNPC
     {
         get { return (int)NPC.ai[2]; }

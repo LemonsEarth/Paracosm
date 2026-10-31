@@ -9,8 +9,6 @@ namespace Paracosm.Content.Items.Weapons.Ranged;
 
 public class FadedFates : ModItem
 {
-    int useCounter = 0;
-
     public override void SetDefaults()
     {
         Item.damage = 75;

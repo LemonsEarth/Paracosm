@@ -8,7 +8,6 @@ namespace Paracosm.Content.Items.Accessories;
 
 public class DemonCoin : ModItem
 {
-    static float damageBoost = 0;
     public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs();
 
     public override void SetStaticDefaults()

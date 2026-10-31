@@ -9,8 +9,6 @@ namespace Paracosm.Content.Projectiles.Friendly;
 
 public class StardustTailProj : ModProjectile
 {
-    ref float AITimer => ref Projectile.ai[0];
-
     public override void SetStaticDefaults()
     {
         ProjectileID.Sets.IsAWhip[Type] = true;

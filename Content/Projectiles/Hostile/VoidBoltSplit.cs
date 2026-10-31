@@ -15,7 +15,6 @@ public class VoidBoltSplit : ModProjectile
     int AITimer = 0;
     ref float DeathTime => ref Projectile.ai[0];
     ref float SplitCount => ref Projectile.ai[1];
-    float speed = 0;
 
     public override void SetStaticDefaults()
     {

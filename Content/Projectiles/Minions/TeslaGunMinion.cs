@@ -13,7 +13,7 @@ public class TeslaGunMinion : ModProjectile
     ref float AITimer => ref Projectile.ai[0];
     ref float AttackTimer => ref Projectile.ai[1];
     ref float NotAttackTimer => ref Projectile.ai[2];
-    NPC closestNPC;
+
     Vector2 offset = new Vector2(40, -40);
     public override void SetStaticDefaults()
     {

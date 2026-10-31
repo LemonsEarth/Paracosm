@@ -1,9 +1,12 @@
+global using Terraria.ModLoader;
+global using Terraria;
+global using System;
+global using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Paracosm.Content.Shaders.Skies;
 using ReLogic.Content;
 using Terraria.Graphics.Effects;
 using Terraria.Graphics.Shaders;
-using Terraria.ModLoader;
 
 namespace Paracosm;
 

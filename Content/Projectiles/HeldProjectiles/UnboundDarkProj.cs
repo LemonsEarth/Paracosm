@@ -38,7 +38,6 @@ public class UnboundDarkProj : ModProjectile
     }
 
     float rotMul = 1;
-    float rot = 0f;
     Vector2 playerToMouse;
     float timeMul = 0.1f;
     public override void AI()

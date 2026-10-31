@@ -630,22 +630,8 @@ public class StardustLeviathanHead : ModNPC
         AttackTimer--;
     }
 
-
-    void MoveToPos(Vector2 pos, float xAccel = 1f, float yAccel = 1f, float xSpeed = 1f, float ySpeed = 1f)
-    {
-        Vector2 direction = NPC.Center.DirectionTo(pos);
-        if (direction.HasNaNs())
-        {
-            return;
-        }
-        float XaccelMod = Math.Sign(direction.X) - Math.Sign(NPC.velocity.X);
-        float YaccelMod = Math.Sign(direction.Y) - Math.Sign(NPC.velocity.Y);
-        NPC.velocity += new Vector2(XaccelMod * xAccel + xSpeed * Math.Sign(direction.X), YaccelMod * yAccel + ySpeed * Math.Sign(direction.Y));
-    }
-
     const int BASE_ARENA_DISTANCE = 3000;
     const int CIRCLING_ARENA_DISTANCE = 2000;
-    const int CHASING_ARENA_DISTANCE = 1500;
     public const int MINEFIELD_ARENA_DISTANCE = 2500;
     const int CIRCLING_BH_ARENA_DISTANCE = 1500;
     const int MINE_TRAIL_ARENA_DISTANCE = 1300;
@@ -783,7 +769,7 @@ public class StardustLeviathanHead : ModNPC
         npcLoot.Add(ItemDropRule.BossBag(ModContent.ItemType<StardustLeviathanBossBag>()));
     }
 
-    public override void BossLoot(ref string name, ref int potionType)
+    public override void BossLoot(ref int potionType)
     {
         potionType = ItemID.SuperHealingPotion;
     }

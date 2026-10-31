@@ -7,7 +7,6 @@ namespace Paracosm.Content.Projectiles.Friendly;
 
 public class ArchmageBolt : ModProjectile
 {
-    ref float AITimer => ref Projectile.ai[0];
     public override void SetStaticDefaults()
     {
         Main.projFrames[Projectile.type] = 1;

@@ -16,24 +16,6 @@ public class VoidWormBody : ModNPC
         get { return (int)NPC.ai[1]; }
     }
 
-    int FollowerNPC
-    {
-        get { return (int)NPC.ai[0]; }
-    }
-
-    int HeadNPC
-    {
-        get { return (int)NPC.ai[2]; }
-    }
-
-    int SegmentNum
-    {
-        get { return (int)NPC.ai[3]; }
-    }
-
-    int AttackTimer = 0;
-    int AttackCount = 0;
-    float RandNum = 0;
     public override void SetStaticDefaults()
     {
         NPCID.Sets.SpecificDebuffImmunity[Type][BuffID.Confused] = true;

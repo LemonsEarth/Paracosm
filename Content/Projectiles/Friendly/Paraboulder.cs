@@ -13,8 +13,6 @@ namespace Paracosm.Content.Projectiles.Friendly;
 
 public class Paraboulder : ModProjectile
 {
-    ref float AITimer => ref Projectile.ai[0];
-
     public override void SetStaticDefaults()
     {
         ProjectileID.Sets.TrailCacheLength[Projectile.type] = 2;
