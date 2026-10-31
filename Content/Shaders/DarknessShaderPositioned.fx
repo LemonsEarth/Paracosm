@@ -14,7 +14,6 @@ float4 DarknessPos(float4 sampleColor : COLOR0, float2 coords : TEXCOORD0, float
     float4 baseColor = tex2D(uImage0, coords);
     float4 fogColor = tex2D(uImage1, coords + uTime * 0.05f);
     sampleColor = baseColor;
-    float2 centeredCoords = coords * 2.0 - 1.0;
     float2 targetCoords = (uTargetPosition - uScreenPosition) / uScreenResolution;
     float2 coordsDir = (coords - targetCoords) * (uScreenResolution / uScreenResolution.y); // (uScreenResolution / uScreenResolution.y) turns it into a circle
     float length = sqrt(coordsDir.x * coordsDir.x + coordsDir.y * coordsDir.y); // target to current coords

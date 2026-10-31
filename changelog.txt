@@ -1,27 +1,3 @@
-Update v0.5.6:
+Update v0.6.6.3:
 
-World Gen:
-	- Structures now check structure map to hopefully reduce the chance of overlap
-	- Removed small Paracosmic Distortion Cores
-	- More Abandoned Armories now generate around the world
-
-NPC Tweaks:
-	- Chainsaw Gun and Corrupt Staff are now sold by the Merchant after defeating any evil biome boss
-	- Adjusted The Nameless stats so phase 1 is a bit shorter
-
-Item Tweaks:
-	- Reworked Voidcore Staff
-		- Left click fires homing projectile that charges the weapon on hit
-		- With enough charge, press right click to fire bursts of Void Bolts
-	- Reduced Chainsaw Gun damage (24 -> 20) and projectile size
-	- Reduced Corrupt Staff damage (24 -> 11) and projectile pierce (3 -> 2), reduced projectile hit cooldown (30 -> 15)
-	- Devourer Rift now properly displays in the user's hands
-	- Round Shield and Roller Shield knockback immunity is disabled for 20 seconds when you get hit
-	- Lemon Head costs more lemons, reduced defense increase (7 -> 1), grants Well Fed on use
-	- Cat Hat defense reduced (7 -> 1), costs more Flinx Fur and increases summon damage by 5%
-
-Other:
-	- Paracosmic Distortion biome is now only active when the player is in front of an Unsafe Parastone Wall, which prevents enemies attacking you outside of the biome
-
-- Fixes:
-	- Demon Coins now correctly craft a Star Cloak instead of a Star Veil
+Updated to latest tMod version

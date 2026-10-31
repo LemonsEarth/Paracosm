@@ -67,7 +67,7 @@ namespace Paracosm.Content.Bosses.TheNameless
         int AttackCount2 = 0;
 
         bool phase2FirstTime = false;
-        int phase { get; set; } = 1;
+        int phase = 1;
         bool phaseTransition = false;
 
         float attackDuration = 0;

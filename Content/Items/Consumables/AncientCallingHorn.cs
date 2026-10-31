@@ -37,6 +37,8 @@ namespace Paracosm.Content.Items.Consumables
             return (!Main.dayTime && !NPC.AnyNPCs(ModContent.NPCType<InfectedRevenantBody>()) && (player.ZoneCorrupt || player.ZoneCrimson));
         }
 
+
+
         public override bool? UseItem(Player player)
         {
             SoundEngine.PlaySound(SoundID.Roar, player.position);
