@@ -1,5 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Paracosm.Common.Systems;
+using Paracosm.Common.Utils;
 using Paracosm.Content.Buffs;
 using Paracosm.Content.Items.BossBags;
 using Paracosm.Content.Items.Materials;
@@ -61,10 +63,8 @@ public class VortexMothership : ModNPC
     Vector2 targetPosition = Vector2.Zero;
     float arenaDistance = 0;
 
-    List<Projectile> Spheres = new List<Projectile>();
     Dictionary<string, int> Proj = new Dictionary<string, int>
     {
-        {"Sphere", ModContent.ProjectileType<BorderSphere>()}
     };
 
     Dictionary<string, int> Summonables = new Dictionary<string, int>
@@ -114,6 +114,7 @@ public class VortexMothership : ModNPC
             PortraitPositionYOverride = -150
         };
         NPCID.Sets.NPCBestiaryDrawOffset.Add(Type, drawModifiers);
+        NPCID.Sets.MustAlwaysDraw[Type] = true;
     }
 
     public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
@@ -180,7 +181,6 @@ public class VortexMothership : ModNPC
         writer.Write(attackDuration);
         writer.Write(phase);
         writer.Write(phase2FirstTime);
-        writer.Write(Spheres.Count);
         writer.Write(AttackTimer2);
         writer.Write(AttackCount2);
     }
@@ -192,21 +192,6 @@ public class VortexMothership : ModNPC
         attackDuration = reader.ReadSingle();
         phase = reader.ReadInt32();
         phase2FirstTime = reader.ReadBoolean();
-        int count = reader.ReadInt32();
-        int sphereCounter = 0;
-        Spheres.Clear();
-        foreach (var proj in Main.ActiveProjectiles)
-        {
-            if (proj.type == Proj["Sphere"])
-            {
-                Spheres.Add(proj);
-                sphereCounter++;
-                if (sphereCounter >= count)
-                {
-                    break;
-                }
-            }
-        }
         AttackTimer2 = reader.ReadInt32();
         AttackCount2 = reader.ReadInt32();
     }
@@ -326,11 +311,6 @@ public class VortexMothership : ModNPC
             AttackTimer2 = 0;
         }
         NPC.netUpdate = true;
-
-        if (Spheres.Any(p => p.active == false))
-        {
-            Spheres.Clear();
-        }
     }
 
     void SpawnWeapons()
@@ -415,29 +395,6 @@ public class VortexMothership : ModNPC
     const float BaseArenaDistance = 1500;
     public void Arena()
     {
-        if (Main.netMode != NetmodeID.MultiplayerClient)
-        {
-            if (Spheres.Count < 40)
-            {
-                for (int i = 0; i < 40; i++)
-                {
-                    var sphere = Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center + new Vector2(0, -arenaDistance).RotatedBy(i * MathHelper.ToRadians(9)), Vector2.Zero, Proj["Sphere"], NPC.damage, 1, ai1: 60f);
-
-                    Spheres.Add(sphere);
-                }
-                NPC.netUpdate = true;
-            }
-        }
-
-        for (int i = 0; i < Spheres.Count; i++)
-        {
-            Vector2 pos = NPC.Center + new Vector2(0, -arenaDistance).RotatedBy(i * MathHelper.ToRadians(9)).RotatedBy(MathHelper.ToRadians(AITimer));
-
-            Spheres[i].velocity = (pos - Spheres[i].position).SafeNormalize(Vector2.Zero) * (Spheres[i].position.Distance(pos) / 20);
-            Spheres[i].timeLeft = 180;
-
-
-        }
         if (arenaDistance < BaseArenaDistance)
         {
             arenaDistance += BaseArenaDistance / INTRO_DURATION;
@@ -466,6 +423,12 @@ public class VortexMothership : ModNPC
     public override bool CheckActive()
     {
         return false;
+    }
+
+    public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
+    {
+        ArenaBorderUtils.DrawBorder(NPC.Center, arenaDistance, MathHelper.ToRadians(AITimer), AITimer, Color.White);
+        return true;
     }
 
     public override bool CheckDead()
@@ -502,7 +465,6 @@ public class VortexMothership : ModNPC
 
     public override void OnKill()
     {
-        DeleteProjectiles(Proj["Sphere"]);
         NPC.SetEventFlagCleared(ref DownedBossSystem.downedVortexMothership, -1);
         for (int i = 0; i < 16; i++)
         {

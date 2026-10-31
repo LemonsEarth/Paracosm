@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Paracosm.Common.Systems;
+using Paracosm.Common.Utils;
 using Paracosm.Content.Buffs;
 using Paracosm.Content.Items.BossBags;
 using Paracosm.Content.Items.Materials;
@@ -69,7 +70,6 @@ public class SolarChampion : ModNPC
     bool isDashing = false;
     bool grow = true;
     float arenaDistance = 0;
-    List<Projectile> Spheres = new List<Projectile>();
     List<Projectile> Swords = new List<Projectile>();
     List<Projectile> Axes = new List<Projectile>();
 
@@ -79,7 +79,6 @@ public class SolarChampion : ModNPC
         {"Hammer", ModContent.ProjectileType<SolarHammer>()},
         {"Axe", ModContent.ProjectileType<SolarAxe>()},
         {"Fireball", ModContent.ProjectileType<SolarFireball>()},
-        {"Sphere", ModContent.ProjectileType<BorderSphere>()}
     };
 
     enum Attacks
@@ -108,6 +107,7 @@ public class SolarChampion : ModNPC
         NPCID.Sets.CantTakeLunchMoney[Type] = true;
         NPCID.Sets.DontDoHardmodeScaling[Type] = true;
         NPCID.Sets.BossBestiaryPriority.Add(Type);
+
     }
 
     public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
@@ -156,7 +156,6 @@ public class SolarChampion : ModNPC
         writer.Write(AttackCount2);
         writer.Write(rotSpeedMul);
         writer.Write(grow);
-        writer.Write(Spheres.Count);
         writer.Write(Swords.Count);
         writer.Write(Axes.Count);
     }
@@ -173,22 +172,6 @@ public class SolarChampion : ModNPC
         AttackCount2 = reader.ReadInt32();
         rotSpeedMul = reader.ReadSingle();
         grow = reader.ReadBoolean();
-
-        int count = reader.ReadInt32();
-        int sphereCounter = 0;
-        Spheres.Clear();
-        foreach (var proj in Main.ActiveProjectiles)
-        {
-            if (proj.type == Proj["Sphere"])
-            {
-                Spheres.Add(proj);
-                sphereCounter++;
-                if (sphereCounter >= count)
-                {
-                    break;
-                }
-            }
-        }
 
         int count1 = reader.ReadInt32();
         int swordCounter = 0;
@@ -226,6 +209,7 @@ public class SolarChampion : ModNPC
 
     public override void AI()
     {
+
         if (NPC.target < 0 || NPC.target == 255 || Main.player[NPC.target].dead || !Main.player[NPC.target].active)
         {
             NPC.TargetClosest();
@@ -357,16 +341,10 @@ public class SolarChampion : ModNPC
             rotSpeedMul = 1;
             foreach (var proj in Proj)
             {
-                if (proj.Key != "Sphere")
-                    DeleteProjectiles(proj.Value);
+                DeleteProjectiles(proj.Value);
             }
         }
         NPC.netUpdate = true;
-
-        if (Spheres.Any(p => p.active == false))
-        {
-            Spheres.Clear();
-        }
     }
 
     public void DashingSword(Player player)
@@ -901,27 +879,6 @@ public class SolarChampion : ModNPC
     const float BaseArenaDistance = 1800;
     public void Arena()
     {
-        if (Main.netMode != NetmodeID.MultiplayerClient)
-        {
-            if (Spheres.Count < 40)
-            {
-                for (int i = 0; i < 40; i++)
-                {
-                    var sphere = Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center + new Vector2(0, -arenaDistance).RotatedBy(i * MathHelper.ToRadians(9)), Vector2.Zero, Proj["Sphere"], NPC.damage, 1, ai1: 60f);
-
-                    Spheres.Add(sphere);
-                }
-                NPC.netUpdate = true;
-            }
-        }
-
-        for (int i = 0; i < Spheres.Count; i++)
-        {
-            Vector2 pos = NPC.Center + new Vector2(0, -arenaDistance).RotatedBy(i * MathHelper.ToRadians(9)).RotatedBy(MathHelper.ToRadians(AITimer));
-
-            Spheres[i].velocity = (pos - Spheres[i].position).SafeNormalize(Vector2.Zero) * (Spheres[i].position.Distance(pos) / 20);
-            Spheres[i].timeLeft = 180;
-        }
         if (arenaDistance < BaseArenaDistance)
         {
             arenaDistance += BaseArenaDistance / INTRO_DURATION;
@@ -1029,11 +986,11 @@ public class SolarChampion : ModNPC
 
     public override void OnKill()
     {
-        DeleteProjectiles(Proj["Sphere"]);
         NPC.SetEventFlagCleared(ref DownedBossSystem.downedSolarChampion, -1);
     }
     public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
     {
+        ArenaBorderUtils.DrawBorder(NPC.Center, arenaDistance, MathHelper.ToRadians(AITimer), AITimer, Color.White);
         Texture2D texture = TextureAssets.Npc[Type].Value;
         Rectangle drawRect = texture.Frame(1, Main.npcFrameCount[Type], 0, 0);
 

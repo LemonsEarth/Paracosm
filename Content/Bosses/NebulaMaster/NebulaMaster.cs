@@ -68,10 +68,8 @@ public class NebulaMaster : ModNPC
     bool arenaFollow = true;
     bool spawnedAura = false;
 
-    List<Projectile> Spheres = new List<Projectile>();
     Dictionary<string, int> Proj = new Dictionary<string, int>
     {
-        {"Sphere", ModContent.ProjectileType<BorderSphere>()},
         {"SpeedFlames",  ModContent.ProjectileType<SpeedyNebulousFlames>()},
         {"Aura", ModContent.ProjectileType<NebulousAuraHostile>()},
         {"Beam", ModContent.ProjectileType<NebulaBeam>()}
@@ -107,6 +105,7 @@ public class NebulaMaster : ModNPC
             PortraitPositionYOverride = -150
         };*/
         NPCID.Sets.NPCBestiaryDrawOffset.Add(Type, drawModifiers);
+        NPCID.Sets.MustAlwaysDraw[Type] = true;
     }
 
     public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
@@ -161,7 +160,6 @@ public class NebulaMaster : ModNPC
         writer.Write(arenaCenter.X);
         writer.Write(arenaCenter.Y);
         writer.Write(arenaFollow);
-        writer.Write(Spheres.Count);
         writer.Write(spawnedAura);
         writer.Write(phaseTransition);
         writer.Write(NPC.Opacity);
@@ -179,21 +177,6 @@ public class NebulaMaster : ModNPC
         arenaCenter.X = reader.ReadSingle();
         arenaCenter.Y = reader.ReadSingle();
         arenaFollow = reader.ReadBoolean();
-        int count = reader.ReadInt32();
-        int sphereCounter = 0;
-        Spheres.Clear();
-        foreach (var proj in Main.ActiveProjectiles)
-        {
-            if (proj.type == Proj["Sphere"])
-            {
-                Spheres.Add(proj);
-                sphereCounter++;
-                if (sphereCounter >= count)
-                {
-                    break;
-                }
-            }
-        }
         spawnedAura = reader.ReadBoolean();
         phaseTransition = reader.ReadBoolean();
         NPC.Opacity = reader.ReadSingle();
@@ -425,15 +408,10 @@ public class NebulaMaster : ModNPC
             }
             foreach (var proj in Proj)
             {
-                if (proj.Key != "Sphere")
-                    DeleteProjectiles(proj.Value);
+                DeleteProjectiles(proj.Value);
             }
         }
 
-        if (Spheres.Any(p => p.active == false))
-        {
-            Spheres.Clear();
-        }
         NPC.netUpdate = true;
     }
 
@@ -845,35 +823,11 @@ public class NebulaMaster : ModNPC
             NPC.netUpdate = true;
         }
 
-        if (Main.netMode != NetmodeID.MultiplayerClient)
-        {
-            if (Spheres.Count < 40)
-            {
-                for (int i = 0; i < 40; i++)
-                {
-                    var sphere = Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center + new Vector2(0, -arenaDistance).RotatedBy(i * MathHelper.ToRadians(9)), Vector2.Zero, Proj["Sphere"], NPC.damage, 1, ai1: 60f);
-
-                    Spheres.Add(sphere);
-                }
-            }
-        }
         NPC.netUpdate = true;
 
         if (arenaFollow)
         {
             arenaCenter = NPC.Center;
-        }
-
-        for (int i = 0; i < Spheres.Count; i++)
-        {
-            Vector2 pos = arenaCenter + new Vector2(0, -arenaDistance).RotatedBy(i * MathHelper.ToRadians(9)).RotatedBy(MathHelper.ToRadians(AITimer));
-            if (Spheres[i].type != Proj["Sphere"])
-            {
-                continue;
-            }
-
-            Spheres[i].velocity = (pos - Spheres[i].Center).SafeNormalize(Vector2.Zero) * (Spheres[i].Center.Distance(pos) / 50);
-            Spheres[i].timeLeft = 180;
         }
 
         arenaDistance += ((targetArenaDistance - arenaDistance) / 60);
@@ -1006,7 +960,6 @@ public class NebulaMaster : ModNPC
 
     public override void OnKill()
     {
-        DeleteProjectiles(Proj["Sphere"]);
         NPC.SetEventFlagCleared(ref DownedBossSystem.downedNebulaMaster, -1);
         for (int i = 0; i < 16; i++)
         {
@@ -1016,6 +969,7 @@ public class NebulaMaster : ModNPC
 
     public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
     {
+        ArenaBorderUtils.DrawBorder(arenaCenter, arenaDistance, MathHelper.ToRadians(AITimer), AITimer, Color.White);
         if (phase == 1)
         {
             return true;

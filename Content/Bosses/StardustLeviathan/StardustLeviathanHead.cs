@@ -1,5 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Paracosm.Common.Systems;
+using Paracosm.Common.Utils;
 using Paracosm.Content.Buffs;
 using Paracosm.Content.Items.BossBags;
 using Paracosm.Content.Items.Materials;
@@ -67,11 +69,9 @@ public class StardustLeviathanHead : ModNPC
     public Vector2 arenaCenter { get; private set; } = Vector2.Zero;
     bool arenaFollow = true;
 
-    List<Projectile> Spheres = new List<Projectile>();
     List<StardustLeviathanBody> Segments = new List<StardustLeviathanBody>();
     public Dictionary<string, int> Proj { get; } = new Dictionary<string, int>
     {
-        {"Sphere", ModContent.ProjectileType<BorderSphere>()},
         {"Starshot", ModContent.ProjectileType<StarshotHostile>()},
         {"StardustShot", ModContent.ProjectileType<StardustShot>()},
         {"Mine", ModContent.ProjectileType<StardustEnergyMine>()},
@@ -108,6 +108,7 @@ public class StardustLeviathanHead : ModNPC
             PortraitPositionYOverride = -150
         };*/
         NPCID.Sets.NPCBestiaryDrawOffset.Add(Type, drawModifiers);
+        NPCID.Sets.MustAlwaysDraw[Type] = true;
     }
 
     public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
@@ -162,7 +163,6 @@ public class StardustLeviathanHead : ModNPC
         writer.Write(arenaCenter.X);
         writer.Write(arenaCenter.Y);
         writer.Write(arenaFollow);
-        writer.Write(Spheres.Count);
         writer.Write(phaseTransition);
         writer.Write(NPC.Opacity);
     }
@@ -178,21 +178,6 @@ public class StardustLeviathanHead : ModNPC
         AttackCount2 = reader.ReadInt32();
         arenaCenter = new Vector2(reader.ReadSingle(), reader.ReadSingle());
         arenaFollow = reader.ReadBoolean();
-        int count = reader.ReadInt32();
-        int sphereCounter = 0;
-        Spheres.Clear();
-        foreach (var proj in Main.ActiveProjectiles)
-        {
-            if (proj.type == Proj["Sphere"])
-            {
-                Spheres.Add(proj);
-                sphereCounter++;
-                if (sphereCounter >= count)
-                {
-                    break;
-                }
-            }
-        }
         phaseTransition = reader.ReadBoolean();
         NPC.Opacity = reader.ReadSingle();
     }
@@ -375,16 +360,10 @@ public class StardustLeviathanHead : ModNPC
             PlayRoar();
             foreach (var proj in Proj)
             {
-                if (proj.Key != "Sphere")
-                    DeleteProjectiles(proj.Value);
+                DeleteProjectiles(proj.Value);
             }
         }
         NPC.netUpdate = true;
-
-        if (Spheres.Any(p => p.active == false))
-        {
-            Spheres.Clear();
-        }
     }
 
     const int DASHING_COOLDOWN = 90;
@@ -684,36 +663,11 @@ public class StardustLeviathanHead : ModNPC
             }
         }
 
-        if (Main.netMode != NetmodeID.MultiplayerClient)
-        {
-            if (Spheres.Count < 40)
-            {
-                for (int i = 0; i < 40; i++)
-                {
-                    var sphere = Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center + new Vector2(0, -arenaDistance).RotatedBy(i * MathHelper.ToRadians(9)), Vector2.Zero, Proj["Sphere"], NPC.damage, 1, ai1: 120f);
-
-                    Spheres.Add(sphere);
-                }
-                NPC.netUpdate = true;
-            }
-        }
-
         if (arenaFollow)
         {
             arenaCenter = NPC.Center;
         }
 
-        for (int i = 0; i < Spheres.Count; i++)
-        {
-            Vector2 pos = arenaCenter + new Vector2(0, -arenaDistance).RotatedBy(i * MathHelper.ToRadians(9)).RotatedBy(MathHelper.ToRadians(AITimer));
-            if (Spheres[i].type != Proj["Sphere"])
-            {
-                continue;
-            }
-
-            Spheres[i].velocity = (pos - Spheres[i].Center).SafeNormalize(Vector2.Zero) * (Spheres[i].Center.Distance(pos) / 50);
-            Spheres[i].timeLeft = 180;
-        }
 
         arenaDistance += ((targetArenaDistance - arenaDistance) / 60);
 
@@ -746,6 +700,12 @@ public class StardustLeviathanHead : ModNPC
     public override bool CheckActive()
     {
         return false;
+    }
+
+    public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
+    {
+        ArenaBorderUtils.DrawBorder(arenaCenter, arenaDistance, MathHelper.ToRadians(AITimer), AITimer, Color.White);
+        return true;
     }
 
     public override bool CheckDead()
@@ -782,7 +742,6 @@ public class StardustLeviathanHead : ModNPC
 
     public override void OnKill()
     {
-        DeleteProjectiles(Proj["Sphere"]);
         NPC.SetEventFlagCleared(ref DownedBossSystem.downedStardustLeviathan, -1);
         for (int i = 0; i < 16; i++)
         {

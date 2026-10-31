@@ -83,11 +83,9 @@ public class TheNameless : ModNPC
     bool enteredFinalPhase = false;
     bool doDeath = false;
 
-    List<Projectile> Spheres = new List<Projectile>();
     List<Projectile> VoidEruptionHooks = new List<Projectile>();
     Dictionary<string, int> Proj = new Dictionary<string, int>
     {
-        {"Sphere", ModContent.ProjectileType<BorderSphere>()},
         {"SplitSpear", ModContent.ProjectileType<VoidSpearSplit>()},
         {"SplitShot", ModContent.ProjectileType<VoidBoltSplit>()},
         {"Bomb", ModContent.ProjectileType<VoidBombHostile>()},
@@ -123,6 +121,7 @@ public class TheNameless : ModNPC
         NPCID.Sets.SpecificDebuffImmunity[Type][BuffID.CursedInferno] = true;
         NPCID.Sets.SpecificDebuffImmunity[Type][BuffID.OnFire3] = true;
         NPCID.Sets.MPAllowedEnemies[Type] = true;
+        NPCID.Sets.MustAlwaysDraw[Type] = true;
         NPCID.Sets.TrailCacheLength[NPC.type] = 5;
         NPCID.Sets.TrailingMode[NPC.type] = 3;
         Main.npcFrameCount[NPC.type] = 3;
@@ -193,7 +192,6 @@ public class TheNameless : ModNPC
         writer.Write(arenaCenter.X);
         writer.Write(arenaCenter.Y);
         writer.Write(arenaFollow);
-        writer.Write(Spheres.Count);
         writer.Write(phaseTransition);
         writer.Write(NPC.Opacity);
 
@@ -223,21 +221,6 @@ public class TheNameless : ModNPC
         arenaCenter.X = reader.ReadSingle();
         arenaCenter.Y = reader.ReadSingle();
         arenaFollow = reader.ReadBoolean();
-        int count = reader.ReadInt32();
-        int sphereCounter = 0;
-        Spheres.Clear();
-        foreach (var proj in Main.ActiveProjectiles)
-        {
-            if (proj.type == Proj["Sphere"])
-            {
-                Spheres.Add(proj);
-                sphereCounter++;
-                if (sphereCounter >= count)
-                {
-                    break;
-                }
-            }
-        }
         phaseTransition = reader.ReadBoolean();
         NPC.Opacity = reader.ReadSingle();
 
@@ -441,11 +424,8 @@ public class TheNameless : ModNPC
                 break;
 
             case 0:
-                if (Main.netMode != NetmodeID.MultiplayerClient)
-                {
-                    phaseTransition = false;
-                }
                 SwitchAttacks();
+                phaseTransition = false;
                 NPC.netUpdate = true;
                 return;
         }
@@ -518,30 +498,26 @@ public class TheNameless : ModNPC
 
     void SwitchAttacks()
     {
-        if (Main.netMode != NetmodeID.MultiplayerClient)
+        Attack++;
+        if (phaseTransition)
         {
-            Attack++;
-            if (phase == 1) attackDuration = attackDurations[(int)Attack];
-            else attackDuration = attackDurations2[(int)Attack];
-
-            AttackCount = 0;
-            AttackCount2 = 0;
-            AttackTimer = 0;
-            AttackTimer2 = 0;
-            NPC.Opacity = 1f;
-            foreach (var proj in Proj)
-            {
-                if (proj.Key != "Sphere")
-                    DeleteProjectiles(proj.Value);
-            }
+            Attack = 0;
         }
+        if (phase == 1) attackDuration = attackDurations[(int)Attack];
+        else attackDuration = attackDurations2[(int)Attack];
+
+        AttackCount = 0;
+        AttackCount2 = 0;
+        AttackTimer = 0;
+        AttackTimer2 = 0;
+        NPC.Opacity = 1f;
+        foreach (var proj in Proj)
+        {
+            DeleteProjectiles(proj.Value);
+        }
+
         VoidEruptionHooks.Clear();
 
-        if (Spheres.Any(p => p.active == false))
-        {
-            Spheres.Clear();
-        }
-        NPC.netUpdate = true;
     }
 
     void ThrowSplitSpear(int timeToFire, int splitInterval, int splitCount)
@@ -1072,11 +1048,6 @@ public class TheNameless : ModNPC
 
         ModifyArena(ref targetArenaDistance);
 
-        if (phase == 1)
-        {
-            SpawnSpheres();
-        }
-
         if (arenaFollow)
         {
             arenaCenter = NPC.Center;
@@ -1085,11 +1056,6 @@ public class TheNameless : ModNPC
         if (AITimer % 5 == 0)
         {
             NPC.netUpdate = true;
-        }
-
-        if (phase == 1)
-        {
-            ControlSpheres();
         }
 
         if (phase == 1)
@@ -1179,37 +1145,6 @@ public class TheNameless : ModNPC
         }
     }
 
-    void SpawnSpheres()
-    {
-        if (Main.netMode != NetmodeID.MultiplayerClient)
-        {
-            if (Spheres.Count < 40)
-            {
-                for (int i = 0; i < 40; i++)
-                {
-                    var sphere = Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center + new Vector2(0, -arenaDistance).RotatedBy(i * MathHelper.ToRadians(9)), Vector2.Zero, Proj["Sphere"], NPC.damage, 1, ai1: 90f);
-
-                    Spheres.Add(sphere);
-                }
-            }
-        }
-    }
-
-    void ControlSpheres()
-    {
-        for (int i = 0; i < Spheres.Count; i++)
-        {
-            Vector2 pos = arenaCenter + new Vector2(0, -arenaDistance).RotatedBy(i * MathHelper.ToRadians(9)).RotatedBy(MathHelper.ToRadians(AITimer));
-            if (Spheres[i].type != Proj["Sphere"])
-            {
-                continue;
-            }
-
-            Spheres[i].velocity = (pos - Spheres[i].Center).SafeNormalize(Vector2.Zero) * (Spheres[i].Center.Distance(pos) / 50);
-            Spheres[i].timeLeft = 180;
-        }
-    }
-
     void ArenaDebuff(float offset = 50)
     {
         foreach (var player in Main.ActivePlayers)
@@ -1281,6 +1216,10 @@ public class TheNameless : ModNPC
 
     public override void PostDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
     {
+        if (phase == 1)
+        {
+            ArenaBorderUtils.DrawBorder(arenaCenter, arenaDistance, MathHelper.ToRadians(AITimer), AITimer, Color.White);
+        }
         if (VoidEruptionHooks.Count == 0)
         {
             return;
@@ -1333,7 +1272,6 @@ public class TheNameless : ModNPC
     {
         Terraria.Graphics.Effects.Filters.Scene.Deactivate("Paracosm:DarknessShaderPos");
         SkyManager.Instance.Deactivate("Paracosm:NamelessSky");
-        DeleteProjectiles(Proj["Sphere"]);
         NPC.SetEventFlagCleared(ref DownedBossSystem.downedTheNameless, -1);
         for (int i = 0; i < 16; i++)
         {

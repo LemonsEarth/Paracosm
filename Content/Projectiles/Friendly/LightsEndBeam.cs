@@ -31,7 +31,7 @@ public class LightsEndBeam : ModProjectile
     {
         if (AITimer == 0)
         {
-            SoundEngine.PlaySound(SoundID.Item43, Projectile.Center);
+            SoundEngine.PlaySound(SoundID.Item43 with { MaxInstances = 3, SoundLimitBehavior = SoundLimitBehavior.ReplaceOldest}, Projectile.Center);
         }
         AITimer++;
         Projectile.rotation = Projectile.velocity.ToRotation();

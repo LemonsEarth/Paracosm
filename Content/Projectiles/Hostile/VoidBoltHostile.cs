@@ -42,9 +42,9 @@ public class VoidBoltHostile : ModProjectile
         }
         if (AITimer == 0)
         {
-            SoundEngine.PlaySound(SoundID.DD2_LightningBugZap, Projectile.Center);
-            SoundEngine.PlaySound(SoundID.DD2_LightningAuraZap with { PitchRange = (-0.4f, -0.2f) }, Projectile.Center);
-            SoundEngine.PlaySound(SoundID.Item94 with { PitchRange = (0.2f, 0.4f) }, Projectile.Center);
+            SoundEngine.PlaySound(SoundID.DD2_LightningBugZap with { Volume = 0.5f, MaxInstances = 5}, Projectile.Center);
+            SoundEngine.PlaySound(SoundID.DD2_LightningAuraZap with { Volume = 0.5f, PitchRange = (-0.4f, -0.2f) }, Projectile.Center);
+            SoundEngine.PlaySound(SoundID.Item94 with { Volume = 0.5f, PitchRange = (0.2f, 0.4f) }, Projectile.Center);
         }
 
         Lighting.AddLight(Projectile.Center, 10, 10, 10);
