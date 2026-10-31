@@ -1,6 +1,9 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.Audio;
+using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -9,9 +12,10 @@ namespace Paracosm.Content.Projectiles.Friendly
     public class NebulaBeamFriendly : ModProjectile
     {
         float AITimer = 0;
-        ref float SegmentCount => ref Projectile.ai[0];
-        ref float SegmentFrame => ref Projectile.ai[1];
+        ref float BeamLength => ref Projectile.ai[0];
         Vector2 direction = Vector2.Zero;
+
+        const int BeamWidth = 42;
 
         public override void SetStaticDefaults()
         {
@@ -20,8 +24,8 @@ namespace Paracosm.Content.Projectiles.Friendly
 
         public override void SetDefaults()
         {
-            Projectile.width = 42;
-            Projectile.height = 42;
+            Projectile.width = BeamWidth;
+            Projectile.height = BeamWidth;
             Projectile.hostile = false;
             Projectile.friendly = true;
             Projectile.ignoreWater = true;
@@ -46,18 +50,6 @@ namespace Paracosm.Content.Projectiles.Friendly
                 SoundEngine.PlaySound(SoundID.Zombie104 with { MaxInstances = 1, SoundLimitBehavior = SoundLimitBehavior.ReplaceOldest });
                 Projectile.rotation = Projectile.velocity.ToRotation();
                 direction = Projectile.velocity.SafeNormalize(Vector2.Zero);
-                Projectile.frame = (int)SegmentFrame;
-                if (Main.myPlayer == Projectile.owner)
-                {
-                    if (SegmentCount > 1)
-                    {
-                        Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center + direction * Projectile.height, direction, Type, Projectile.damage, 1, Projectile.owner, ai0: SegmentCount - 1, ai1: 1);
-                    }
-                    else if (SegmentCount > 0)
-                    {
-                        Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center + direction * Projectile.height, direction, Type, Projectile.damage, 1, Projectile.owner, ai0: SegmentCount - 1, ai1: 3);
-                    }
-                }
             }
 
             if (AITimer % 2 == 0)
@@ -79,6 +71,32 @@ namespace Paracosm.Content.Projectiles.Friendly
             Projectile.velocity = Vector2.Zero;
 
             AITimer++;
+        }
+
+        public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
+        {
+            Vector2 start = Projectile.Center - direction * (BeamWidth / 2f);
+            Vector2 end = Projectile.Center + direction * (Math.Max(BeamLength, 1f) - 1f) * BeamWidth + direction * (BeamWidth / 2f);
+            float collisionPoint = 0f;
+            return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), start, end, BeamWidth, ref collisionPoint);
+        }
+
+        public override bool PreDraw(ref Color lightColor)
+        {
+            Texture2D texture = TextureAssets.Projectile[Type].Value;
+            int frameHeight = texture.Height / Main.projFrames[Type];
+            int beamLength = Math.Max((int)BeamLength, 1);
+            Vector2 origin = new(texture.Width / 2f, frameHeight / 2f);
+
+            for (int i = 0; i < beamLength; i++)
+            {
+                int frame = i == 0 ? 0 : i == beamLength - 1 ? 2 : 1;
+                Rectangle sourceRectangle = new(0, frame * frameHeight, texture.Width, frameHeight);
+                Vector2 drawPosition = Projectile.Center + direction * i * BeamWidth - Main.screenPosition;
+                Main.EntitySpriteDraw(texture, drawPosition, sourceRectangle, lightColor * Projectile.Opacity, Projectile.rotation, origin, 1f, SpriteEffects.None);
+            }
+
+            return false;
         }
     }
 }

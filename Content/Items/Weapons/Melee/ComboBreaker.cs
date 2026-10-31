@@ -13,6 +13,7 @@ namespace Paracosm.Content.Items.Weapons.Melee
 {
     public class ComboBreaker : ModItem
     {
+        const int NebulaBeamLength = 30;
         int useCounter = 0;
         public override void SetStaticDefaults()
         {
@@ -66,7 +67,7 @@ namespace Paracosm.Content.Items.Weapons.Melee
             }
             if (player.altFunctionUse == 2 && useCounter >= 100)
             {
-                Projectile.NewProjectile(Item.GetSource_FromThis(), player.Center, (Main.MouseWorld - player.Center).SafeNormalize(Vector2.Zero), ModContent.ProjectileType<NebulaBeamFriendly>(), Item.damage * 10, 1f, player.whoAmI, ai0: 30);
+                Projectile.NewProjectile(Item.GetSource_FromThis(), player.Center, (Main.MouseWorld - player.Center).SafeNormalize(Vector2.Zero), ModContent.ProjectileType<NebulaBeamFriendly>(), Item.damage * 10, 1f, player.whoAmI, ai0: NebulaBeamLength);
                 useCounter = 0;
             }
             return true;
